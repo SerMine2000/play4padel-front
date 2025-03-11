@@ -23,15 +23,29 @@ import {
   IonToast,
   IonBackButton,
   IonButtons,
-  IonIcon
+  IonIcon,
+  IonSelect,
+  IonSelectOption,
+  IonTextarea
 } from '@ionic/react';
-import { personOutline, mailOutline, lockClosedOutline, phonePortraitOutline } from 'ionicons/icons';
+import { 
+  personOutline, 
+  mailOutline, 
+  lockClosedOutline, 
+  phonePortraitOutline,
+  businessOutline,
+  locationOutline,
+  timeOutline,
+  calendarOutline
+} from 'ionicons/icons';
 import { useHistory } from 'react-router';
 import { useAuth } from '../context/AuthContext';
-import { API_URL } from '../utils/constants';
+import { API_URL, TIPOS_CUENTA } from '../utils/constants';
+import { RegisterRequest } from '../interfaces';
 import './css/Register.css';
 
 const Register: React.FC = () => {
+  // Estados básicos para todos los usuarios
   const [nombre, setNombre] = useState('');
   const [apellidos, setApellidos] = useState('');
   const [email, setEmail] = useState('');
@@ -39,6 +53,15 @@ const Register: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [telefono, setTelefono] = useState('');
   
+  // Estados para el tipo de cuenta y datos del club
+  const [tipoUsuario, setTipoUsuario] = useState<string>(TIPOS_CUENTA.USUARIO);
+  const [nombreClub, setNombreClub] = useState('');
+  const [direccionClub, setDireccionClub] = useState('');
+  const [descripcionClub, setDescripcionClub] = useState('');
+  const [horarioApertura, setHorarioApertura] = useState('08:00');
+  const [horarioCierre, setHorarioCierre] = useState('22:00');
+  
+  // Estados de UI
   const [formError, setFormError] = useState('');
   const [showLoading, setShowLoading] = useState(false);
   const [showToast, setShowToast] = useState(false);
@@ -63,7 +86,7 @@ const Register: React.FC = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validación básica
+    // Validación básica para todos
     if (!nombre || !apellidos || !email || !password || !confirmPassword) {
       setFormError('Por favor, completa todos los campos obligatorios');
       return;
@@ -74,19 +97,44 @@ const Register: React.FC = () => {
       return;
     }
     
+    // Validaciones específicas para club
+    if (tipoUsuario === TIPOS_CUENTA.CLUB) {
+      if (!nombreClub || !direccionClub || !horarioApertura || !horarioCierre) {
+        setFormError('Por favor, completa todos los datos del club');
+        return;
+      }
+    }
+    
     try {
       setShowLoading(true);
       setFormError('');
       
-      // Llamar a la función register del contexto con rol de USUARIO (id=4) predeterminado
-      await register({
+      // Preparar datos de registro según el tipo
+      const registroData: RegisterRequest = {
         nombre,
         apellidos,
         email,
         password,
-        id_rol: 4, // ID para USUARIO
-        telefono
-      });
+        id_rol: tipoUsuario === TIPOS_CUENTA.CLUB ? 1 : 4, // 1 para ADMIN (club), 4 para USUARIO
+        telefono,
+        tipo_cuenta: tipoUsuario
+      };
+      
+      // Añadir datos del club si corresponde
+      if (tipoUsuario === TIPOS_CUENTA.CLUB) {
+        registroData.club_data = {
+          nombre: nombreClub,
+          direccion: direccionClub,
+          horario_apertura: horarioApertura,
+          horario_cierre: horarioCierre,
+          descripcion: descripcionClub,
+          telefono: telefono,
+          email: email
+        };
+      }
+      
+      // Llamar a la función register del contexto
+      await register(registroData);
       
       // Mostrar toast de éxito
       setShowToast(true);
@@ -98,6 +146,15 @@ const Register: React.FC = () => {
       setPassword('');
       setConfirmPassword('');
       setTelefono('');
+      
+      // Limpiar campos de club
+      if (tipoUsuario === TIPOS_CUENTA.CLUB) {
+        setNombreClub('');
+        setDireccionClub('');
+        setDescripcionClub('');
+        setHorarioApertura('08:00');
+        setHorarioCierre('22:00');
+      }
       
       // Redirigir al login después de un breve retraso
       setTimeout(() => {
@@ -138,9 +195,26 @@ const Register: React.FC = () => {
                   </div>
                   
                   <form className="register-form" onSubmit={handleRegister}>
+                    {/* Selector de tipo de cuenta */}
+                    <IonItem lines="full">
+                      <IonIcon icon={businessOutline} slot="start" color="medium"></IonIcon>
+                      <IonLabel position="floating">Tipo de cuenta *</IonLabel>
+                      <IonSelect 
+                        value={tipoUsuario} 
+                        onIonChange={e => setTipoUsuario(e.detail.value)}
+                        placeholder="Seleccione tipo de cuenta"
+                      >
+                        <IonSelectOption value={TIPOS_CUENTA.USUARIO}>Usuario</IonSelectOption>
+                        <IonSelectOption value={TIPOS_CUENTA.CLUB}>Club</IonSelectOption>
+                      </IonSelect>
+                    </IonItem>
+                    
+                    {/* Campos comunes para ambos tipos de cuenta */}
                     <IonItem lines="full">
                       <IonIcon icon={personOutline} slot="start" color="medium"></IonIcon>
-                      <IonLabel position="floating">Nombre *</IonLabel>
+                      <IonLabel position="floating">
+                        {tipoUsuario === TIPOS_CUENTA.CLUB ? 'Nombre del Administrador *' : 'Nombre *'}
+                      </IonLabel>
                       <IonInput 
                         value={nombre} 
                         onIonChange={e => setNombre(e.detail.value!)} 
@@ -150,7 +224,9 @@ const Register: React.FC = () => {
                     
                     <IonItem lines="full">
                       <IonIcon icon={personOutline} slot="start" color="medium"></IonIcon>
-                      <IonLabel position="floating">Apellidos *</IonLabel>
+                      <IonLabel position="floating">
+                        {tipoUsuario === TIPOS_CUENTA.CLUB ? 'Apellidos del Administrador *' : 'Apellidos *'}
+                      </IonLabel>
                       <IonInput 
                         value={apellidos} 
                         onIonChange={e => setApellidos(e.detail.value!)} 
@@ -160,7 +236,9 @@ const Register: React.FC = () => {
                     
                     <IonItem lines="full">
                       <IonIcon icon={mailOutline} slot="start" color="medium"></IonIcon>
-                      <IonLabel position="floating">Email *</IonLabel>
+                      <IonLabel position="floating">
+                        {tipoUsuario === TIPOS_CUENTA.CLUB ? 'Email del Administrador *' : 'Email *'}
+                      </IonLabel>
                       <IonInput 
                         type="email" 
                         value={email} 
@@ -171,7 +249,9 @@ const Register: React.FC = () => {
                     
                     <IonItem lines="full">
                       <IonIcon icon={phonePortraitOutline} slot="start" color="medium"></IonIcon>
-                      <IonLabel position="floating">Teléfono</IonLabel>
+                      <IonLabel position="floating">
+                        {tipoUsuario === TIPOS_CUENTA.CLUB ? 'Teléfono de Contacto' : 'Teléfono'}
+                      </IonLabel>
                       <IonInput 
                         type="tel" 
                         value={telefono} 
@@ -201,6 +281,68 @@ const Register: React.FC = () => {
                       />
                     </IonItem>
                     
+                    {/* Campos específicos para club */}
+                    {tipoUsuario === TIPOS_CUENTA.CLUB && (
+                      <>
+                        <div className="club-section">
+                          <h4 className="section-title">Información del Club</h4>
+                          
+                          <IonItem lines="full">
+                            <IonIcon icon={businessOutline} slot="start" color="medium"></IonIcon>
+                            <IonLabel position="floating">Nombre del Club *</IonLabel>
+                            <IonInput 
+                              value={nombreClub} 
+                              onIonChange={e => setNombreClub(e.detail.value!)} 
+                              required
+                            />
+                          </IonItem>
+                          
+                          <IonItem lines="full">
+                            <IonIcon icon={locationOutline} slot="start" color="medium"></IonIcon>
+                            <IonLabel position="floating">Dirección *</IonLabel>
+                            <IonInput 
+                              value={direccionClub} 
+                              onIonChange={e => setDireccionClub(e.detail.value!)} 
+                              required
+                            />
+                          </IonItem>
+                          
+                          <IonItem lines="full">
+                            <IonIcon icon={calendarOutline} slot="start" color="medium"></IonIcon>
+                            <IonLabel position="floating">Descripción</IonLabel>
+                            <IonTextarea
+                              value={descripcionClub}
+                              onIonChange={e => setDescripcionClub(e.detail.value!)}
+                              autoGrow={true}
+                              rows={3}
+                            />
+                          </IonItem>
+                          
+                          <IonItem lines="full">
+                            <IonIcon icon={timeOutline} slot="start" color="medium"></IonIcon>
+                            <IonLabel position="floating">Horario Apertura *</IonLabel>
+                            <IonInput 
+                              type="time" 
+                              value={horarioApertura} 
+                              onIonChange={e => setHorarioApertura(e.detail.value!)} 
+                              required
+                            />
+                          </IonItem>
+                          
+                          <IonItem lines="full">
+                            <IonIcon icon={timeOutline} slot="start" color="medium"></IonIcon>
+                            <IonLabel position="floating">Horario Cierre *</IonLabel>
+                            <IonInput 
+                              type="time" 
+                              value={horarioCierre} 
+                              onIonChange={e => setHorarioCierre(e.detail.value!)} 
+                              required
+                            />
+                          </IonItem>
+                        </div>
+                      </>
+                    )}
+                    
                     {formError && (
                       <div className="error-message">
                         <IonText color="danger">
@@ -214,7 +356,7 @@ const Register: React.FC = () => {
                       type="submit" 
                       className="register-button"
                     >
-                      Crear cuenta
+                      {tipoUsuario === TIPOS_CUENTA.CLUB ? 'Registrar Club' : 'Crear Cuenta'}
                     </IonButton>
                   </form>
                   
@@ -234,14 +376,16 @@ const Register: React.FC = () => {
         
         <IonLoading
           isOpen={showLoading}
-          message={'Registrando usuario...'}
+          message={tipoUsuario === TIPOS_CUENTA.CLUB ? 'Registrando club...' : 'Registrando usuario...'}
           spinner="circles"
         />
         
         <IonToast
           isOpen={showToast}
           onDidDismiss={() => setShowToast(false)}
-          message="Usuario registrado correctamente. Redirigiendo al login..."
+          message={tipoUsuario === TIPOS_CUENTA.CLUB 
+            ? "Club registrado correctamente. Redirigiendo al login..." 
+            : "Usuario registrado correctamente. Redirigiendo al login..."}
           duration={2000}
           position="bottom"
           color="success"

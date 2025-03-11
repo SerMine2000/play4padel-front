@@ -33,3 +33,8 @@ export const ESTADOS_RESERVA = {
   CANCELADA: 'cancelada',
   COMPLETADA: 'completada'
 };
+
+export const TIPOS_CUENTA = {
+  USUARIO: 'usuario',
+  CLUB: 'club'
+};

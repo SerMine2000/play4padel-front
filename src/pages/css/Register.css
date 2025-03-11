@@ -1,125 +1,140 @@
 /* src/pages/css/Register.css */
 
 .register-container {
-    --background: url('/img/fondoLoginRegistro.jpg') no-repeat center center / cover;
-  }
-  
+  --background: url('/img/fondoLoginRegistro.jpg') no-repeat center center / cover;
+}
+
+.register-card {
+  margin: 0 auto;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+.register-card-header {
+  background-color: #3880ff;
+  color: white;
+  padding: 20px;
+}
+
+.register-card-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.register-card-content {
+  padding: 20px;
+}
+
+.register-form {
+  margin-bottom: 20px;
+}
+
+.register-form ion-item {
+  --border-radius: 8px;
+  --background: transparent;
+  --padding-start: 12px;
+  margin-bottom: 16px;
+  --border-color: #ddd;
+  --highlight-color-focused: #3880ff;
+  --min-height: 65px; /* Aumentar altura mínima del ítem */
+}
+
+.register-form ion-input {
+  --padding-start: 8px;
+  --placeholder-color: #d35858;
+  --padding-top: 24px; /* Aumentar padding superior para alejar el texto de la etiqueta */
+  --padding-bottom: 8px; /* Padding inferior para equilibrar */
+  font-size: 16px;
+}
+
+.register-form ion-label {
+  font-weight: 500;
+  font-size: 16px;
+  margin-bottom: 16px; /* Añadir margen inferior a las etiquetas */
+  --color: #666; /* Color más suave para mejor contraste */
+}
+
+.register-button {
+  margin-top: 20px;
+  --border-radius: 8px;
+  --background: #3880ff;
+  --background-hover: #3171e0;
+  font-weight: 600;
+  height: 48px;
+  text-transform: none;
+  font-size: 16px;
+}
+
+.register-footer {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.register-footer p {
+  color: #666;
+  font-size: 15px;
+}
+
+.register-footer ion-router-link {
+  color: #3880ff;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.error-message {
+  color: #eb445a;
+  font-size: 14px;
+  margin-bottom: 15px;
+  padding: 0 12px;
+}
+
+/* Información de campos requeridos */
+.required-info {
+  font-size: 13px;
+  color: #999;
+  margin-top: 8px;
+  margin-bottom: 20px;
+  padding-left: 12px;
+}
+
+/* Sección de club */
+.club-section {
+  margin-top: 20px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #3880ff;
+  margin-bottom: 16px;
+  padding-left: 12px;
+}
+
+/* Animación de carga */
+.loading-animation {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
   .register-card {
-    margin: 0 auto;
-    border-radius: 16px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-    overflow: hidden;
-    margin-top: 20px;
-  }
-  
-  .register-card-header {
-    background-color: #3880ff;
-    color: white;
-    padding: 20px;
+    margin-top: 10px;
   }
   
   .register-card-header h2 {
-    margin: 0;
-    font-size: 24px;
-    font-weight: 600;
+    font-size: 20px;
   }
-  
-  .register-card-content {
-    padding: 20px;
+}
+
+@media (min-width: 768px) {
+  .register-container {
+    padding: 30px;
   }
-  
-  .register-form {
-    margin-bottom: 20px;
-  }
-  
-  .register-form ion-item {
-    --border-radius: 8px;
-    --background: transparent;
-    --padding-start: 12px;
-    margin-bottom: 16px;
-    --border-color: #ddd;
-    --highlight-color-focused: #3880ff;
-    --min-height: 65px; /* Aumentar altura mínima del ítem */
-  }
-  
-  .register-form ion-input {
-    --padding-start: 8px;
-    --placeholder-color: #d35858;
-    --padding-top: 24px; /* Aumentar padding superior para alejar el texto de la etiqueta */
-    --padding-bottom: 8px; /* Padding inferior para equilibrar */
-    font-size: 16px;
-  }
-  
-  .register-form ion-label {
-    font-weight: 500;
-    font-size: 16px;
-    margin-bottom: 16px; /* Añadir margen inferior a las etiquetas */
-    --color: #666; /* Color más suave para mejor contraste */
-  }
-  
-  .register-button {
-    margin-top: 20px;
-    --border-radius: 8px;
-    --background: #3880ff;
-    --background-hover: #3171e0;
-    font-weight: 600;
-    height: 48px;
-    text-transform: none;
-    font-size: 16px;
-  }
-  
-  .register-footer {
-    text-align: center;
-    margin-top: 30px;
-  }
-  
-  .register-footer p {
-    color: #666;
-    font-size: 15px;
-  }
-  
-  .register-footer ion-router-link {
-    color: #3880ff;
-    font-weight: 500;
-    text-decoration: none;
-  }
-  
-  .error-message {
-    color: #eb445a;
-    font-size: 14px;
-    margin-bottom: 15px;
-    padding: 0 12px;
-  }
-  
-  /* Información de campos requeridos */
-  .required-info {
-    font-size: 13px;
-    color: #999;
-    margin-top: 8px;
-    margin-bottom: 20px;
-    padding-left: 12px;
-  }
-  
-  /* Animación de carga */
-  .loading-animation {
-    display: flex;
-    justify-content: center;
-    margin: 20px 0;
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 576px) {
-    .register-card {
-      margin-top: 10px;
-    }
-    
-    .register-card-header h2 {
-      font-size: 20px;
-    }
-  }
-  
-  @media (min-width: 768px) {
-    .register-container {
-      padding: 30px;
-    }
-  }
+}

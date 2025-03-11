@@ -23,7 +23,35 @@ class AuthService {
   
   async register(userData: RegisterRequest): Promise<void> {
     try {
-      await apiService.post(API_ENDPOINTS.REGISTER, userData);
+      // Si es registro como club, usamos un flujo diferente
+      if (userData.tipo_cuenta === 'club') {
+        // Registrar al usuario administrador primero
+        const userResponse = await apiService.post(API_ENDPOINTS.REGISTER, {
+          nombre: userData.nombre,
+          apellidos: userData.apellidos,
+          email: userData.email,
+          password: userData.password,
+          id_rol: 1, // ID para ADMIN
+          telefono: userData.telefono
+        });
+        
+        // Luego registrar el club asociado al usuario
+        if (userData.club_data && userResponse?.user_id) {
+          await apiService.post(API_ENDPOINTS.CLUBS, {
+            nombre: userData.club_data.nombre,
+            direccion: userData.club_data.direccion,
+            horario_apertura: userData.club_data.horario_apertura,
+            horario_cierre: userData.club_data.horario_cierre,
+            descripcion: userData.club_data.descripcion || '',
+            telefono: userData.club_data.telefono || userData.telefono || '',
+            email: userData.club_data.email || userData.email,
+            id_administrador: userResponse.user_id
+          });
+        }
+      } else {
+        // Registro normal de usuario
+        await apiService.post(API_ENDPOINTS.REGISTER, userData);
+      }
     } catch (error: any) {
       if (error.message) {
         throw new Error(error.message);
