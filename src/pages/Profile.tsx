@@ -169,7 +169,7 @@ const Profile: React.FC = () => {
       };
       
       // Llamar a la API para actualizar la contraseña
-      await apiService.put(API_ENDPOINTS.UPDATE_PASSWORD, passwordData);
+      const response = await apiService.put(API_ENDPOINTS.UPDATE_PASSWORD, passwordData);
       
       setSuccessMessage('Contraseña actualizada correctamente');
       setIsChangingPassword(false);
@@ -187,10 +187,10 @@ const Profile: React.FC = () => {
       }, 3000);
     } catch (error: any) {
       console.error('Error al actualizar contraseña:', error);
-      let errorMsg = 'Error al actualizar la contraseña';
       
-      if (error.response && error.response.data && error.response.data.error) {
-        errorMsg = error.response.data.error;
+      let errorMsg = 'Error al actualizar la contraseña';
+      if (error.message) {
+        errorMsg = error.message;
       }
       
       setErrorMessage(errorMsg);

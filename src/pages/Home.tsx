@@ -84,11 +84,6 @@ const Home: React.FC = () => {
                         <li>Participar en torneos</li>
                         <li>Gestionar tu perfil y preferencias</li>
                       </ul>
-                      
-                      <IonButton expand="block" onClick={goToProfile}>
-                        <IonIcon slot="start" icon={settingsOutline}></IonIcon>
-                        Gestionar Mi Perfil
-                      </IonButton>
                     </div>
                   )}
                 </IonCardContent>

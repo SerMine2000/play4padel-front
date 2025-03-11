@@ -120,6 +120,7 @@ const Reservas: React.FC = () => {
   const [colorToast, setColorToast] = useState<string>('success');
   const [showModal, setShowModal] = useState<boolean>(false);
   const [segmento, setSegmento] = useState<string>('hacer');
+  const [isDatetimeOpen, setIsDatetimeOpen] = useState(false);
   
   const { user } = useAuth();
   const history = useHistory();
@@ -336,6 +337,20 @@ const Reservas: React.FC = () => {
     );
   };
 
+  // Manejar cambio de fecha
+  const handleDateChange = (value: string | string[] | null | undefined) => {
+    if (value && typeof value === 'string') {
+      setFechaSeleccionada(value);
+    }
+    setIsDatetimeOpen(false);
+  };
+
+  // Formatear fecha para mostrar
+  const formatearFechaMostrar = (fecha: string): string => {
+    if (!fecha) return 'Seleccionar fecha';
+    return new Date(fecha).toLocaleDateString();
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -398,18 +413,30 @@ const Reservas: React.FC = () => {
                       </IonSelect>
                     </IonItem>
                     
-                    {/* <IonItem>
-                        <IonLabel position="floating">Fecha</IonLabel>
-                        <IonDatetime 
-                            value={fechaSeleccionada}
-                            onIonChange={e => setFechaSeleccionada(e.detail.value as string)}
-                            min={new Date().toISOString()}
-                            max={new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString()}
-                            displayFormat="DD/MM/YYYY"
-                            placeholder="Selecciona una fecha"
-                            disabled={!pistaSeleccionada}
-                        />
-                        </IonItem> */}
+                    <IonItem button onClick={() => setIsDatetimeOpen(true)} disabled={!pistaSeleccionada}>
+                      <IonLabel position="floating">Fecha</IonLabel>
+                      <IonLabel>{fechaSeleccionada ? formatearFechaMostrar(fechaSeleccionada) : 'Seleccionar fecha'}</IonLabel>
+                      <IonIcon slot="end" icon={calendarOutline} />
+                    </IonItem>
+                    
+                    <IonModal isOpen={isDatetimeOpen} onDidDismiss={() => setIsDatetimeOpen(false)}>
+                      <IonDatetime
+                        value={fechaSeleccionada}
+                        presentation="date"
+                        onIonChange={e => handleDateChange(e.detail.value)}
+                        min={new Date().toISOString()}
+                        max={new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString()}
+                        locale="es-ES"
+                        firstDayOfWeek={1}
+                        cancelText="Cancelar"
+                        doneText="Aceptar"
+                      >
+                        <IonButtons slot="buttons">
+                          <IonButton onClick={() => setIsDatetimeOpen(false)}>Cancelar</IonButton>
+                          <IonButton strong={true} onClick={() => handleDateChange(fechaSeleccionada)}>Aceptar</IonButton>
+                        </IonButtons>
+                      </IonDatetime>
+                    </IonModal>
                     
                     {cargandoDisponibilidad && (
                       <div className="loading-container">
