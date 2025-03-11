@@ -91,6 +91,18 @@
     padding: 0 12px;
   }
   
+
+  .login-card {
+    margin: 0 auto;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    margin-top: 20px;
+    max-width: 650px;
+    width: 90%; 
+  }
+
+
   /* Responsive adjustments */
   @media (max-width: 576px) {
     .login-card {
