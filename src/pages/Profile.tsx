@@ -72,12 +72,12 @@ const Profile: React.FC = () => {
     }
   }, [user]);
   
-  const handleInputChange = (e: CustomEvent) => {
-    const { name, value } = e.detail;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+  const handleInputChange = (e: CustomEvent, fieldName: string) => {
+    const value = e.detail.value;
+    setFormData(prevState => ({
+      ...prevState,
+      [fieldName]: value
+    }));
   };
   
   const handleEditProfile = () => {
@@ -169,18 +169,18 @@ const Profile: React.FC = () => {
       };
       
       // Llamar a la API para actualizar la contraseña
-      const response = await apiService.put(API_ENDPOINTS.UPDATE_PASSWORD, passwordData);
+      await apiService.put(API_ENDPOINTS.UPDATE_PASSWORD, passwordData);
       
       setSuccessMessage('Contraseña actualizada correctamente');
       setIsChangingPassword(false);
       
       // Limpiar campos de contraseña
-      setFormData({
-        ...formData,
+      setFormData(prevState => ({
+        ...prevState,
         currentPassword: '',
         newPassword: '',
         confirmPassword: ''
-      });
+      }));
       
       setTimeout(() => {
         setSuccessMessage('');
@@ -286,46 +286,41 @@ const Profile: React.FC = () => {
                       <IonItem>
                         <IonLabel position="floating">Nombre</IonLabel>
                         <IonInput
-                          name="nombre"
                           value={formData.nombre}
-                          onIonChange={handleInputChange}
+                          onIonChange={(e) => handleInputChange(e, 'nombre')}
                           required
                         />
                       </IonItem>
                       <IonItem>
                         <IonLabel position="floating">Apellidos</IonLabel>
                         <IonInput
-                          name="apellidos"
                           value={formData.apellidos}
-                          onIonChange={handleInputChange}
+                          onIonChange={(e) => handleInputChange(e, 'apellidos')}
                           required
                         />
                       </IonItem>
                       <IonItem>
                         <IonLabel position="floating">Email</IonLabel>
                         <IonInput
-                          name="email"
                           type="email"
                           value={formData.email}
-                          onIonChange={handleInputChange}
+                          onIonChange={(e) => handleInputChange(e, 'email')}
                           required
                         />
                       </IonItem>
                       <IonItem>
                         <IonLabel position="floating">Teléfono</IonLabel>
                         <IonInput
-                          name="telefono"
                           type="tel"
                           value={formData.telefono}
-                          onIonChange={handleInputChange}
+                          onIonChange={(e) => handleInputChange(e, 'telefono')}
                         />
                       </IonItem>
                       <IonItem>
                         <IonLabel position="floating">Biografía</IonLabel>
                         <IonInput
-                          name="bio"
                           value={formData.bio}
-                          onIonChange={handleInputChange}
+                          onIonChange={(e) => handleInputChange(e, 'bio')}
                         />
                       </IonItem>
                       
@@ -353,30 +348,27 @@ const Profile: React.FC = () => {
                       <IonItem>
                         <IonLabel position="floating">Contraseña Actual</IonLabel>
                         <IonInput
-                          name="currentPassword"
                           type="password"
                           value={formData.currentPassword}
-                          onIonChange={handleInputChange}
+                          onIonChange={(e) => handleInputChange(e, 'currentPassword')}
                           required
                         />
                       </IonItem>
                       <IonItem>
                         <IonLabel position="floating">Nueva Contraseña</IonLabel>
                         <IonInput
-                          name="newPassword"
                           type="password"
                           value={formData.newPassword}
-                          onIonChange={handleInputChange}
+                          onIonChange={(e) => handleInputChange(e, 'newPassword')}
                           required
                         />
                       </IonItem>
                       <IonItem>
                         <IonLabel position="floating">Confirmar Contraseña</IonLabel>
                         <IonInput
-                          name="confirmPassword"
                           type="password"
                           value={formData.confirmPassword}
-                          onIonChange={handleInputChange}
+                          onIonChange={(e) => handleInputChange(e, 'confirmPassword')}
                           required
                         />
                       </IonItem>

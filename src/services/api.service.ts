@@ -11,16 +11,24 @@ class ApiService {
       headers['Authorization'] = `Bearer ${token}`;
     }
     
-    const response = await fetch(`${API_URL}${endpoint}`, {
-      method: 'GET',
-      headers
-    });
-    
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status}`);
+    try {
+      const response = await fetch(`${API_URL}${endpoint}`, {
+        method: 'GET',
+        headers
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Error desconocido' }));
+        throw new Error(errorData.error || `Error: ${response.status}`);
+      }
+      
+      return await response.json();
+    } catch (error: any) {
+      if (error.message) {
+        throw new Error(error.message);
+      }
+      throw new Error(`Error en la solicitud GET a ${endpoint}`);
     }
-    
-    return await response.json();
   }
   
   async post(endpoint: string, data: any, token?: string) {
@@ -32,18 +40,25 @@ class ApiService {
       headers['Authorization'] = `Bearer ${token}`;
     }
     
-    const response = await fetch(`${API_URL}${endpoint}`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(data)
-    });
-    
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || `Error: ${response.status}`);
+    try {
+      const response = await fetch(`${API_URL}${endpoint}`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(data)
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Error desconocido' }));
+        throw new Error(errorData.error || `Error: ${response.status}`);
+      }
+      
+      return await response.json();
+    } catch (error: any) {
+      if (error.message) {
+        throw new Error(error.message);
+      }
+      throw new Error(`Error en la solicitud POST a ${endpoint}`);
     }
-    
-    return await response.json();
   }
   
   async put(endpoint: string, data: any, token?: string) {
@@ -55,17 +70,25 @@ class ApiService {
       headers['Authorization'] = `Bearer ${token}`;
     }
     
-    const response = await fetch(`${API_URL}${endpoint}`, {
-      method: 'PUT',
-      headers,
-      body: JSON.stringify(data)
-    });
-    
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status}`);
+    try {
+      const response = await fetch(`${API_URL}${endpoint}`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify(data)
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Error desconocido' }));
+        throw new Error(errorData.error || `Error: ${response.status}`);
+      }
+      
+      return await response.json();
+    } catch (error: any) {
+      if (error.message) {
+        throw new Error(error.message);
+      }
+      throw new Error(`Error en la solicitud PUT a ${endpoint}`);
     }
-    
-    return await response.json();
   }
   
   async delete(endpoint: string, token?: string) {
@@ -77,16 +100,24 @@ class ApiService {
       headers['Authorization'] = `Bearer ${token}`;
     }
     
-    const response = await fetch(`${API_URL}${endpoint}`, {
-      method: 'DELETE',
-      headers
-    });
-    
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status}`);
+    try {
+      const response = await fetch(`${API_URL}${endpoint}`, {
+        method: 'DELETE',
+        headers
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Error desconocido' }));
+        throw new Error(errorData.error || `Error: ${response.status}`);
+      }
+      
+      return await response.json();
+    } catch (error: any) {
+      if (error.message) {
+        throw new Error(error.message);
+      }
+      throw new Error(`Error en la solicitud DELETE a ${endpoint}`);
     }
-    
-    return await response.json();
   }
 }
 

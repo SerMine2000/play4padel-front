@@ -1,4 +1,4 @@
-// src/interfaces/index.ts (versión actualizada)
+// src/interfaces/index.ts
 export interface User {
   id: number;
   nombre: string;

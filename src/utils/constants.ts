@@ -1,4 +1,4 @@
-// src/utils/constants.ts (versión actualizada)
+// src/utils/constants.ts
 export const API_URL = 'http://localhost:5000';
 
 export const API_ENDPOINTS = {
@@ -7,6 +7,10 @@ export const API_ENDPOINTS = {
   LOGOUT: '/logout',
   USER: '/user',
   UPDATE_PASSWORD: '/update-password',
+  CLUBS: '/clubs',
+  RESERVAS: '/reservas',
+  CREAR_RESERVA: '/crear-reserva',
+  DISPONIBILIDAD_PISTA: '/pistas'
 };
 
 export const STORAGE_KEYS = {
@@ -21,4 +25,11 @@ export const ROLES = {
   EMPLEADO: 'EMPLEADO',
   USUARIO: 'USUARIO',
   SOCIO: 'SOCIO',
+};
+
+export const ESTADOS_RESERVA = {
+  PENDIENTE: 'pendiente',
+  CONFIRMADA: 'confirmada', 
+  CANCELADA: 'cancelada',
+  COMPLETADA: 'completada'
 };

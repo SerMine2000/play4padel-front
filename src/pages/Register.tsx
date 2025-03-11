@@ -101,7 +101,7 @@ const Register: React.FC = () => {
       
       // Redirigir al login después de un breve retraso
       setTimeout(() => {
-        history.push('/login');
+        history.replace('/login');
       }, 2000);
       
     } catch (error: any) {

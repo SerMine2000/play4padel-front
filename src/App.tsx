@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
+import Reservas from './pages/Reservas';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 /* Core CSS required for Ionic components to work properly */
@@ -40,31 +41,48 @@ const AppContent: React.FC = () => {
       <IonReactRouter>
         <IonRouterOutlet>
           {/* Rutas públicas */}
-          <Route path="/login" component={Login} exact />
-          <Route path="/register" component={Register} exact />
+          <Route path="/login" exact>
+            {isAuthenticated ? <Redirect to="/home" /> : <Login />}
+          </Route>
+          
+          <Route path="/register" exact>
+            {isAuthenticated ? <Redirect to="/home" /> : <Register />}
+          </Route>
           
           {/* Rutas protegidas */}
-          <Route 
-            path="/home" 
-            exact 
-            render={() => {
-              if (isLoading) return <div>Cargando...</div>;
-              return isAuthenticated ? <Home /> : <Redirect to="/login" />;
-            }} 
-          />
+          <Route path="/home" exact>
+            {isLoading ? (
+              <div>Cargando...</div>
+            ) : isAuthenticated ? (
+              <Home />
+            ) : (
+              <Redirect to="/login" />
+            )}
+          </Route>
           
-          <Route 
-            path="/profile" 
-            exact 
-            render={() => {
-              if (isLoading) return <div>Cargando...</div>;
-              return isAuthenticated ? <Profile /> : <Redirect to="/login" />;
-            }} 
-          />
+          <Route path="/profile" exact>
+            {isLoading ? (
+              <div>Cargando...</div>
+            ) : isAuthenticated ? (
+              <Profile />
+            ) : (
+              <Redirect to="/login" />
+            )}
+          </Route>
+          
+          <Route path="/reservas" exact>
+            {isLoading ? (
+              <div>Cargando...</div>
+            ) : isAuthenticated ? (
+              <Reservas />
+            ) : (
+              <Redirect to="/login" />
+            )}
+          </Route>
           
           {/* Redirección por defecto */}
           <Route exact path="/">
-            <Redirect to="/home" />
+            {isAuthenticated ? <Redirect to="/home" /> : <Redirect to="/login" />}
           </Route>
         </IonRouterOutlet>
       </IonReactRouter>

@@ -1,21 +1,35 @@
 // src/services/auth.service.ts
-import { LoginRequest, LoginResponse, RegisterRequest, User } from '../interfaces';
+import { LoginRequest, LoginResponse, RegisterRequest, User, UpdatePasswordRequest } from '../interfaces';
 import { API_ENDPOINTS, STORAGE_KEYS } from '../utils/constants';
 import apiService from './api.service';
 
 class AuthService {
   async login(credentials: LoginRequest): Promise<LoginResponse> {
-    const response = await apiService.post(API_ENDPOINTS.LOGIN, credentials);
-    
-    // Guardar información del usuario en localStorage
-    localStorage.setItem(STORAGE_KEYS.USER_ID, response.user_id.toString());
-    localStorage.setItem(STORAGE_KEYS.USER_ROLE, response.role);
-    
-    return response;
+    try {
+      const response = await apiService.post(API_ENDPOINTS.LOGIN, credentials);
+      
+      // Guardar información del usuario en localStorage
+      localStorage.setItem(STORAGE_KEYS.USER_ID, response.user_id.toString());
+      localStorage.setItem(STORAGE_KEYS.USER_ROLE, response.role);
+      
+      return response;
+    } catch (error: any) {
+      if (error.message) {
+        throw new Error(error.message);
+      }
+      throw new Error('Error al iniciar sesión. Verifica tus credenciales.');
+    }
   }
   
   async register(userData: RegisterRequest): Promise<void> {
-    await apiService.post(API_ENDPOINTS.REGISTER, userData);
+    try {
+      await apiService.post(API_ENDPOINTS.REGISTER, userData);
+    } catch (error: any) {
+      if (error.message) {
+        throw new Error(error.message);
+      }
+      throw new Error('Error al registrar usuario. Inténtalo de nuevo.');
+    }
   }
   
   async logout(userId: number): Promise<void> {
@@ -30,7 +44,25 @@ class AuthService {
   }
   
   async getCurrentUser(userId: number): Promise<User> {
-    return await apiService.get(`${API_ENDPOINTS.USER}/${userId}`);
+    try {
+      return await apiService.get(`${API_ENDPOINTS.USER}/${userId}`);
+    } catch (error: any) {
+      if (error.message) {
+        throw new Error(error.message);
+      }
+      throw new Error('Error al obtener información del usuario.');
+    }
+  }
+
+  async updatePassword(data: UpdatePasswordRequest): Promise<void> {
+    try {
+      await apiService.put(API_ENDPOINTS.UPDATE_PASSWORD, data);
+    } catch (error: any) {
+      if (error.message) {
+        throw new Error(error.message);
+      }
+      throw new Error('Error al actualizar la contraseña.');
+    }
   }
   
   isAuthenticated(): boolean {

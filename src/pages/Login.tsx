@@ -52,8 +52,8 @@ const Login: React.FC = () => {
       // Llamar a la función login del contexto
       await login({ email, password });
       
-      // Redirigir al home
-      history.push('/home');
+      // Redirigir al home - usar replace en lugar de push para evitar la duplicación
+      history.replace('/home');
     } catch (error: any) {
       console.error('Error en login:', error);
       setFormError(error.message || 'Error al iniciar sesión. Verifica tus credenciales.');
