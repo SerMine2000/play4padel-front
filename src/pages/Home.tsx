@@ -1,3 +1,5 @@
+// src/pages/Home.tsx
+import React from 'react';
 import { 
   IonContent, 
   IonHeader, 
@@ -16,16 +18,14 @@ import {
   IonLabel, 
   IonText,
   IonIcon,
-  IonButtons,
-  IonMenuButton
+  IonButtons
 } from '@ionic/react';
 import { logOutOutline, personCircleOutline, settingsOutline } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
-import { useHistory, RouteComponentProps } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import './css/Home.css';
 
-// Especificar que el componente acepta RouteComponentProps
-const Home: React.FC<RouteComponentProps> = (props) => {
+const Home: React.FC = () => {
   const { user, logout } = useAuth();
   const history = useHistory();
 

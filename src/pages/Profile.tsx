@@ -27,12 +27,14 @@ import {
 } from '@ionic/react';
 import { personCircleOutline, saveOutline, refreshOutline, mailOutline, callOutline, keyOutline } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
+import { useHistory } from 'react-router-dom';
 import apiService from '../services/api.service';
 import { API_ENDPOINTS } from '../utils/constants';
 import './css/Profile.css';
 
 const Profile: React.FC = () => {
-  const { user, isLoading: authLoading } = useAuth();
+  const { user, isLoading: authLoading, refreshUser } = useAuth();
+  const history = useHistory();
   
   const [formData, setFormData] = useState({
     nombre: '',
@@ -132,7 +134,8 @@ const Profile: React.FC = () => {
       setSuccessMessage('Perfil actualizado correctamente');
       setIsEditing(false);
       
-      // Recargar los datos del usuario (podrías implementar una función refreshUser en el contexto de autenticación)
+      // Recargar los datos del usuario
+      await refreshUser();
       
       setTimeout(() => {
         setSuccessMessage('');
@@ -160,12 +163,13 @@ const Profile: React.FC = () => {
       
       // Preparar datos para actualizar la contraseña
       const passwordData = {
+        user_id: user.id,
         current_password: formData.currentPassword,
         new_password: formData.newPassword
       };
       
       // Llamar a la API para actualizar la contraseña
-      await apiService.put(`${API_ENDPOINTS.USER}/${user.id}/change-password`, passwordData);
+      await apiService.put(API_ENDPOINTS.UPDATE_PASSWORD, passwordData);
       
       setSuccessMessage('Contraseña actualizada correctamente');
       setIsChangingPassword(false);
@@ -183,7 +187,13 @@ const Profile: React.FC = () => {
       }, 3000);
     } catch (error: any) {
       console.error('Error al actualizar contraseña:', error);
-      setErrorMessage(error.message || 'Error al actualizar la contraseña');
+      let errorMsg = 'Error al actualizar la contraseña';
+      
+      if (error.response && error.response.data && error.response.data.error) {
+        errorMsg = error.response.data.error;
+      }
+      
+      setErrorMessage(errorMsg);
     } finally {
       setIsLoading(false);
     }

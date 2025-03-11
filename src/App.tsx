@@ -1,3 +1,4 @@
+// src/App.tsx
 import { Redirect, Route, RouteComponentProps } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
@@ -31,39 +32,9 @@ import './theme/variables.css';
 
 setupIonicReact();
 
-// Componente para rutas protegidas con tipos corregidos
-interface PrivateRouteProps {
-  component: React.ComponentType<RouteComponentProps>;
-  path: string;
-  exact?: boolean;
-}
-
-const PrivateRoute: React.FC<PrivateRouteProps> = ({ component: Component, ...rest }) => {
-  const { isAuthenticated, isLoading } = useAuth();
-  
-  // Mostrar algo mientras se verifica la autenticación
-  if (isLoading) {
-    return <div>Cargando...</div>;
-  }
-  
-  return (
-    <Route
-      {...rest}
-      render={(props: RouteComponentProps) =>
-        isAuthenticated ? (
-          <Component {...props} />
-        ) : (
-          <Redirect to={{
-            pathname: "/login",
-            state: { from: props.location }
-          }} />
-        )
-      }
-    />
-  );
-};
-
 const AppContent: React.FC = () => {
+  const { isAuthenticated, isLoading } = useAuth();
+
   return (
     <IonApp>
       <IonReactRouter>
@@ -73,8 +44,23 @@ const AppContent: React.FC = () => {
           <Route path="/register" component={Register} exact />
           
           {/* Rutas protegidas */}
-          <PrivateRoute path="/home" component={Home} exact />
-          <PrivateRoute path="/profile" component={Profile} exact /> {/* Nueva ruta para el perfil */}
+          <Route 
+            path="/home" 
+            exact 
+            render={() => {
+              if (isLoading) return <div>Cargando...</div>;
+              return isAuthenticated ? <Home /> : <Redirect to="/login" />;
+            }} 
+          />
+          
+          <Route 
+            path="/profile" 
+            exact 
+            render={() => {
+              if (isLoading) return <div>Cargando...</div>;
+              return isAuthenticated ? <Profile /> : <Redirect to="/login" />;
+            }} 
+          />
           
           {/* Redirección por defecto */}
           <Route exact path="/">
