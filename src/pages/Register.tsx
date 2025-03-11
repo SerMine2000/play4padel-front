@@ -20,11 +20,16 @@ import {
   IonGrid,
   IonRow,
   IonCol,
-  IonToast
+  IonToast,
+  IonBackButton,
+  IonButtons,
+  IonIcon
 } from '@ionic/react';
+import { personOutline, mailOutline, lockClosedOutline, phonePortraitOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router';
 import { useAuth } from '../context/AuthContext';
 import { API_URL } from '../utils/constants';
+import './css/Register.css';
 
 const Register: React.FC = () => {
   const [nombre, setNombre] = useState('');
@@ -110,21 +115,31 @@ const Register: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
-          <IonTitle>Play4Padel - Registro</IonTitle>
+        <IonToolbar color="primary">
+          <IonButtons slot="start">
+            <IonBackButton defaultHref="/login" />
+          </IonButtons>
+          <IonTitle>Crear cuenta</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
+      <IonContent className="register-container">
         <IonGrid>
           <IonRow className="ion-justify-content-center">
             <IonCol size="12" sizeMd="8" sizeLg="6">
-              <IonCard>
-                <IonCardHeader>
-                  <IonCardTitle className="ion-text-center">Crear una nueva cuenta</IonCardTitle>
+              <IonCard className="register-card">
+                <IonCardHeader className="register-card-header">
+                  <IonCardTitle className="ion-text-center">
+                    <h2>Únete a Play4Padel</h2>
+                  </IonCardTitle>
                 </IonCardHeader>
-                <IonCardContent>
-                  <form onSubmit={handleRegister}>
-                    <IonItem>
+                <IonCardContent className="register-card-content">
+                  <div className="required-info">
+                    * Campos obligatorios
+                  </div>
+                  
+                  <form className="register-form" onSubmit={handleRegister}>
+                    <IonItem lines="full">
+                      <IonIcon icon={personOutline} slot="start" color="medium"></IonIcon>
                       <IonLabel position="floating">Nombre *</IonLabel>
                       <IonInput 
                         value={nombre} 
@@ -133,7 +148,8 @@ const Register: React.FC = () => {
                       />
                     </IonItem>
                     
-                    <IonItem>
+                    <IonItem lines="full">
+                      <IonIcon icon={personOutline} slot="start" color="medium"></IonIcon>
                       <IonLabel position="floating">Apellidos *</IonLabel>
                       <IonInput 
                         value={apellidos} 
@@ -142,7 +158,8 @@ const Register: React.FC = () => {
                       />
                     </IonItem>
                     
-                    <IonItem>
+                    <IonItem lines="full">
+                      <IonIcon icon={mailOutline} slot="start" color="medium"></IonIcon>
                       <IonLabel position="floating">Email *</IonLabel>
                       <IonInput 
                         type="email" 
@@ -152,7 +169,8 @@ const Register: React.FC = () => {
                       />
                     </IonItem>
                     
-                    <IonItem>
+                    <IonItem lines="full">
+                      <IonIcon icon={phonePortraitOutline} slot="start" color="medium"></IonIcon>
                       <IonLabel position="floating">Teléfono</IonLabel>
                       <IonInput 
                         type="tel" 
@@ -161,7 +179,8 @@ const Register: React.FC = () => {
                       />
                     </IonItem>
                     
-                    <IonItem>
+                    <IonItem lines="full">
+                      <IonIcon icon={lockClosedOutline} slot="start" color="medium"></IonIcon>
                       <IonLabel position="floating">Contraseña *</IonLabel>
                       <IonInput 
                         type="password" 
@@ -171,7 +190,8 @@ const Register: React.FC = () => {
                       />
                     </IonItem>
                     
-                    <IonItem className="ion-margin-bottom">
+                    <IonItem lines="full">
+                      <IonIcon icon={lockClosedOutline} slot="start" color="medium"></IonIcon>
                       <IonLabel position="floating">Confirmar Contraseña *</IonLabel>
                       <IonInput 
                         type="password" 
@@ -182,21 +202,23 @@ const Register: React.FC = () => {
                     </IonItem>
                     
                     {formError && (
-                      <IonText color="danger" className="ion-padding-start">
-                        <p>{formError}</p>
-                      </IonText>
+                      <div className="error-message">
+                        <IonText color="danger">
+                          <p>{formError}</p>
+                        </IonText>
+                      </div>
                     )}
                     
                     <IonButton 
                       expand="block" 
                       type="submit" 
-                      className="ion-margin-top"
+                      className="register-button"
                     >
-                      Registrarse
+                      Crear cuenta
                     </IonButton>
                   </form>
                   
-                  <div className="ion-text-center ion-margin-top">
+                  <div className="register-footer">
                     <p>
                       ¿Ya tienes cuenta? 
                       <IonRouterLink href="/login" className="ion-padding-start">
@@ -213,6 +235,7 @@ const Register: React.FC = () => {
         <IonLoading
           isOpen={showLoading}
           message={'Registrando usuario...'}
+          spinner="circles"
         />
         
         <IonToast

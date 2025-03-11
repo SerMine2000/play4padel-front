@@ -19,10 +19,13 @@ import {
   IonRouterLink,
   IonGrid,
   IonRow,
-  IonCol
+  IonCol,
+  IonIcon
 } from '@ionic/react';
+import { mailOutline, lockClosedOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router';
 import { useAuth } from '../context/AuthContext';
+import './css/Login.css';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -62,21 +65,24 @@ const Login: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
+        <IonToolbar color="primary">
           <IonTitle>Play4Padel - Iniciar Sesión</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
+      <IonContent className="login-container">
         <IonGrid>
           <IonRow className="ion-justify-content-center">
             <IonCol size="12" sizeMd="8" sizeLg="6">
-              <IonCard>
-                <IonCardHeader>
-                  <IonCardTitle className="ion-text-center">Bienvenido a Play4Padel</IonCardTitle>
+              <IonCard className="login-card">
+                <IonCardHeader className="login-card-header">
+                  <IonCardTitle className="ion-text-center">
+                    <h2>Bienvenido a Play4Padel</h2>
+                  </IonCardTitle>
                 </IonCardHeader>
-                <IonCardContent>
-                  <form onSubmit={handleLogin}>
-                    <IonItem>
+                <IonCardContent className="login-card-content">
+                  <form className="login-form" onSubmit={handleLogin}>
+                    <IonItem lines="full">
+                      <IonIcon icon={mailOutline} slot="start" color="medium"></IonIcon>
                       <IonLabel position="floating">Email</IonLabel>
                       <IonInput 
                         type="email" 
@@ -85,7 +91,8 @@ const Login: React.FC = () => {
                         required
                       />
                     </IonItem>
-                    <IonItem className="ion-margin-bottom">
+                    <IonItem lines="full">
+                      <IonIcon icon={lockClosedOutline} slot="start" color="medium"></IonIcon>
                       <IonLabel position="floating">Contraseña</IonLabel>
                       <IonInput 
                         type="password" 
@@ -96,21 +103,23 @@ const Login: React.FC = () => {
                     </IonItem>
                     
                     {formError && (
-                      <IonText color="danger" className="ion-padding-start">
-                        <p>{formError}</p>
-                      </IonText>
+                      <div className="error-message">
+                        <IonText color="danger">
+                          <p>{formError}</p>
+                        </IonText>
+                      </div>
                     )}
                     
                     <IonButton 
                       expand="block" 
                       type="submit" 
-                      className="ion-margin-top"
+                      className="login-button"
                     >
                       Iniciar Sesión
                     </IonButton>
                   </form>
                   
-                  <div className="ion-text-center ion-margin-top">
+                  <div className="login-footer">
                     <p>
                       ¿No tienes cuenta? 
                       <IonRouterLink href="/register" className="ion-padding-start">
@@ -127,6 +136,7 @@ const Login: React.FC = () => {
         <IonLoading
           isOpen={showLoading}
           message={'Iniciando sesión...'}
+          spinner="circles"
         />
       </IonContent>
     </IonPage>

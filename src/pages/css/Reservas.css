@@ -1,0 +1,151 @@
+/* src/pages/css/Reservas.css */
+
+.reservas-container {
+    --background: #f8f8f8;
+  }
+  
+  .reserva-card, .mis-reservas-card {
+    margin: 16px;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  }
+  
+  .reserva-card ion-card-header, .mis-reservas-card ion-card-header {
+    background-color: #3880ff;
+    color: white;
+    padding: 16px;
+  }
+  
+  .reserva-card ion-card-title, .mis-reservas-card ion-card-title {
+    font-size: 22px;
+    font-weight: 600;
+  }
+  
+  .reserva-card ion-card-content, .mis-reservas-card ion-card-content {
+    padding: 16px;
+  }
+  
+  .franjas-disponibles {
+    margin-top: 20px;
+  }
+  
+  .franjas-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .franja-horaria {
+    --border-radius: 8px;
+    font-size: 14px;
+  }
+  
+  .hora-seleccionada {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .reservar-button {
+    margin-top: 20px;
+    --border-radius: 8px;
+    --background: #3880ff;
+    font-weight: 600;
+    height: 48px;
+  }
+  
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+  }
+  
+  .sin-reservas {
+    padding: 30px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .sin-reservas ion-icon {
+    font-size: 48px;
+    color: #3880ff;
+  }
+  
+  .sin-reservas p {
+    font-size: 18px;
+    color: #666;
+    margin: 10px 0;
+  }
+  
+  .reserva-item {
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+  }
+  
+  .reserva-info {
+    width: 100%;
+  }
+  
+  .reserva-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .reserva-header h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+  }
+  
+  .reserva-detalles {
+    margin: 10px 0;
+  }
+  
+  .reserva-detalles p {
+    margin: 8px 0;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .reserva-detalles ion-icon {
+    color: #3880ff;
+  }
+  
+  .reserva-acciones {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 576px) {
+    .reserva-card, .mis-reservas-card {
+      margin: 10px;
+    }
+    
+    .reserva-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .reservas-container {
+      padding: 20px;
+    }
+  }

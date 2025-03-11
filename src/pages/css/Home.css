@@ -1,0 +1,71 @@
+/* src/pages/css/Home.css */
+
+.home-container {
+    --background: url('/img/fondoHome.jpg') no-repeat center center / cover;
+  }
+  
+  .home-toolbar {
+    --background: #3880ff;
+    --color: white;
+  }
+  
+  .welcome-card {
+    margin: 0 auto;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    margin-top: 20px;
+  }
+  
+  .welcome-card-header {
+    background-color: #3880ff;
+    color: white;
+    padding: 20px;
+  }
+  
+  .welcome-card-header h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+  }
+  
+  .welcome-card-content {
+    padding: 20px;
+  }
+  
+  .user-info ion-label h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  
+  .user-info ion-text p {
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .logout-button {
+    --border-radius: 8px;
+    --background: transparent;
+    --color: #fff;
+    font-weight: 600;
+    text-transform: none;
+    font-size: 14px;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 576px) {
+    .welcome-card {
+      margin-top: 10px;
+    }
+    
+    .welcome-card-header h2 {
+      font-size: 20px;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .home-container {
+      padding: 30px;
+    }
+  }
