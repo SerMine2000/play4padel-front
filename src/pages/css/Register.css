@@ -36,16 +36,16 @@
   --border-radius: 8px;
   --background: transparent;
   --padding-start: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 25px; /* Aumentado de 16px a 25px para más espacio entre elementos */
   --border-color: #ddd;
   --highlight-color-focused: #3880ff;
-  --min-height: 65px; /* Aumentar altura mínima del ítem */
+  --min-height: 75px; /* Aumentado de 65px a 75px para más altura */
 }
 
 .register-form ion-input {
   --padding-start: 8px;
   --placeholder-color: #d35858;
-  --padding-top: 24px; /* Aumentar padding superior para alejar el texto de la etiqueta */
+  --padding-top: 30px; /* Aumentado de 24px a 30px */
   --padding-bottom: 8px; /* Padding inferior para equilibrar */
   font-size: 16px;
 }
@@ -55,6 +55,10 @@
   font-size: 16px;
   margin-bottom: 16px; /* Añadir margen inferior a las etiquetas */
   --color: #666; /* Color más suave para mejor contraste */
+}
+
+.register-form ion-select {
+  margin-top: 30px;
 }
 
 .register-button {
@@ -96,7 +100,7 @@
   font-size: 13px;
   color: #999;
   margin-top: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 30px; /* Aumentado de 20px a 30px */
   padding-left: 12px;
 }
 
