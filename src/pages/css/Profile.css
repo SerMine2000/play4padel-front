@@ -33,18 +33,34 @@
 
 .profile-form ion-item {
   --padding-start: 0;
-  margin-bottom: 15px;
+  --min-height: 50px; /* Reducido de 65px a 50px */
 }
 
 .profile-form ion-label {
   font-weight: 500;
   color: #555;
+  margin-bottom: 5px; /* Reducido de 12px a 5px */
+}
+
+.profile-form ion-input, 
+.profile-form ion-textarea {
+  --padding-top: 25px; /* Aumentado de 14px a 25px para dar más espacio entre título y valor */
+  --padding-bottom: 8px;
+}
+
+/* Añadido para dar más espacio entre título y valor */
+.profile-form ion-item ion-label + ion-input {
+  margin-top: 5px;
+}
+
+.profile-form ion-select {
+  margin-top: 20px;
 }
 
 .form-buttons {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+  margin-top: 15px; /* Aumentado de 10px a 20px */
 }
 
 .avatar-upload {
