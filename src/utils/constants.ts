@@ -1,4 +1,4 @@
-// src/utils/constants.ts
+// src/utils/constants.ts (versión actualizada)
 export const API_URL = 'http://localhost:5000';
 
 export const API_ENDPOINTS = {
@@ -6,6 +6,7 @@ export const API_ENDPOINTS = {
   REGISTER: '/create-user',
   LOGOUT: '/logout',
   USER: '/user',
+  UPDATE_PASSWORD: '/update-password',
 };
 
 export const STORAGE_KEYS = {

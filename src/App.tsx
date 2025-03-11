@@ -1,10 +1,10 @@
-// src/App.tsx
 import { Redirect, Route, RouteComponentProps } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Profile from './pages/Profile';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 /* Core CSS required for Ionic components to work properly */
@@ -74,6 +74,7 @@ const AppContent: React.FC = () => {
           
           {/* Rutas protegidas */}
           <PrivateRoute path="/home" component={Home} exact />
+          <PrivateRoute path="/profile" component={Profile} exact /> {/* Nueva ruta para el perfil */}
           
           {/* Redirección por defecto */}
           <Route exact path="/">

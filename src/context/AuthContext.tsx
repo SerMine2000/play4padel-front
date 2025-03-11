@@ -1,7 +1,8 @@
-// src/context/AuthContext.tsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { AuthContextType, LoginRequest, RegisterRequest, User } from '../interfaces';
 import authService from '../services/auth.service';
+import apiService from '../services/api.service';
+import { API_ENDPOINTS } from '../utils/constants';
 
 // Crear el contexto con un valor inicial
 const AuthContext = createContext<AuthContextType>({
@@ -12,6 +13,7 @@ const AuthContext = createContext<AuthContextType>({
   login: async () => {},
   register: async () => {},
   logout: () => {},
+  refreshUser: async () => {},
 });
 
 // Hook personalizado para usar el contexto
@@ -103,6 +105,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // Función para refrescar los datos del usuario
+  const refreshUser = async () => {
+    try {
+      if (!isAuthenticated) return;
+      
+      const userId = authService.getUserId();
+      if (!userId) return;
+      
+      setIsLoading(true);
+      setError(null);
+      
+      // Obtener los datos actualizados del usuario
+      const userData = await authService.getCurrentUser(userId);
+      setUser(userData);
+      
+    } catch (error: any) {
+      console.error('Error al refrescar datos del usuario:', error);
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // Función para cerrar sesión
   const logout = async () => {
     try {
@@ -132,6 +157,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     login,
     register,
     logout,
+    refreshUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

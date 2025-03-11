@@ -1,4 +1,3 @@
-// src/pages/Home.tsx
 import { 
   IonContent, 
   IonHeader, 
@@ -16,9 +15,11 @@ import {
   IonItem, 
   IonLabel, 
   IonText,
-  IonIcon
+  IonIcon,
+  IonButtons,
+  IonMenuButton
 } from '@ionic/react';
-import { logOutOutline, personCircleOutline } from 'ionicons/icons';
+import { logOutOutline, personCircleOutline, settingsOutline } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
 import { useHistory, RouteComponentProps } from 'react-router';
 import './css/Home.css';
@@ -33,15 +34,24 @@ const Home: React.FC<RouteComponentProps> = (props) => {
     history.push('/login');
   };
 
+  const goToProfile = () => {
+    history.push('/profile');
+  };
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar className="home-toolbar">
           <IonTitle>Play4Padel - Inicio</IonTitle>
-          <IonButton slot="end" onClick={handleLogout} className="logout-button">
-            <IonIcon slot="start" icon={logOutOutline}></IonIcon>
-            Cerrar Sesión
-          </IonButton>
+          <IonButtons slot="end">
+            <IonButton onClick={goToProfile}>
+              <IonIcon slot="icon-only" icon={personCircleOutline}></IonIcon>
+            </IonButton>
+            <IonButton onClick={handleLogout} className="logout-button">
+              <IonIcon slot="start" icon={logOutOutline}></IonIcon>
+              Cerrar Sesión
+            </IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent className="home-container">
@@ -55,7 +65,7 @@ const Home: React.FC<RouteComponentProps> = (props) => {
                 <IonCardContent className="welcome-card-content">
                   {user && (
                     <div className="user-info">
-                      <IonItem lines="none">
+                      <IonItem lines="none" button onClick={goToProfile}>
                         <IonIcon icon={personCircleOutline} slot="start" size="large" color="primary"></IonIcon>
                         <IonLabel>
                           <h2>Hola, {user.nombre} {user.apellidos}</h2>
@@ -74,6 +84,11 @@ const Home: React.FC<RouteComponentProps> = (props) => {
                         <li>Participar en torneos</li>
                         <li>Gestionar tu perfil y preferencias</li>
                       </ul>
+                      
+                      <IonButton expand="block" onClick={goToProfile}>
+                        <IonIcon slot="start" icon={settingsOutline}></IonIcon>
+                        Gestionar Mi Perfil
+                      </IonButton>
                     </div>
                   )}
                 </IonCardContent>
