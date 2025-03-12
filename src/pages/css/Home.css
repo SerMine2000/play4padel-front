@@ -1,71 +1,163 @@
 /* src/pages/css/Home.css */
 
 .home-container {
-    --background: url('/img/fondoHome.jpg') no-repeat center center / cover;
-  }
-  
-  .home-toolbar {
-    --background: #3880ff;
-    --color: white;
-  }
-  
+  --background: url('/img/fondoHome.jpg') no-repeat center center / cover;
+  background-color: #121212;
+}
+
+.home-toolbar {
+  --background: #3880ff;
+  --color: white;
+}
+
+.welcome-card {
+  margin: 0 auto;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  margin-top: 20px;
+  background-color: #1c1c1c;
+}
+
+.welcome-card-header {
+  background-color: #3880ff;
+  color: white;
+  padding: 20px;
+}
+
+.welcome-card-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.welcome-card-content {
+  padding: 20px;
+  background-color: #1c1c1c;
+  color: white;
+}
+
+/* Este es el menú de opciones que sigue apareciendo en blanco */
+ion-list {
+  background-color: #1c1c1c !important;
+  --ion-item-background: #1c1c1c !important;
+}
+
+ion-item {
+  --background: #1c1c1c !important;
+  --color: white !important;
+  --border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+ion-label {
+  color: white !important;
+}
+
+/* Asegurarse de que todos los elementos dentro de la lista tengan fondo oscuro */
+.club-section ion-item,
+.club-header ion-item,
+.user-info ion-item {
+  --background: #1c1c1c !important;
+  --color: white !important;
+}
+
+.user-info ion-label h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: white;
+}
+
+.user-info ion-text p {
+  font-size: 14px;
+  color: #cccccc;
+}
+
+.logout-button {
+  --border-radius: 8px;
+  --background: transparent;
+  --color: #fff;
+  font-weight: 600;
+  text-transform: none;
+  font-size: 14px;
+}
+
+/* Estilos para la vista de club */
+.club-header {
+  margin-bottom: 16px;
+}
+
+.club-header h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: white;
+}
+
+.club-stats {
+  margin: 20px 0;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #2c2c2c;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  color: white;
+}
+
+.stat-card ion-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.stat-card h3 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 8px 0;
+  color: white;
+}
+
+.stat-card p {
+  color: #cccccc;
+  margin: 0;
+}
+
+.section-title {
+  margin: 24px 0 8px;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+}
+
+.club-action-button {
+  margin-top: 24px;
+}
+
+.no-club-data {
+  text-align: center;
+  padding: 20px;
+  color: #cccccc;
+}
+
+.no-club-data p {
+  margin-bottom: 20px;
+  color: #cccccc;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
   .welcome-card {
-    margin: 0 auto;
-    border-radius: 16px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-    overflow: hidden;
-    margin-top: 20px;
-  }
-  
-  .welcome-card-header {
-    background-color: #3880ff;
-    color: white;
-    padding: 20px;
+    margin-top: 10px;
   }
   
   .welcome-card-header h2 {
-    margin: 0;
-    font-size: 24px;
-    font-weight: 600;
+    font-size: 20px;
   }
-  
-  .welcome-card-content {
-    padding: 20px;
+}
+
+@media (min-width: 768px) {
+  .home-container {
+    padding: 30px;
   }
-  
-  .user-info ion-label h2 {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-  
-  .user-info ion-text p {
-    font-size: 14px;
-    color: #666;
-  }
-  
-  .logout-button {
-    --border-radius: 8px;
-    --background: transparent;
-    --color: #fff;
-    font-weight: 600;
-    text-transform: none;
-    font-size: 14px;
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 576px) {
-    .welcome-card {
-      margin-top: 10px;
-    }
-    
-    .welcome-card-header h2 {
-      font-size: 20px;
-    }
-  }
-  
-  @media (min-width: 768px) {
-    .home-container {
-      padding: 30px;
-    }
-  }
+}

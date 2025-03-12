@@ -25,6 +25,8 @@ class AuthService {
     try {
       // Si es registro como club, usamos un flujo diferente
       if (userData.tipo_cuenta === 'club') {
+        console.log("Registrando como club:", userData);
+        
         // Registrar al usuario administrador primero
         const userResponse = await apiService.post(API_ENDPOINTS.REGISTER, {
           nombre: userData.nombre,
@@ -35,9 +37,11 @@ class AuthService {
           telefono: userData.telefono
         });
         
+        console.log("Respuesta de creación de usuario:", userResponse);
+        
         // Luego registrar el club asociado al usuario
         if (userData.club_data && userResponse?.user_id) {
-          await apiService.post(API_ENDPOINTS.CLUBS, {
+          const clubData = {
             nombre: userData.club_data.nombre,
             direccion: userData.club_data.direccion,
             horario_apertura: userData.club_data.horario_apertura,
@@ -46,13 +50,25 @@ class AuthService {
             telefono: userData.club_data.telefono || userData.telefono || '',
             email: userData.club_data.email || userData.email,
             id_administrador: userResponse.user_id
+          };
+          
+          console.log("Creando club con datos:", clubData);
+          
+          const clubResponse = await apiService.post(API_ENDPOINTS.CLUBS, clubData);
+          console.log("Respuesta de creación de club:", clubResponse);
+        } else {
+          console.error("Falta información del club o ID de usuario:", { 
+            clubData: userData.club_data, 
+            userId: userResponse?.user_id 
           });
+          throw new Error('No se pudo crear el club: faltan datos necesarios');
         }
       } else {
         // Registro normal de usuario
         await apiService.post(API_ENDPOINTS.REGISTER, userData);
       }
     } catch (error: any) {
+      console.error("Error completo en register:", error);
       if (error.message) {
         throw new Error(error.message);
       }

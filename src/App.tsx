@@ -1,5 +1,5 @@
 // src/App.tsx
-import { Redirect, Route, RouteComponentProps } from 'react-router-dom';
+import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
 import Reservas from './pages/Reservas';
+import ManageCourts from './pages/ManageCourts';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 /* Core CSS required for Ionic components to work properly */
@@ -25,16 +26,72 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
-/* Dark Mode */
-import '@ionic/react/css/palettes/dark.system.css';
-
 /* Theme variables */
 import './theme/variables.css';
 
 setupIonicReact();
 
-const AppContent: React.FC = () => {
+// Componente envoltorio para rutas autenticadas
+const PrivateRoute: React.FC<{
+  component: React.ComponentType<any>;
+  path: string;
+  exact?: boolean;
+}> = ({ component: Component, ...rest }) => {
   const { isAuthenticated, isLoading } = useAuth();
+  
+  return (
+    <Route
+      {...rest}
+      render={(props) => {
+        if (isLoading) {
+          return <div>Cargando...</div>;
+        }
+        
+        return isAuthenticated ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to="/login" />
+        );
+      }}
+    />
+  );
+};
+
+// Componente para rutas que requieren rol específico
+const RoleRoute: React.FC<{
+  component: React.ComponentType<any>;
+  path: string;
+  roles: number[];
+  exact?: boolean;
+}> = ({ component: Component, roles, ...rest }) => {
+  const { user, isAuthenticated, isLoading } = useAuth();
+  
+  return (
+    <Route
+      {...rest}
+      render={(props) => {
+        if (isLoading) {
+          return <div>Cargando...</div>;
+        }
+        
+        if (!isAuthenticated) {
+          return <Redirect to="/login" />;
+        }
+        
+        // Verificar si el usuario tiene uno de los roles permitidos
+        if (user && roles.includes(user.id_rol)) {
+          return <Component {...props} />;
+        }
+        
+        // Redirigir al home si no tiene el rol adecuado
+        return <Redirect to="/home" />;
+      }}
+    />
+  );
+};
+
+const AppContent: React.FC = () => {
+  const { isAuthenticated } = useAuth();
 
   return (
     <IonApp>
@@ -49,36 +106,18 @@ const AppContent: React.FC = () => {
             {isAuthenticated ? <Redirect to="/home" /> : <Register />}
           </Route>
           
-          {/* Rutas protegidas */}
-          <Route path="/home" exact>
-            {isLoading ? (
-              <div>Cargando...</div>
-            ) : isAuthenticated ? (
-              <Home />
-            ) : (
-              <Redirect to="/login" />
-            )}
-          </Route>
+          {/* Rutas privadas - para todos los usuarios autenticados */}
+          <PrivateRoute path="/home" exact component={Home} />
+          <PrivateRoute path="/profile" exact component={Profile} />
+          <PrivateRoute path="/reservas" exact component={Reservas} />
           
-          <Route path="/profile" exact>
-            {isLoading ? (
-              <div>Cargando...</div>
-            ) : isAuthenticated ? (
-              <Profile />
-            ) : (
-              <Redirect to="/login" />
-            )}
-          </Route>
-          
-          <Route path="/reservas" exact>
-            {isLoading ? (
-              <div>Cargando...</div>
-            ) : isAuthenticated ? (
-              <Reservas />
-            ) : (
-              <Redirect to="/login" />
-            )}
-          </Route>
+          {/* Rutas que requieren rol específico - solo administradores (id_rol = 1) */}
+          <RoleRoute 
+            path="/manage-courts" 
+            exact 
+            component={ManageCourts} 
+            roles={[1]} 
+          />
           
           {/* Redirección por defecto */}
           <Route exact path="/">

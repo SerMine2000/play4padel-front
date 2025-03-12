@@ -40,7 +40,8 @@ import {
   checkmarkCircleOutline, 
   createOutline, 
   trashOutline, 
-  tennisballOutline
+  tennisballOutline,
+  refreshOutline
 } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
 import { useHistory } from 'react-router';
@@ -115,6 +116,7 @@ const Reservas: React.FC = () => {
   const [cargandoPistas, setCargandoPistas] = useState<boolean>(false);
   const [cargandoDisponibilidad, setCargandoDisponibilidad] = useState<boolean>(false);
   const [cargandoReservas, setCargandoReservas] = useState<boolean>(false);
+  const [cargandoClubes, setCargandoClubes] = useState<boolean>(false);
   const [showToast, setShowToast] = useState<boolean>(false);
   const [mensajeToast, setMensajeToast] = useState<string>('');
   const [colorToast, setColorToast] = useState<string>('success');
@@ -136,20 +138,37 @@ const Reservas: React.FC = () => {
     return hora.substr(0, 5);
   };
 
-  // Cargar clubes al iniciar
+  // Función para cargar clubes (movida fuera del useEffect)
+  const cargarClubes = async () => {
+    try {
+      setCargandoClubes(true);
+      const data = await apiService.get('/clubs');
+      setClubes(data);
+    } catch (error) {
+      console.error('Error al cargar clubes:', error);
+      mostrarToast('Error al cargar los clubes', 'danger');
+    } finally {
+      setCargandoClubes(false);
+    }
+  };
+
+  // Cargar clubes al iniciar y cuando cambie el usuario
   useEffect(() => {
-    const cargarClubes = async () => {
-      try {
-        const data = await apiService.get('/clubs');
-        setClubes(data);
-      } catch (error) {
-        console.error('Error al cargar clubes:', error);
-        mostrarToast('Error al cargar los clubes', 'danger');
+    cargarClubes();
+    
+    // Listener para recargar cuando se vuelva a la página
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        cargarClubes();
       }
     };
     
-    cargarClubes();
-  }, []);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [user]);
 
   // Cargar pistas cuando se selecciona un club
   useEffect(() => {
@@ -395,6 +414,9 @@ const Reservas: React.FC = () => {
                           </IonSelectOption>
                         ))}
                       </IonSelect>
+                      <IonButton slot="end" fill="clear" onClick={() => cargarClubes()} disabled={cargandoClubes}>
+                        <IonIcon icon={refreshOutline} />
+                      </IonButton>
                     </IonItem>
                     
                     <IonItem>
@@ -576,7 +598,7 @@ const Reservas: React.FC = () => {
         />
         
         <IonLoading
-          isOpen={cargandoPistas || cargandoDisponibilidad || cargandoReservas}
+          isOpen={cargandoPistas || cargandoDisponibilidad || cargandoReservas || cargandoClubes}
           message={'Cargando...'}
           spinner="circles"
         />
