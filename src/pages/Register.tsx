@@ -69,25 +69,13 @@ const Register: React.FC = () => {
   const { register } = useAuth();
   const history = useHistory();
 
-  // Llamada a inicializar la base de datos (opcional)
-  useEffect(() => {
-    const initDatabase = async () => {
-      try {
-        await fetch(`${API_URL}/initialize-database`);
-        console.log("Base de datos inicializada correctamente");
-      } catch (error) {
-        console.error("Error al inicializar la base de datos:", error);
-      }
-    };
-    
-    initDatabase();
-  }, []);
-
+  // Se eliminó el useEffect que llamaba a initialize-database
+  
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Validación básica para todos
-    if (!nombre || !apellidos || !email || !password || !confirmPassword) {
+    if (!nombre || !email || !password || !confirmPassword) {
       setFormError('Por favor, completa todos los campos obligatorios');
       return;
     }
@@ -112,12 +100,13 @@ const Register: React.FC = () => {
       // Preparar datos de registro según el tipo
       const registroData: RegisterRequest = {
         nombre,
-        apellidos,
+        // Si es club, usar "Club" como apellido por defecto
+        apellidos: tipoUsuario === TIPOS_CUENTA.CLUB ? "Club" : apellidos,
         email,
         password,
         id_rol: tipoUsuario === TIPOS_CUENTA.CLUB ? 1 : 4, // 1 para ADMIN (club), 4 para USUARIO
-        telefono,
-        tipo_cuenta: tipoUsuario
+        telefono
+        // NO incluir tipo_cuenta aquí
       };
       
       // Añadir datos del club si corresponde
@@ -133,8 +122,12 @@ const Register: React.FC = () => {
         };
       }
       
-      // Llamar a la función register del contexto
-      await register(registroData);
+      // Llamar a la función register del contexto con el objeto correcto
+      if (tipoUsuario === TIPOS_CUENTA.CLUB) {
+        await register({ ...registroData, tipo_cuenta: tipoUsuario });
+      } else {
+        await register(registroData);
+      }
       
       // Mostrar toast de éxito
       setShowToast(true);
@@ -213,7 +206,7 @@ const Register: React.FC = () => {
                     <IonItem lines="full">
                       <IonIcon icon={personOutline} slot="start" color="medium"></IonIcon>
                       <IonLabel position="floating">
-                        {tipoUsuario === TIPOS_CUENTA.CLUB ? 'Nombre del Administrador *' : 'Nombre *'}
+                        {tipoUsuario === TIPOS_CUENTA.CLUB ? 'Nombre de usuario de club *' : 'Nombre *'}
                       </IonLabel>
                       <IonInput 
                         value={nombre} 
@@ -222,22 +215,23 @@ const Register: React.FC = () => {
                       />
                     </IonItem>
                     
-                    <IonItem lines="full">
-                      <IonIcon icon={personOutline} slot="start" color="medium"></IonIcon>
-                      <IonLabel position="floating">
-                        {tipoUsuario === TIPOS_CUENTA.CLUB ? 'Apellidos del Administrador *' : 'Apellidos *'}
-                      </IonLabel>
-                      <IonInput 
-                        value={apellidos} 
-                        onIonChange={e => setApellidos(e.detail.value!)} 
-                        required
-                      />
-                    </IonItem>
+                    {/* Solo mostrar campo de apellidos para usuarios normales */}
+                    {tipoUsuario !== TIPOS_CUENTA.CLUB && (
+                      <IonItem lines="full">
+                        <IonIcon icon={personOutline} slot="start" color="medium"></IonIcon>
+                        <IonLabel position="floating">Apellidos *</IonLabel>
+                        <IonInput 
+                          value={apellidos} 
+                          onIonChange={e => setApellidos(e.detail.value!)} 
+                          required
+                        />
+                      </IonItem>
+                    )}
                     
                     <IonItem lines="full">
                       <IonIcon icon={mailOutline} slot="start" color="medium"></IonIcon>
                       <IonLabel position="floating">
-                        {tipoUsuario === TIPOS_CUENTA.CLUB ? 'Email del Administrador *' : 'Email *'}
+                        {tipoUsuario === TIPOS_CUENTA.CLUB ? 'Correo del club *' : 'Email *'}
                       </IonLabel>
                       <IonInput 
                         type="email" 

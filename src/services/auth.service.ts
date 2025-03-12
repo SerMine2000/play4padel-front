@@ -27,28 +27,24 @@ class AuthService {
       if (userData.tipo_cuenta === 'club') {
         console.log("Registrando como club:", userData);
         
+        // Eliminar tipo_cuenta antes de enviar al backend
+        const { tipo_cuenta, club_data, ...userDataToSend } = userData;
+        
         // Registrar al usuario administrador primero
-        const userResponse = await apiService.post(API_ENDPOINTS.REGISTER, {
-          nombre: userData.nombre,
-          apellidos: userData.apellidos,
-          email: userData.email,
-          password: userData.password,
-          id_rol: 1, // ID para ADMIN
-          telefono: userData.telefono
-        });
+        const userResponse = await apiService.post(API_ENDPOINTS.REGISTER, userDataToSend);
         
         console.log("Respuesta de creación de usuario:", userResponse);
         
         // Luego registrar el club asociado al usuario
-        if (userData.club_data && userResponse?.user_id) {
+        if (club_data && userResponse?.user_id) {
           const clubData = {
-            nombre: userData.club_data.nombre,
-            direccion: userData.club_data.direccion,
-            horario_apertura: userData.club_data.horario_apertura,
-            horario_cierre: userData.club_data.horario_cierre,
-            descripcion: userData.club_data.descripcion || '',
-            telefono: userData.club_data.telefono || userData.telefono || '',
-            email: userData.club_data.email || userData.email,
+            nombre: club_data.nombre,
+            direccion: club_data.direccion,
+            horario_apertura: club_data.horario_apertura,
+            horario_cierre: club_data.horario_cierre,
+            descripcion: club_data.descripcion || '',
+            telefono: club_data.telefono || userData.telefono || '',
+            email: club_data.email || userData.email,
             id_administrador: userResponse.user_id
           };
           
@@ -58,14 +54,16 @@ class AuthService {
           console.log("Respuesta de creación de club:", clubResponse);
         } else {
           console.error("Falta información del club o ID de usuario:", { 
-            clubData: userData.club_data, 
+            clubData: club_data, 
             userId: userResponse?.user_id 
           });
           throw new Error('No se pudo crear el club: faltan datos necesarios');
         }
       } else {
         // Registro normal de usuario
-        await apiService.post(API_ENDPOINTS.REGISTER, userData);
+        // Eliminar tipo_cuenta si existe
+        const { tipo_cuenta, ...dataToSend } = userData;
+        await apiService.post(API_ENDPOINTS.REGISTER, dataToSend);
       }
     } catch (error: any) {
       console.error("Error completo en register:", error);
