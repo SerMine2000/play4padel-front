@@ -23,9 +23,10 @@ import {
   IonText,
   IonGrid,
   IonRow,
-  IonCol
+  IonCol,
+  IonAlert
 } from '@ionic/react';
-import { personCircleOutline, saveOutline, refreshOutline, mailOutline, callOutline, keyOutline } from 'ionicons/icons';
+import { personCircleOutline, saveOutline, refreshOutline, mailOutline, callOutline, keyOutline, imageOutline } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
 import { useHistory } from 'react-router-dom';
 import apiService from '../services/api.service';
@@ -47,6 +48,10 @@ const Profile: React.FC = () => {
     newPassword: '',
     confirmPassword: '',
   });
+
+  // Nuevo estado para la URL de avatar temporal
+  const [tempAvatarUrl, setTempAvatarUrl] = useState('');
+  const [showAvatarAlert, setShowAvatarAlert] = useState(false);
   
   const [isEditing, setIsEditing] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
@@ -69,6 +74,9 @@ const Profile: React.FC = () => {
         newPassword: '',
         confirmPassword: '',
       });
+      
+      // También establecer la URL temporal de avatar
+      setTempAvatarUrl(user.avatar_url || '');
     }
   }, [user]);
   
@@ -105,10 +113,27 @@ const Profile: React.FC = () => {
         newPassword: '',
         confirmPassword: '',
       });
+      
+      // Restaurar URL temporal de avatar
+      setTempAvatarUrl(user.avatar_url || '');
     }
     setIsEditing(false);
     setIsChangingPassword(false);
     setErrorMessage('');
+  };
+
+  // Función para manejar la actualización del avatar
+  const handleAvatarUpdate = () => {
+    setShowAvatarAlert(true);
+  };
+
+  // Función para aplicar URL de avatar temporal
+  const applyAvatarUrl = () => {
+    setFormData(prevState => ({
+      ...prevState,
+      avatar_url: tempAvatarUrl
+    }));
+    setShowAvatarAlert(false);
   };
   
   const handleUpdateProfile = async () => {
@@ -198,6 +223,15 @@ const Profile: React.FC = () => {
       setIsLoading(false);
     }
   };
+
+  // Función para validar URL de imagen
+  const validateImageUrl = (url: string) => {
+    // URL vacía es permitida
+    if (!url) return true;
+    
+    // Validación básica: debe iniciar con http:// o https://
+    return url.startsWith('http://') || url.startsWith('https://');
+  };
   
   return (
     <IonPage>
@@ -215,13 +249,18 @@ const Profile: React.FC = () => {
         ) : user ? (
           <>
             <div className="profile-header">
-              <IonAvatar className="profile-avatar">
-                {user.avatar_url ? (
-                  <img src={user.avatar_url} alt={user.nombre} />
+              <IonAvatar className="profile-avatar" onClick={isEditing ? handleAvatarUpdate : undefined}>
+                {tempAvatarUrl ? (
+                  <img src={tempAvatarUrl} alt={user.nombre} />
                 ) : (
                   <IonIcon icon={personCircleOutline} size="large" />
                 )}
               </IonAvatar>
+              {isEditing && (
+                <IonText color="light" className="edit-avatar-text">
+                  <p><small>Toca para cambiar avatar</small></p>
+                </IonText>
+              )}
               <h2 className="profile-name">{user.nombre} {user.apellidos}</h2>
               <p>{user.email}</p>
             </div>
@@ -403,6 +442,53 @@ const Profile: React.FC = () => {
                 </IonText>
               </div>
             )}
+
+            {/* Alerta para cambiar avatar */}
+            <IonAlert
+              isOpen={showAvatarAlert}
+              onDidDismiss={() => setShowAvatarAlert(false)}
+              header="Cambiar avatar"
+              subHeader="Introduce la URL de la imagen"
+              inputs={[
+                {
+                  name: 'avatar_url',
+                  type: 'url',
+                  placeholder: 'https://ejemplo.com/imagen.jpg',
+                  value: tempAvatarUrl
+                }
+              ]}
+              buttons={[
+                {
+                  text: 'Cancelar',
+                  role: 'cancel'
+                },
+                {
+                  text: 'Ver previa',
+                  handler: (data) => {
+                    if (validateImageUrl(data.avatar_url)) {
+                      setTempAvatarUrl(data.avatar_url);
+                      return false; // Mantener el diálogo abierto
+                    } else {
+                      setErrorMessage('URL de imagen no válida. Debe comenzar con http:// o https://');
+                      return false;
+                    }
+                  }
+                },
+                {
+                  text: 'Guardar',
+                  handler: (data) => {
+                    if (validateImageUrl(data.avatar_url)) {
+                      setTempAvatarUrl(data.avatar_url);
+                      applyAvatarUrl();
+                      return true;
+                    } else {
+                      setErrorMessage('URL de imagen no válida. Debe comenzar con http:// o https://');
+                      return false;
+                    }
+                  }
+                }
+              ]}
+            />
           </>
         ) : (
           <div className="ion-padding ion-text-center">

@@ -142,7 +142,9 @@ const Reservas: React.FC = () => {
   const cargarClubes = async () => {
     try {
       setCargandoClubes(true);
+      console.log('Cargando clubes...');
       const data = await apiService.get('/clubs');
+      console.log('Clubes cargados:', data);
       setClubes(data);
     } catch (error) {
       console.error('Error al cargar clubes:', error);
@@ -177,13 +179,24 @@ const Reservas: React.FC = () => {
     const cargarPistas = async () => {
       try {
         setCargandoPistas(true);
-        // Asumiendo que hay un endpoint para obtener pistas por club
-        // Si no existe, habría que crearlo en el backend
+        console.log(`Cargando pistas para el club ID: ${clubSeleccionado}`);
+        
+        // URL correcta para obtener las pistas del club seleccionado
         const data = await apiService.get(`/clubs/${clubSeleccionado}/pistas`);
-        setPistas(data);
+        
+        if (Array.isArray(data) && data.length > 0) {
+          console.log(`Pistas cargadas: ${data.length}`, data);
+          setPistas(data);
+        } else {
+          console.log('No se encontraron pistas para este club');
+          setPistas([]);
+          // Mostrar un mensaje al usuario
+          mostrarToast('Este club no tiene pistas disponibles', 'warning');
+        }
       } catch (error) {
         console.error('Error al cargar pistas:', error);
         mostrarToast('Error al cargar las pistas', 'danger');
+        setPistas([]);
       } finally {
         setCargandoPistas(false);
       }
@@ -428,9 +441,9 @@ const Reservas: React.FC = () => {
                         disabled={!clubSeleccionado || cargandoPistas}
                       >
                         {pistas.map(pista => (
-                            <IonSelectOption key={pista.id} value={pista.id}>
-                                Pista {pista.numero} - {pista.tipo} - {pista.precio_hora}€/hora
-                            </IonSelectOption>
+                          <IonSelectOption key={pista.id} value={pista.id}>
+                            Pista {pista.numero} - {pista.tipo} - {pista.precio_hora}€/hora
+                          </IonSelectOption>
                         ))}
                       </IonSelect>
                     </IonItem>

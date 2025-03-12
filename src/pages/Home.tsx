@@ -57,12 +57,18 @@ const Home: React.FC = () => {
     try {
       setIsLoadingClub(true);
       
-      // 1. Obtener información del club
+      // 1. Obtener información del club filtrando por el administrador actual
+      console.log(`Buscando club con id_administrador: ${user.id}`);
       const clubsResponse = await apiService.get(`/clubs?id_administrador=${user.id}`);
       
-      if (clubsResponse && clubsResponse.length > 0) {
-        const club = clubsResponse[0];
+      console.log('Clubes encontrados:', clubsResponse);
+      
+      if (clubsResponse && Array.isArray(clubsResponse) && clubsResponse.length > 0) {
+        // Usar el club asociado a este administrador (no simplemente el primero)
+        const club = clubsResponse.find(c => c.id_administrador === user.id) || clubsResponse[0];
         setClubData(club);
+        
+        console.log('Club cargado:', club);
         
         // 2. Obtener el número de pistas del club
         const pistasResponse = await apiService.get(`/clubs/${club.id}/pistas`);
@@ -76,6 +82,9 @@ const Home: React.FC = () => {
         if (Array.isArray(reservasResponse)) {
           setReservasHoy(reservasResponse.length);
         }
+      } else {
+        console.log('No se encontraron clubes para este administrador');
+        setClubData(null);
       }
     } catch (error) {
       console.error('Error al cargar datos del club:', error);
