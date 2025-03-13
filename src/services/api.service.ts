@@ -12,6 +12,7 @@ class ApiService {
     }
     
     try {
+      console.log(`Realizando petición GET a: ${API_URL}${endpoint}`);
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'GET',
         headers
@@ -19,11 +20,16 @@ class ApiService {
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: 'Error desconocido' }));
+        console.error('Error en respuesta API:', errorData, 'Status:', response.status);
         throw new Error(errorData.error || `Error: ${response.status}`);
       }
       
-      return await response.json();
+      const data = await response.json();
+      console.log(`Respuesta API para ${endpoint}:`, 
+        data.length > 20 ? `[Array con ${data.length} elementos]` : data);
+      return data;
     } catch (error: any) {
+      console.error(`Error completo en API GET ${endpoint}:`, error);
       if (error.message) {
         throw new Error(error.message);
       }
@@ -41,6 +47,7 @@ class ApiService {
     }
     
     try {
+      console.log(`Realizando petición POST a: ${API_URL}${endpoint}`, data);
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers,
@@ -49,11 +56,15 @@ class ApiService {
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: 'Error desconocido' }));
+        console.error('Error en respuesta API POST:', errorData);
         throw new Error(errorData.error || `Error: ${response.status}`);
       }
       
-      return await response.json();
+      const responseData = await response.json();
+      console.log(`Respuesta POST para ${endpoint}:`, responseData);
+      return responseData;
     } catch (error: any) {
+      console.error(`Error completo en API POST ${endpoint}:`, error);
       if (error.message) {
         throw new Error(error.message);
       }
@@ -71,6 +82,7 @@ class ApiService {
     }
     
     try {
+      console.log(`Realizando petición PUT a: ${API_URL}${endpoint}`, data);
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'PUT',
         headers,
@@ -79,11 +91,15 @@ class ApiService {
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: 'Error desconocido' }));
+        console.error('Error en respuesta API PUT:', errorData);
         throw new Error(errorData.error || `Error: ${response.status}`);
       }
       
-      return await response.json();
+      const responseData = await response.json();
+      console.log(`Respuesta PUT para ${endpoint}:`, responseData);
+      return responseData;
     } catch (error: any) {
+      console.error(`Error completo en API PUT ${endpoint}:`, error);
       if (error.message) {
         throw new Error(error.message);
       }
@@ -101,6 +117,7 @@ class ApiService {
     }
     
     try {
+      console.log(`Realizando petición DELETE a: ${API_URL}${endpoint}`);
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'DELETE',
         headers
@@ -108,11 +125,15 @@ class ApiService {
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: 'Error desconocido' }));
+        console.error('Error en respuesta API DELETE:', errorData);
         throw new Error(errorData.error || `Error: ${response.status}`);
       }
       
-      return await response.json();
+      const responseData = await response.json();
+      console.log(`Respuesta DELETE para ${endpoint}:`, responseData);
+      return responseData;
     } catch (error: any) {
+      console.error(`Error completo en API DELETE ${endpoint}:`, error);
       if (error.message) {
         throw new Error(error.message);
       }

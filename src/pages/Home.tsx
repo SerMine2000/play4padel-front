@@ -1,4 +1,4 @@
-// src/pages/Home.tsx - Componente unificado con vistas condicionales
+// src/pages/Home.tsx
 import React, { useState, useEffect } from 'react';
 import { 
   IonContent, 
@@ -118,6 +118,11 @@ const Home: React.FC = () => {
     history.push('/manage-courts');
   };
 
+  // Añadimos la función para ir a la vista de calendario
+  const goToCalendar = () => {
+    history.push('/calendar');
+  };
+
   // Vista para administradores de club
   const renderClubAdminView = () => {
     return (
@@ -168,7 +173,7 @@ const Home: React.FC = () => {
                           <IonLabel>Gestionar Pistas</IonLabel>
                           <IonText slot="end" color="medium">{pistaCount}</IonText>
                         </IonItem>
-                        <IonItem button detail>
+                        <IonItem button onClick={goToCalendar} detail>
                           <IonIcon icon={calendarOutline} slot="start" color="secondary"></IonIcon>
                           <IonLabel>Reservas y Calendario</IonLabel>
                         </IonItem>

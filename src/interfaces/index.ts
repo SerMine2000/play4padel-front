@@ -6,6 +6,7 @@ export interface User {
   email: string;
   telefono?: string;
   id_rol: number;
+  id_club?: number;
   avatar_url?: string;
   bio?: string;
   activo: boolean;

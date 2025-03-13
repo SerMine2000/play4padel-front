@@ -8,6 +8,7 @@ import Register from './pages/Register';
 import Profile from './pages/Profile';
 import Reservas from './pages/Reservas';
 import ManageCourts from './pages/ManageCourts';
+import CalendarView from './pages/CalendarView';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { useEffect } from 'react';
 
@@ -142,6 +143,7 @@ const AppContent: React.FC = () => {
           <PrivateRoute path="/home" exact component={Home} />
           <PrivateRoute path="/profile" exact component={Profile} />
           <PrivateRoute path="/reservas" exact component={Reservas} />
+          <PrivateRoute path="/calendar" exact component={CalendarView} />
           
           {/* Rutas que requieren rol específico - solo administradores (id_rol = 1) */}
           <RoleRoute 
