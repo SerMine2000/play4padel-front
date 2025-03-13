@@ -182,56 +182,143 @@ const CalendarView: React.FC = () => {
 
   // Cargar reservas de un día específico
   const cargarReservasDia = async (fecha: Date) => {
-  if (!user || !user.id_club) return;
-  
-  try {
-    setCargando(true);
+    console.log('===== CARGANDO RESERVAS DEL DÍA =====');
+    console.log('Fecha recibida:', fecha);
     
-    const fechaFormateada = formatearFecha(fecha);
-    console.log(`Cargando reservas para el día ${fechaFormateada}`);
+    if (!user) {
+      console.log('Error: No hay usuario definido');
+      return;
+    }
     
-    // Obtener reservas del día seleccionado
-    const response = await apiService.get(`/reservas?id_club=${user.id_club}`);
+    // Obtener el ID del club manualmente si no está en el objeto user
+    let idClub = user.id_club;
     
-    if (Array.isArray(response)) {
-      console.log('Todas las reservas:', response);
+    if (!idClub) {
+      console.log('No se encontró id_club en el objeto user, intentando obtenerlo manualmente');
+      try {
+        // Buscar los clubes asociados al administrador
+        const clubsResponse = await apiService.get(`/clubs?id_administrador=${user.id}`);
+        console.log('Respuesta de búsqueda de clubes:', clubsResponse);
+        
+        if (Array.isArray(clubsResponse) && clubsResponse.length > 0) {
+          idClub = clubsResponse[0].id;
+          console.log(`ID del club obtenido manualmente: ${idClub}`);
+        } else {
+          console.log('No se encontraron clubes para este administrador');
+          mostrarMensaje('No se encontró un club asignado a tu cuenta', 'warning');
+          return;
+        }
+      } catch (error) {
+        console.error('Error al buscar clubes del administrador:', error);
+        mostrarMensaje('Error al obtener información del club', 'danger');
+        return;
+      }
+    }
+    
+    try {
+      setCargando(true);
       
-      // Filtrar las reservas para la fecha seleccionada
-      const reservasDelDiaSeleccionado = response.filter(reserva => reserva.fecha === fechaFormateada);
-      console.log('Reservas del día seleccionado:', reservasDelDiaSeleccionado);
+      // Formatear la fecha manteniendo la zona horaria local
+      const year = fecha.getFullYear();
+      const month = String(fecha.getMonth() + 1).padStart(2, '0');
+      const day = String(fecha.getDate()).padStart(2, '0');
+      const fechaFormateada = `${year}-${month}-${day}`;
       
-      // Enriquecer datos con información del usuario
-      const reservasDetalladas: ReservaDetalle[] = await Promise.all(
-        reservasDelDiaSeleccionado.map(async (reserva) => {
-          let nombreUsuario = "Usuario";
-          let pistaNumero;
-          let pistaTipo;
+      console.log(`Fecha original: ${fecha}`);
+      console.log(`Fecha formateada para API: ${fechaFormateada}`);
+      
+      // URL para obtener las reservas
+      const url = `/reservas?id_club=${idClub}&fecha=${fechaFormateada}`;
+      console.log(`URL de la solicitud: ${url}`);
+      
+      // Realizar la solicitud a la API
+      console.log('Enviando solicitud a la API...');
+      const response = await apiService.get(url);
+      console.log('Respuesta recibida de la API:', response);
+      
+      // Verificar si la respuesta es un array
+      if (!Array.isArray(response)) {
+        console.log('Error: La respuesta no es un array');
+        setReservasDelDia([]);
+        setCargando(false);
+        return;
+      }
+      
+      console.log(`Se encontraron ${response.length} reservas para el día ${fechaFormateada}`);
+      
+      // Depuración de fechas
+      if (response.length > 0) {
+        console.log('===== COMPARACIÓN DE FECHAS =====');
+        console.log('Fecha solicitada (formateada):', fechaFormateada);
+        response.forEach((reserva, index) => {
+          console.log(`Reserva ${index + 1} - Fecha: ${reserva.fecha}, Tipo: ${typeof reserva.fecha}`);
+          console.log(`Comparación directa: ${reserva.fecha === fechaFormateada}`);
+        });
+      }
+      
+      // Si no hay reservas, actualizar el estado y salir
+      if (response.length === 0) {
+        console.log('No hay reservas para esta fecha');
+        setReservasDelDia([]);
+        setCargando(false);
+        return;
+      }
+      
+      // Procesar cada reserva para añadir detalles
+      console.log('Procesando reservas para añadir detalles...');
+      
+      const reservasPromesas = response.map(async (reserva, index) => {
+        console.log(`Procesando reserva ${index + 1}:`, reserva);
+        
+        // Inicializar valores por defecto
+        let nombreUsuario = "Usuario";
+        let pistaNumero = null;
+        let pistaTipo = null;
+        
+        try {
+          // Obtener datos del usuario
+          console.log(`Obteniendo datos del usuario ID: ${reserva.id_usuario}`);
+          const usuarioResponse = await apiService.get(`/user/${reserva.id_usuario}`);
           
-          try {
-            // Obtener datos del usuario
-            const usuarioResponse = await apiService.get(`/user/${reserva.id_usuario}`);
-            if (usuarioResponse) {
-              nombreUsuario = `${usuarioResponse.nombre} ${usuarioResponse.apellidos}`;
-            }
-            
-            // Obtener datos de la pista
-            const pistaResponse = await apiService.get(`/pistas/${reserva.id_pista}`);
-            if (pistaResponse) {
-              pistaNumero = pistaResponse.numero;
-              pistaTipo = pistaResponse.tipo;
-            }
-          } catch (e) {
-            console.error('Error al obtener detalles adicionales:', e);
+          if (usuarioResponse && usuarioResponse.nombre) {
+            nombreUsuario = `${usuarioResponse.nombre} ${usuarioResponse.apellidos || ''}`;
+            console.log(`Nombre de usuario obtenido: ${nombreUsuario}`);
+          } else {
+            console.log('No se pudo obtener el nombre del usuario');
           }
           
-          return {
-            ...reserva,
-            nombre_usuario: nombreUsuario,
-            pista_numero: pistaNumero,
-            pista_tipo: pistaTipo
-          };
-        })
-      );
+          // Obtener datos de la pista
+          console.log(`Obteniendo datos de la pista ID: ${reserva.id_pista}`);
+          const pistaResponse = await apiService.get(`/pistas/${reserva.id_pista}`);
+          
+          if (pistaResponse && pistaResponse.numero) {
+            pistaNumero = pistaResponse.numero;
+            pistaTipo = pistaResponse.tipo;
+            console.log(`Datos de pista obtenidos: Pista ${pistaNumero} - ${pistaTipo}`);
+          } else {
+            console.log('No se pudo obtener información de la pista');
+          }
+        } catch (error) {
+          console.error(`Error al obtener detalles para la reserva ${index + 1}:`, error);
+        }
+        
+        // Crear objeto con detalles completos
+        const reservaDetallada = {
+          ...reserva,
+          nombre_usuario: nombreUsuario,
+          pista_numero: pistaNumero,
+          pista_tipo: pistaTipo
+        };
+        
+        console.log(`Reserva ${index + 1} procesada:`, reservaDetallada);
+        return reservaDetallada;
+      });
+      
+      // Esperar a que todas las promesas se resuelvan
+      console.log('Esperando a que se completen todas las promesas...');
+      const reservasDetalladas = await Promise.all(reservasPromesas);
+      
+      console.log('Todas las reservas procesadas:', reservasDetalladas);
       
       // Ordenar por hora de inicio
       reservasDetalladas.sort((a, b) => {
@@ -240,22 +327,32 @@ const CalendarView: React.FC = () => {
         return 0;
       });
       
-      console.log('Reservas detalladas:', reservasDetalladas);
+      console.log('Reservas ordenadas por hora:', reservasDetalladas);
+      
+      // Actualizar el estado con las reservas procesadas
+      console.log('Actualizando estado con setReservasDelDia...');
       setReservasDelDia(reservasDetalladas);
-    } else {
+      console.log('Estado actualizado correctamente');
+      
+    } catch (error) {
+      console.error('Error al cargar reservas del día:', error);
+      mostrarMensaje('Error al cargar reservas del día', 'danger');
       setReservasDelDia([]);
+    } finally {
+      setCargando(false);
     }
-  } catch (error) {
-    console.error('Error al cargar reservas del día:', error);
-    mostrarMensaje('Error al cargar reservas del día', 'danger');
-  } finally {
-    setCargando(false);
-  }
-};
+  };
 
   // Manejar clic en día del calendario
   const handleClickDia = (dia: DiaCalendario) => {
+    console.log('===== SELECCIONANDO DÍA =====');
+    console.log('Día seleccionado:', dia);
+    
+    // Establecer el día seleccionado primero
     setDiaSeleccionado(dia.fecha);
+    
+    // Luego cargar las reservas para ese día
+    console.log('Llamando a cargarReservasDia con fecha:', dia.fecha);
     cargarReservasDia(dia.fecha);
   };
 
@@ -333,9 +430,11 @@ const CalendarView: React.FC = () => {
 
   // Formatear fecha a YYYY-MM-DD
   const formatearFecha = (fecha: Date): string => {
+    if (!fecha) return '';
+    
     const year = fecha.getFullYear();
-    const month = (fecha.getMonth() + 1).toString().padStart(2, '0');
-    const day = fecha.getDate().toString().padStart(2, '0');
+    const month = String(fecha.getMonth() + 1).padStart(2, '0');
+    const day = String(fecha.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   };
 
@@ -423,31 +522,40 @@ const CalendarView: React.FC = () => {
     );
   };
 
-  // Renderizar lista de reservas del día
-  const renderListaReservas = () => {
-    if (!diaSeleccionado) {
-      return (
-        <div className="sin-dia-seleccionado">
-          <IonText color="medium">
-            <p>Selecciona un día para ver sus reservas</p>
-          </IonText>
-        </div>
-      );
-    }
-    
-    if (reservasDelDia.length === 0) {
-      return (
-        <div className="sin-reservas">
-          <IonText color="medium">
-            <p>No hay reservas para el {formatearFechaMostrar(diaSeleccionado)}</p>
-          </IonText>
-        </div>
-      );
-    }
-    
+// Renderizar lista de reservas del día
+const renderListaReservas = () => {
+  console.log('Renderizando lista de reservas. Día seleccionado:', diaSeleccionado);
+  console.log('Reservas disponibles:', reservasDelDia);
+  
+  if (!diaSeleccionado) {
+    console.log('No hay día seleccionado');
     return (
-      <IonList className="lista-reservas">
-        {reservasDelDia.map((reserva) => (
+      <div className="sin-dia-seleccionado">
+        <IonText color="medium">
+          <p>Selecciona un día para ver sus reservas</p>
+        </IonText>
+      </div>
+    );
+  }
+  
+  if (reservasDelDia.length === 0) {
+    console.log('No hay reservas para este día');
+    return (
+      <div className="sin-reservas">
+        <IonText color="medium">
+          <p>No hay reservas para el {formatearFechaMostrar(diaSeleccionado)}</p>
+        </IonText>
+      </div>
+    );
+  }
+  
+  console.log(`Renderizando ${reservasDelDia.length} reservas`);
+  
+  return (
+    <IonList className="lista-reservas">
+      {reservasDelDia.map((reserva) => {
+        console.log('Renderizando reserva:', reserva);
+        return (
           <IonItem 
             key={reserva.id} 
             button 
@@ -469,10 +577,11 @@ const CalendarView: React.FC = () => {
               {reserva.estado}
             </IonChip>
           </IonItem>
-        ))}
-      </IonList>
-    );
-  };
+        );
+      })}
+    </IonList>
+  );
+};
 
   return (
     <IonPage>
