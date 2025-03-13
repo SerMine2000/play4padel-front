@@ -1,151 +1,223 @@
 /* src/pages/css/Reservas.css */
+/* Estilos actualizados para la página de reservas */
 
-.reservas-container {
-    --background: #f8f8f8;
+.reservas-page {
+  --background: #363738;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.reserva-form-container {
+  padding: 20px 0;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.reserva-form {
+  background-color: #0c0c0c;
+  border-radius: 5px;
+  overflow: hidden;
+  padding: 0;
+}
+
+.form-group {
+  padding: 15px;
+  border-bottom: 1px solid #333;
+}
+
+.form-group:last-child {
+  border-bottom: none;
+}
+
+.form-group label {
+  display: block;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.reserva-select {
+  width: 100%;
+  background-color: #1c1c1c;
+  color: white;
+  border-radius: 4px;
+  --placeholder-color: #999;
+}
+
+.fecha-selector {
+  background-color: #1c1c1c;
+  border-radius: 4px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.fecha-placeholder, .fecha-seleccionada {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+}
+
+.fecha-placeholder span {
+  color: #999;
+}
+
+.fecha-selector ion-icon {
+  color: #0066cc;
+  font-size: 20px;
+}
+
+.horarios-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.horario-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #1c1c1c;
+  color: white;
+  border-radius: 20px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.horario-chip.selected {
+  background-color: #0066cc;
+}
+
+.horario-chip ion-icon {
+  color: #0066cc;
+  font-size: 16px;
+}
+
+.horario-chip.selected ion-icon {
+  color: white;
+}
+
+/* Estilos para el resumen de reserva */
+.resumen-card {
+  margin: 15px;
+  border-radius: 8px;
+  background-color: #1c1c1c;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.resumen-card ion-card-header {
+  background-color: #0066cc;
+}
+
+.resumen-card ion-card-title {
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.resumen-card ion-card-content {
+  color: white;
+  padding: 15px;
+}
+
+.resumen-card ion-row {
+  margin-bottom: 8px;
+}
+
+.resumen-card ion-icon {
+  font-size: 20px;
+  margin-top: 2px;
+}
+
+/* Estilos para el precio total */
+.precio-total-container {
+  padding: 15px;
+  margin: 0 15px 15px;
+  background-color: rgba(0, 102, 204, 0.1);
+  border-radius: 8px;
+}
+
+.precio-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.precio-total label {
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+}
+
+.precio-valor {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0066cc;
+}
+
+.notas-textarea {
+  width: 100%;
+  background-color: #1c1c1c;
+  border-radius: 4px;
+  --placeholder-color: #999;
+  --color: white;
+}
+
+.reservar-button {
+  margin: 20px 15px;
+  --background: #0066cc;
+  --background-activated: #0055aa;
+  --border-radius: 4px;
+  --box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+  height: 50px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Ajustes para el datetime popover */
+.date-popover {
+  --width: 300px;
+  --offset-y: 0px !important;
+}
+
+ion-popover.date-popover {
+  --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+ion-datetime {
+  --background: #1c1c1c;
+  --color: white;
+  --background-rgb: 28, 28, 28;
+}
+
+/* Media queries para responsividad */
+@media (max-width: 576px) {
+  .form-group {
+    padding: 12px;
   }
   
-  .reserva-card, .mis-reservas-card {
-    margin: 16px;
-    border-radius: 16px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  .horario-chip {
+    font-size: 12px;
+    padding: 6px 10px;
   }
   
-  .reserva-card ion-card-header, .mis-reservas-card ion-card-header {
-    background-color: #3880ff;
-    color: white;
-    padding: 16px;
-  }
-  
-  .reserva-card ion-card-title, .mis-reservas-card ion-card-title {
+  .precio-valor {
     font-size: 22px;
-    font-weight: 600;
-  }
-  
-  .reserva-card ion-card-content, .mis-reservas-card ion-card-content {
-    padding: 16px;
-  }
-  
-  .franjas-disponibles {
-    margin-top: 20px;
-  }
-  
-  .franjas-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 10px;
-    margin-bottom: 20px;
-  }
-  
-  .franja-horaria {
-    --border-radius: 8px;
-    font-size: 14px;
-  }
-  
-  .hora-seleccionada {
-    margin-top: 16px;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
   }
   
   .reservar-button {
-    margin-top: 20px;
-    --border-radius: 8px;
-    --background: #3880ff;
-    font-weight: 600;
-    height: 48px;
+    height: 46px;
+    font-size: 14px;
   }
   
-  .loading-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100px;
+  .resumen-card ion-card-title {
+    font-size: 16px;
   }
-  
-  .sin-reservas {
-    padding: 30px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-  }
-  
-  .sin-reservas ion-icon {
-    font-size: 48px;
-    color: #3880ff;
-  }
-  
-  .sin-reservas p {
-    font-size: 18px;
-    color: #666;
-    margin: 10px 0;
-  }
-  
-  .reserva-item {
-    --padding-start: 16px;
-    --padding-end: 16px;
-    --padding-top: 12px;
-    --padding-bottom: 12px;
-  }
-  
-  .reserva-info {
-    width: 100%;
-  }
-  
-  .reserva-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  .reserva-header h2 {
-    font-size: 18px;
-    font-weight: 600;
-    margin: 0;
-  }
-  
-  .reserva-detalles {
-    margin: 10px 0;
-  }
-  
-  .reserva-detalles p {
-    margin: 8px 0;
-    color: #666;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  
-  .reserva-detalles ion-icon {
-    color: #3880ff;
-  }
-  
-  .reserva-acciones {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 10px;
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 576px) {
-    .reserva-card, .mis-reservas-card {
-      margin: 10px;
-    }
-    
-    .reserva-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 10px;
-    }
-  }
-  
-  @media (min-width: 768px) {
-    .reservas-container {
-      padding: 20px;
-    }
-  }
+}
