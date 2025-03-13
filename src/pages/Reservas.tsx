@@ -574,7 +574,7 @@ const ReservarPista: React.FC = () => {
               >
                 {pistas.map(pista => (
                   <IonSelectOption key={pista.id} value={pista.id}>
-                    Pista {pista.numero} - {pista.tipo} - {pista.precio_hora}€/h
+                    Pista {pista.numero} - {pista.tipo} - {pista.precio_hora}€/90min
                   </IonSelectOption>
                 ))}
               </IonSelect>
