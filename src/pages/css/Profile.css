@@ -1,5 +1,31 @@
 .profile-container {
-  --background: #f5f5f5;
+  --background: #111111;
+  color: white;
+}
+
+/* Para asegurar que los títulos de secciones sean blancos */
+.profile-container h2, 
+.profile-container h3, 
+.profile-container h4,
+.profile-container ion-card-title,
+.profile-container ion-title {
+  color: white !important;
+}
+
+/* Para el contenedor principal de información */
+ion-card, 
+.profile-card {
+  background-color: #1c1c1c;
+  color: white;
+}
+
+/* Para títulos de cards */
+ion-card-header {
+  color: white;
+}
+
+ion-card-title {
+  color: white !important;
 }
 
 .profile-header {

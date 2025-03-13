@@ -26,6 +26,7 @@
 
 .register-card-content {
   padding: 20px;
+  background-color: #1c1c1c;
 }
 
 .register-form {
@@ -34,31 +35,39 @@
 
 .register-form ion-item {
   --border-radius: 8px;
-  --background: transparent;
+  --background: #1c1c1c;
   --padding-start: 12px;
-  margin-bottom: 25px; /* Aumentado de 16px a 25px para más espacio entre elementos */
-  --border-color: #ddd;
+  margin-bottom: 25px;
+  --border-color: rgba(255, 255, 255, 0.1);
   --highlight-color-focused: #3880ff;
-  --min-height: 75px; /* Aumentado de 65px a 75px para más altura */
+  --min-height: 75px;
 }
 
 .register-form ion-input {
   --padding-start: 8px;
-  --placeholder-color: #d35858;
-  --padding-top: 30px; /* Aumentado de 24px a 30px */
-  --padding-bottom: 8px; /* Padding inferior para equilibrar */
+  --placeholder-color: #999;
+  --padding-top: 30px;
+  --padding-bottom: 8px;
   font-size: 16px;
+  --color: white;
 }
 
 .register-form ion-label {
   font-weight: 500;
   font-size: 16px;
-  margin-bottom: 16px; /* Añadir margen inferior a las etiquetas */
-  --color: #666; /* Color más suave para mejor contraste */
+  margin-bottom: 16px;
+  --color: #dddddd;
 }
 
 .register-form ion-select {
   margin-top: 30px;
+  --color: white;
+  --placeholder-color: #999;
+}
+
+.register-form ion-textarea {
+  --color: white;
+  --placeholder-color: #999;
 }
 
 .register-button {
@@ -78,7 +87,7 @@
 }
 
 .register-footer p {
-  color: #666;
+  color: #dddddd;
   font-size: 15px;
 }
 
@@ -98,9 +107,9 @@
 /* Información de campos requeridos */
 .required-info {
   font-size: 13px;
-  color: #999;
+  color: #dddddd;
   margin-top: 8px;
-  margin-bottom: 30px; /* Aumentado de 20px a 30px */
+  margin-bottom: 30px;
   padding-left: 12px;
 }
 
@@ -108,7 +117,7 @@
 .club-section {
   margin-top: 20px;
   padding-top: 10px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid #444;
 }
 
 .section-title {
@@ -126,7 +135,6 @@
   margin: 20px 0;
 }
 
-
 .register-card {
   margin: 0 auto;
   border-radius: 16px;
@@ -136,7 +144,6 @@
   max-width: 650px;
   width: 90%; 
 }
-
 
 /* Responsive adjustments */
 @media (max-width: 576px) {

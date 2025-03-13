@@ -225,7 +225,8 @@ const Home: React.FC = () => {
               <IonCardContent className="welcome-card-content">
                 {user && (
                   <div className="user-info">
-                    <IonItem lines="none" button onClick={goToProfile}>
+                    {/* Se elimina el button y onClick aquí */}
+                    <IonItem lines="none">
                       <IonIcon icon={personCircleOutline} slot="start" size="large" color="primary"></IonIcon>
                       <IonLabel>
                         <h2>Hola, {user.nombre} {user.apellidos}</h2>

@@ -1,6 +1,6 @@
 // src/App.tsx
 import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
+import { IonApp, IonRouterOutlet, setupIonicReact, useIonRouter } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -9,6 +9,7 @@ import Profile from './pages/Profile';
 import Reservas from './pages/Reservas';
 import ManageCourts from './pages/ManageCourts';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { useEffect } from 'react';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -90,12 +91,43 @@ const RoleRoute: React.FC<{
   );
 };
 
+// Componente para manejar la limpieza de foco en cambios de ruta
+const FocusManager: React.FC = () => {
+  const ionRouter = useIonRouter();
+
+  useEffect(() => {
+    const handleRouteChange = () => {
+      // Pequeño delay para asegurar que el cambio de página haya ocurrido
+      setTimeout(() => {
+        if (document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur();
+        }
+      }, 100);
+    };
+
+    // Limpiar el foco en el montaje inicial
+    handleRouteChange();
+
+    // Suscribirse a cambios de ruta
+    document.addEventListener('ionRouterOutletActivated', handleRouteChange);
+    
+    return () => {
+      document.removeEventListener('ionRouterOutletActivated', handleRouteChange);
+    };
+  }, [ionRouter]);
+
+  return null;
+};
+
 const AppContent: React.FC = () => {
   const { isAuthenticated } = useAuth();
 
   return (
     <IonApp>
       <IonReactRouter>
+        {/* Componente para manejar el foco */}
+        <FocusManager />
+        
         <IonRouterOutlet>
           {/* Rutas públicas */}
           <Route path="/login" exact>
