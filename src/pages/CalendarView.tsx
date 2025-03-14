@@ -81,7 +81,7 @@ const CalendarView: React.FC = () => {
 
   // Cargar datos iniciales
   useEffect(() => {
-    if (user && user.id_rol === 1) {
+    if (user) {
       generarDiasCalendario(fechaActual);
       cargarReservasMes(fechaActual);
     }
@@ -89,16 +89,19 @@ const CalendarView: React.FC = () => {
 
   // Efecto para actualizar días con reservas
   useEffect(() => {
-    const nuevosDias = diasCalendario.map(dia => {
-      const fechaStr = formatearFecha(dia.fecha);
-      return {
-        ...dia,
-        tieneReservas: !!fechasConReservas[fechaStr],
-        numReservas: fechasConReservas[fechaStr] || 0
-      };
-    });
-    
-    setDiasCalendario(nuevosDias);
+    // Solo actualizar si hay dias en el calendario
+    if (diasCalendario.length > 0) {
+      const nuevosDias = diasCalendario.map(dia => {
+        const fechaStr = formatearFecha(dia.fecha);
+        return {
+          ...dia,
+          tieneReservas: !!fechasConReservas[fechaStr],
+          numReservas: fechasConReservas[fechaStr] || 0
+        };
+      });
+      
+      setDiasCalendario(nuevosDias);
+    }
   }, [fechasConReservas]);
 
   // Generar días para el calendario
@@ -118,6 +121,8 @@ const CalendarView: React.FC = () => {
       const fechaDia = new Date(primerDiaMostrado);
       fechaDia.setDate(primerDiaMostrado.getDate() + i);
       
+      // Aquí inicializamos todos los días a false para tieneReservas y 0 para numReservas
+      // Serán actualizados después cuando se carguen los datos reales
       diasArray.push({
         fecha: fechaDia,
         diaMes: fechaDia.getDate(),
@@ -521,7 +526,6 @@ const CalendarView: React.FC = () => {
       </>
     );
   };
-
 // Renderizar lista de reservas del día
 const renderListaReservas = () => {
   console.log('Renderizando lista de reservas. Día seleccionado:', diaSeleccionado);
