@@ -63,9 +63,20 @@ ion-segment-button {
 .grid-calendario {
   padding: 0;
   margin-bottom: 20px;
-  width: 95%; /* Reducir ligeramente para dar más espacio a los lados */
+  width: 95%;
   margin-left: auto;
   margin-right: auto;
+}
+
+ion-grid.grid-calendario {
+  width: 90% !important;
+  max-width: 1200px !important;
+}
+
+/* Asegurar que cada celda de día tenga espacio suficiente */
+.dia {
+  width: calc(100% / 7); /* Cada día ocupa 1/7 del ancho total */
+  min-width: 40px; /* Asegurar un ancho mínimo para los días */
 }
 
 .dias-semana {
@@ -115,7 +126,7 @@ ion-segment-button {
 
 .numero-dia {
   font-size: 1rem;
-  color: white; /* Para asegurar que los números sean blancos */
+  color: white;
 }
 
 .indicador-reservas {
@@ -324,4 +335,13 @@ ion-button.refresh-button {
 .lista-reservas ion-item ion-icon[slot="start"],
 .lista-reservas-mes ion-item ion-icon[slot="start"] {
   color: #28a745 !important;
+}
+
+
+.cargando-lista {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: white !important;
 }

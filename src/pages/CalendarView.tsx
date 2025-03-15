@@ -119,7 +119,6 @@ const CalendarView: React.FC = () => {
   useEffect(() => {
     if (vistaActual === 'lista' && user && reservasDelMes.length === 0) {
       // Forzar la carga de los datos para la vista de lista
-      console.log("Cambiando a vista de lista - forzando carga de datos");
       cargarReservasMes(fechaActual, true);
     }
     
@@ -177,7 +176,6 @@ const CalendarView: React.FC = () => {
 
   // Handler para pull-to-refresh
   const handleRefresh = (event: CustomEvent) => {
-    console.log('Pull-to-refresh activado');
     setTimeout(() => {
       actualizarReservas();
       event.detail.complete();
@@ -186,10 +184,7 @@ const CalendarView: React.FC = () => {
 
   // Cargar reservas del mes actual
   const cargarReservasMes = async (fecha: Date, forceReload: boolean = false) => {
-    if (!user) {
-      console.log("No hay usuario autenticado");
-      return;
-    }
+    if (!user) return;
     
     // Obtener ID del club
     let idClub = user.id_club;
@@ -227,14 +222,10 @@ const CalendarView: React.FC = () => {
       const fechaInicio = formatearFecha(primerDiaMes);
       const fechaFin = formatearFecha(ultimoDiaMes);
       
-      console.log(`Cargando reservas del mes desde ${fechaInicio} hasta ${fechaFin} para el club ${idClub}`);
-      
       // Obtener todas las reservas del club
       const response = await apiService.get(`/reservas?id_club=${idClub}`);
       
       if (Array.isArray(response)) {
-        console.log(`Se obtuvieron ${response.length} reservas totales`);
-        
         // Contar reservas por fecha (para el calendario)
         const reservasPorFecha: {[key: string]: number} = {};
         
@@ -269,14 +260,10 @@ const CalendarView: React.FC = () => {
           }
         });
         
-        console.log('Fechas con reservas:', reservasPorFecha);
-        console.log('Grupos de reservas por día:', Object.keys(reservasPorDia));
-        
         setFechasConReservas(reservasPorFecha);
         
         // Si no hay reservas para el mes, simplemente establecer array vacío
         if (Object.keys(reservasPorDia).length === 0) {
-          console.log('No hay reservas para este mes');
           setReservasDelMes([]);
           return;
         }
@@ -361,7 +348,6 @@ const CalendarView: React.FC = () => {
         
         // Procesar y establecer las reservas por día
         const reservasPorDiaArray = await procesarReservasPorDia();
-        console.log(`Procesadas ${reservasPorDiaArray.length} fechas con reservas`);
         
         if (reservasPorDiaArray.length > 0) {
           setReservasDelMes(reservasPorDiaArray);
@@ -369,7 +355,6 @@ const CalendarView: React.FC = () => {
           setMensajeError('No se pudieron procesar las reservas del mes');
         }
       } else {
-        console.log('La respuesta no es un array', response);
         setReservasDelMes([]);
         setMensajeError('La respuesta del servidor no tiene el formato esperado');
       }
@@ -386,29 +371,19 @@ const CalendarView: React.FC = () => {
 
   // Cargar reservas de un día específico
   const cargarReservasDia = async (fecha: Date) => {
-    console.log('===== CARGANDO RESERVAS DEL DÍA =====');
-    console.log('Fecha recibida:', fecha);
-    
-    if (!user) {
-      console.log('Error: No hay usuario definido');
-      return;
-    }
+    if (!user) return;
     
     // Obtener el ID del club manualmente si no está en el objeto user
     let idClub = user.id_club;
     
     if (!idClub) {
-      console.log('No se encontró id_club en el objeto user, intentando obtenerlo manualmente');
       try {
         // Buscar los clubes asociados al administrador
         const clubsResponse = await apiService.get(`/clubs?id_administrador=${user.id}`);
-        console.log('Respuesta de búsqueda de clubes:', clubsResponse);
         
         if (Array.isArray(clubsResponse) && clubsResponse.length > 0) {
           idClub = clubsResponse[0].id;
-          console.log(`ID del club obtenido manualmente: ${idClub}`);
         } else {
-          console.log('No se encontraron clubes para este administrador');
           mostrarMensaje('No se encontró un club asignado a tu cuenta', 'warning');
           return;
         }
@@ -428,42 +403,28 @@ const CalendarView: React.FC = () => {
       const day = String(fecha.getDate()).padStart(2, '0');
       const fechaFormateada = `${year}-${month}-${day}`;
       
-      console.log(`Fecha original: ${fecha}`);
-      console.log(`Fecha formateada para API: ${fechaFormateada}`);
-      
       // URL para obtener las reservas
       const url = `/reservas?id_club=${idClub}&fecha=${fechaFormateada}`;
-      console.log(`URL de la solicitud: ${url}`);
       
       // Realizar la solicitud a la API
-      console.log('Enviando solicitud a la API...');
       const response = await apiService.get(url);
-      console.log('Respuesta recibida de la API:', response);
       
       // Verificar si la respuesta es un array
       if (!Array.isArray(response)) {
-        console.log('Error: La respuesta no es un array');
         setReservasDelDia([]);
         setCargando(false);
         return;
       }
       
-      console.log(`Se encontraron ${response.length} reservas para el día ${fechaFormateada}`);
-      
       // Si no hay reservas, actualizar el estado y salir
       if (response.length === 0) {
-        console.log('No hay reservas para esta fecha');
         setReservasDelDia([]);
         setCargando(false);
         return;
       }
       
       // Procesar cada reserva para añadir detalles
-      console.log('Procesando reservas para añadir detalles...');
-      
-      const reservasPromesas = response.map(async (reserva, index) => {
-        console.log(`Procesando reserva ${index + 1}:`, reserva);
-        
+      const reservasPromesas = response.map(async (reserva) => {
         // Inicializar valores por defecto
         let nombreUsuario = "Usuario";
         let pistaNumero = null;
@@ -471,48 +432,34 @@ const CalendarView: React.FC = () => {
         
         try {
           // Obtener datos del usuario
-          console.log(`Obteniendo datos del usuario ID: ${reserva.id_usuario}`);
           const usuarioResponse = await apiService.get(`/user/${reserva.id_usuario}`);
           
           if (usuarioResponse && usuarioResponse.nombre) {
             nombreUsuario = `${usuarioResponse.nombre} ${usuarioResponse.apellidos || ''}`;
-            console.log(`Nombre de usuario obtenido: ${nombreUsuario}`);
-          } else {
-            console.log('No se pudo obtener el nombre del usuario');
           }
           
           // Obtener datos de la pista
-          console.log(`Obteniendo datos de la pista ID: ${reserva.id_pista}`);
           const pistaResponse = await apiService.get(`/pistas/${reserva.id_pista}`);
           
           if (pistaResponse && pistaResponse.numero) {
             pistaNumero = pistaResponse.numero;
             pistaTipo = pistaResponse.tipo;
-            console.log(`Datos de pista obtenidos: Pista ${pistaNumero} - ${pistaTipo}`);
-          } else {
-            console.log('No se pudo obtener información de la pista');
           }
         } catch (error) {
-          console.error(`Error al obtener detalles para la reserva ${index + 1}:`, error);
+          console.error(`Error al obtener detalles para la reserva:`, error);
         }
         
         // Crear objeto con detalles completos
-        const reservaDetallada = {
+        return {
           ...reserva,
           nombre_usuario: nombreUsuario,
           pista_numero: pistaNumero,
           pista_tipo: pistaTipo
         };
-        
-        console.log(`Reserva ${index + 1} procesada:`, reservaDetallada);
-        return reservaDetallada;
       });
       
       // Esperar a que todas las promesas se resuelvan
-      console.log('Esperando a que se completen todas las promesas...');
       const reservasDetalladas = await Promise.all(reservasPromesas);
-      
-      console.log('Todas las reservas procesadas:', reservasDetalladas);
       
       // Ordenar por hora de inicio
       reservasDetalladas.sort((a, b) => {
@@ -521,12 +468,8 @@ const CalendarView: React.FC = () => {
         return 0;
       });
       
-      console.log('Reservas ordenadas por hora:', reservasDetalladas);
-      
       // Actualizar el estado con las reservas procesadas
-      console.log('Actualizando estado con setReservasDelDia...');
       setReservasDelDia(reservasDetalladas);
-      console.log('Estado actualizado correctamente');
       
     } catch (error) {
       console.error('Error al cargar reservas del día:', error);
@@ -539,14 +482,10 @@ const CalendarView: React.FC = () => {
 
   // Manejar clic en día del calendario
   const handleClickDia = (dia: DiaCalendario) => {
-    console.log('===== SELECCIONANDO DÍA =====');
-    console.log('Día seleccionado:', dia);
-    
     // Establecer el día seleccionado primero
     setDiaSeleccionado(dia.fecha);
     
     // Luego cargar las reservas para ese día
-    console.log('Llamando a cargarReservasDia con fecha:', dia.fecha);
     cargarReservasDia(dia.fecha);
   };
 
@@ -605,10 +544,8 @@ const CalendarView: React.FC = () => {
     try {
       setCargando(true);
       
-      // Llamada a la API para cancelar reserva
-      await apiService.put(`/reservas/${reservaId}/cancelar`, {
-        motivo: "Cancelada por el administrador del club"
-      });
+      // Llamada al endpoint de eliminación
+      await apiService.delete(`/eliminar-reserva/${reservaId}`);
       
       mostrarMensaje('Reserva cancelada correctamente', 'success');
       
@@ -732,11 +669,7 @@ const CalendarView: React.FC = () => {
 
   // Renderizar lista de reservas del día
   const renderListaReservas = () => {
-    console.log('Renderizando lista de reservas. Día seleccionado:', diaSeleccionado);
-    console.log('Reservas disponibles:', reservasDelDia);
-    
     if (!diaSeleccionado) {
-      console.log('No hay día seleccionado');
       return (
         <div className="sin-dia-seleccionado">
           <IonText color="medium">
@@ -747,7 +680,6 @@ const CalendarView: React.FC = () => {
     }
     
     if (reservasDelDia.length === 0) {
-      console.log('No hay reservas para este día');
       return (
         <div className="sin-reservas">
           <IonText color="medium">
@@ -757,48 +689,41 @@ const CalendarView: React.FC = () => {
       );
     }
     
-    console.log(`Renderizando ${reservasDelDia.length} reservas`);
-    
     return (
       <IonList className="lista-reservas">
-        {reservasDelDia.map((reserva) => {
-          console.log('Renderizando reserva:', reserva);
-          return (
-            <IonItem 
-              key={reserva.id} 
-              button 
-              detail 
-              onClick={() => handleClickReserva(reserva)}
-              className={`reserva-item estado-${reserva.estado.toLowerCase()}`}
-            >
-              <IonIcon slot="start" icon={tennisballOutline} />
-              <IonLabel>
-                <h2>{reserva.nombre_usuario}</h2>
-                <p>
-                  <IonIcon icon={timeOutline} /> {formatearHora(reserva.hora_inicio)} - {formatearHora(reserva.hora_fin)}
-                </p>
-                <p>
-                  <IonIcon icon={cashOutline} /> {reserva.precio_total.toFixed(2)}€
-                </p>
-              </IonLabel>
-              <IonChip slot="end" color={getColorEstadoReserva(reserva.estado)}>
-                {reserva.estado}
-              </IonChip>
-            </IonItem>
-          );
-        })}
+        {reservasDelDia.map((reserva) => (
+          <IonItem 
+            key={reserva.id} 
+            button 
+            detail 
+            onClick={() => handleClickReserva(reserva)}
+            className={`reserva-item estado-${reserva.estado.toLowerCase()}`}
+          >
+            <IonIcon slot="start" icon={tennisballOutline} />
+            <IonLabel>
+              <h2>{reserva.nombre_usuario}</h2>
+              <p>
+                <IonIcon icon={timeOutline} /> {formatearHora(reserva.hora_inicio)} - {formatearHora(reserva.hora_fin)}
+              </p>
+              <p>
+                <IonIcon icon={cashOutline} /> {reserva.precio_total.toFixed(2)}€
+              </p>
+            </IonLabel>
+            <IonChip slot="end" color={getColorEstadoReserva(reserva.estado)}>
+              {reserva.estado}
+            </IonChip>
+          </IonItem>
+        ))}
       </IonList>
     );
   };
 
   // Renderizar lista de todas las reservas del mes
   const renderListaReservasMes = () => {
-    console.log('Renderizando lista de reservas del mes. Total grupos:', reservasDelMes.length);
-    
     if (cargandoLista) {
       return (
         <div className="cargando-lista">
-          <IonSpinner name="circles" />
+          <IonSpinner name="circles" color="light"/>
           <p>Cargando reservas...</p>
         </div>
       );
