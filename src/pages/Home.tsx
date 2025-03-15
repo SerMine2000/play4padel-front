@@ -123,6 +123,11 @@ const Home: React.FC = () => {
     history.push('/calendar');
   };
 
+  // Función para ir a la página de gestión de usuarios
+  const goToManageUsers = () => {
+    history.push('/manage-users');
+  };
+
   // Vista para administradores de club
   const renderClubAdminView = () => {
     return (
@@ -177,7 +182,7 @@ const Home: React.FC = () => {
                           <IonIcon icon={calendarOutline} slot="start" color="secondary"></IonIcon>
                           <IonLabel>Reservas y Calendario</IonLabel>
                         </IonItem>
-                        <IonItem button detail>
+                        <IonItem button onClick={goToManageUsers} detail>
                           <IonIcon icon={peopleOutline} slot="start" color="tertiary"></IonIcon>
                           <IonLabel>Usuarios y Miembros</IonLabel>
                         </IonItem>

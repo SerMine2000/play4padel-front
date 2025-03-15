@@ -8,6 +8,7 @@ import Register from './pages/Register';
 import Profile from './pages/Profile';
 import Reservas from './pages/Reservas';
 import ManageCourts from './pages/ManageCourts';
+import ManageUsers from './pages/ManageUsers';
 import CalendarView from './pages/CalendarView';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { useEffect } from 'react';
@@ -150,6 +151,13 @@ const AppContent: React.FC = () => {
             path="/manage-courts" 
             exact 
             component={ManageCourts} 
+            roles={[1]} 
+          />
+          
+          <RoleRoute 
+            path="/manage-users" 
+            exact 
+            component={ManageUsers} 
             roles={[1]} 
           />
           
