@@ -146,6 +146,7 @@ ion-segment-button {
   border-radius: 0;
   padding-top: 0;
   margin-top: 0;
+  min-height: 100%;
 }
 
 .fecha-seleccionada {
@@ -176,7 +177,7 @@ ion-segment-button {
 
 .reserva-item {
   --background: #1c1c1c;
-  --border-color: #834343;
+  --border-color: #333333;
 }
 
 /* Color del icono de pelota en las reservas */
@@ -186,6 +187,15 @@ ion-segment-button {
 
 .reserva-item.estado-cancelada {
   --opacity: 0.6;
+}
+
+/* Estilos para los divisores de fecha en la vista de lista */
+ion-item-divider {
+  --background: #2c2c2c;
+  --color: white;
+  font-weight: bold;
+  text-transform: capitalize;
+  margin-top: 10px;
 }
 
 .sin-dia-seleccionado,
@@ -309,4 +319,9 @@ ion-button.refresh-button {
     --padding-end: 6px;
     right: 45px;
   }
+}
+
+.lista-reservas ion-item ion-icon[slot="start"],
+.lista-reservas-mes ion-item ion-icon[slot="start"] {
+  color: #28a745 !important;
 }

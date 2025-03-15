@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   IonContent, 
   IonHeader, 
@@ -25,7 +25,11 @@ import {
   IonModal,
   IonSegment,
   IonSegmentButton,
-  IonText
+  IonText,
+  IonItemDivider,
+  IonSpinner,
+  IonRefresher,
+  IonRefresherContent
 } from '@ionic/react';
 import { 
   calendarOutline, 
@@ -64,13 +68,21 @@ interface DiaCalendario {
   numReservas: number;
 }
 
+interface ReservasPorDia {
+  fecha: string;
+  fechaFormateada: string;
+  reservas: ReservaDetalle[];
+}
+
 const CalendarView: React.FC = () => {
   const { user } = useAuth();
   const [fechaActual, setFechaActual] = useState<Date>(new Date());
   const [diasCalendario, setDiasCalendario] = useState<DiaCalendario[]>([]);
   const [diaSeleccionado, setDiaSeleccionado] = useState<Date | null>(null);
   const [reservasDelDia, setReservasDelDia] = useState<ReservaDetalle[]>([]);
+  const [reservasDelMes, setReservasDelMes] = useState<ReservasPorDia[]>([]);
   const [cargando, setCargando] = useState<boolean>(false);
+  const [cargandoLista, setCargandoLista] = useState<boolean>(false);
   const [mostrarToast, setMostrarToast] = useState<boolean>(false);
   const [mensajeToast, setMensajeToast] = useState<string>('');
   const [colorToast, setColorToast] = useState<string>('success');
@@ -78,14 +90,44 @@ const CalendarView: React.FC = () => {
   const [reservaSeleccionada, setReservaSeleccionada] = useState<ReservaDetalle | null>(null);
   const [vistaActual, setVistaActual] = useState<'calendario' | 'lista'>('calendario');
   const [fechasConReservas, setFechasConReservas] = useState<{[key: string]: number}>({});
+  const [mensajeError, setMensajeError] = useState<string>('');
+  
+  const contentRef = useRef<HTMLIonContentElement>(null);
 
   // Cargar datos iniciales
   useEffect(() => {
     if (user) {
       generarDiasCalendario(fechaActual);
       cargarReservasMes(fechaActual);
+      
+      // Establecer el día actual como seleccionado por defecto
+      const hoy = new Date();
+      setDiaSeleccionado(hoy);
+      cargarReservasDia(hoy);
     }
-  }, [user, fechaActual]);
+  }, [user]);
+  
+  // Efecto adicional para cuando cambia el mes
+  useEffect(() => {
+    if (user) {
+      generarDiasCalendario(fechaActual);
+      cargarReservasMes(fechaActual);
+    }
+  }, [fechaActual]);
+
+  // Efecto para manejar cambios de vista
+  useEffect(() => {
+    if (vistaActual === 'lista' && user && reservasDelMes.length === 0) {
+      // Forzar la carga de los datos para la vista de lista
+      console.log("Cambiando a vista de lista - forzando carga de datos");
+      cargarReservasMes(fechaActual, true);
+    }
+    
+    // Hacer scroll al inicio cuando cambia la vista
+    if (contentRef.current) {
+      contentRef.current.scrollToTop(300);
+    }
+  }, [vistaActual]);
 
   // Efecto para actualizar días con reservas
   useEffect(() => {
@@ -121,8 +163,6 @@ const CalendarView: React.FC = () => {
       const fechaDia = new Date(primerDiaMostrado);
       fechaDia.setDate(primerDiaMostrado.getDate() + i);
       
-      // Aquí inicializamos todos los días a false para tieneReservas y 0 para numReservas
-      // Serán actualizados después cuando se carguen los datos reales
       diasArray.push({
         fecha: fechaDia,
         diaMes: fechaDia.getDate(),
@@ -135,12 +175,49 @@ const CalendarView: React.FC = () => {
     setDiasCalendario(diasArray);
   };
 
+  // Handler para pull-to-refresh
+  const handleRefresh = (event: CustomEvent) => {
+    console.log('Pull-to-refresh activado');
+    setTimeout(() => {
+      actualizarReservas();
+      event.detail.complete();
+    }, 1000);
+  };
+
   // Cargar reservas del mes actual
-  const cargarReservasMes = async (fecha: Date) => {
-    if (!user || !user.id_club) return;
+  const cargarReservasMes = async (fecha: Date, forceReload: boolean = false) => {
+    if (!user) {
+      console.log("No hay usuario autenticado");
+      return;
+    }
+    
+    // Obtener ID del club
+    let idClub = user.id_club;
+    if (!idClub) {
+      try {
+        const clubsResponse = await apiService.get(`/clubs?id_administrador=${user.id}`);
+        if (Array.isArray(clubsResponse) && clubsResponse.length > 0) {
+          idClub = clubsResponse[0].id;
+        } else {
+          mostrarMensaje('No se encontró un club asignado a tu cuenta', 'warning');
+          return;
+        }
+      } catch (error) {
+        console.error('Error al buscar clubes del administrador:', error);
+        mostrarMensaje('Error al obtener información del club', 'danger');
+        return;
+      }
+    }
     
     try {
-      setCargando(true);
+      // Si estamos en la vista de lista, mostrar el spinner específico
+      if (vistaActual === 'lista') {
+        setCargandoLista(true);
+      } else {
+        setCargando(true);
+      }
+      
+      setMensajeError('');
       
       // Obtener primer y último día del mes
       const primerDiaMes = new Date(fecha.getFullYear(), fecha.getMonth(), 1);
@@ -150,38 +227,160 @@ const CalendarView: React.FC = () => {
       const fechaInicio = formatearFecha(primerDiaMes);
       const fechaFin = formatearFecha(ultimoDiaMes);
       
-      console.log(`Cargando reservas del mes desde ${fechaInicio} hasta ${fechaFin}`);
+      console.log(`Cargando reservas del mes desde ${fechaInicio} hasta ${fechaFin} para el club ${idClub}`);
       
-      // Obtener todas las reservas del club en este rango de fechas
-      const response = await apiService.get(`/reservas?id_club=${user.id_club}`);
+      // Obtener todas las reservas del club
+      const response = await apiService.get(`/reservas?id_club=${idClub}`);
       
       if (Array.isArray(response)) {
-        console.log('Reservas obtenidas:', response);
+        console.log(`Se obtuvieron ${response.length} reservas totales`);
         
-        // Contar reservas por fecha
+        // Contar reservas por fecha (para el calendario)
         const reservasPorFecha: {[key: string]: number} = {};
         
+        // Para la vista de lista, agrupar reservas por día
+        const reservasPorDia: {[key: string]: any[]} = {};
+        
+        // Filtrar solo las reservas del mes actual
         response.forEach(reserva => {
           const fechaReserva = reserva.fecha;
-          // Verificar que la fecha está en el rango del mes actual
-          const fechaObj = new Date(fechaReserva + 'T00:00:00');
-          if (fechaObj >= primerDiaMes && fechaObj <= ultimoDiaMes) {
-            if (reservasPorFecha[fechaReserva]) {
-              reservasPorFecha[fechaReserva]++;
-            } else {
-              reservasPorFecha[fechaReserva] = 1;
+          try {
+            // Convertir la fecha de string a Date para comparación
+            const fechaObj = new Date(fechaReserva);
+            // Verificar si está en el mes actual
+            if (fechaObj.getMonth() === fecha.getMonth() && 
+                fechaObj.getFullYear() === fecha.getFullYear()) {
+              
+              // Para el calendario
+              if (reservasPorFecha[fechaReserva]) {
+                reservasPorFecha[fechaReserva]++;
+              } else {
+                reservasPorFecha[fechaReserva] = 1;
+              }
+              
+              // Para la vista de lista
+              if (!reservasPorDia[fechaReserva]) {
+                reservasPorDia[fechaReserva] = [];
+              }
+              reservasPorDia[fechaReserva].push(reserva);
             }
+          } catch (err) {
+            console.error(`Error procesando fecha de reserva: ${fechaReserva}`, err);
           }
         });
         
         console.log('Fechas con reservas:', reservasPorFecha);
+        console.log('Grupos de reservas por día:', Object.keys(reservasPorDia));
+        
         setFechasConReservas(reservasPorFecha);
+        
+        // Si no hay reservas para el mes, simplemente establecer array vacío
+        if (Object.keys(reservasPorDia).length === 0) {
+          console.log('No hay reservas para este mes');
+          setReservasDelMes([]);
+          return;
+        }
+        
+        // Procesar cada día para obtener detalles adicionales de reservas
+        const procesarReservasPorDia = async () => {
+          const reservasPorDiaArray: ReservasPorDia[] = [];
+          
+          // Obtener las fechas ordenadas
+          const fechasOrdenadas = Object.keys(reservasPorDia).sort();
+          
+          for (const fecha of fechasOrdenadas) {
+            const reservasDelDia = reservasPorDia[fecha];
+            
+            // Procesar cada reserva para añadir detalles
+            const reservasDetalladas = await Promise.all(
+              reservasDelDia.map(async (reserva) => {
+                let nombreUsuario = "Usuario";
+                let pistaNumero = null;
+                let pistaTipo = null;
+                
+                try {
+                  // Obtener datos del usuario
+                  const usuarioResponse = await apiService.get(`/user/${reserva.id_usuario}`);
+                  
+                  if (usuarioResponse && usuarioResponse.nombre) {
+                    nombreUsuario = `${usuarioResponse.nombre} ${usuarioResponse.apellidos || ''}`;
+                  }
+                  
+                  // Obtener datos de la pista
+                  const pistaResponse = await apiService.get(`/pistas/${reserva.id_pista}`);
+                  
+                  if (pistaResponse && pistaResponse.numero) {
+                    pistaNumero = pistaResponse.numero;
+                    pistaTipo = pistaResponse.tipo;
+                  }
+                } catch (error) {
+                  console.error('Error al obtener detalles para la reserva:', error);
+                }
+                
+                return {
+                  ...reserva,
+                  nombre_usuario: nombreUsuario,
+                  pista_numero: pistaNumero,
+                  pista_tipo: pistaTipo
+                };
+              })
+            );
+            
+            // Ordenar las reservas por hora
+            reservasDetalladas.sort((a, b) => {
+              if (a.hora_inicio < b.hora_inicio) return -1;
+              if (a.hora_inicio > b.hora_inicio) return 1;
+              return 0;
+            });
+            
+            // Construir la fecha formateada
+            let fechaFormateada = '';
+            try {
+              const fechaObj = new Date(fecha);
+              fechaFormateada = fechaObj.toLocaleDateString('es-ES', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              });
+            } catch (err) {
+              console.error(`Error formateando fecha: ${fecha}`, err);
+              fechaFormateada = fecha; // Usar la fecha sin formatear en caso de error
+            }
+            
+            // Añadir al array de días con sus reservas
+            reservasPorDiaArray.push({
+              fecha,
+              fechaFormateada: fechaFormateada,
+              reservas: reservasDetalladas
+            });
+          }
+          
+          return reservasPorDiaArray;
+        };
+        
+        // Procesar y establecer las reservas por día
+        const reservasPorDiaArray = await procesarReservasPorDia();
+        console.log(`Procesadas ${reservasPorDiaArray.length} fechas con reservas`);
+        
+        if (reservasPorDiaArray.length > 0) {
+          setReservasDelMes(reservasPorDiaArray);
+        } else {
+          setMensajeError('No se pudieron procesar las reservas del mes');
+        }
+      } else {
+        console.log('La respuesta no es un array', response);
+        setReservasDelMes([]);
+        setMensajeError('La respuesta del servidor no tiene el formato esperado');
       }
     } catch (error) {
       console.error('Error al cargar reservas del mes:', error);
       mostrarMensaje('Error al cargar reservas del mes', 'danger');
+      setReservasDelMes([]);
+      setMensajeError('Error de conexión al cargar reservas');
     } finally {
       setCargando(false);
+      setCargandoLista(false);
     }
   };
 
@@ -250,16 +449,6 @@ const CalendarView: React.FC = () => {
       }
       
       console.log(`Se encontraron ${response.length} reservas para el día ${fechaFormateada}`);
-      
-      // Depuración de fechas
-      if (response.length > 0) {
-        console.log('===== COMPARACIÓN DE FECHAS =====');
-        console.log('Fecha solicitada (formateada):', fechaFormateada);
-        response.forEach((reserva, index) => {
-          console.log(`Reserva ${index + 1} - Fecha: ${reserva.fecha}, Tipo: ${typeof reserva.fecha}`);
-          console.log(`Comparación directa: ${reserva.fecha === fechaFormateada}`);
-        });
-      }
       
       // Si no hay reservas, actualizar el estado y salir
       if (response.length === 0) {
@@ -389,11 +578,25 @@ const CalendarView: React.FC = () => {
     cargarReservasDia(hoy);
   };
 
+  // Cambiar vista (calendario o lista)
+  const cambiarVista = (nuevaVista: 'calendario' | 'lista') => {
+    setVistaActual(nuevaVista);
+    
+    // Si cambiamos a lista y no hay datos, intentar cargar
+    if (nuevaVista === 'lista' && reservasDelMes.length === 0) {
+      cargarReservasMes(fechaActual, true);
+    }
+  };
+
   // Actualizar reservas (refrescar datos)
   const actualizarReservas = () => {
-    cargarReservasMes(fechaActual);
-    if (diaSeleccionado) {
-      cargarReservasDia(diaSeleccionado);
+    if (vistaActual === 'calendario') {
+      cargarReservasMes(fechaActual);
+      if (diaSeleccionado) {
+        cargarReservasDia(diaSeleccionado);
+      }
+    } else {
+      cargarReservasMes(fechaActual, true);
     }
   };
 
@@ -526,66 +729,148 @@ const CalendarView: React.FC = () => {
       </>
     );
   };
-// Renderizar lista de reservas del día
-const renderListaReservas = () => {
-  console.log('Renderizando lista de reservas. Día seleccionado:', diaSeleccionado);
-  console.log('Reservas disponibles:', reservasDelDia);
-  
-  if (!diaSeleccionado) {
-    console.log('No hay día seleccionado');
+
+  // Renderizar lista de reservas del día
+  const renderListaReservas = () => {
+    console.log('Renderizando lista de reservas. Día seleccionado:', diaSeleccionado);
+    console.log('Reservas disponibles:', reservasDelDia);
+    
+    if (!diaSeleccionado) {
+      console.log('No hay día seleccionado');
+      return (
+        <div className="sin-dia-seleccionado">
+          <IonText color="medium">
+            <p>Selecciona un día para ver sus reservas</p>
+          </IonText>
+        </div>
+      );
+    }
+    
+    if (reservasDelDia.length === 0) {
+      console.log('No hay reservas para este día');
+      return (
+        <div className="sin-reservas">
+          <IonText color="medium">
+            <p>No hay reservas para el {formatearFechaMostrar(diaSeleccionado)}</p>
+          </IonText>
+        </div>
+      );
+    }
+    
+    console.log(`Renderizando ${reservasDelDia.length} reservas`);
+    
     return (
-      <div className="sin-dia-seleccionado">
-        <IonText color="medium">
-          <p>Selecciona un día para ver sus reservas</p>
-        </IonText>
-      </div>
+      <IonList className="lista-reservas">
+        {reservasDelDia.map((reserva) => {
+          console.log('Renderizando reserva:', reserva);
+          return (
+            <IonItem 
+              key={reserva.id} 
+              button 
+              detail 
+              onClick={() => handleClickReserva(reserva)}
+              className={`reserva-item estado-${reserva.estado.toLowerCase()}`}
+            >
+              <IonIcon slot="start" icon={tennisballOutline} />
+              <IonLabel>
+                <h2>{reserva.nombre_usuario}</h2>
+                <p>
+                  <IonIcon icon={timeOutline} /> {formatearHora(reserva.hora_inicio)} - {formatearHora(reserva.hora_fin)}
+                </p>
+                <p>
+                  <IonIcon icon={cashOutline} /> {reserva.precio_total.toFixed(2)}€
+                </p>
+              </IonLabel>
+              <IonChip slot="end" color={getColorEstadoReserva(reserva.estado)}>
+                {reserva.estado}
+              </IonChip>
+            </IonItem>
+          );
+        })}
+      </IonList>
     );
-  }
-  
-  if (reservasDelDia.length === 0) {
-    console.log('No hay reservas para este día');
+  };
+
+  // Renderizar lista de todas las reservas del mes
+  const renderListaReservasMes = () => {
+    console.log('Renderizando lista de reservas del mes. Total grupos:', reservasDelMes.length);
+    
+    if (cargandoLista) {
+      return (
+        <div className="cargando-lista">
+          <IonSpinner name="circles" />
+          <p>Cargando reservas...</p>
+        </div>
+      );
+    }
+    
+    if (mensajeError) {
+      return (
+        <div className="error-mensaje">
+          <IonText color="danger">
+            <p>{mensajeError}</p>
+          </IonText>
+          <IonButton onClick={() => cargarReservasMes(fechaActual, true)}>
+            <IonIcon slot="start" icon={refreshOutline} />
+            Reintentar
+          </IonButton>
+        </div>
+      );
+    }
+    
+    if (reservasDelMes.length === 0) {
+      return (
+        <div className="sin-reservas">
+          <IonText color="medium">
+            <p>No hay reservas para el mes actual</p>
+          </IonText>
+          <IonButton size="small" onClick={actualizarReservas} className="refresh-button">
+            <IonIcon slot="start" icon={refreshOutline} />
+            Actualizar
+          </IonButton>
+        </div>
+      );
+    }
+    
     return (
-      <div className="sin-reservas">
-        <IonText color="medium">
-          <p>No hay reservas para el {formatearFechaMostrar(diaSeleccionado)}</p>
-        </IonText>
-      </div>
+      <IonList className="lista-reservas-mes">
+        {reservasDelMes.map((dia) => (
+          <React.Fragment key={dia.fecha}>
+            <IonItemDivider color="primary" sticky className="fecha-divider">
+              <IonLabel>
+                {dia.fechaFormateada}
+              </IonLabel>
+              <IonChip slot="end" color="light">{dia.reservas.length} reservas</IonChip>
+            </IonItemDivider>
+            
+            {dia.reservas.map((reserva) => (
+              <IonItem 
+                key={reserva.id} 
+                button 
+                detail 
+                onClick={() => handleClickReserva(reserva)}
+                className={`reserva-item estado-${reserva.estado.toLowerCase()}`}
+              >
+                <IonIcon slot="start" icon={tennisballOutline} />
+                <IonLabel>
+                  <h2>{reserva.nombre_usuario}</h2>
+                  <p>
+                    <IonIcon icon={timeOutline} /> {formatearHora(reserva.hora_inicio)} - {formatearHora(reserva.hora_fin)}
+                  </p>
+                  <p>
+                    <IonIcon icon={cashOutline} /> {reserva.precio_total.toFixed(2)}€
+                  </p>
+                </IonLabel>
+                <IonChip slot="end" color={getColorEstadoReserva(reserva.estado)}>
+                  {reserva.estado}
+                </IonChip>
+              </IonItem>
+            ))}
+          </React.Fragment>
+        ))}
+      </IonList>
     );
-  }
-  
-  console.log(`Renderizando ${reservasDelDia.length} reservas`);
-  
-  return (
-    <IonList className="lista-reservas">
-      {reservasDelDia.map((reserva) => {
-        console.log('Renderizando reserva:', reserva);
-        return (
-          <IonItem 
-            key={reserva.id} 
-            button 
-            detail 
-            onClick={() => handleClickReserva(reserva)}
-            className={`reserva-item estado-${reserva.estado.toLowerCase()}`}
-          >
-            <IonIcon slot="start" icon={tennisballOutline} />
-            <IonLabel>
-              <h2>{reserva.nombre_usuario}</h2>
-              <p>
-                <IonIcon icon={timeOutline} /> {formatearHora(reserva.hora_inicio)} - {formatearHora(reserva.hora_fin)}
-              </p>
-              <p>
-                <IonIcon icon={cashOutline} /> {reserva.precio_total.toFixed(2)}€
-              </p>
-            </IonLabel>
-            <IonChip slot="end" color={getColorEstadoReserva(reserva.estado)}>
-              {reserva.estado}
-            </IonChip>
-          </IonItem>
-        );
-      })}
-    </IonList>
-  );
-};
+  };
 
   return (
     <IonPage>
@@ -603,14 +888,19 @@ const renderListaReservas = () => {
         </IonToolbar>
       </IonHeader>
       
-      <IonContent className="calendar-view">
+      <IonContent className="calendar-view" ref={contentRef}>
+        {/* Pull-to-refresh */}
+        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+          <IonRefresherContent></IonRefresherContent>
+        </IonRefresher>
+        
         {/* Segmento para cambiar entre vista calendario y lista */}
-        <IonSegment value={vistaActual} onIonChange={e => setVistaActual(e.detail.value as 'calendario' | 'lista')}>
+        <IonSegment value={vistaActual} onIonChange={e => cambiarVista(e.detail.value as 'calendario' | 'lista')}>
           <IonSegmentButton value="calendario">
-            <IonLabel>Calendario</IonLabel>
+            <IonLabel>CALENDARIO</IonLabel>
           </IonSegmentButton>
           <IonSegmentButton value="lista">
-            <IonLabel>Lista</IonLabel>
+            <IonLabel>LISTA</IonLabel>
           </IonSegmentButton>
         </IonSegment>
         
@@ -637,25 +927,26 @@ const renderListaReservas = () => {
             <IonGrid className="grid-calendario">
               {renderCalendario()}
             </IonGrid>
+            
+            {/* Panel de reservas del día seleccionado */}
+            <div className="panel-reservas">
+              {diaSeleccionado && (
+                <h3 className="fecha-seleccionada">
+                  {formatearFechaMostrar(diaSeleccionado)}
+                </h3>
+              )}
+              
+              {renderListaReservas()}
+            </div>
           </div>
         )}
         
-        {/* Panel de reservas del día */}
-        <div className={`panel-reservas ${vistaActual === 'lista' ? 'pantalla-completa' : ''}`}>
-          {vistaActual === 'lista' && diaSeleccionado && (
-            <div className="cabecera-lista">
-              <h2>{formatearFechaMostrar(diaSeleccionado)}</h2>
-            </div>
-          )}
-          
-          {vistaActual === 'calendario' && diaSeleccionado && (
-            <h3 className="fecha-seleccionada">
-              {formatearFechaMostrar(diaSeleccionado)}
-            </h3>
-          )}
-          
-          {renderListaReservas()}
-        </div>
+        {/* Vista de lista completa del mes */}
+        {vistaActual === 'lista' && (
+          <div className="panel-reservas pantalla-completa">
+            {renderListaReservasMes()}
+          </div>
+        )}
         
         {/* Modal de detalle de reserva */}
         <IonModal isOpen={mostrarDetalleReserva} onDidDismiss={() => setMostrarDetalleReserva(false)}>
