@@ -6,7 +6,7 @@
 }
 
 .home-toolbar {
-  --background: #3880ff;
+  --background: #0066cc;
   --color: white;
 }
 
@@ -20,7 +20,7 @@
 }
 
 .welcome-card-header {
-  background-color: #3880ff;
+  background-color: #0066cc;
   color: white;
   padding: 20px;
 }

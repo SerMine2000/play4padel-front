@@ -37,7 +37,9 @@ import {
   businessOutline,
   locationOutline,
   timeOutline,
-  calendarOutline
+  calendarOutline,
+  reader,
+  readerOutline
 } from 'ionicons/icons';
 import { useHistory } from 'react-router';
 import { useAuth } from '../context/AuthContext';
@@ -420,7 +422,7 @@ const Register: React.FC = () => {
                           </IonItem>
                           
                           <IonItem lines="full">
-                            <IonIcon icon={calendarOutline} slot="start" color="medium"></IonIcon>
+                            <IonIcon icon={readerOutline} slot="start" color="medium"></IonIcon>
                             <IonLabel position="floating">Descripción</IonLabel>
                             <IonTextarea
                               name="descripcionClub"

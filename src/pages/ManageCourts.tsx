@@ -455,14 +455,9 @@ const ManageCourts: React.FC = () => {
                   
                   <IonItem>
                     <IonLabel position="floating">Tipo de Pista *</IonLabel>
-                    <IonSelect
-                      value={formData.tipo}
-                      onIonChange={(e) => handleInputChange(e, 'tipo')}
-                    >
-                      <IonSelectOption value="standard">Estándar</IonSelectOption>
-                      <IonSelectOption value="panoramica">Panorámica</IonSelectOption>
-                      <IonSelectOption value="central">Central</IonSelectOption>
-                      <IonSelectOption value="indoor">Indoor</IonSelectOption>
+                    <IonSelect value={formData.tipo} onIonChange={(e) => handleInputChange(e, 'tipo')} placeholder="Elegir">
+                      <IonSelectOption value="Indoor">Indoor</IonSelectOption>
+                      <IonSelectOption value="Outdoor">Outdoor</IonSelectOption>
                     </IonSelect>
                   </IonItem>
                   

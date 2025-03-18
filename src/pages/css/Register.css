@@ -2,6 +2,7 @@
 
 .register-container {
   --background: url('/img/fondoLoginRegistro.jpg') no-repeat center center / cover;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .register-card {
@@ -10,12 +11,16 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
   overflow: hidden;
   margin-top: 20px;
+  max-width: 650px;
+  width: 90%;
+  background-color: #111111;
 }
 
 .register-card-header {
-  background-color: #3880ff;
+  background-color: #0066cc;
   color: white;
   padding: 20px;
+  text-align: center;
 }
 
 .register-card-header h2 {
@@ -26,7 +31,7 @@
 
 .register-card-content {
   padding: 20px;
-  background-color: #1c1c1c;
+  /* background-color: #111111; */
 }
 
 .register-form {
@@ -39,7 +44,7 @@
   --padding-start: 12px;
   margin-bottom: 25px;
   --border-color: rgba(255, 255, 255, 0.1);
-  --highlight-color-focused: #3880ff;
+  --highlight-color-focused: #0066cc;
   --min-height: 75px;
 }
 
@@ -73,10 +78,10 @@
 .register-button {
   margin-top: 20px;
   --border-radius: 8px;
-  --background: #3880ff;
-  --background-hover: #3171e0;
+  --background: #0066cc;
+  --background-activated: #0055aa;
   font-weight: 600;
-  height: 48px;
+  height: 50px;
   text-transform: none;
   font-size: 16px;
 }
@@ -92,7 +97,7 @@
 }
 
 .register-footer ion-router-link {
-  color: #3880ff;
+  color: #0066cc;
   font-weight: 500;
   text-decoration: none;
 }
@@ -123,7 +128,7 @@
 .section-title {
   font-size: 18px;
   font-weight: 600;
-  color: #3880ff;
+  color: #0066cc;
   margin-bottom: 16px;
   padding-left: 12px;
 }
@@ -135,17 +140,7 @@
   margin: 20px 0;
 }
 
-.register-card {
-  margin: 0 auto;
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-  overflow: hidden;
-  margin-top: 20px;
-  max-width: 650px;
-  width: 90%; 
-}
-
-/* Responsive adjustments */
+/* Responsive */
 @media (max-width: 576px) {
   .register-card {
     margin-top: 10px;
@@ -153,6 +148,11 @@
   
   .register-card-header h2 {
     font-size: 20px;
+  }
+  
+  .register-button {
+    height: 46px;
+    font-size: 14px;
   }
 }
 

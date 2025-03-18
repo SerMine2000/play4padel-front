@@ -41,7 +41,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { useHistory } from 'react-router-dom';
 import apiService from '../services/api.service';
-import './css/ManageCourts.css'; // Reutilizamos estilos similares
+import './css/ManageUsers.css';
 
 const ManageUsers: React.FC = () => {
   const { user } = useAuth();
