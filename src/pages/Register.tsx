@@ -86,99 +86,93 @@ const Register: React.FC = () => {
   // Efecto para procesar el registro después de que los estados se actualicen
   useEffect(() => {
     const performRegistration = async () => {
-      if (!isSubmitting) return;
-      
+      if (isSubmitting) return;
+      setIsSubmitting(true);
+  
       try {
-        // Validación básica para todos
-        if (!nombre || !email || !password || !confirmPassword) {
-          setFormError('Por favor, completa todos los campos obligatorios');
-          setIsSubmitting(false);
-          return;
-        }
-        
-        if (password !== confirmPassword) {
-          setFormError('Las contraseñas no coinciden');
-          setIsSubmitting(false);
-          return;
-        }
-        
-        // Validaciones específicas para club
-        if (tipoUsuario === TIPOS_CUENTA.CLUB) {
-          if (!nombreClub || !direccionClub || !horarioApertura || !horarioCierre) {
-            setFormError('Por favor, completa todos los datos del club');
-            setIsSubmitting(false);
-            return;
+          // Validación de datos
+          if (!nombre || !email || !password || !confirmPassword) {
+              setIsSubmitting(false);
+              return;
           }
-        }
-        
-        setShowLoading(true);
-        setFormError('');
-        
-        // Preparar datos de registro según el tipo
-        const registroData: RegisterRequest = {
-          nombre,
-          // Si es club, usar "Club" como apellido por defecto
-          apellidos: tipoUsuario === TIPOS_CUENTA.CLUB ? "Club" : apellidos,
-          email,
-          password,
-          id_rol: tipoUsuario === TIPOS_CUENTA.CLUB ? 1 : 4, // 1 para ADMIN (club), 4 para USUARIO
-          telefono
-          // NO incluir tipo_cuenta aquí
-        };
-        
-        // Añadir datos del club si corresponde
-        if (tipoUsuario === TIPOS_CUENTA.CLUB) {
-          registroData.club_data = {
-            nombre: nombreClub,
-            direccion: direccionClub,
-            horario_apertura: horarioApertura,
-            horario_cierre: horarioCierre,
-            descripcion: descripcionClub,
-            telefono: telefono,
-            email: email
+  
+          if (password !== confirmPassword) {
+              setFormError('Las contraseñas no coinciden');
+              setIsSubmitting(false);
+              return;
+          }
+  
+          // Validaciones específicas para club
+          if (tipoUsuario === TIPOS_CUENTA.CLUB) {
+              if (!nombreClub || !direccionClub || !horarioApertura || !horarioCierre) {
+                  setFormError('Por favor, completa todos los datos del club');
+                  setIsSubmitting(false);
+                  return;
+              }
+          }
+  
+          setShowLoading(true);
+          setFormError('');
+  
+          // Preparar datos de registro
+          const registroData: RegisterRequest = {
+              nombre,
+              apellidos: tipoUsuario === TIPOS_CUENTA.CLUB ? "Club" : apellidos,
+              email,
+              password,
+              id_rol: tipoUsuario === TIPOS_CUENTA.CLUB ? 1 : 4,
+              telefono
           };
-        }
-        
-        // Llamar a la función register del contexto con el objeto correcto
-        if (tipoUsuario === TIPOS_CUENTA.CLUB) {
-          await register({ ...registroData, tipo_cuenta: tipoUsuario });
-        } else {
-          await register(registroData);
-        }
-        
-        // Mostrar toast de éxito
-        setShowToast(true);
-        
-        // Limpiar formulario
-        setNombre('');
-        setApellidos('');
-        setEmail('');
-        setPassword('');
-        setConfirmPassword('');
-        setTelefono('');
-        
-        // Limpiar campos de club
-        if (tipoUsuario === TIPOS_CUENTA.CLUB) {
-          setNombreClub('');
-          setDireccionClub('');
-          setDescripcionClub('');
-          setHorarioApertura('08:00');
-          setHorarioCierre('22:00');
-        }
-        
-        // Redirigir al login después de un breve retraso
-        setTimeout(() => {
-          history.replace('/login');
-        }, 2000);
-        
+  
+          if (tipoUsuario === TIPOS_CUENTA.CLUB) {
+              registroData.club_data = {
+                  nombre: nombreClub,
+                  direccion: direccionClub,
+                  horario_apertura: horarioApertura,
+                  horario_cierre: horarioCierre,
+                  descripcion: descripcionClub,
+                  telefono: telefono,
+                  email: email
+              };
+          }
+  
+          if (tipoUsuario === TIPOS_CUENTA.CLUB) {
+              await register({ ...registroData, tipo_cuenta: tipoUsuario });
+          } else {
+              await register(registroData);
+          }
+  
+          // Mostrar toast de registro con éxito
+          setShowToast(true);
+  
+          //Limpiar campos
+          setNombre('');
+          setApellidos('');
+          setEmail('');
+          setPassword('');
+          setConfirmPassword('');
+          setTelefono('');
+  
+          if (tipoUsuario === TIPOS_CUENTA.CLUB) {
+              setNombreClub('');
+              setDireccionClub('');
+              setDescripcionClub('');
+              setHorarioApertura('08:00');
+              setHorarioCierre('22:00');
+          }
+  
+          setTimeout(() => {
+              history.replace('/login');
+          }, 2000);
+  
       } catch (error: any) {
-        console.error('Error en registro:', error);
-        setFormError(error.message || 'Error al registrar usuario. Inténtalo de nuevo.');
+          console.error('Error en registro:', error);
+          setFormError(error.message || 'Error al registrar usuario. Inténtalo de nuevo.');
       } finally {
-        setShowLoading(false);
-        setIsSubmitting(false);
+          setShowLoading(false);
+          setIsSubmitting(false);
       }
-    };
+  };
     
     performRegistration();
   }, [isSubmitting, nombre, apellidos, email, password, confirmPassword, telefono, tipoUsuario, 

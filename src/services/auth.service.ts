@@ -23,6 +23,7 @@ class AuthService {
   
   async register(userData: RegisterRequest): Promise<void> {
     try {
+      console.log("Enviando solicitud de creación de usuario", userData);
       // Si es registro como club, usamos un flujo diferente
       if (userData.tipo_cuenta === 'club') {
         console.log("Registrando como club:", userData);
