@@ -43,7 +43,7 @@ ion-item {
   --background: #1c1c1c;
   --color: white;
   --border-color: rgba(255, 255, 255, 0.1);
-  --padding-start: 16px; /* Margen a la izquierda */
+  --padding-start: 16px;
   margin-bottom: 16px;
 }
 
@@ -53,9 +53,8 @@ ion-item-options {
 
 ion-item-option {
   min-height: 80px;
-  max-height: 120px;
-  max-width: 75px;
-  text-align: center; 
+  display: flex;
+  align-items: center;
   padding: 10px;
 }
 

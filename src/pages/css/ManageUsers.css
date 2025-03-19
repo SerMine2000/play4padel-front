@@ -48,7 +48,6 @@ ion-item {
   --color: white;
   --border-color: rgba(255, 255, 255, 0.1);
   --padding-start: 16px;
-  margin-bottom: 16px;
 }
 
 ion-item h2 {
@@ -107,19 +106,19 @@ ion-item-options {
 }
 
 ion-item-option {
-  width: auto; /* Asegurar que el botón se adapta al tamaño del contenido */
-  max-width: 80px; /* Tamaño máximo para botones más pequeños */
-  height: 100%; /* Asegura que el botón ocupe toda la altura */
-  text-align: center; /* Centra el contenido del botón */
+  width: auto;
+  max-width: 80px;
+  height: 100%;
+  text-align: center;
 }
 
 ion-item-option[color="primary"] {
-  --background: #3880ff; /* Azul */
+  --background: #3880ff;
   --color: white;
 }
 
 ion-item-option[color="danger"] {
-  --background: #eb445a; /* Rojo */
+  --background: #eb445a;
   --color: white;
 }
 
