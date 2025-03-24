@@ -12,7 +12,6 @@ class ApiService {
     }
     
     try {
-      console.log(`Realizando petición GET a: ${API_URL}${endpoint}`);
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'GET',
         headers
@@ -20,7 +19,7 @@ class ApiService {
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: 'Error desconocido' }));
-        console.error('Error en respuesta API:', errorData, 'Status:', response.status);
+      
         throw new Error(errorData.error || `Error: ${response.status}`);
       }
       
@@ -47,7 +46,6 @@ class ApiService {
     }
     
     try {
-      console.log(`Realizando petición POST a: ${API_URL}${endpoint}`, data);
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers,
@@ -82,7 +80,6 @@ class ApiService {
     }
     
     try {
-      console.log(`Realizando petición PUT a: ${API_URL}${endpoint}`, data);
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'PUT',
         headers,
@@ -117,7 +114,6 @@ class ApiService {
     }
     
     try {
-      console.log(`Realizando petición DELETE a: ${API_URL}${endpoint}`);
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'DELETE',
         headers

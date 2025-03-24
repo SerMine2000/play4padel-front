@@ -541,39 +541,44 @@ const CalendarView: React.FC = () => {
 
   // Cancelar reserva
   const cancelarReserva = async (reservaId: number) => {
+    if (!window.confirm('¿Está seguro que desea cancelar esta reserva?')) {
+      return;
+    }
+    
     try {
       setCargando(true);
       
-      // Llamada al endpoint de eliminación
-      await apiService.delete(`/eliminar-reserva/${reservaId}`);
+      const response = await apiService.delete(`/eliminar-reserva/${reservaId}`);
       
-      mostrarMensaje('Reserva cancelada correctamente', 'success');
+      if (response && response.message) {
+        mostrarMensaje(response.message, 'success');
+      } else {
+        mostrarMensaje('Reserva cancelada correctamente', 'success');
+      }
       
-      // Actualizar datos
       if (diaSeleccionado) {
         cargarReservasDia(diaSeleccionado);
       }
       cargarReservasMes(fechaActual);
       
-      // Cerrar modal de detalles
       setMostrarDetalleReserva(false);
       
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error al cancelar reserva:', error);
-      mostrarMensaje('Error al cancelar la reserva', 'danger');
+      
+      const errorMessage = error.message || 'Error al cancelar la reserva';
+      mostrarMensaje(errorMessage, 'danger');
     } finally {
       setCargando(false);
     }
   };
 
-  // Mostrar mensaje toast
   const mostrarMensaje = (mensaje: string, color: string = 'success') => {
     setMensajeToast(mensaje);
     setColorToast(color);
     setMostrarToast(true);
   };
 
-  // Formatear fecha a YYYY-MM-DD
   const formatearFecha = (fecha: Date): string => {
     if (!fecha) return '';
     
@@ -583,7 +588,6 @@ const CalendarView: React.FC = () => {
     return `${year}-${month}-${day}`;
   };
 
-  // Formatear fecha para mostrar
   const formatearFechaMostrar = (fecha: Date): string => {
     return fecha.toLocaleDateString('es-ES', {
       weekday: 'long',
@@ -593,7 +597,6 @@ const CalendarView: React.FC = () => {
     });
   };
 
-  // Formatear mes y año para título
   const formatearMesAnio = (fecha: Date): string => {
     return fecha.toLocaleDateString('es-ES', {
       month: 'long',
@@ -601,12 +604,11 @@ const CalendarView: React.FC = () => {
     });
   };
 
-  // Formatear hora
   const formatearHora = (hora: string): string => {
     return hora.substring(0, 5);
   };
 
-  // Obtener color según estado de reserva
+
   const getColorEstadoReserva = (estado: string): string => {
     switch (estado.toLowerCase()) {
       case 'pendiente':
@@ -637,11 +639,53 @@ const CalendarView: React.FC = () => {
 
   // Generar grid del calendario
   const renderCalendario = () => {
-    // Agrupar días en semanas (7 días por semana)
     const semanas: DiaCalendario[][] = [];
     for (let i = 0; i < diasCalendario.length; i += 7) {
       semanas.push(diasCalendario.slice(i, i + 7));
     }
+
+
+    const cambiarEstadoReserva = async (reservaId: number, estadoActual: string) => {
+      try {
+        setCargando(true);
+        
+        // Determinar el nuevo estado (alternar entre "pendiente" y "reservado")
+        const nuevoEstado = estadoActual === 'pendiente' ? 'reservado' : 'pendiente';
+        
+        // Llamar al endpoint para actualizar el estado
+        const response = await apiService.put(`/modificar-reserva/${reservaId}`, {
+          estado: nuevoEstado
+        });
+        
+        // Verificar si la respuesta es exitosa
+        if (response && response.message) {
+          mostrarMensaje(response.message, 'success');
+        } else {
+          mostrarMensaje(`Estado cambiado a: ${nuevoEstado}`, 'success');
+        }
+        
+        // Actualizar la reserva seleccionada con el nuevo estado
+        if (reservaSeleccionada) {
+          setReservaSeleccionada({
+            ...reservaSeleccionada,
+            estado: nuevoEstado
+          });
+        }
+        
+        // Actualizar datos
+        if (diaSeleccionado) {
+          cargarReservasDia(diaSeleccionado);
+        }
+        cargarReservasMes(fechaActual);
+        
+      } catch (error: any) {
+        console.error('Error al cambiar estado de reserva:', error);
+        const errorMessage = error.message || 'Error al cambiar el estado de la reserva';
+        mostrarMensaje(errorMessage, 'danger');
+      } finally {
+        setCargando(false);
+      }
+    };
     
     return (
       <>
