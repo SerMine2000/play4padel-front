@@ -29,7 +29,8 @@ import {
   IonItemDivider,
   IonSpinner,
   IonRefresher,
-  IonRefresherContent
+  IonRefresherContent,
+  IonAlert
 } from '@ionic/react';
 import { 
   calendarOutline, 
@@ -91,6 +92,8 @@ const CalendarView: React.FC = () => {
   const [vistaActual, setVistaActual] = useState<'calendario' | 'lista'>('calendario');
   const [fechasConReservas, setFechasConReservas] = useState<{[key: string]: number}>({});
   const [mensajeError, setMensajeError] = useState<string>('');
+  const [showCancelConfirm, setShowCancelConfirm] = useState<boolean>(false);
+  const [reservaToCancel, setReservaToCancel] = useState<number | null>(null);
   
   const contentRef = useRef<HTMLIonContentElement>(null);
 
@@ -540,15 +543,19 @@ const CalendarView: React.FC = () => {
   };
 
   // Cancelar reserva
-  const cancelarReserva = async (reservaId: number) => {
-    if (!window.confirm('¿Está seguro que desea cancelar esta reserva?')) {
-      return;
-    }
+  const cancelarReserva = (reservaId: number) => {
+    setReservaToCancel(reservaId);
+    setShowCancelConfirm(true);
+  };
+  
+  // Agregar una nueva función para ejecutar la cancelación después de la confirmación
+  const confirmCancelReserva = async () => {
+    if (!reservaToCancel) return;
     
     try {
       setCargando(true);
       
-      const response = await apiService.delete(`/eliminar-reserva/${reservaId}`);
+      const response = await apiService.delete(`/eliminar-reserva/${reservaToCancel}`);
       
       if (response && response.message) {
         mostrarMensaje(response.message, 'success');
@@ -570,6 +577,8 @@ const CalendarView: React.FC = () => {
       mostrarMensaje(errorMessage, 'danger');
     } finally {
       setCargando(false);
+      setShowCancelConfirm(false);
+      setReservaToCancel(null);
     }
   };
 
@@ -1009,14 +1018,14 @@ const CalendarView: React.FC = () => {
                     {reservaSeleccionada.estado !== 'cancelada' && (
                       <IonRow>
                         <IonCol size="12" className="ion-padding-top">
-                          <IonButton 
-                            expand="block" 
-                            color="danger"
-                            onClick={() => cancelarReserva(reservaSeleccionada.id)}
-                          >
-                            <IonIcon slot="start" icon={closeCircleOutline} />
-                            Cancelar Reserva
-                          </IonButton>
+                        <IonButton 
+                          expand="block" 
+                          color="danger"
+                          onClick={() => cancelarReserva(reservaSeleccionada.id)}
+                        >
+                          <IonIcon slot="start" icon={closeCircleOutline} />
+                          Cancelar Reserva
+                        </IonButton>
                         </IonCol>
                       </IonRow>
                     )}
@@ -1037,6 +1046,31 @@ const CalendarView: React.FC = () => {
           duration={2000}
           color={colorToast}
         />
+
+        <IonAlert
+          isOpen={showCancelConfirm}
+          onDidDismiss={() => setShowCancelConfirm(false)}
+          header="¿Cancelar reserva?"
+          message="Esta acción no se puede deshacer"
+          buttons={[
+            {
+              text: 'No',
+              role: 'cancel',
+              cssClass: 'secondary',
+              handler: () => {
+                setShowCancelConfirm(false);
+                setReservaToCancel(null);
+              }
+            },
+            {
+              text: 'Sí',
+              cssClass: 'danger',
+              handler: confirmCancelReserva
+            }
+          ]}
+        />
+
+
       </IonContent>
     </IonPage>
   );

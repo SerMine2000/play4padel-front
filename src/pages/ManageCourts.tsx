@@ -33,7 +33,8 @@ import {
   IonModal,
   IonChip,
   IonFab,
-  IonFabButton
+  IonFabButton,
+  IonAlert
 } from '@ionic/react';
 import {
   addCircleOutline,
@@ -76,6 +77,8 @@ const ManageCourts: React.FC = () => {
   const [toastColor, setToastColor] = useState<string>('success');
   const [showModal, setShowModal] = useState<boolean>(false);
   const [editingPista, setEditingPista] = useState<Pista | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<boolean>(false);
+  const [courtToDelete, setCourtToDelete] = useState<number | null>(null);
   
   // Form state
   const [formData, setFormData] = useState({
@@ -262,25 +265,31 @@ const ManageCourts: React.FC = () => {
   };
   
   // Eliminar pista
-  const deleteCourt = async (pistaId: number) => {
-    if (!confirm('¿Está seguro de eliminar esta pista? Esta acción no se puede deshacer.')) {
-      return;
-    }
+  const prepareDeleteCourt = (pistaId: number) => {
+    setCourtToDelete(pistaId);
+    setShowDeleteConfirm(true);
+  };
+  
+
+  const confirmDeleteCourt = async () => {
+    if (!courtToDelete) return;
     
     try {
       setLoading(true);
       
-      await apiService.delete(`/pistas/${pistaId}`);
+      await apiService.delete(`/pistas/${courtToDelete}`);
       
       showToastMessage('Pista eliminada correctamente');
       
       // Actualizar lista de pistas
-      setPistas(pistas.filter(pista => pista.id !== pistaId));
+      setPistas(pistas.filter(pista => pista.id !== courtToDelete));
     } catch (error) {
       console.error('Error al eliminar pista:', error);
       showToastMessage('Error al eliminar la pista', 'danger');
     } finally {
       setLoading(false);
+      setShowDeleteConfirm(false);
+      setCourtToDelete(null);
     }
   };
   
@@ -377,7 +386,7 @@ const ManageCourts: React.FC = () => {
                             </IonItemOption>
                             <IonItemOption 
                               color="danger" 
-                              onClick={() => deleteCourt(pista.id)}
+                              onClick={() => prepareDeleteCourt(pista.id)}
                             >
                               <IonIcon slot="icon-only" icon={trashOutline} />
                             </IonItemOption>
@@ -509,6 +518,29 @@ const ManageCourts: React.FC = () => {
             </IonGrid>
           </IonContent>
         </IonModal>
+
+        <IonAlert
+          isOpen={showDeleteConfirm}
+          onDidDismiss={() => setShowDeleteConfirm(false)}
+          header="¿Eliminar pista?"
+          message=" Esta acción no se puede deshacer"
+          buttons={[
+            {
+              text: 'Cancelar',
+              role: 'cancel',
+              cssClass: 'secondary',
+              handler: () => {
+                setShowDeleteConfirm(false);
+                setCourtToDelete(null);
+              }
+            },
+            {
+              text: 'Eliminar',
+              cssClass: 'danger',
+              handler: confirmDeleteCourt
+            }
+          ]}
+        />
         
         <IonLoading isOpen={loading} message="Procesando..." />
         
