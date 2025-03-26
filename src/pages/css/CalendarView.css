@@ -191,11 +191,6 @@ ion-grid.grid-calendario {
   --border-color: #333333;
 }
 
-/* Color del icono de pelota en las reservas */
-.reserva-item ion-icon[name="tennisball-outline"] {
-  color: #3880ff; /* Cambia a color primario (azul) */
-}
-
 .reserva-item.estado-cancelada {
   --opacity: 0.6;
 }

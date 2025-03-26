@@ -39,6 +39,7 @@ import {
 import {
   addCircleOutline,
   createOutline,
+  buildOutline,
   trashOutline,
   closeCircleOutline,
   checkmarkCircleOutline,
@@ -406,7 +407,7 @@ const ManageCourts: React.FC = () => {
                                 color="warning" 
                                 onClick={() => changeCourtStatus(pista.id, 'mantenimiento')}
                               >
-                                <IonIcon slot="icon-only" icon={createOutline} />
+                                <IonIcon slot="icon-only" icon={buildOutline} />
                               </IonItemOption>
                             )}
                             {pista.estado !== 'cerrada' && (

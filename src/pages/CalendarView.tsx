@@ -930,7 +930,7 @@ const CalendarView: React.FC = () => {
         <IonModal isOpen={mostrarDetalleReserva} onDidDismiss={() => setMostrarDetalleReserva(false)}>
           <IonHeader>
             <IonToolbar>
-              <IonButtons slot="start">
+              <IonButtons slot="end">
                 <IonButton onClick={() => setMostrarDetalleReserva(false)}>
                   Cerrar
                 </IonButton>
@@ -981,7 +981,7 @@ const CalendarView: React.FC = () => {
                       
                       <IonCol size="12">
                         <IonItem lines="none">
-                          <IonIcon icon={tennisballOutline} slot="start" color="primary" />
+                          <IonIcon icon={tennisballOutline} slot="start" color="success" />
                           <IonLabel>
                             <h2>Pista</h2>
                             <p>

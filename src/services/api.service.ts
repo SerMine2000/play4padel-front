@@ -24,8 +24,6 @@ class ApiService {
       }
       
       const data = await response.json();
-      console.log(`Respuesta API para ${endpoint}:`, 
-        data.length > 20 ? `[Array con ${data.length} elementos]` : data);
       return data;
     } catch (error: any) {
       console.error(`Error completo en API GET ${endpoint}:`, error);
@@ -59,7 +57,6 @@ class ApiService {
       }
       
       const responseData = await response.json();
-      console.log(`Respuesta POST para ${endpoint}:`, responseData);
       return responseData;
     } catch (error: any) {
       console.error(`Error completo en API POST ${endpoint}:`, error);
@@ -93,7 +90,6 @@ class ApiService {
       }
       
       const responseData = await response.json();
-      console.log(`Respuesta PUT para ${endpoint}:`, responseData);
       return responseData;
     } catch (error: any) {
       console.error(`Error completo en API PUT ${endpoint}:`, error);
@@ -126,7 +122,6 @@ class ApiService {
       }
       
       const responseData = await response.json();
-      console.log(`Respuesta DELETE para ${endpoint}:`, responseData);
       return responseData;
     } catch (error: any) {
       console.error(`Error completo en API DELETE ${endpoint}:`, error);
