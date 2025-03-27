@@ -391,6 +391,7 @@ const ManageUsers: React.FC = () => {
       </IonHeader>
       
       <IonContent>
+      <div className="background-container"></div>
         <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent></IonRefresherContent>
         </IonRefresher>
@@ -462,18 +463,6 @@ const ManageUsers: React.FC = () => {
                             <IonLabel>
                               <h2>{userData.nombre} {userData.apellidos}</h2>
                               <p>{userData.email}</p>
-                              {userIsMember && (
-                                <IonChip color="success" className="member-badge">
-                                  <IonIcon icon={personCircleOutline} />
-                                  <IonLabel>Socio</IonLabel>
-                                </IonChip>
-                              )}
-                              {userIsAdmin && (
-                                <IonChip color="danger" className="admin-badge">
-                                  <IonIcon icon={shieldOutline} />
-                                  <IonLabel>Administrador</IonLabel>
-                                </IonChip>
-                              )}
                             </IonLabel>
                             
                             <IonChip 
