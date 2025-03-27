@@ -60,14 +60,99 @@ const ManageUsers: React.FC = () => {
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [alertAction, setAlertAction] = useState<'add' | 'remove'>('add');
   
+
+
+  // Obtener rol como texto
+  const getRolName = (rolId: number): string => {
+    switch (rolId) {
+      case 1: return 'ADMIN';
+      case 2: return 'PROFESOR';
+      case 3: return 'EMPLEADO';
+      case 4: return 'USUARIO';
+      case 5: return 'SOCIO';
+      default: return 'DESCONOCIDO';
+    }
+  };
+
+  // Obtener color según rol
+  const getRolColor = (rolId: number): string => {
+    switch (rolId) {
+      case 1: return 'danger';
+      case 2: return 'secondary';
+      case 3: return 'tertiary';
+      case 4: return 'medium';
+      case 5: return 'success';
+      default: return 'medium';
+    }
+  };
+
+  // Función para obtener el número total de socios
+  const getTotalMembers = (): number => {
+    if (!clubId) return 0;
+    return users.filter(u => isUserMember(u.id)).length;
+  };
+
+
+
+  // Mostrar mensaje de toast
+  const showToastMessage = (message: string, color: string = 'success') => {
+    setToastMessage(message);
+    setToastColor(color);
+    setShowToast(true);
+  };
+  
+  // Verificar si el usuario ya es socio
+  const isUserMember = (userId: number): boolean => {
+    const userFound = users.find(u => u.id === userId);
+    
+    if (userFound && userFound.club_socio && userFound.id_rol === 5) {
+      return userFound.club_socio.id === clubId;
+    }
+    
+    return Boolean(userFound && userFound.id_rol === 5 && userFound.id_club_socio === clubId);
+  };
+  
+  // Verificar si un usuario es administrador
+  const isUserAdmin = (userId: number): boolean => {
+    const userFound = users.find(u => u.id === userId);
+    if (!userFound) return false;
+    
+    return userFound.id_rol === 1;
+  };
+  
+  // Verificar si un usuario es miembro de algún club
+  const isMemberOfAnyClub = (userId: number): boolean => {
+    const userFound = users.find(u => u.id === userId);
+    
+    if (!userFound) return false;
+    
+    if (userFound.id_rol === 5) {
+      if (userFound.club_socio) {
+        return true;
+      }
+      
+      if (userFound.id_club_socio) {
+        return true;
+      }
+    }
+    
+    return false;
+  };
+  
   // Filtrar usuarios
   const filteredUsers = users.filter(user => {
     const fullName = `${user.nombre} ${user.apellidos}`.toLowerCase();
-    return fullName.includes(searchText.toLowerCase()) || 
-           user.email.toLowerCase().includes(searchText.toLowerCase());
+    const matchesSearch = fullName.includes(searchText.toLowerCase()) || 
+                         user.email.toLowerCase().includes(searchText.toLowerCase());
+    
+    const isMemberOfThisClub = isUserMember(user.id);
+    const isPotentialMember = user.id_rol === 4 && !isMemberOfAnyClub(user.id);
+    const isClubAdmin = user.id_rol === 1 && clubData && user.id === clubData.id_administrador;
+    
+    return matchesSearch && (isMemberOfThisClub || isPotentialMember || isClubAdmin);
   });
   
-  // Cargar datos del club y usuarios cuando se monta el componente
+  // Cargar datos del club y usuarios
   useEffect(() => {
     const loadClubData = async () => {
       if (!user || user.id_rol !== 1) {
@@ -130,31 +215,6 @@ const ManageUsers: React.FC = () => {
     }
   };
   
-  // Mostrar mensaje de toast
-  const showToastMessage = (message: string, color: string = 'success') => {
-    setToastMessage(message);
-    setToastColor(color);
-    setShowToast(true);
-  };
-  
-  // Verificar si el usuario ya es socio
-  const isUserMember = (userId: number): boolean => {
-    const userFound = users.find(u => u.id === userId);
-    
-    if (userFound && userFound.club_socio && userFound.id_rol === 5) {
-      return userFound.club_socio.id === clubId;
-    }
-    
-    return Boolean(userFound && userFound.id_rol === 5 && userFound.id_club_socio === clubId);
-  };
-  
-  const isUserAdmin = (userId: number): boolean => {
-    const userFound = users.find(u => u.id === userId);
-    if (!userFound) return false;
-    
-    return userFound.id_rol === 1;
-  };
-  
   const prepareAddAsMember = (userId: number) => {
     // Verificar si el usuario es administrador
     if (isUserAdmin(userId)) {
@@ -177,7 +237,7 @@ const ManageUsers: React.FC = () => {
     setShowAlert(true);
   };
   
-  // Preparar para eliminar usuario como socio
+  // Comprobación para quitar un usuario como socio
   const prepareRemoveAsMember = (userId: number) => {
     // Verificar si el usuario es administrador
     if (isUserAdmin(userId)) {
@@ -194,7 +254,7 @@ const ManageUsers: React.FC = () => {
     setSelectedUserId(userId);
     setAlertAction('remove');
     
-    // Buscar información del usuario para el mensaje
+    // Buscar información del usuario para mostrar en el mensaje
     const selectedUser = users.find(u => u.id === userId);
     const userName = selectedUser ? `${selectedUser.nombre} ${selectedUser.apellidos}` : 'este usuario';
     
@@ -242,8 +302,6 @@ const ManageUsers: React.FC = () => {
       });
       
       
-      // CLAVE: Actualizar manualmente el usuario en el estado local
-      // Asegurar que el usuario se convierte en SOCIO (id_rol = 5)
       const updatedUsers = users.map(u => {
         if (u.id === userId) {
           return { ...u, id_rol: 5, id_club_socio: clubId };
@@ -252,7 +310,6 @@ const ManageUsers: React.FC = () => {
       });
       
       setUsers(updatedUsers);
-      
       showToastMessage('Usuario añadido como socio correctamente', 'success');
       
       // Recargar lista de usuarios después de una pausa
@@ -285,71 +342,36 @@ const ManageUsers: React.FC = () => {
         return;
       }
       
-      // Verificar nuevamente si el usuario no es socio
+      // Verificar que el usuario no sea socio
       if (!isUserMember(userId)) {
         showToastMessage('Este usuario no es socio del club', 'warning');
         return;
       }
       
-      // Intenta usar un endpoint específico para quitar membresía
+      // Usar endpoint para quitar de socio a un usuario
       try {
         const response = await apiService.post('/remove-club-member', {
           user_id: userId,
           club_id: clubId
         });
       } catch (error) {
-        console.error("Error con endpoint específico, intentando actualización directa");
-        
-        // Si el endpoint específico falla, intentar actualizar directamente
-        // Cambiar rol a usuario normal 
+        // En caso de error, cambiar rol a usuario 
         const updateData = {
-          id_rol: 4, // Cambiar a rol USUARIO normal
-          id_club_socio: null // Quitar asociación al club
+          id_rol: 4,
+          id_club_socio: null
         };
-        
-        const response = await apiService.put(`/user/${userId}`, updateData);
       }
-      
       showToastMessage('Usuario eliminado como socio correctamente', 'success');
       
       // Recargar lista de usuarios
       await loadUsers();
       
     } catch (error) {
-      console.error('Error al eliminar socio:', error);
+      console.error('Error al eliminar socio:');
       showToastMessage('Error al eliminar usuario como socio', 'danger');
     } finally {
       setLoading(false);
     }
-  };
-  
-  // Obtener rol como texto
-  const getRolName = (rolId: number): string => {
-    switch (rolId) {
-      case 1: return 'ADMIN';
-      case 2: return 'PROFESOR';
-      case 3: return 'EMPLEADO';
-      case 4: return 'USUARIO';
-      case 5: return 'SOCIO';
-      default: return 'DESCONOCIDO';
-    }
-  };
-  
-  // Obtener color según rol
-  const getRolColor = (rolId: number): string => {
-    switch (rolId) {
-      case 1: return 'danger';
-      case 2: return 'secondary';
-      case 3: return 'tertiary';
-      case 4: return 'medium';
-      case 5: return 'success';
-      default: return 'medium';
-    }
-  };
-
-  // Función para obtener el número total de socios
-  const getTotalMembers = (): number => {
-    return users.filter(u => u.id_rol === 5).length;
   };
 
   return (
@@ -379,9 +401,9 @@ const ManageUsers: React.FC = () => {
               <IonCard className="info-card">
                 <IonCardHeader>
                   <IonCardTitle>
-                    {clubData ? clubData.nombre : 'Club'} 
+                    {clubData ? clubData.nombre : 'Club'}
                     <IonBadge color="success" style={{ float: 'right' }}>
-                      {getTotalMembers()} Socios
+                       Nº Socios: {getTotalMembers()}
                     </IonBadge>
                   </IonCardTitle>
                 </IonCardHeader>
@@ -414,7 +436,6 @@ const ManageUsers: React.FC = () => {
                         onClick={() => loadUsers()}
                       >
                         <IonIcon slot="start" icon={refreshOutline} />
-                        Recargar
                       </IonButton>
                     </div>
                   ) : (
