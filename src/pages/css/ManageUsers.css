@@ -50,6 +50,12 @@ ion-item {
   --padding-start: 16px;
 }
 
+/* Destacar elemento de socio */
+.member-item {
+  --background: rgba(76, 175, 80, 0.1);
+  border-left: 3px solid #4caf50;
+}
+
 ion-item h2 {
   font-size: 16px;
   color: white;
@@ -58,6 +64,26 @@ ion-item h2 {
 ion-item p {
   font-size: 14px;
   color: #cccccc;
+}
+
+/* Estilo para el avatar */
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0066cc;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Badge de socio */
+.member-badge {
+  margin-top: 4px;
+  --background: rgba(76, 175, 80, 0.2);
+  --color: #4caf50;
 }
 
 /* Chips de roles */
@@ -98,28 +124,6 @@ ion-chip[color="medium"] {
 .no-courts ion-icon {
   margin-bottom: 8px;
   color: #0066cc;
-}
-
-/* Opciones deslizables */
-ion-item-options {
-  --background: transparent;
-}
-
-ion-item-option {
-  width: auto;
-  max-width: 80px;
-  height: 100%;
-  text-align: center;
-}
-
-ion-item-option[color="primary"] {
-  --background: #3880ff;
-  --color: white;
-}
-
-ion-item-option[color="danger"] {
-  --background: #eb445a;
-  --color: white;
 }
 
 /* Toast */

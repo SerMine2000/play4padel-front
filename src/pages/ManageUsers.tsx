@@ -19,9 +19,6 @@ import {
   IonButton,
   IonIcon,
   IonList,
-  IonItemSliding,
-  IonItemOptions,
-  IonItemOption,
   IonLoading,
   IonToast,
   IonText,
@@ -29,14 +26,16 @@ import {
   IonChip,
   IonRefresher,
   IonRefresherContent,
-  IonAlert
+  IonAlert,
+  IonBadge,
+  IonAvatar
 } from '@ionic/react';
 import { 
   personAddOutline,
-  removeCircleOutline,
-  createOutline,
+  personRemoveOutline,
   refreshOutline,
-  personCircleOutline
+  personCircleOutline,
+  shieldOutline
 } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
 import { useHistory } from 'react-router-dom';
@@ -138,23 +137,71 @@ const ManageUsers: React.FC = () => {
     setShowToast(true);
   };
   
-  // Preparar para añadir usuario como socio
+  // Verificar si el usuario ya es socio
+  const isUserMember = (userId: number): boolean => {
+    const userFound = users.find(u => u.id === userId);
+    
+    if (userFound && userFound.club_socio && userFound.id_rol === 5) {
+      return userFound.club_socio.id === clubId;
+    }
+    
+    return Boolean(userFound && userFound.id_rol === 5 && userFound.id_club_socio === clubId);
+  };
+  
+  const isUserAdmin = (userId: number): boolean => {
+    const userFound = users.find(u => u.id === userId);
+    if (!userFound) return false;
+    
+    return userFound.id_rol === 1;
+  };
+  
   const prepareAddAsMember = (userId: number) => {
+    // Verificar si el usuario es administrador
+    if (isUserAdmin(userId)) {
+      showToastMessage('No se puede modificar el rol de un administrador', 'danger');
+      return;
+    }
+    
+    if (isUserMember(userId)) {
+      showToastMessage('Este usuario ya es socio del club', 'warning');
+      return;
+    }
+  
     setSelectedUserId(userId);
     setAlertAction('add');
-    setAlertMessage('¿Está seguro de añadir este usuario como socio del club?');
+    
+    const selectedUser = users.find(u => u.id === userId);
+    const userName = selectedUser ? `${selectedUser.nombre} ${selectedUser.apellidos}` : 'este usuario';
+    
+    setAlertMessage(`¿Añadir a ${userName} como socio del club?`);
     setShowAlert(true);
   };
   
   // Preparar para eliminar usuario como socio
   const prepareRemoveAsMember = (userId: number) => {
+    // Verificar si el usuario es administrador
+    if (isUserAdmin(userId)) {
+      showToastMessage('No se puede modificar el rol de un administrador', 'danger');
+      return;
+    }
+    
+    // Verificar si el usuario es socio
+    if (!isUserMember(userId)) {
+      showToastMessage('Este usuario no es socio del club', 'warning');
+      return;
+    }
+    
     setSelectedUserId(userId);
     setAlertAction('remove');
-    setAlertMessage('¿Está seguro de eliminar a este usuario como socio del club? No perderá su cuenta en la aplicación.');
+    
+    // Buscar información del usuario para el mensaje
+    const selectedUser = users.find(u => u.id === userId);
+    const userName = selectedUser ? `${selectedUser.nombre} ${selectedUser.apellidos}` : 'este usuario';
+    
+    setAlertMessage(`¿Está seguro de eliminar a ${userName} como socio del club? No perderá su cuenta en la aplicación.`);
     setShowAlert(true);
   };
   
-  // Confirmar acción
   const confirmAction = async () => {
     if (!selectedUserId || !clubId) return;
     
@@ -177,15 +224,41 @@ const ManageUsers: React.FC = () => {
     try {
       setLoading(true);
       
+      if (isUserAdmin(userId)) {
+        showToastMessage('No se puede modificar el rol de un administrador', 'danger');
+        return;
+      }
+      
+      // Verificar si el usuario ya es socio
+      if (isUserMember(userId)) {
+        showToastMessage('Este usuario ya es socio del club', 'warning');
+        setLoading(false);
+        return;
+      }
+      
       const response = await apiService.post('/add-club-member', {
         user_id: userId,
         club_id: clubId
       });
       
+      
+      // CLAVE: Actualizar manualmente el usuario en el estado local
+      // Asegurar que el usuario se convierte en SOCIO (id_rol = 5)
+      const updatedUsers = users.map(u => {
+        if (u.id === userId) {
+          return { ...u, id_rol: 5, id_club_socio: clubId };
+        }
+        return u;
+      });
+      
+      setUsers(updatedUsers);
+      
       showToastMessage('Usuario añadido como socio correctamente', 'success');
       
-      // Recargar lista de usuarios
-      await loadUsers();
+      // Recargar lista de usuarios después de una pausa
+      setTimeout(async () => {
+        await loadUsers();
+      }, 1000);
       
     } catch (error) {
       console.error('Error al añadir socio:', error);
@@ -195,7 +268,7 @@ const ManageUsers: React.FC = () => {
     }
   };
   
-  // Eliminar usuario como socio del club (NUEVO MÉTODO)
+  // Eliminar usuario como socio del club
   const removeAsMember = async (userId: number) => {
     if (!clubId) {
       showToastMessage('No se ha seleccionado un club', 'danger');
@@ -212,14 +285,30 @@ const ManageUsers: React.FC = () => {
         return;
       }
       
-      // Cambiar rol a usuario normal y eliminar club_socio
-      const updateData = {
-        id_rol: 4, // Cambiar a rol USUARIO normal
-        id_club_socio: null // Quitar asociación al club
-      };
+      // Verificar nuevamente si el usuario no es socio
+      if (!isUserMember(userId)) {
+        showToastMessage('Este usuario no es socio del club', 'warning');
+        return;
+      }
       
-      // Actualizar usuario
-      await apiService.put(`/user/${userId}`, updateData);
+      // Intenta usar un endpoint específico para quitar membresía
+      try {
+        const response = await apiService.post('/remove-club-member', {
+          user_id: userId,
+          club_id: clubId
+        });
+      } catch (error) {
+        console.error("Error con endpoint específico, intentando actualización directa");
+        
+        // Si el endpoint específico falla, intentar actualizar directamente
+        // Cambiar rol a usuario normal 
+        const updateData = {
+          id_rol: 4, // Cambiar a rol USUARIO normal
+          id_club_socio: null // Quitar asociación al club
+        };
+        
+        const response = await apiService.put(`/user/${userId}`, updateData);
+      }
       
       showToastMessage('Usuario eliminado como socio correctamente', 'success');
       
@@ -257,11 +346,10 @@ const ManageUsers: React.FC = () => {
       default: return 'medium';
     }
   };
-  
-  // Verificar si el usuario ya es socio
-  const isUserMember = (userId: number): boolean => {
-    const userFound = users.find(u => u.id === userId);
-    return userFound && userFound.id_rol === 5 && userFound.id_club_socio === clubId;
+
+  // Función para obtener el número total de socios
+  const getTotalMembers = (): number => {
+    return users.filter(u => u.id_rol === 5).length;
   };
 
   return (
@@ -272,6 +360,11 @@ const ManageUsers: React.FC = () => {
             <IonBackButton defaultHref="/home" />
           </IonButtons>
           <IonTitle>Gestión de Usuarios</IonTitle>
+          <IonButtons slot="end">
+            <IonButton onClick={loadUsers}>
+              <IonIcon slot="icon-only" icon={refreshOutline} />
+            </IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
       
@@ -286,7 +379,10 @@ const ManageUsers: React.FC = () => {
               <IonCard className="info-card">
                 <IonCardHeader>
                   <IonCardTitle>
-                    {clubData ? clubData.nombre : 'Club'}
+                    {clubData ? clubData.nombre : 'Club'} 
+                    <IonBadge color="success" style={{ float: 'right' }}>
+                      {getTotalMembers()} Socios
+                    </IonBadge>
                   </IonCardTitle>
                 </IonCardHeader>
                 <IonCardContent>
@@ -323,47 +419,76 @@ const ManageUsers: React.FC = () => {
                     </div>
                   ) : (
                     <IonList>
-                      {filteredUsers.map((userData) => (
-                        <IonItemSliding key={userData.id}>
-                          <IonItem>
+                      {filteredUsers.map((userData) => {
+                        const userIsMember = isUserMember(userData.id);
+                        const userIsAdmin = isUserAdmin(userData.id);
+                        
+                        return (
+                          <IonItem 
+                            key={userData.id} 
+                            className={`${userIsMember ? 'member-item' : ''} ${userIsAdmin ? 'admin-item' : ''}`}
+                          >
+                            <IonAvatar slot="start">
+                              {userData.avatar_url ? (
+                                <img src={userData.avatar_url} alt={userData.nombre} />
+                              ) : (
+                                <div className="avatar-placeholder">
+                                  {userData.nombre.charAt(0)}
+                                </div>
+                              )}
+                            </IonAvatar>
+                            
                             <IonLabel>
                               <h2>{userData.nombre} {userData.apellidos}</h2>
                               <p>{userData.email}</p>
-                              {userData.id_club_socio === clubId && (
-                                <p><strong>Socio de este club</strong></p>
+                              {userIsMember && (
+                                <IonChip color="success" className="member-badge">
+                                  <IonIcon icon={personCircleOutline} />
+                                  <IonLabel>Socio</IonLabel>
+                                </IonChip>
+                              )}
+                              {userIsAdmin && (
+                                <IonChip color="danger" className="admin-badge">
+                                  <IonIcon icon={shieldOutline} />
+                                  <IonLabel>Administrador</IonLabel>
+                                </IonChip>
                               )}
                             </IonLabel>
+                            
                             <IonChip 
                               color={getRolColor(userData.id_rol)} 
                               slot="end"
                             >
                               {getRolName(userData.id_rol)}
                             </IonChip>
+                            
+                            {/* Solo mostrar botones si no es administrador */}
+                            {!userIsAdmin && (
+                              <>
+                                {/* Botón para añadir como socio */}
+                                <IonButton 
+                                  slot="end" 
+                                  fill="clear" 
+                                  color="success"
+                                  onClick={() => prepareAddAsMember(userData.id)}
+                                >
+                                  <IonIcon slot="icon-only" icon={personAddOutline} />
+                                </IonButton>
+                                
+                                {/* Botón para quitar como socio */}
+                                <IonButton 
+                                  slot="end" 
+                                  fill="clear" 
+                                  color="danger"
+                                  onClick={() => prepareRemoveAsMember(userData.id)}
+                                >
+                                  <IonIcon slot="icon-only" icon={personRemoveOutline} />
+                                </IonButton>
+                              </>
+                            )}
                           </IonItem>
-                          
-                          <IonItemOptions side="end">
-                            {isUserMember(userData.id) && (
-                              <IonItemOption 
-                                color="danger" 
-                                onClick={() => prepareRemoveAsMember(userData.id)}
-                              >
-                                <IonIcon slot="icon-only" icon={removeCircleOutline} />
-                              </IonItemOption>
-                            )}
-                          </IonItemOptions>
-                          
-                          <IonItemOptions side="start">
-                            {!isUserMember(userData.id) && (
-                              <IonItemOption 
-                                color="success" 
-                                onClick={() => prepareAddAsMember(userData.id)}
-                              >
-                                <IonIcon slot="icon-only" icon={personAddOutline} />
-                              </IonItemOption>
-                            )}
-                          </IonItemOptions>
-                        </IonItemSliding>
-                      ))}
+                        );
+                      })}
                     </IonList>
                   )}
                 </IonCardContent>
@@ -376,7 +501,7 @@ const ManageUsers: React.FC = () => {
         <IonAlert
           isOpen={showAlert}
           onDidDismiss={() => setShowAlert(false)}
-          header="Confirmar acción"
+          header={alertAction === 'add' ? "Añadir socio" : "Eliminar socio"}
           message={alertMessage}
           buttons={[
             {
