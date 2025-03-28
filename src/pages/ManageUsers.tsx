@@ -92,8 +92,6 @@ const ManageUsers: React.FC = () => {
     return users.filter(u => isUserMember(u.id)).length;
   };
 
-
-
   // Mostrar mensaje de toast
   const showToastMessage = (message: string, color: string = 'success') => {
     setToastMessage(message);
@@ -120,6 +118,15 @@ const ManageUsers: React.FC = () => {
     return userFound.id_rol === 1;
   };
   
+  // Verificar si un usuario es administrador de este club específico
+  const isClubAdmin = (userId: number): boolean => {
+    if (!clubData) return false;
+    const userFound = users.find(u => u.id === userId);
+    if (!userFound || userFound.id_rol !== 1) return false;
+    
+    return clubData.id_administrador === userId;
+  };
+  
   // Verificar si un usuario es miembro de algún club
   const isMemberOfAnyClub = (userId: number): boolean => {
     const userFound = users.find(u => u.id === userId);
@@ -139,17 +146,63 @@ const ManageUsers: React.FC = () => {
     return false;
   };
   
-  // Filtrar usuarios
-  const filteredUsers = users.filter(user => {
-    const fullName = `${user.nombre} ${user.apellidos}`.toLowerCase();
-    const matchesSearch = fullName.includes(searchText.toLowerCase()) || 
-                         user.email.toLowerCase().includes(searchText.toLowerCase());
+  // Verificar si un usuario pertenece a este club
+  const belongsToThisClub = (user: any): boolean => {
+    if (!clubId || !clubData) return false;
     
-    const isMemberOfThisClub = isUserMember(user.id);
-    const isPotentialMember = user.id_rol === 4 && !isMemberOfAnyClub(user.id);
-    const isClubAdmin = user.id_rol === 1 && clubData && user.id === clubData.id_administrador;
+    // Es el administrador de este club
+    if (user.id_rol === 1 && clubData.id_administrador === user.id) {
+      return true;
+    }
     
-    return matchesSearch && (isMemberOfThisClub || isPotentialMember || isClubAdmin);
+    // Es profesor o empleado de este club
+    if ((user.id_rol === 2 || user.id_rol === 3) && user.id_club === clubId) {
+      return true;
+    }
+    
+    // Es socio de este club
+    if (user.id_rol === 5) {
+      if (user.club_socio && user.club_socio.id === clubId) {
+        return true;
+      }
+      if (user.id_club_socio === clubId) {
+        return true;
+      }
+    }
+    
+    // Es un usuario regular (sin club asignado)
+    if (user.id_rol === 4 && !isMemberOfAnyClub(user.id)) {
+      return true;
+    }
+    
+    return false;
+  };
+  
+  // Filtrar usuarios con búsqueda común
+  const applySearchFilter = (userList: any[]) => {
+    return userList.filter(user => {
+      const fullName = `${user.nombre} ${user.apellidos}`.toLowerCase();
+      return fullName.includes(searchText.toLowerCase()) || 
+             user.email.toLowerCase().includes(searchText.toLowerCase());
+    });
+  };
+
+  // Obtener todos los usuarios relacionados con este club
+  const getClubRelatedUsers = () => {
+    return users.filter(user => belongsToThisClub(user));
+  };
+
+  // Filtrar usuarios para el personal del club (ADMIN, PROFESOR, EMPLEADO)
+  const filteredStaffUsers = applySearchFilter(getClubRelatedUsers()).filter(user => {
+    // Solo mostrar usuarios con roles 1 (ADMIN), 2 (PROFESOR) o 3 (EMPLEADO)
+    // Y que estén relacionados con este club específico
+    return [1, 2, 3].includes(user.id_rol);
+  });
+  
+  // Filtrar usuarios para la sección de usuarios (USUARIO, SOCIO)
+  const filteredRegularUsers = applySearchFilter(getClubRelatedUsers()).filter(user => {
+    // Solo mostrar usuarios con roles 4 (USUARIO) o 5 (SOCIO)
+    return [4, 5].includes(user.id_rol);
   });
   
   // Cargar datos del club y usuarios
@@ -258,7 +311,7 @@ const ManageUsers: React.FC = () => {
     const selectedUser = users.find(u => u.id === userId);
     const userName = selectedUser ? `${selectedUser.nombre} ${selectedUser.apellidos}` : 'este usuario';
     
-    setAlertMessage(`¿Está seguro de eliminar a ${userName} como socio del club? No perderá su cuenta en la aplicación.`);
+    setAlertMessage(`¿Eliminar a ${userName} como socio del club?`);
     setShowAlert(true);
   };
   
@@ -374,6 +427,96 @@ const ManageUsers: React.FC = () => {
     }
   };
 
+  // Renderizar lista de usuarios
+  const renderUserList = (userList: any[], showHeader: boolean = true) => {
+    if (userList.length === 0) {
+      return (
+        <div className="no-courts">
+          <IonIcon icon={personCircleOutline} className="empty-icon" />
+          <IonText color="medium" className="empty-text">
+            <p>No se encontraron usuarios</p>
+          </IonText>
+          <IonButton 
+            className="refresh-button"
+            expand="block" 
+            fill="clear"
+            onClick={() => loadUsers()}
+          >
+            <IonIcon slot="icon-only" icon={refreshOutline} />
+          </IonButton>
+        </div>
+      );
+    }
+    
+    return (
+      <IonList>
+        {userList.map((userData) => {
+          const userIsMember = isUserMember(userData.id);
+          const userIsAdmin = isUserAdmin(userData.id);
+          
+          return (
+            <IonItem 
+              key={userData.id} 
+              className={`${userIsMember ? 'member-item' : ''} ${userIsAdmin ? 'admin-item' : ''}`}
+            >
+              <IonAvatar slot="start">
+                {userData.avatar_url ? (
+                  <img src={userData.avatar_url} alt={userData.nombre} />
+                ) : (
+                  <div className="avatar-placeholder">
+                    {userData.nombre.charAt(0)}
+                  </div>
+                )}
+              </IonAvatar>
+              
+              <IonLabel>
+                <h2>{userData.nombre} {userData.apellidos}</h2>
+                <p>{userData.email}</p>
+              </IonLabel>
+              
+              <IonChip 
+                color={getRolColor(userData.id_rol)} 
+                slot="end"
+              >
+                {getRolName(userData.id_rol)}
+              </IonChip>
+              
+              {/* Solo mostrar botones si no es administrador */}
+              {!userIsAdmin && userData.id_rol === 4 && (
+                <>
+                  {/* Botón para añadir como socio */}
+                  <IonButton 
+                    slot="end" 
+                    fill="clear" 
+                    color="success"
+                    onClick={() => prepareAddAsMember(userData.id)}
+                  >
+                    <IonIcon slot="icon-only" icon={personAddOutline} />
+                  </IonButton>
+                </>
+              )}
+              
+              {/* Solo mostrar botón de quitar para socios */}
+              {!userIsAdmin && userData.id_rol === 5 && (
+                <>
+                  {/* Botón para quitar como socio */}
+                  <IonButton 
+                    slot="end" 
+                    fill="clear" 
+                    color="danger"
+                    onClick={() => prepareRemoveAsMember(userData.id)}
+                  >
+                    <IonIcon slot="icon-only" icon={personRemoveOutline} />
+                  </IonButton>
+                </>
+              )}
+            </IonItem>
+          );
+        })}
+      </IonList>
+    );
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -423,84 +566,19 @@ const ManageUsers: React.FC = () => {
               
               <IonCard className="courts-card">
                 <IonCardHeader>
+                  <IonCardTitle>Personal del club</IonCardTitle>
+                </IonCardHeader>
+                <IonCardContent>
+                  {renderUserList(filteredStaffUsers)}
+                </IonCardContent>
+              </IonCard>
+
+              <IonCard className="courts-card">
+                <IonCardHeader>
                   <IonCardTitle>Usuarios</IonCardTitle>
                 </IonCardHeader>
                 <IonCardContent>
-                  {filteredUsers.length === 0 ? (
-                    <div className="no-courts">
-                      <IonIcon icon={personCircleOutline} size="large" />
-                      <IonText color="medium">
-                        <p>No se encontraron usuarios</p>
-                      </IonText>
-                      <IonButton 
-                        expand="block" 
-                        onClick={() => loadUsers()}
-                      >
-                        <IonIcon slot="start" icon={refreshOutline} />
-                      </IonButton>
-                    </div>
-                  ) : (
-                    <IonList>
-                      {filteredUsers.map((userData) => {
-                        const userIsMember = isUserMember(userData.id);
-                        const userIsAdmin = isUserAdmin(userData.id);
-                        
-                        return (
-                          <IonItem 
-                            key={userData.id} 
-                            className={`${userIsMember ? 'member-item' : ''} ${userIsAdmin ? 'admin-item' : ''}`}
-                          >
-                            <IonAvatar slot="start">
-                              {userData.avatar_url ? (
-                                <img src={userData.avatar_url} alt={userData.nombre} />
-                              ) : (
-                                <div className="avatar-placeholder">
-                                  {userData.nombre.charAt(0)}
-                                </div>
-                              )}
-                            </IonAvatar>
-                            
-                            <IonLabel>
-                              <h2>{userData.nombre} {userData.apellidos}</h2>
-                              <p>{userData.email}</p>
-                            </IonLabel>
-                            
-                            <IonChip 
-                              color={getRolColor(userData.id_rol)} 
-                              slot="end"
-                            >
-                              {getRolName(userData.id_rol)}
-                            </IonChip>
-                            
-                            {/* Solo mostrar botones si no es administrador */}
-                            {!userIsAdmin && (
-                              <>
-                                {/* Botón para añadir como socio */}
-                                <IonButton 
-                                  slot="end" 
-                                  fill="clear" 
-                                  color="success"
-                                  onClick={() => prepareAddAsMember(userData.id)}
-                                >
-                                  <IonIcon slot="icon-only" icon={personAddOutline} />
-                                </IonButton>
-                                
-                                {/* Botón para quitar como socio */}
-                                <IonButton 
-                                  slot="end" 
-                                  fill="clear" 
-                                  color="danger"
-                                  onClick={() => prepareRemoveAsMember(userData.id)}
-                                >
-                                  <IonIcon slot="icon-only" icon={personRemoveOutline} />
-                                </IonButton>
-                              </>
-                            )}
-                          </IonItem>
-                        );
-                      })}
-                    </IonList>
-                  )}
+                  {renderUserList(filteredRegularUsers)}
                 </IonCardContent>
               </IonCard>
             </IonCol>
@@ -526,7 +604,7 @@ const ManageUsers: React.FC = () => {
           ]}
         />
         
-        <IonLoading isOpen={loading} message="Procesando..." />
+        <IonLoading isOpen={loading} message="Cargando usuarios..." />
         
         <IonToast
           isOpen={showToast}

@@ -126,18 +126,40 @@ ion-item ion-button ion-icon {
   font-size: 24px;
 }
 
-
-/* Botones para recargar */
-.no-courts ion-button {
-  --background: #0066cc;
-  --color: white;
-  border-radius: 8px;
-  margin-top: 16px;
+/* Estilos para cuando no hay usuarios */
+.no-courts {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
 }
 
 .no-courts ion-icon {
-  margin-bottom: 38px;
-  color: #0066cc;
+  font-size: 56px;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+
+.no-courts p {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+.no-courts ion-button {
+  --background: transparent;
+  --color: white;
+  --box-shadow: none;
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+.no-courts ion-button ion-icon {
+  font-size: 50px;
+  color: white;
+  margin: 0;
 }
 
 /* Toast */

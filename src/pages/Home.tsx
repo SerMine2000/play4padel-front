@@ -192,15 +192,6 @@ const Home: React.FC = () => {
                         </IonItem>
                       </IonList>
                       
-                      <IonButton 
-                        expand="block" 
-                        color="primary" 
-                        className="club-action-button"
-                        onClick={goToManageCourts}
-                      >
-                        <IonIcon slot="start" icon={addCircleOutline}></IonIcon>
-                        Añadir Nueva Pista
-                      </IonButton>
                     </div>
                   </>
                 ) : (

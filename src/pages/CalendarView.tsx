@@ -1037,7 +1037,7 @@ const CalendarView: React.FC = () => {
         </IonModal>
         
         {/* Loading y Toast */}
-        <IonLoading isOpen={cargando} message="Cargando..." />
+        <IonLoading isOpen={cargando} message="Cargando reservas..." />
         
         <IonToast
           isOpen={mostrarToast}
