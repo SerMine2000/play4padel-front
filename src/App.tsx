@@ -10,6 +10,8 @@ import Reservas from './pages/Reservas';
 import ManageCourts from './pages/ManageCourts';
 import ManageUsers from './pages/ManageUsers';
 import CalendarView from './pages/CalendarView';
+import MarcadorControl from './pages/MarcadorControl';
+import MarcadorPantalla from './pages/MarcadorPantalla';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { useEffect } from 'react';
 
@@ -161,6 +163,15 @@ const AppContent: React.FC = () => {
             roles={[1]} 
           />
           
+          {/* Rutas para el marcador */}
+          <PrivateRoute path="/marcador-control" exact component={MarcadorControl} />
+          <PrivateRoute path="/marcador-pantalla" exact component={MarcadorPantalla} />
+          
+          {/* Rutas de compatibilidad para el marcador */}
+          <PrivateRoute path="/marcador" exact component={MarcadorControl} />
+          <PrivateRoute path="/club/marcador-control" exact component={MarcadorControl} />
+          <PrivateRoute path="/club/marcador" exact component={MarcadorPantalla} />
+
           {/* Redirección por defecto */}
           <Route exact path="/">
             {isAuthenticated ? <Redirect to="/home" /> : <Redirect to="/login" />}

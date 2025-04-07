@@ -1,2 +1,10 @@
 /* For information on how to create your own theme, please see:
 http://ionicframework.com/docs/theming/ */
+
+.marcador-card {
+    max-width: 600px;
+    margin: auto;
+    box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+  }
+  

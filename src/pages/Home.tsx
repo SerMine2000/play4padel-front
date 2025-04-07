@@ -32,7 +32,8 @@ import {
   addCircleOutline,
   tennisballOutline,
   peopleOutline,
-  statsChartOutline
+  statsChartOutline,
+  stopwatchOutline // Icono para el marcador
 } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
 import { useHistory } from 'react-router-dom';
@@ -128,6 +129,11 @@ const Home: React.FC = () => {
     history.push('/manage-users');
   };
 
+  // Nueva función para ir al marcador
+  const goToScoreboard = () => {
+    history.push('/marcador-control');
+  };
+
   // Vista para administradores de club
   const renderClubAdminView = () => {
     return (
@@ -186,6 +192,13 @@ const Home: React.FC = () => {
                           <IonIcon icon={peopleOutline} slot="start" color="tertiary"></IonIcon>
                           <IonLabel>Usuarios y Miembros</IonLabel>
                         </IonItem>
+                        
+                        {/* Nueva opción para el marcador */}
+                        <IonItem button onClick={goToScoreboard} detail>
+                          <IonIcon icon={stopwatchOutline} slot="start" color="warning"></IonIcon>
+                          <IonLabel>Marcador de Partidos</IonLabel>
+                        </IonItem>
+                        
                         <IonItem button detail>
                           <IonIcon icon={statsChartOutline} slot="start" color="success"></IonIcon>
                           <IonLabel>Estadísticas</IonLabel>
