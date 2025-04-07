@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  IonContent, 
+import {
+  IonContent,
   IonPage,
   IonButton,
   IonItem,
@@ -27,12 +27,11 @@ import {
   IonCol,
   IonText
 } from '@ionic/react';
-import { 
+import {
   tennisballOutline,
   calendarOutline,
   timeOutline,
   businessOutline,
-  locationOutline,
   cashOutline
 } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
@@ -349,52 +348,42 @@ const ReservarPista: React.FC = () => {
       mostrarMensaje('Debes iniciar sesión para reservar', 'warning');
       return;
     }
-    
+  
     if (!pistaDatos || !fechaSeleccionada || franjasSeleccionadas.length === 0) {
       mostrarMensaje('Por favor, completa todos los campos requeridos', 'warning');
       return;
     }
-    
+  
     try {
       setCargando(true);
-      
-      // Crear una reserva para cada franja seleccionada
+      const reservasConfirmadas = [];
+  
       for (const franja of franjasSeleccionadas) {
-        console.log(`Enviando reserva para franja ${franja.inicio}-${franja.fin}`);
-        
         const reservaData = {
           id_usuario: user.id,
           id_pista: pistaSeleccionada,
           fecha: formatearFecha(fechaSeleccionada),
           hora_inicio: formatearHoraAPI(franja.inicio),
           hora_fin: formatearHoraAPI(franja.fin),
-          precio_total: pistaDatos.precio_hora, // Usar el precio base de la pista para cada franja
+          precio_total: pistaDatos.precio_hora,
           estado: 'pendiente',
           notas: notas || ''
         };
-        
+  
         const respuesta = await apiService.post('/crear-reserva', reservaData);
-        console.log("Respuesta de crear reserva:", respuesta);
+        console.log("Respuesta de reserva:", respuesta);
+        reservasConfirmadas.push(respuesta);
       }
-      
-      mostrarMensaje('Reserva realizada con éxito', 'success');
-      
-      // Limpiar el formulario
-      setPistaSeleccionada(null);
-      setPistaDatos(null);
-      setFechaSeleccionada('');
-      setHorasDisponibles([]);
-      setFranjasSeleccionadas([]);
-      setRangosHorarios([]);
-      setNotas('');
-      setPrecioTotal(0);
-      setTarifaTotal(0);
-      
-      // Redirigir al home después de un breve retraso
+  
+      mostrarMensaje('Redirigiendo al pago...', 'medium');
+  
+      const ultimaReserva = reservasConfirmadas[reservasConfirmadas.length - 1];
+  
       setTimeout(() => {
-        history.push('/home');
+        history.push(`/pay?reservaId=${ultimaReserva.reserva_id}&precio=${ultimaReserva.precio_total}`);
+
       }, 2000);
-      
+  
     } catch (error: any) {
       console.error('Error al realizar la reserva:', error);
       mostrarMensaje(`Error al realizar la reserva: ${error.message || 'Error desconocido'}`, 'danger');
@@ -584,6 +573,7 @@ const ReservarPista: React.FC = () => {
             <div className="form-group" ref={fechaSelectorRef}>
               <label>Selecciona una Fecha *</label>
               <div 
+                id="fecha-selector"
                 className="fecha-selector" 
                 onClick={() => pistaSeleccionada && setIsDateTimeOpen(true)}
               >

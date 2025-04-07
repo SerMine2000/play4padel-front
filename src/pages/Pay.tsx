@@ -1,0 +1,126 @@
+// Pay.tsx con integración Stripe completa
+import React, { useEffect, useState } from 'react';
+import {
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonLoading,
+  IonToast,
+} from '@ionic/react';
+import { useLocation, useHistory } from 'react-router';
+import { loadStripe } from '@stripe/stripe-js';
+import {
+  Elements,
+  CardElement,
+  useStripe,
+  useElements,
+} from '@stripe/react-stripe-js';
+import axios from 'axios';
+
+const stripePromise = loadStripe('pk_test_51RBDLF2MsbKNiz9B2Wol9ZvHjbvYvhMjVwkQPOvZmBEeyRGBFPAFgkGAhBOzD4FSq1kMxZgjYJGTm9fFhfJuMdA300Vt5jJ7m4');
+
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
+const CheckoutForm: React.FC<{ reservaId: number; precio: number }> = ({ reservaId, precio }) => {
+  const stripe = useStripe();
+  const elements = useElements();
+  const history = useHistory();
+  const [clientSecret, setClientSecret] = useState<string>('');
+  const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState<string>('');
+
+  useEffect(() => {
+    const crearIntent = async () => {
+      try {
+        const res = await axios.post('http://localhost:5000/crear-pago', {
+          amount: precio,
+          reserva_id: reservaId,
+        });
+        setClientSecret(res.data.clientSecret);
+      } catch (error) {
+        console.error('Error creando PaymentIntent:', error);
+        setToast('Error al iniciar el pago');
+      } finally {
+        setLoading(false);
+      }
+    };
+    crearIntent();
+  }, [precio, reservaId]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!stripe || !elements) return;
+
+    setLoading(true);
+    const result = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: elements.getElement(CardElement)!,
+      },
+    });
+
+    if (result.error) {
+      setToast(result.error.message || 'Error en el pago');
+    } else {
+      if (result.paymentIntent.status === 'succeeded') {
+        setToast('Pago realizado con éxito');
+        setTimeout(() => {
+          history.push('/home');
+        }, 2000);
+      }
+    }
+    setLoading(false);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <CardElement />
+      <button type="submit" disabled={!stripe || loading} style={{ padding: '1rem' }}>
+        Pagar {precio.toFixed(2)} €
+      </button>
+      <IonLoading isOpen={loading} message="Procesando pago..." />
+      <IonToast isOpen={!!toast} message={toast} duration={2000} color="success" onDidDismiss={() => setToast('')} />
+    </form>
+  );
+};
+
+const Pay: React.FC = () => {
+  const query = useQuery();
+  const reservaId = Number(query.get('reservaId'));
+  const precio = Number(query.get('precio'));
+
+  if (!reservaId || !precio) {
+    return (
+      <IonPage>
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>Error de Pago</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent className="ion-padding">
+          <p>No se ha podido cargar la información de la reserva.</p>
+        </IonContent>
+      </IonPage>
+    );
+  }
+
+  return (
+    <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>Pago con Tarjeta</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent className="ion-padding">
+        <Elements stripe={stripePromise}>
+          <CheckoutForm reservaId={reservaId} precio={precio} />
+        </Elements>
+      </IonContent>
+    </IonPage>
+  );
+};
+
+export default Pay;

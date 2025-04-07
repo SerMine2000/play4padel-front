@@ -10,6 +10,7 @@ import Reservas from './pages/Reservas';
 import ManageCourts from './pages/ManageCourts';
 import ManageUsers from './pages/ManageUsers';
 import CalendarView from './pages/CalendarView';
+import Pay from './pages/Pay';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { useEffect } from 'react';
 
@@ -165,6 +166,9 @@ const AppContent: React.FC = () => {
           <Route exact path="/">
             {isAuthenticated ? <Redirect to="/home" /> : <Redirect to="/login" />}
           </Route>
+
+          <Route exact path="/pay" component={Pay} />
+
         </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>
