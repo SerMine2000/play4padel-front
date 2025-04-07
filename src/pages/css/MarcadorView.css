@@ -1,0 +1,197 @@
+/* Estilos para el componente MarcadorView y páginas relacionadas */
+
+/* Estilos para el componente de visualización */
+.marcador-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 2rem;
+  font-size: 2rem;
+  color: white; /* Asegurar que el texto sea visible */
+}
+
+.equipo {
+  text-align: center;
+  padding: 1rem 2rem;
+  border-radius: 20px;
+  min-width: 250px;
+  background-color: #f4f4f4;
+  box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+  color: black; /* Color de texto para equipos */
+}
+
+.equipo-a {
+  border: 3px solid #007bff;
+}
+
+.equipo-b {
+  border: 3px solid #dc3545;
+}
+
+.separador {
+  font-size: 3rem;
+  font-weight: bold;
+  margin: 1rem 2rem;
+  color: white; /* Asegurar que el separador sea visible */
+}
+
+.puntos {
+  font-size: 4rem;
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+.estado-info {
+  width: 100%;
+  text-align: center;
+  font-style: italic;
+  font-size: 1.5rem;
+  margin-top: 1rem;
+  color: orange;
+}
+
+.estado-fin {
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  font-size: 2rem;
+  margin-top: 1rem;
+  color: green;
+}
+
+/* Estilos para las páginas de marcador */
+.marcador-card {
+  max-width: 800px;
+  margin: auto;
+  box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+}
+
+.marcador-pantalla-container {
+  --background: #121212;
+  color: white !important; /* Forzar color de texto blanco */
+}
+
+.marcador-pantalla {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 2rem;
+  background-color: #121212;
+  color: white !important; /* Forzar color de texto blanco */
+}
+
+/* La pantalla completa muestra un marcador más grande */
+.marcador-pantalla .marcador-container {
+  transform: scale(1.5);
+  margin: 2rem 0;
+}
+
+.marcador-pantalla .equipo {
+  background-color: #2a2a2a;
+  color: white !important;
+}
+
+.marcador-pantalla .estado-info,
+.marcador-pantalla .estado-fin {
+  font-size: 2.5rem;
+  color: #ffc107;
+}
+
+.marcador-pantalla .estado-fin {
+  color: #28a745;
+}
+
+.cargando {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  font-size: 1.2rem;
+  color: #666;
+  margin: 2rem 0;
+}
+
+.error-mensaje {
+  color: #eb445a;
+  padding: 1rem;
+  margin: 1rem 0;
+  border: 1px solid #eb445a;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.sin-datos {
+  padding: 2rem;
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.ultima-actualizacion {
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  opacity: 0.6;
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .marcador-pantalla .marcador-container {
+    transform: scale(1);
+  }
+  
+  .equipo {
+    min-width: 180px;
+    padding: 0.8rem 1.5rem;
+  }
+  
+  .separador {
+    font-size: 2rem;
+    margin: 0.8rem 1rem;
+  }
+  
+  .puntos {
+    font-size: 3rem;
+  }
+  
+  .marcador-pantalla .estado-info,
+  .marcador-pantalla .estado-fin {
+    font-size: 1.8rem;
+  }
+}
+
+/* Ajustes para pantallas extra pequeñas */
+@media (max-width: 480px) {
+  .marcador-container {
+    flex-direction: column;
+    padding: 1rem;
+  }
+  
+  .equipo {
+    margin-bottom: 1rem;
+    min-width: 220px;
+  }
+  
+  .separador {
+    margin: 0.5rem;
+  }
+  
+  .puntos {
+    font-size: 2.5rem;
+  }
+}
+
+/* Asegurarnos que los títulos y textos sean visibles */
+.marcador-pantalla h2, 
+.marcador-pantalla p,
+.marcador-pantalla .puntos,
+.marcador-pantalla .estado-info,
+.marcador-pantalla .estado-fin,
+.marcador-pantalla .separador {
+  color: white !important;
+}

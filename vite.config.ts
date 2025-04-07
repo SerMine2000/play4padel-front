@@ -14,5 +14,26 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/setupTests.ts',
+  },
+  server: {
+    proxy: {
+      '/marcador': {
+        target: 'http://localhost:5000', // Ajusta esto al puerto de tu backend Flask
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path,
+        configure: (proxy, _options) => {
+          proxy.on('error', (err, _req, _res) => {
+            console.log('Proxy error:', err);
+          });
+          proxy.on('proxyReq', (proxyReq, req, _res) => {
+            console.log('Enviando solicitud al backend:', req.method, req.url);
+          });
+          proxy.on('proxyRes', (proxyRes, req, _res) => {
+            console.log('Respuesta del backend:', proxyRes.statusCode, req.url);
+          });
+        }
+      }
+    }
   }
 })
