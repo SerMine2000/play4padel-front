@@ -51,27 +51,29 @@ const CheckoutForm: React.FC<{ reservaId: number; precio: number }> = ({ reserva
     crearIntent();
   }, [precio, reservaId]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!stripe || !elements) return;
-
+  
+    if (!stripe || !elements || !clientSecret) {
+      return;
+    }
+  
     setLoading(true);
-    const result = await stripe.confirmCardPayment(clientSecret, {
-      payment_method: {
-        card: elements.getElement(CardElement)!,
-      },
-    });
-
-    if (result.error) {
-      setToast(result.error.message || 'Error en el pago');
-    } else {
-      if (result.paymentIntent.status === 'succeeded') {
-        setToast('Pago realizado con éxito');
-        setTimeout(() => {
-          history.push('/home');
-        }, 2000);
+  
+    try {
+      await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: elements.getElement(CardElement)!,
+        },
+      });
+    } catch (err: any) {
+      if (err.message?.includes("Failed to fetch")) {
+        console.warn("Stripe tracking blocked por el navegador.");
+      } else {
+        console.error(err);
       }
     }
+  
     setLoading(false);
   };
 

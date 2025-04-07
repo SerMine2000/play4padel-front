@@ -356,7 +356,7 @@ const ReservarPista: React.FC = () => {
   
     try {
       setCargando(true);
-      const reservasConfirmadas = [];
+      let ultimaReservaId: number | null = null;
   
       for (const franja of franjasSeleccionadas) {
         const reservaData = {
@@ -371,26 +371,32 @@ const ReservarPista: React.FC = () => {
         };
   
         const respuesta = await apiService.post('/crear-reserva', reservaData);
-        console.log("Respuesta de reserva:", respuesta);
-        reservasConfirmadas.push(respuesta);
+        console.log("Respuesta crear-reserva:", respuesta);
+  
+        const idReserva = respuesta?.reserva_id || respuesta?.data?.reserva_id;
+  
+        if (!idReserva) {
+          mostrarMensaje('No se pudo obtener el ID de la reserva creada', 'danger');
+          return;
+        }
+  
+        ultimaReservaId = idReserva;
       }
   
-      mostrarMensaje('Redirigiendo al pago...', 'medium');
+      if (ultimaReservaId) {
+        history.push(`/pay?reservaId=${ultimaReservaId}&precio=${pistaDatos.precio_hora}`);
+      } else {
+        mostrarMensaje('No se pudo crear ninguna reserva', 'danger');
+      }
   
-      const ultimaReserva = reservasConfirmadas[reservasConfirmadas.length - 1];
-  
-      setTimeout(() => {
-        history.push(`/pay?reservaId=${ultimaReserva.reserva_id}&precio=${ultimaReserva.precio_total}`);
-
-      }, 2000);
-  
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error al realizar la reserva:', error);
-      mostrarMensaje(`Error al realizar la reserva: ${error.message || 'Error desconocido'}`, 'danger');
+      mostrarMensaje('No se ha podido realizar la reserva.', 'danger');
     } finally {
       setCargando(false);
     }
   };
+    
   
   // Función para mostrar mensajes
   const mostrarMensaje = (mensaje: string, color: string = 'success') => {
