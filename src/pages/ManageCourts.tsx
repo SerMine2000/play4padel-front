@@ -343,9 +343,10 @@ const ManageCourts: React.FC = () => {
                   <IonCardTitle>Pistas</IonCardTitle>
                   <div className="slide-indicator">
                     <span className="swipe-icon">↔</span>
-                    <span className="swipe-text">Desliza una pista para cambiar  de estado o editar</span>
+                    <span className="swipe-text">Desliza una pista para cambiar de estado o editar</span>
                   </div>
                 </IonCardHeader>
+
                 <IonCardContent>
                   {pistas.length === 0 ? (
                     <div className="no-courts">
@@ -373,8 +374,13 @@ const ManageCourts: React.FC = () => {
                               </div>
 
                               {pista.imagen_url && (
-                                <img src={pista.imagen_url} alt={`Imagen de pista ${pista.numero}`} className="court-image"
-                                onClick={() => setImagenSeleccionada(pista.imagen_url ?? null)} style={{ cursor: 'pointer' }}/>
+                                <img
+                                  src={pista.imagen_url}
+                                  alt={`Imagen de pista ${pista.numero}`}
+                                  className="court-image"
+                                  onClick={() => setImagenSeleccionada(pista.imagen_url ?? null)}
+                                  style={{ cursor: 'pointer' }}
+                                />
                               )}
                             </div>
 
@@ -383,40 +389,60 @@ const ManageCourts: React.FC = () => {
                             </IonChip>
                           </IonItem>
 
-                          <IonItemOptions side="end">
-                            <IonItemOption color="primary" onClick={() => openEditModal(pista)}>
-                              <IonIcon slot="icon-only" icon={createOutline} />
-                              <span>Editar</span>
-                            </IonItemOption>
-                            <IonItemOption color="danger" onClick={() => prepareDeleteCourt(pista.id)}>
-                              <IonIcon slot="icon-only" icon={trashOutline} />
-                              <span>Eliminar</span>
-                            </IonItemOption>
+                          {/* OPCIONES A LA IZQUIERDA */}
+                          <IonItemOptions side="start">
+                            {pista.estado !== 'mantenimiento' && (
+                              <IonItemOption
+                                color="warning"
+                                onClick={() => changeCourtStatus(pista.id, 'mantenimiento')}
+                                className="equal-width-option"
+                              >
+                                <div className="option-content" style={{ color: 'black' }}>
+                                  <IonIcon icon={buildOutline} style={{ color: 'black', fontSize: '24px' }} />
+                                  <span style={{ color: 'black', marginTop: '4px', textTransform: 'capitalize' }}>
+                                    Mantenimiento
+                                  </span>
+                                </div>
+                              </IonItemOption>
+                            )}
+
+                            {pista.estado !== 'cerrada' && (
+                              <IonItemOption
+                                color="danger"
+                                onClick={() => changeCourtStatus(pista.id, 'cerrada')}
+                                className="equal-width-option"
+                              >
+                                <div className="option-content">
+                                  <IonIcon icon={closeCircleOutline} />
+                                  <span style={{ marginTop: '4px', textTransform: 'capitalize' }}>
+                                    Cerrada
+                                  </span>
+                                </div>
+                              </IonItemOption>
+                            )}
                           </IonItemOptions>
 
-                          <IonItemOptions side="start">
-                            {pista.estado !== 'disponible' && (
-                              <IonItemOption color="success" onClick={() => changeCourtStatus(pista.id, 'disponible')}>
-                                <IonIcon slot="icon-only" icon={checkmarkCircleOutline} />
-                              </IonItemOption>
-                            )}
-                            {pista.estado !== 'mantenimiento' && (
-                              <IonItemOption color="warning" onClick={() => changeCourtStatus(pista.id, 'mantenimiento')}>
-                                <IonIcon slot="icon-only" icon={buildOutline} />
-                                <span>Mantenimiento</span>
-                              </IonItemOption>
-                            )}
-                            {pista.estado !== 'cerrada' && (
-                              <IonItemOption color="danger" onClick={() => changeCourtStatus(pista.id, 'cerrada')}>
-                                <IonIcon slot="icon-only" icon={closeCircleOutline} />
-                                <span>Cerrada</span>
-                              </IonItemOption>
-                            )}
+                          {/* OPCIONES A LA DERECHA */}
+                          <IonItemOptions side="end">
+                            <IonItemOption color="primary" onClick={() => openEditModal(pista)}>
+                              <div className="option-content">
+                                <IonIcon icon={createOutline} />
+                                <span>Editar</span>
+                              </div>
+                            </IonItemOption>
+                            <IonItemOption color="danger" onClick={() => prepareDeleteCourt(pista.id)}>
+                              <div className="option-content">
+                                <IonIcon icon={trashOutline} />
+                                <span>Eliminar</span>
+                              </div>
+                            </IonItemOption>
                           </IonItemOptions>
                         </IonItemSliding>
                       ))}
                     </IonList>
                   )}
+
+                  {/* MODAL PARA IMAGEN AMPLIADA */}
                   <IonModal isOpen={!!imagenSeleccionada} onDidDismiss={() => setImagenSeleccionada(null)}>
                     <IonContent className="ion-padding">
                       <div className="modal-image-wrapper">
@@ -429,6 +455,7 @@ const ManageCourts: React.FC = () => {
                   </IonModal>
                 </IonCardContent>
               </IonCard>
+
             </IonCol>
           </IonRow>
         </IonGrid>

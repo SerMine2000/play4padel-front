@@ -294,13 +294,26 @@ ion-modal ion-textarea {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 13px;
   color: white;
+  text-align: center;
+  text-transform: none;
+  line-height: 1.2;
 }
 
+.equal-width-option {
+  min-width: 110px;
+  display: inline-flex;
+  justify-content: center;
+}
+
+.option-content span {
+  text-transform: capitalize; /* primera letra en mayúscula */
+  margin-top: 4px;
+}
+  
 .option-content ion-icon {
   font-size: 24px;
-  margin-bottom: 4px;
 }
 
 
@@ -328,4 +341,15 @@ ion-modal ion-textarea {
     height: 46px;
     font-size: 14px;
   }
+
+  @media (max-width: 576px) {
+    .option-content {
+      font-size: 11px;
+    }
+  
+    .option-content ion-icon {
+      font-size: 22px;
+    }
+  }
+
 }
