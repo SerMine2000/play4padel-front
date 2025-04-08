@@ -341,6 +341,10 @@ const ManageCourts: React.FC = () => {
               <IonCard className="courts-card">
                 <IonCardHeader>
                   <IonCardTitle>Pistas</IonCardTitle>
+                  <div className="slide-indicator">
+                    <span className="swipe-icon">↔</span>
+                    <span className="swipe-text">Desliza una pista para cambiar  de estado o editar</span>
+                  </div>
                 </IonCardHeader>
                 <IonCardContent>
                   {pistas.length === 0 ? (
@@ -364,7 +368,7 @@ const ManageCourts: React.FC = () => {
                                 <h2>Pista {pista.numero}</h2>
                                 <p>{pista.tipo} - {pista.precio_hora}€/1h 30min</p>
                                 <p>
-                                  {pista.iluminacion ? 'Con iluminación' : 'Sin iluminación'} - {pista.techada ? 'Cubierta' : 'Descubierta'}
+                                  {pista.iluminacion ? 'Con iluminación' : 'Sin iluminación'} - {pista.techada ? 'Indoor' : 'Outdoor'}
                                 </p>
                               </div>
 
@@ -382,9 +386,11 @@ const ManageCourts: React.FC = () => {
                           <IonItemOptions side="end">
                             <IonItemOption color="primary" onClick={() => openEditModal(pista)}>
                               <IonIcon slot="icon-only" icon={createOutline} />
+                              <span>Editar</span>
                             </IonItemOption>
                             <IonItemOption color="danger" onClick={() => prepareDeleteCourt(pista.id)}>
                               <IonIcon slot="icon-only" icon={trashOutline} />
+                              <span>Eliminar</span>
                             </IonItemOption>
                           </IonItemOptions>
 
@@ -397,11 +403,13 @@ const ManageCourts: React.FC = () => {
                             {pista.estado !== 'mantenimiento' && (
                               <IonItemOption color="warning" onClick={() => changeCourtStatus(pista.id, 'mantenimiento')}>
                                 <IonIcon slot="icon-only" icon={buildOutline} />
+                                <span>Mantenimiento</span>
                               </IonItemOption>
                             )}
                             {pista.estado !== 'cerrada' && (
                               <IonItemOption color="danger" onClick={() => changeCourtStatus(pista.id, 'cerrada')}>
                                 <IonIcon slot="icon-only" icon={closeCircleOutline} />
+                                <span>Cerrada</span>
                               </IonItemOption>
                             )}
                           </IonItemOptions>

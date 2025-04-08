@@ -38,6 +38,9 @@
 
 .court-text {
   flex: 1;
+  min-height: 100px;
+  padding-bottom: 16px;
+  padding: 8px;
 }
 
 .court-text h2,
@@ -252,6 +255,54 @@ ion-modal ion-textarea {
 .close-icon:hover {
   background: rgba(255, 255, 255, 0.2);
 }
+
+
+.slide-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 4px;
+  margin-bottom: 12px;
+  padding-right: 6px;
+}
+
+
+.swipe-icon {
+  font-size: 20px; /* más grande para que se vea bien */
+  color: #aaa;
+  animation: swipe-bounce 1.2s infinite;
+  margin-bottom: 2.5px;
+}
+
+.swipe-text {
+  font-size: 14px;
+  color: #ccc;
+  margin-left: 6px;
+}
+
+@keyframes swipe-bounce {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(8px); }
+}
+
+
+
+
+.option-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: white;
+}
+
+.option-content ion-icon {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
 
 
 /* Responsive */
