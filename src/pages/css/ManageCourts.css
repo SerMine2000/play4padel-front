@@ -35,6 +35,28 @@
   margin-bottom: 20px;
 }
 
+
+.court-text {
+  flex: 1;
+}
+
+.court-text h2,
+.court-text p {
+  margin: 0;
+  font-size: 14px;
+  color: white;
+}
+
+.court-image {
+  width: 120px;
+  height: auto;
+  object-fit: cover;
+  margin-left: 12px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+}
+
+
 ion-item-sliding {
   margin-bottom: 8px;
 }
@@ -180,6 +202,57 @@ ion-modal ion-textarea {
   background-color: #0066cc;
   color: white;
 }
+
+
+
+
+.court-item {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+}
+
+
+.court-content {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-image-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 16px;
+}
+
+.modal-image-wrapper img {
+  max-width: 100%;
+  max-height: 80vh;
+  border-radius: 12px;
+  object-fit: contain;
+}
+
+.close-icon {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  font-size: 24px;
+  padding: 4px 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.close-icon:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
 
 /* Responsive */
 @media (max-width: 576px) {
