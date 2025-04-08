@@ -1,197 +1,169 @@
-/* Estilos para el componente MarcadorView y páginas relacionadas */
+/* Añade estos estilos a tu archivo /src/pages/css/MarcadorView.css */
 
-/* Estilos para el componente de visualización */
-.marcador-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 2rem;
-  font-size: 2rem;
-  color: white; /* Asegurar que el texto sea visible */
-}
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@700&display=swap');
 
-.equipo {
-  text-align: center;
-  padding: 1rem 2rem;
-  border-radius: 20px;
-  min-width: 250px;
-  background-color: #f4f4f4;
-  box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
-  color: black; /* Color de texto para equipos */
-}
-
-.equipo-a {
-  border: 3px solid #007bff;
-}
-
-.equipo-b {
-  border: 3px solid #dc3545;
-}
-
-.separador {
-  font-size: 3rem;
-  font-weight: bold;
-  margin: 1rem 2rem;
-  color: white; /* Asegurar que el separador sea visible */
-}
-
-.puntos {
-  font-size: 4rem;
-  font-weight: bold;
-  margin-top: 0.5rem;
-}
-
-.estado-info {
-  width: 100%;
-  text-align: center;
-  font-style: italic;
-  font-size: 1.5rem;
-  margin-top: 1rem;
-  color: orange;
-}
-
-.estado-fin {
-  width: 100%;
-  text-align: center;
-  font-weight: bold;
-  font-size: 2rem;
-  margin-top: 1rem;
-  color: green;
-}
-
-/* Estilos para las páginas de marcador */
-.marcador-card {
-  max-width: 800px;
-  margin: auto;
-  box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.2);
-  border-radius: 20px;
-}
-
-.marcador-pantalla-container {
-  --background: #121212;
-  color: white !important; /* Forzar color de texto blanco */
-}
-
-.marcador-pantalla {
+/* Estilos para la página de marcador en pantalla completa */
+.scoreboard {
+  width: 100vw;
+  height: 100vh;
+  background-color: #111;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  padding: 2rem;
-  background-color: #121212;
-  color: white !important; /* Forzar color de texto blanco */
+  font-family: Arial, sans-serif;
+  color: white;
+  overflow: hidden;
 }
 
-/* La pantalla completa muestra un marcador más grande */
-.marcador-pantalla .marcador-container {
-  transform: scale(1.5);
-  margin: 2rem 0;
+.header {
+  background-color: #550055;
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 28px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border-bottom: 2px solid #fff;
 }
 
-.marcador-pantalla .equipo {
-  background-color: #2a2a2a;
-  color: white !important;
+.score-table {
+  flex: 1;
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.marcador-pantalla .estado-info,
-.marcador-pantalla .estado-fin {
-  font-size: 2.5rem;
-  color: #ffc107;
+.header-row {
+  display: table-row;
+  height: 40px;
+  background-color: #550055;
 }
 
-.marcador-pantalla .estado-fin {
-  color: #28a745;
+.header-cell {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 24px;
+  color: #fff;
+  text-transform: uppercase;
+  border-left: 2px solid #333;
 }
 
-.cargando {
+.header-spacer {
+  display: table-cell;
+  width: 40%;
+}
+
+.team-row {
+  display: table-row;
+  height: 50%;
+  border-bottom: 2px solid #333;
+}
+
+.team-name {
+  display: table-cell;
+  width: 40%;
+  vertical-align: middle;
+  padding-left: 20px;
+  font-size: 42px;
+  color: #ff77ff;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.team-a .team-name {
+  background-color: #330033;
+}
+
+.team-b .team-name {
+  background-color: #330033;
+}
+
+.score-cell {
+  display: table-cell;
+  width: 20%;
+  text-align: center;
+  vertical-align: middle;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 80px;
+  color: #ffff00;
+  background-color: #220022;
+  border-left: 2px solid #333;
+}
+
+.footer {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100px;
-  font-size: 1.2rem;
-  color: #666;
-  margin: 2rem 0;
+  justify-content: space-between;
+  background-color: #333;
+  padding: 10px 20px;
+  font-size: 24px;
+  border-top: 2px solid #fff;
 }
 
-.error-mensaje {
-  color: #eb445a;
-  padding: 1rem;
-  margin: 1rem 0;
-  border: 1px solid #eb445a;
-  border-radius: 8px;
+.time {
+  font-family: 'Roboto Mono', monospace;
+  color: #fff;
+}
+
+.temp {
+  font-family: 'Roboto Mono', monospace;
+  color: #fff;
+}
+
+.match-status {
+  font-family: 'Roboto Mono', monospace;
+  color: #ffff00;
   text-align: center;
+  padding: 10px 0;
+  font-size: 32px;
+  background-color: #330033;
 }
 
-.sin-datos {
-  padding: 2rem;
-  text-align: center;
-  margin: 2rem 0;
+.tie-break {
+  background-color: #333300;
 }
 
-.ultima-actualizacion {
-  margin-top: 2rem;
-  font-size: 0.9rem;
-  opacity: 0.6;
-  text-align: center;
+.terminado {
+  background-color: #003300;
 }
 
-/* Responsive adjustments */
+/* Media queries para responsive */
 @media (max-width: 768px) {
-  .marcador-pantalla .marcador-container {
-    transform: scale(1);
+  .team-name {
+    font-size: 32px;
   }
   
-  .equipo {
-    min-width: 180px;
-    padding: 0.8rem 1.5rem;
+  .score-cell {
+    font-size: 60px;
   }
   
-  .separador {
-    font-size: 2rem;
-    margin: 0.8rem 1rem;
+  .header {
+    font-size: 24px;
   }
   
-  .puntos {
-    font-size: 3rem;
+  .match-status {
+    font-size: 28px;
   }
   
-  .marcador-pantalla .estado-info,
-  .marcador-pantalla .estado-fin {
-    font-size: 1.8rem;
+  .footer {
+    font-size: 20px;
   }
 }
 
-/* Ajustes para pantallas extra pequeñas */
 @media (max-width: 480px) {
-  .marcador-container {
-    flex-direction: column;
-    padding: 1rem;
+  .team-name {
+    font-size: 24px;
   }
   
-  .equipo {
-    margin-bottom: 1rem;
-    min-width: 220px;
+  .score-cell {
+    font-size: 40px;
   }
   
-  .separador {
-    margin: 0.5rem;
+  .header-cell {
+    font-size: 18px;
   }
   
-  .puntos {
-    font-size: 2.5rem;
+  .footer {
+    font-size: 16px;
   }
-}
-
-/* Asegurarnos que los títulos y textos sean visibles */
-.marcador-pantalla h2, 
-.marcador-pantalla p,
-.marcador-pantalla .puntos,
-.marcador-pantalla .estado-info,
-.marcador-pantalla .estado-fin,
-.marcador-pantalla .separador {
-  color: white !important;
 }

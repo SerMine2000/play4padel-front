@@ -20,7 +20,7 @@ import {
   IonText,
   IonSpinner
 } from '@ionic/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { tennisballOutline, refreshOutline, playOutline, addOutline } from 'ionicons/icons';
 import axios from 'axios';
 import MarcadorView from '../pages/MarcadorView';
@@ -47,6 +47,9 @@ const MarcadorControl: React.FC = () => {
   const [showToast, setShowToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>('');
   const [toastColor, setToastColor] = useState<string>('success');
+  
+  // Referencia a la ventana del marcador
+  const marcadorWindowRef = useRef<Window | null>(null);
 
   /**
    * Obtiene el estado actual del marcador desde el servidor
@@ -57,7 +60,7 @@ const MarcadorControl: React.FC = () => {
       setError(null);
       console.log('Solicitando datos del marcador...');
       
-      // Esta URL debe coincidir con la configuraciΩón del proxy en vite.config.ts
+      // Esta URL debe coincidir con la configuración del proxy en vite.config.ts
       const url = '/marcador';
       console.log('URL de la solicitud:', url);
       
@@ -76,6 +79,14 @@ const MarcadorControl: React.FC = () => {
         };
         
         setEstado(estadoSeguro);
+        
+        // Actualizar la ventana del marcador si está abierta
+        if (marcadorWindowRef.current && !marcadorWindowRef.current.closed) {
+          marcadorWindowRef.current.postMessage({
+            type: 'ACTUALIZAR_MARCADOR',
+            data: estadoSeguro
+          }, '*');
+        }
       } else {
         setError('No se recibieron datos del servidor');
       }
@@ -104,6 +115,14 @@ const MarcadorControl: React.FC = () => {
       // Actualizar el estado del marcador
       if (res.data) {
         setEstado(res.data);
+        
+        // Actualizar la ventana del marcador si está abierta
+        if (marcadorWindowRef.current && !marcadorWindowRef.current.closed) {
+          marcadorWindowRef.current.postMessage({
+            type: 'ACTUALIZAR_MARCADOR',
+            data: res.data
+          }, '*');
+        }
       }
       
       mostrarToast(`Punto anotado para el equipo ${equipo}`, 'success');
@@ -159,7 +178,33 @@ const MarcadorControl: React.FC = () => {
    * Abre una ventana con el marcador en pantalla completa
    */
   const abrirMarcador = () => {
-    window.open('/marcador-pantalla', '_blank', 'width=1000,height=700');
+    // Usar la ruta alternativa que sabemos que existe
+    const url = `${window.location.origin}/club/marcador`;
+    
+    // Cerrar la ventana anterior si existe
+    if (marcadorWindowRef.current && !marcadorWindowRef.current.closed) {
+      marcadorWindowRef.current.close();
+    }
+    
+    // Abrir nueva ventana con opciones de pantalla completa
+    marcadorWindowRef.current = window.open(
+      url, 
+      'marcador', 
+      'width=1280,height=720,menubar=no,toolbar=no,location=no,status=no'
+    );
+    
+    // Enviar los datos actuales a la nueva ventana
+    if (marcadorWindowRef.current) {
+      // Esperar a que la ventana cargue
+      setTimeout(() => {
+        if (marcadorWindowRef.current) {
+          marcadorWindowRef.current.postMessage({
+            type: 'ACTUALIZAR_MARCADOR',
+            data: estado
+          }, '*');
+        }
+      }, 1000);
+    }
   };
 
   /**
@@ -170,6 +215,15 @@ const MarcadorControl: React.FC = () => {
     setToastColor(color);
     setShowToast(true);
   };
+
+  // Cerrar la ventana del marcador cuando se desmonte el componente
+  useEffect(() => {
+    return () => {
+      if (marcadorWindowRef.current && !marcadorWindowRef.current.closed) {
+        marcadorWindowRef.current.close();
+      }
+    };
+  }, []);
 
   // Efecto para cargar el marcador al iniciar y cada 2 segundos
   useEffect(() => {

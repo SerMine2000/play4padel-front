@@ -1,28 +1,10 @@
-import { 
-  IonPage, 
-  IonContent, 
-  IonHeader, 
-  IonToolbar, 
-  IonTitle,
-  IonLoading,
-  IonText,
-  IonButtons,
-  IonButton,
-  IonIcon,
-  IonSpinner
-} from '@ionic/react';
 import { useEffect, useState } from 'react';
-import { refreshOutline, closeOutline } from 'ionicons/icons';
 import axios from 'axios';
-
-// Usar la implementación más robusta de MarcadorView
-import MarcadorView from '../pages/MarcadorView';
 import './css/MarcadorView.css';
 
 /**
- * Página de visualización del marcador en pantalla completa.
- * Esta página está optimizada para ser mostrada en una pantalla secundaria
- * o en modo kiosko para que los jugadores y espectadores puedan ver el marcador.
+ * Página de visualización del marcador en formato de tablero deportivo.
+ * Diseñada para mostrarse en una pantalla secundaria para los espectadores.
  */
 const MarcadorPantalla: React.FC = () => {
   // Estado del marcador con valores iniciales seguros
@@ -33,27 +15,30 @@ const MarcadorPantalla: React.FC = () => {
     tie_break: false,
     terminado: false
   });
-  
-  // Estados de UI
-  const [cargando, setCargando] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
 
-  /**
-   * Obtiene el estado actual del marcador desde el servidor
-   */
+  // Estados para UI
+  const [cargando, setCargando] = useState<boolean>(true);
+  const [tiempo, setTiempo] = useState<number>(0);
+  
+  // Función para formatear puntos de tenis (0, 15, 30, 40, AD)
+  const formatearPuntos = (puntos: number): string => {
+    switch(puntos) {
+      case 0: return "0";
+      case 1: return "15";
+      case 2: return "30";
+      case 3: return "40";
+      case 4: return "AD";
+      default: return puntos.toString();
+    }
+  };
+
+  // Obtener el estado actual del marcador desde el servidor
   const fetchEstado = async () => {
     try {
       setCargando(true);
-      setError(null);
-      console.log('Solicitando datos del marcador para pantalla...');
       
-      // Esta URL debe coincidir con la configuración del proxy en vite.config.ts
       const url = '/marcador';
-      console.log('URL de la solicitud:', url);
-      
       const res = await axios.get(url);
-      console.log('Datos recibidos para pantalla:', res.data);
       
       if (res.data) {
         // Asegurar que el estado tiene la estructura esperada
@@ -67,31 +52,12 @@ const MarcadorPantalla: React.FC = () => {
         };
         
         setEstado(estadoSeguro);
-        setLastUpdate(new Date());
-      } else {
-        setError('No se recibieron datos del servidor');
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error al obtener el marcador:', err);
-      console.error('Detalles del error:', err.response || err.message);
-      setError(`Error al obtener datos del marcador: ${err.message || 'Error desconocido'}`);
     } finally {
       setCargando(false);
     }
-  };
-
-  /**
-   * Función para refrescar manualmente el marcador
-   */
-  const refreshMarcador = () => {
-    fetchEstado();
-  };
-
-  /**
-   * Función para cerrar la ventana (útil cuando se abre en ventana popup)
-   */
-  const closeWindow = () => {
-    window.close();
   };
 
   // Efecto para cargar el marcador al iniciar y cada 2 segundos
@@ -101,83 +67,64 @@ const MarcadorPantalla: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Efecto para configurar el comportamiento de pantalla completa
+  // Efecto para incrementar el tiempo cada segundo
   useEffect(() => {
-    // Configurar pantalla completa para mejor visualización
-    document.documentElement.style.overflow = 'hidden';
-    document.body.style.backgroundColor = '#121212';
+    const timer = setInterval(() => {
+      if (!estado.terminado) {
+        setTiempo(prevTiempo => prevTiempo + 1);
+      }
+    }, 1000);
     
-    return () => {
-      document.documentElement.style.overflow = '';
-      document.body.style.backgroundColor = '';
-    };
-  }, []);
+    return () => clearInterval(timer);
+  }, [estado.terminado]);
+
+  // Formatear el tiempo en formato mm:ss
+  const formatearTiempo = (): string => {
+    const minutos = Math.floor(tiempo / 60);
+    const segundos = tiempo % 60;
+    return `${minutos}:${segundos < 10 ? '0' + segundos : segundos}`;
+  };
+
+  // Obtener el set actual
+  const setActual = estado.sets && estado.sets.length > 0 
+    ? estado.sets[estado.sets.length - 1] 
+    : { A: 0, B: 0 };
 
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar color="primary">
-          <IonTitle>Marcador - Pista 1</IonTitle>
-          <IonButtons slot="end">
-            <IonButton onClick={refreshMarcador}>
-              <IonIcon slot="icon-only" icon={refreshOutline} />
-            </IonButton>
-            <IonButton onClick={closeWindow}>
-              <IonIcon slot="icon-only" icon={closeOutline} />
-            </IonButton>
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
+    <div className="scoreboard">
+      <div className="header">CENTER COURT</div>
       
-      <IonContent className="marcador-pantalla-container" fullscreen>
-        <div className="marcador-pantalla" style={{
-          backgroundColor: '#121212',
-          color: 'white',
-          minHeight: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '2rem'
-        }}>
-          {/* Mostrar indicador de carga si está cargando y no hay datos */}
-          {cargando && !estado ? (
-            <div className="cargando">
-              <IonSpinner name="circles" color="light"/>
-              <IonText color="light" style={{ marginTop: '1rem' }}>
-                <p>Cargando marcador...</p>
-              </IonText>
-            </div>
-          ) : error ? (
-            <div className="error-mensaje" style={{ color: 'white', borderColor: '#eb445a' }}>
-              <IonText color="danger">
-                <p>{error}</p>
-              </IonText>
-              <IonButton 
-                size="small" 
-                fill="clear" 
-                color="light" 
-                onClick={refreshMarcador}
-              >
-                <IonIcon slot="start" icon={refreshOutline} />
-                Reintentar
-              </IonButton>
-            </div>
-          ) : (
-            <MarcadorView estado={estado} estilo="completo" />
-          )}
-          
-          {/* Información de última actualización */}
-          {estado && (
-            <div className="ultima-actualizacion">
-              <IonText color="medium">
-                Última actualización: {lastUpdate.toLocaleTimeString()}
-              </IonText>
-            </div>
-          )}
+      <div className="score-table">
+        <div className="header-row">
+          <div className="header-spacer"></div>
+          <div className="header-cell">PUNTOS</div>
+          <div className="header-cell">JUEGOS</div>
+          <div className="header-cell">SETS</div>
         </div>
-      </IonContent>
-    </IonPage>
+        
+        <div className="team-row team-a">
+          <div className="team-name">EQUIPO A</div>
+          <div className="score-cell">{formatearPuntos(estado.puntos.A)}</div>
+          <div className="score-cell">{estado.juegos.A}</div>
+          <div className="score-cell">{setActual.A}</div>
+        </div>
+        
+        <div className="team-row team-b">
+          <div className="team-name">EQUIPO B</div>
+          <div className="score-cell">{formatearPuntos(estado.puntos.B)}</div>
+          <div className="score-cell">{estado.juegos.B}</div>
+          <div className="score-cell">{setActual.B}</div>
+        </div>
+      </div>
+      
+      {estado.tie_break && <div className="match-status tie-break">TIE BREAK</div>}
+      {estado.terminado && <div className="match-status terminado">PARTIDO TERMINADO</div>}
+      
+      <div className="footer">
+        <div className="temp">22°C</div>
+        <div className="time">{formatearTiempo()}</div>
+      </div>
+    </div>
   );
 };
 

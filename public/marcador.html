@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marcador Pádel</title>
+  <style>
+    @font-face {
+      font-family: 'Digital';
+      src: url('https://fonts.cdnfonts.com/s/13720/DS-DIGI.woff') format('woff');
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #000;
+      color: white;
+      overflow: hidden;
+    }
+    
+    .scoreboard {
+      width: 100vw;
+      height: 100vh;
+      background-color: #111;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .header {
+      background-color: #550055;
+      color: #fff;
+      text-align: center;
+      padding: 10px 0;
+      font-size: 28px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      border-bottom: 2px solid #fff;
+    }
+    
+    .score-table {
+      flex: 1;
+      display: table;
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .team-row {
+      display: table-row;
+      height: 50%;
+      border-bottom: 2px solid #333;
+    }
+    
+    .team-name {
+      display: table-cell;
+      width: 40%;
+      vertical-align: middle;
+      padding-left: 20px;
+      font-size: 42px;
+      color: #ff77ff;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+    
+    .team-a .team-name {
+      background-color: #330033;
+    }
+    
+    .team-b .team-name {
+      background-color: #330033;
+    }
+    
+    .score-cell {
+      display: table-cell;
+      width: 20%;
+      text-align: center;
+      vertical-align: middle;
+      font-family: 'Digital', monospace;
+      font-size: 80px;
+      color: #ffff00;
+      background-color: #220022;
+    }
+    
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      background-color: #333;
+      padding: 10px 20px;
+      font-size: 24px;
+      border-top: 2px solid #fff;
+    }
+    
+    .time {
+      font-family: 'Digital', monospace;
+      color: #fff;
+    }
+    
+    .match-status {
+      font-family: 'Digital', monospace;
+      color: #ffff00;
+      text-align: center;
+      padding: 10px 0;
+      font-size: 32px;
+      background-color: #330033;
+      display: none;
+    }
+    
+    /* Agregamos un borde entre columnas */
+    .score-cell {
+      border-left: 2px solid #333;
+    }
+    
+    /* Ajustamos los colores para las etiquetas de columnas */
+    .header-row {
+      display: table-row;
+      height: 40px;
+      background-color: #550055;
+    }
+    
+    .header-cell {
+      display: table-cell;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 24px;
+      color: #fff;
+      text-transform: uppercase;
+    }
+    
+    .header-spacer {
+      display: table-cell;
+      width: 40%;
+    }
+  </style>
+</head>
+<body>
+  <div class="scoreboard">
+    <div class="header">CENTER COURT</div>
+    
+    <div class="score-table">
+      <div class="header-row">
+        <div class="header-spacer"></div>
+        <div class="header-cell">PUNTOS</div>
+        <div class="header-cell">JUEGOS</div>
+        <div class="header-cell">SETS</div>
+      </div>
+      
+      <div class="team-row team-a">
+        <div class="team-name">EQUIPO A</div>
+        <div class="score-cell" id="puntos-a">0</div>
+        <div class="score-cell" id="juegos-a">0</div>
+        <div class="score-cell" id="set-a">0</div>
+      </div>
+      
+      <div class="team-row team-b">
+        <div class="team-name">EQUIPO B</div>
+        <div class="score-cell" id="puntos-b">0</div>
+        <div class="score-cell" id="juegos-b">0</div>
+        <div class="score-cell" id="set-b">0</div>
+      </div>
+    </div>
+    
+    <div id="tie-break" class="match-status">TIE BREAK</div>
+    <div id="terminado" class="match-status">PARTIDO TERMINADO</div>
+    
+    <div class="footer">
+      <div class="temp">20°C</div>
+      <div class="time" id="match-time">0:00</div>
+    </div>
+  </div>
+
+  <script>
+    // Variables para el tiempo del partido
+    let startTime = new Date();
+    let matchSeconds = 0;
+    let timerInterval;
+    
+    // Iniciar cronómetro del partido
+    function startTimer() {
+      timerInterval = setInterval(updateTimer, 1000);
+    }
+    
+    // Actualizar el tiempo mostrado
+    function updateTimer() {
+      matchSeconds++;
+      const minutes = Math.floor(matchSeconds / 60);
+      const seconds = matchSeconds % 60;
+      document.getElementById('match-time').textContent = 
+        `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+    }
+    
+    // Iniciar el temporizador al cargar la página
+    startTimer();
+    
+    // Escuchar mensajes de la ventana de control
+    window.addEventListener('message', function(event) {
+      // Verificar origen del mensaje para seguridad
+      if (event.data && event.data.type === 'ACTUALIZAR_MARCADOR') {
+        actualizarMarcador(event.data.data);
+      }
+    });
+    
+    // Función para convertir puntos de tenis a formato visual
+    function formatPuntosTenis(puntos) {
+      switch(puntos) {
+        case 0: return "0";
+        case 1: return "15";
+        case 2: return "30";
+        case 3: return "40";
+        case 4: return "AD";
+        default: return puntos;
+      }
+    }
+    
+    // Función para actualizar el marcador con datos recibidos
+    function actualizarMarcador(data) {
+      if (!data) return;
+      
+      // Actualizar puntos con formato de tenis
+      if (data.puntos) {
+        document.getElementById('puntos-a').textContent = formatPuntosTenis(data.puntos.A);
+        document.getElementById('puntos-b').textContent = formatPuntosTenis(data.puntos.B);
+      }
+      
+      // Actualizar juegos
+      if (data.juegos) {
+        document.getElementById('juegos-a').textContent = data.juegos.A || '0';
+        document.getElementById('juegos-b').textContent = data.juegos.B || '0';
+      }
+      
+      // Actualizar sets
+      if (data.sets && data.sets.length > 0) {
+        const setActual = data.sets[data.sets.length - 1];
+        document.getElementById('set-a').textContent = setActual.A || '0';
+        document.getElementById('set-b').textContent = setActual.B || '0';
+      }
+      
+      // Mostrar/ocultar tie-break
+      const tieBreakElement = document.getElementById('tie-break');
+      if (data.tie_break) {
+        tieBreakElement.style.display = 'block';
+      } else {
+        tieBreakElement.style.display = 'none';
+      }
+      
+      // Mostrar/ocultar terminado
+      const terminadoElement = document.getElementById('terminado');
+      if (data.terminado) {
+        terminadoElement.style.display = 'block';
+        // Detener el cronómetro si el partido ha terminado
+        clearInterval(timerInterval);
+      } else {
+        terminadoElement.style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>
