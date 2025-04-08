@@ -16,8 +16,15 @@ const MarcadorPantalla: React.FC = () => {
     terminado: false
   });
 
+  // Configuración personalizada
+  const [config, setConfig] = useState<any>({
+    nombreEquipoA: 'EQUIPO A',
+    nombreEquipoB: 'EQUIPO B',
+    tituloPista: 'CENTER COURT',
+    tipoPista: 'Pista 1'
+  });
+
   // Estados para UI
-  const [cargando, setCargando] = useState<boolean>(true);
   const [tiempo, setTiempo] = useState<number>(0);
   
   // Función para formatear puntos de tenis (0, 15, 30, 40, AD)
@@ -35,8 +42,6 @@ const MarcadorPantalla: React.FC = () => {
   // Obtener el estado actual del marcador desde el servidor
   const fetchEstado = async () => {
     try {
-      setCargando(true);
-      
       const url = '/marcador';
       const res = await axios.get(url);
       
@@ -55,10 +60,39 @@ const MarcadorPantalla: React.FC = () => {
       }
     } catch (err) {
       console.error('Error al obtener el marcador:', err);
-    } finally {
-      setCargando(false);
     }
   };
+
+  // Escuchar mensajes de la ventana de control
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data && event.data.type === 'ACTUALIZAR_MARCADOR') {
+        const { data } = event.data;
+        
+        // Actualizar estado del marcador
+        if (data) {
+          setEstado({
+            puntos: data.puntos || estado.puntos,
+            juegos: data.juegos || estado.juegos,
+            sets: data.sets || estado.sets,
+            tie_break: data.tie_break !== undefined ? data.tie_break : estado.tie_break,
+            terminado: data.terminado !== undefined ? data.terminado : estado.terminado
+          });
+          
+          // Actualizar configuración personalizada si está presente
+          if (data.config) {
+            setConfig(data.config);
+          }
+        }
+      }
+    };
+    
+    window.addEventListener('message', handleMessage);
+    
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, [estado]);
 
   // Efecto para cargar el marcador al iniciar y cada 2 segundos
   useEffect(() => {
@@ -92,7 +126,7 @@ const MarcadorPantalla: React.FC = () => {
 
   return (
     <div className="scoreboard">
-      <div className="header">CENTER COURT</div>
+      <div className="header">{config.tituloPista}</div>
       
       <div className="score-table">
         <div className="header-row">
@@ -103,14 +137,14 @@ const MarcadorPantalla: React.FC = () => {
         </div>
         
         <div className="team-row team-a">
-          <div className="team-name">EQUIPO A</div>
+          <div className="team-name">{config.nombreEquipoA}</div>
           <div className="score-cell">{formatearPuntos(estado.puntos.A)}</div>
           <div className="score-cell">{estado.juegos.A}</div>
           <div className="score-cell">{setActual.A}</div>
         </div>
         
         <div className="team-row team-b">
-          <div className="team-name">EQUIPO B</div>
+          <div className="team-name">{config.nombreEquipoB}</div>
           <div className="score-cell">{formatearPuntos(estado.puntos.B)}</div>
           <div className="score-cell">{estado.juegos.B}</div>
           <div className="score-cell">{setActual.B}</div>
@@ -121,7 +155,6 @@ const MarcadorPantalla: React.FC = () => {
       {estado.terminado && <div className="match-status terminado">PARTIDO TERMINADO</div>}
       
       <div className="footer">
-        <div className="temp">22°C</div>
         <div className="time">{formatearTiempo()}</div>
       </div>
     </div>

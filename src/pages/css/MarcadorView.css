@@ -1,29 +1,31 @@
-/* Añade estos estilos a tu archivo /src/pages/css/MarcadorView.css */
+/* Estilos mejorados para el marcador deportivo */
 
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&display=swap');
 
 /* Estilos para la página de marcador en pantalla completa */
 .scoreboard {
   width: 100vw;
   height: 100vh;
-  background-color: #111;
+  background-color: #000;
   display: flex;
   flex-direction: column;
-  font-family: Arial, sans-serif;
+  font-family: 'Oswald', sans-serif;
   color: white;
   overflow: hidden;
 }
 
 .header {
-  background-color: #550055;
+  background-color: #ff0066;
   color: #fff;
   text-align: center;
-  padding: 10px 0;
-  font-size: 28px;
-  font-weight: bold;
+  padding: 12px 0;
+  font-size: 36px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  border-bottom: 2px solid #fff;
+  letter-spacing: 3px;
+  border-bottom: 3px solid #fff;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
 
 .score-table {
@@ -35,29 +37,32 @@
 
 .header-row {
   display: table-row;
-  height: 40px;
-  background-color: #550055;
+  height: 50px;
+  background-color: #222;
 }
 
 .header-cell {
   display: table-cell;
   text-align: center;
   vertical-align: middle;
-  font-size: 24px;
+  font-size: 22px;
   color: #fff;
   text-transform: uppercase;
   border-left: 2px solid #333;
+  letter-spacing: 1px;
+  font-weight: 500;
 }
 
 .header-spacer {
   display: table-cell;
   width: 40%;
+  background-color: #222;
 }
 
 .team-row {
   display: table-row;
   height: 50%;
-  border-bottom: 2px solid #333;
+  border-bottom: 3px solid #333;
 }
 
 .team-name {
@@ -65,18 +70,22 @@
   width: 40%;
   vertical-align: middle;
   padding-left: 20px;
-  font-size: 42px;
-  color: #ff77ff;
+  font-size: 48px;
   text-transform: uppercase;
-  font-weight: bold;
+  font-weight: 700;
+  letter-spacing: 1px;
 }
 
 .team-a .team-name {
-  background-color: #330033;
+  background-color: #0066cc;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
 
 .team-b .team-name {
-  background-color: #330033;
+  background-color: #cc0000;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
 
 .score-cell {
@@ -85,85 +94,106 @@
   text-align: center;
   vertical-align: middle;
   font-family: 'Roboto Mono', monospace;
-  font-size: 80px;
+  font-size: 90px;
   color: #ffff00;
-  background-color: #220022;
+  background-color: #111;
   border-left: 2px solid #333;
+  text-shadow: 0 0 10px rgba(255,255,0,0.5);
 }
 
 .footer {
   display: flex;
-  justify-content: space-between;
-  background-color: #333;
-  padding: 10px 20px;
-  font-size: 24px;
-  border-top: 2px solid #fff;
+  justify-content: center;
+  background-color: #222;
+  padding: 15px 0;
+  border-top: 3px solid #333;
 }
 
 .time {
   font-family: 'Roboto Mono', monospace;
   color: #fff;
-}
-
-.temp {
-  font-family: 'Roboto Mono', monospace;
-  color: #fff;
+  font-size: 36px;
+  font-weight: bold;
+  text-shadow: 0 0 8px rgba(255,255,255,0.5);
 }
 
 .match-status {
-  font-family: 'Roboto Mono', monospace;
+  font-family: 'Oswald', sans-serif;
   color: #ffff00;
   text-align: center;
-  padding: 10px 0;
-  font-size: 32px;
-  background-color: #330033;
+  padding: 12px 0;
+  font-size: 36px;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 2px;
 }
 
 .tie-break {
-  background-color: #333300;
+  background-color: #ff6600;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  animation: pulse 1.5s infinite alternate;
 }
 
 .terminado {
-  background-color: #003300;
+  background-color: #009900;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+/* Animaciones */
+@keyframes pulse {
+  0% { opacity: 0.8; }
+  100% { opacity: 1; }
 }
 
 /* Media queries para responsive */
 @media (max-width: 768px) {
   .team-name {
-    font-size: 32px;
+    font-size: 36px;
+    padding-left: 10px;
   }
   
   .score-cell {
-    font-size: 60px;
+    font-size: 70px;
   }
   
   .header {
-    font-size: 24px;
+    font-size: 28px;
+    padding: 10px 0;
   }
   
   .match-status {
-    font-size: 28px;
+    font-size: 30px;
   }
   
-  .footer {
-    font-size: 20px;
+  .time {
+    font-size: 30px;
   }
 }
 
 @media (max-width: 480px) {
   .team-name {
     font-size: 24px;
+    padding-left: 5px;
   }
   
   .score-cell {
-    font-size: 40px;
+    font-size: 48px;
   }
   
   .header-cell {
-    font-size: 18px;
+    font-size: 16px;
   }
   
-  .footer {
-    font-size: 16px;
+  .header {
+    font-size: 22px;
+  }
+  
+  .time {
+    font-size: 24px;
+  }
+  
+  .match-status {
+    font-size: 24px;
+    padding: 8px 0;
   }
 }

@@ -18,10 +18,26 @@ import {
   IonLoading,
   IonToast,
   IonText,
-  IonSpinner
+  IonSpinner,
+  IonItem,
+  IonLabel,
+  IonInput,
+  IonToggle,
+  IonSelect,
+  IonSelectOption,
+  IonAccordion,
+  IonAccordionGroup
 } from '@ionic/react';
 import { useEffect, useState, useRef } from 'react';
-import { tennisballOutline, refreshOutline, playOutline, addOutline } from 'ionicons/icons';
+import { 
+  tennisballOutline, 
+  refreshOutline, 
+  playOutline, 
+  addOutline,
+  settingsOutline,
+  createOutline,
+  trophyOutline
+} from 'ionicons/icons';
 import axios from 'axios';
 import MarcadorView from '../pages/MarcadorView';
 import './css/MarcadorView.css';
@@ -41,15 +57,21 @@ const MarcadorControl: React.FC = () => {
     terminado: false
   });
   
+  // Estados para configuración del partido
+  const [nombreEquipoA, setNombreEquipoA] = useState<string>('EQUIPO A');
+  const [nombreEquipoB, setNombreEquipoB] = useState<string>('EQUIPO B');
+  const [tituloPista, setTituloPista] = useState<string>('CENTER COURT');
+  const [tipoPista, setTipoPista] = useState<string>('Pista 1');
+  
+  // Referencia a la ventana del marcador
+  const marcadorWindowRef = useRef<Window | null>(null);
+  
   // Estados de UI
   const [cargando, setCargando] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [showToast, setShowToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>('');
   const [toastColor, setToastColor] = useState<string>('success');
-  
-  // Referencia a la ventana del marcador
-  const marcadorWindowRef = useRef<Window | null>(null);
 
   /**
    * Obtiene el estado actual del marcador desde el servidor
@@ -81,12 +103,7 @@ const MarcadorControl: React.FC = () => {
         setEstado(estadoSeguro);
         
         // Actualizar la ventana del marcador si está abierta
-        if (marcadorWindowRef.current && !marcadorWindowRef.current.closed) {
-          marcadorWindowRef.current.postMessage({
-            type: 'ACTUALIZAR_MARCADOR',
-            data: estadoSeguro
-          }, '*');
-        }
+        actualizarVentanaMarcador(estadoSeguro);
       } else {
         setError('No se recibieron datos del servidor');
       }
@@ -116,13 +133,8 @@ const MarcadorControl: React.FC = () => {
       if (res.data) {
         setEstado(res.data);
         
-        // Actualizar la ventana del marcador si está abierta
-        if (marcadorWindowRef.current && !marcadorWindowRef.current.closed) {
-          marcadorWindowRef.current.postMessage({
-            type: 'ACTUALIZAR_MARCADOR',
-            data: res.data
-          }, '*');
-        }
+        // Actualizar la ventana del marcador
+        actualizarVentanaMarcador(res.data);
       }
       
       mostrarToast(`Punto anotado para el equipo ${equipo}`, 'success');
@@ -178,7 +190,7 @@ const MarcadorControl: React.FC = () => {
    * Abre una ventana con el marcador en pantalla completa
    */
   const abrirMarcador = () => {
-    // Usar la ruta alternativa que sabemos que existe
+    // Usar la ruta existente
     const url = `${window.location.origin}/club/marcador`;
     
     // Cerrar la ventana anterior si existe
@@ -194,17 +206,84 @@ const MarcadorControl: React.FC = () => {
     );
     
     // Enviar los datos actuales a la nueva ventana
-    if (marcadorWindowRef.current) {
-      // Esperar a que la ventana cargue
-      setTimeout(() => {
-        if (marcadorWindowRef.current) {
-          marcadorWindowRef.current.postMessage({
-            type: 'ACTUALIZAR_MARCADOR',
-            data: estado
-          }, '*');
+    setTimeout(() => {
+      // Actualizar con los datos iniciales
+      actualizarVentanaMarcador(estado);
+    }, 1000);
+  };
+
+  /**
+   * Envía los datos de configuración a la ventana del marcador
+   */
+  const actualizarVentanaMarcador = (datos: any) => {
+    if (marcadorWindowRef.current && !marcadorWindowRef.current.closed) {
+      // Enviar el estado del marcador y la configuración del partido
+      marcadorWindowRef.current.postMessage({
+        type: 'ACTUALIZAR_MARCADOR',
+        data: {
+          ...datos,
+          config: {
+            nombreEquipoA,
+            nombreEquipoB,
+            tituloPista,
+            tipoPista
+          }
         }
-      }, 1000);
+      }, '*');
     }
+  };
+
+  /**
+   * Activar o desactivar manualmente el tie-break
+   */
+  const toggleTieBreak = async () => {
+    try {
+      // Invertir el estado actual del tie_break
+      const nuevoEstado = !estado.tie_break;
+      
+      // URL para actualizar el estado del tie-break
+      const url = '/marcador/update';
+      const res = await axios.post(url, { tie_break: nuevoEstado });
+      
+      // Actualizar el estado local
+      if (res.data) {
+        setEstado(res.data);
+        actualizarVentanaMarcador(res.data);
+      }
+      
+      mostrarToast(`Tie-break ${nuevoEstado ? 'activado' : 'desactivado'}`, 'success');
+    } catch (err: any) {
+      console.error('Error al cambiar estado de tie-break:', err);
+      mostrarToast('Error al cambiar estado de tie-break', 'danger');
+    }
+  };
+
+  /**
+   * Finalizar el partido manualmente
+   */
+  const finalizarPartido = async () => {
+    try {
+      const url = '/marcador/update';
+      const res = await axios.post(url, { terminado: true });
+      
+      if (res.data) {
+        setEstado(res.data);
+        actualizarVentanaMarcador(res.data);
+      }
+      
+      mostrarToast('Partido finalizado correctamente', 'success');
+    } catch (err: any) {
+      console.error('Error al finalizar partido:', err);
+      mostrarToast('Error al finalizar partido', 'danger');
+    }
+  };
+
+  /**
+   * Actualiza todas las configuraciones del partido en la ventana del marcador
+   */
+  const actualizarConfiguracion = () => {
+    actualizarVentanaMarcador(estado);
+    mostrarToast('Configuración actualizada', 'success');
   };
 
   /**
@@ -246,7 +325,7 @@ const MarcadorControl: React.FC = () => {
       <IonContent className="ion-padding">
         <IonCard className="marcador-card">
           <IonCardHeader>
-            <IonCardTitle>Marcador Pista 1</IonCardTitle>
+            <IonCardTitle>Marcador {tipoPista}</IonCardTitle>
           </IonCardHeader>
           
           <IonCardContent>
@@ -268,7 +347,7 @@ const MarcadorControl: React.FC = () => {
               <MarcadorView estado={estado} />
             )}
             
-            {/* Controles del marcador */}
+            {/* Controles para asignar puntos */}
             <IonGrid className="ion-padding-top">
               <IonRow>
                 <IonCol>
@@ -280,7 +359,7 @@ const MarcadorControl: React.FC = () => {
                     onClick={() => anotarPunto("A")}
                   >
                     <IonIcon slot="start" icon={addOutline} />
-                    Punto Equipo A
+                    Punto {nombreEquipoA}
                   </IonButton>
                 </IonCol>
                 <IonCol>
@@ -292,7 +371,7 @@ const MarcadorControl: React.FC = () => {
                     onClick={() => anotarPunto("B")}
                   >
                     <IonIcon slot="start" icon={addOutline} />
-                    Punto Equipo B
+                    Punto {nombreEquipoB}
                   </IonButton>
                 </IonCol>
               </IonRow>
@@ -312,6 +391,116 @@ const MarcadorControl: React.FC = () => {
                 </IonCol>
               </IonRow>
             </IonGrid>
+            
+            {/* Controles adicionales y configuración */}
+            <IonAccordionGroup className="ion-margin-top">
+              <IonAccordion value="configuration">
+                <IonItem slot="header">
+                  <IonIcon icon={settingsOutline} slot="start" />
+                  <IonLabel>Configuración del marcador</IonLabel>
+                </IonItem>
+                
+                <div slot="content" className="ion-padding">
+                  <IonGrid>
+                    {/* Configuración de nombres de equipos */}
+                    <IonRow>
+                      <IonCol>
+                        <IonItem>
+                          <IonLabel position="stacked">Nombre Equipo A</IonLabel>
+                          <IonInput
+                            value={nombreEquipoA}
+                            onIonChange={e => setNombreEquipoA(e.detail.value as string)}
+                          ></IonInput>
+                        </IonItem>
+                      </IonCol>
+                      <IonCol>
+                        <IonItem>
+                          <IonLabel position="stacked">Nombre Equipo B</IonLabel>
+                          <IonInput
+                            value={nombreEquipoB}
+                            onIonChange={e => setNombreEquipoB(e.detail.value as string)}
+                          ></IonInput>
+                        </IonItem>
+                      </IonCol>
+                    </IonRow>
+                    
+                    {/* Configuración de pista y marcador */}
+                    <IonRow>
+                      <IonCol>
+                        <IonItem>
+                          <IonLabel position="stacked">Título del marcador</IonLabel>
+                          <IonInput
+                            value={tituloPista}
+                            onIonChange={e => setTituloPista(e.detail.value as string)}
+                          ></IonInput>
+                        </IonItem>
+                      </IonCol>
+                      <IonCol>
+                        <IonItem>
+                          <IonLabel position="stacked">Número/Tipo de Pista</IonLabel>
+                          <IonSelect
+                            value={tipoPista}
+                            onIonChange={e => setTipoPista(e.detail.value)}
+                          >
+                            <IonSelectOption value="Pista 1">Pista 1</IonSelectOption>
+                            <IonSelectOption value="Pista 2">Pista 2</IonSelectOption>
+                            <IonSelectOption value="Pista 3">Pista 3</IonSelectOption>
+                            <IonSelectOption value="Pista Central">Pista Central</IonSelectOption>
+                          </IonSelect>
+                        </IonItem>
+                      </IonCol>
+                    </IonRow>
+                    
+                    {/* Botón para aplicar configuración */}
+                    <IonRow className="ion-margin-top">
+                      <IonCol>
+                        <IonButton expand="block" onClick={actualizarConfiguracion}>
+                          <IonIcon slot="start" icon={createOutline} />
+                          Aplicar configuración
+                        </IonButton>
+                      </IonCol>
+                    </IonRow>
+                  </IonGrid>
+                </div>
+              </IonAccordion>
+              
+              <IonAccordion value="advanced">
+                <IonItem slot="header">
+                  <IonIcon icon={tennisballOutline} slot="start" />
+                  <IonLabel>Controles avanzados</IonLabel>
+                </IonItem>
+                
+                <div slot="content" className="ion-padding">
+                  <IonGrid>
+                    <IonRow>
+                      <IonCol>
+                        <IonItem>
+                          <IonLabel>Tie-Break</IonLabel>
+                          <IonToggle
+                            checked={estado.tie_break}
+                            onIonChange={() => toggleTieBreak()}
+                          ></IonToggle>
+                        </IonItem>
+                      </IonCol>
+                    </IonRow>
+                    
+                    <IonRow className="ion-margin-top">
+                      <IonCol>
+                        <IonButton 
+                          expand="block" 
+                          color="warning"
+                          disabled={estado.terminado}
+                          onClick={finalizarPartido}
+                        >
+                          <IonIcon slot="start" icon={trophyOutline} />
+                          Finalizar partido
+                        </IonButton>
+                      </IonCol>
+                    </IonRow>
+                  </IonGrid>
+                </div>
+              </IonAccordion>
+            </IonAccordionGroup>
           </IonCardContent>
         </IonCard>
         
