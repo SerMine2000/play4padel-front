@@ -46,6 +46,12 @@ ion-card-title {
   position: relative;
 }
 
+.profile-avatar ion-icon {
+  width: 90%;
+  height: 90%;
+  color: white;
+}
+
 /* Nuevo estilo para hacer el avatar clickable */
 .profile-avatar:hover {
   cursor: pointer;

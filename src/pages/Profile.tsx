@@ -26,7 +26,7 @@ import {
   IonCol,
   IonAlert
 } from '@ionic/react';
-import { personCircleOutline, saveOutline, refreshOutline, mailOutline, callOutline, keyOutline, imageOutline } from 'ionicons/icons';
+import { personOutline, saveOutline, refreshOutline, mailOutline, callOutline, keyOutline, imageOutline } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
 import { useHistory } from 'react-router-dom';
 import apiService from '../services/api.service';
@@ -253,7 +253,7 @@ const Profile: React.FC = () => {
                 {tempAvatarUrl ? (
                   <img src={tempAvatarUrl} alt={user.nombre} />
                 ) : (
-                  <IonIcon icon={personCircleOutline} size="large" />
+                  <IonIcon icon={personOutline} size="large" />
                 )}
               </IonAvatar>
               {isEditing && (

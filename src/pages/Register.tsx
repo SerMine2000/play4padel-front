@@ -82,181 +82,92 @@ const Register: React.FC = () => {
       document.activeElement.blur();
     }
   });
-
-  // Efecto para procesar el registro después de que los estados se actualicen
-  useEffect(() => {
-    const performRegistration = async () => {
-      if (isSubmitting) return;
-      setIsSubmitting(true);
   
-      try {
-          // Validación de datos
-          if (!nombre || !email || !password || !confirmPassword) {
-              setIsSubmitting(false);
-              return;
-          }
-  
-          if (password !== confirmPassword) {
-              setFormError('Las contraseñas no coinciden');
-              setIsSubmitting(false);
-              return;
-          }
-  
-          // Validaciones específicas para club
-          if (tipoUsuario === TIPOS_CUENTA.CLUB) {
-              if (!nombreClub || !direccionClub || !horarioApertura || !horarioCierre) {
-                  setFormError('Por favor, completa todos los datos del club');
-                  setIsSubmitting(false);
-                  return;
-              }
-          }
-  
-          setShowLoading(true);
-          setFormError('');
-  
-          // Preparar datos de registro
-          const registroData: RegisterRequest = {
-              nombre,
-              apellidos: tipoUsuario === TIPOS_CUENTA.CLUB ? "Club" : apellidos,
-              email,
-              password,
-              id_rol: tipoUsuario === TIPOS_CUENTA.CLUB ? 1 : 4,
-              telefono
-          };
-  
-          if (tipoUsuario === TIPOS_CUENTA.CLUB) {
-              registroData.club_data = {
-                  nombre: nombreClub,
-                  direccion: direccionClub,
-                  horario_apertura: horarioApertura,
-                  horario_cierre: horarioCierre,
-                  descripcion: descripcionClub,
-                  telefono: telefono,
-                  email: email
-              };
-          }
-  
-          if (tipoUsuario === TIPOS_CUENTA.CLUB) {
-              await register({ ...registroData, tipo_cuenta: tipoUsuario });
-          } else {
-              await register(registroData);
-          }
-  
-          // Mostrar toast de registro con éxito
-          setShowToast(true);
-  
-          //Limpiar campos
-          setNombre('');
-          setApellidos('');
-          setEmail('');
-          setPassword('');
-          setConfirmPassword('');
-          setTelefono('');
-  
-          if (tipoUsuario === TIPOS_CUENTA.CLUB) {
-              setNombreClub('');
-              setDireccionClub('');
-              setDescripcionClub('');
-              setHorarioApertura('08:00');
-              setHorarioCierre('22:00');
-          }
-  
-          setTimeout(() => {
-              history.replace('/login');
-          }, 2000);
-  
-      } catch (error: any) {
-          console.error('Error en registro:', error);
-          setFormError(error.message || 'Error al registrar usuario. Inténtalo de nuevo.');
-      } finally {
-          setShowLoading(false);
-          setIsSubmitting(false);
-      }
-  };
-    
-    performRegistration();
-  }, [isSubmitting, nombre, apellidos, email, password, confirmPassword, telefono, tipoUsuario, 
-      nombreClub, direccionClub, descripcionClub, horarioApertura, horarioCierre, register, history]);
-  
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Sólo marcamos que estamos enviando y dejamos que el useEffect se encargue
-    setIsSubmitting(true);
-    
-    // Eliminar el foco de cualquier elemento activo
-    if (document.activeElement instanceof HTMLElement) {
-      document.activeElement.blur();
+  
+    if (!nombre || !email || !password || !confirmPassword) {
+      setFormError('Todos los campos son obligatorios');
+      return;
+    }
+  
+    if (password !== confirmPassword) {
+      setFormError('Las contraseñas no coinciden');
+      return;
+    }
+  
+    if (
+      tipoUsuario === TIPOS_CUENTA.CLUB &&
+      (!nombreClub || !direccionClub || !horarioApertura || !horarioCierre || !descripcionClub)
+    ) {
+      setFormError('Por favor, completa todos los datos del club');
+      return;
+    }
+  
+    try {
+      setShowLoading(true);
+      setFormError('');
+  
+      const registroData: RegisterRequest = {
+        nombre,
+        apellidos: tipoUsuario === TIPOS_CUENTA.CLUB ? "Club" : apellidos,
+        email,
+        password,
+        id_rol: tipoUsuario === TIPOS_CUENTA.CLUB ? 1 : 4,
+        telefono
+      };
+  
+      if (tipoUsuario === TIPOS_CUENTA.CLUB) {
+        registroData.club_data = {
+          nombre: nombreClub,
+          direccion: direccionClub,
+          horario_apertura: horarioApertura,
+          horario_cierre: horarioCierre,
+          descripcion: descripcionClub,
+          telefono,
+          email
+        };
+      }
+  
+      await register({ ...registroData, tipo_cuenta: tipoUsuario });
+  
+      setShowToast(true);
+  
+      // Limpiar campos
+      setNombre('');
+      setApellidos('');
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+      setTelefono('');
+      setNombreClub('');
+      setDireccionClub('');
+      setDescripcionClub('');
+      setHorarioApertura('08:00');
+      setHorarioCierre('22:00');
+  
+      setTimeout(() => {
+        history.replace('/login');
+      }, 2000);
+    } catch (error: any) {
+      console.error('Error en registro:', error);
+      setFormError(error.message || 'Error al registrar usuario. Inténtalo de nuevo.');
+    } finally {
+      setShowLoading(false);
     }
   };
+  
   
   // Manejador para la tecla Enter en los inputs
   const handleKeyDown = (e: React.KeyboardEvent<HTMLIonInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      
-      // Forzar actualización del estado antes de enviar el formulario
-      const target = e.currentTarget;
-      const name = target.name;
-      const value = target.value?.toString() || '';
-      
-      // Actualizar el estado correspondiente
-      switch(name) {
-        case 'nombre':
-          setNombre(value);
-          break;
-        case 'apellidos':
-          setApellidos(value);
-          break;
-        case 'email':
-          setEmail(value);
-          break;
-        case 'password':
-          setPassword(value);
-          break;
-        case 'confirmPassword':
-          setConfirmPassword(value);
-          break;
-        case 'telefono':
-          setTelefono(value);
-          break;
-        case 'nombreClub':
-          setNombreClub(value);
-          break;
-        case 'direccionClub':
-          setDireccionClub(value);
-          break;
-        case 'horarioApertura':
-          setHorarioApertura(value);
-          break;
-        case 'horarioCierre':
-          setHorarioCierre(value);
-          break;
-      }
-      
-      // Usar setTimeout para asegurar que los estados se actualicen
-      setTimeout(() => {
-        if (formRef.current) {
-          formRef.current.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-        }
-      }, 0);
     }
   };
 
-  // Manejador para textarea (descripción del club)
   const handleTextareaKeyDown = (e: React.KeyboardEvent<HTMLIonTextareaElement>) => {
-    if (e.key === 'Enter' && e.ctrlKey) {
+    if (e.key === 'Enter' && !e.ctrlKey) {
       e.preventDefault();
-      
-      // Actualizar el estado
-      setDescripcionClub(e.currentTarget.value?.toString() || '');
-      
-      // Usar setTimeout para asegurar que los estados se actualicen
-      setTimeout(() => {
-        if (formRef.current) {
-          formRef.current.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-        }
-      }, 0);
     }
   };
 
