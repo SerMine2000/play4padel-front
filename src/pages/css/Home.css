@@ -53,6 +53,11 @@ ion-label {
   color: white !important;
 }
 
+.logout-item ion-label {
+  color: #eb445a !important;
+  font-weight: 600;
+}
+
 .club-section ion-item,
 .club-header ion-item,
 .user-info ion-item {
@@ -119,6 +124,10 @@ ion-label {
 .stat-card p {
   color: #cccccc;
   margin: 0;
+}
+
+ion-avatar img {
+  object-fit: cover;
 }
 
 .section-title {

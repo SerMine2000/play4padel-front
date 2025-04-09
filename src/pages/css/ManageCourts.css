@@ -217,9 +217,11 @@ ion-modal ion-textarea {
 
 .court-content {
   display: flex;
+  flex-direction: row;
   width: 100%;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .modal-image-wrapper {
@@ -281,6 +283,13 @@ ion-modal ion-textarea {
   margin-left: 6px;
 }
 
+
+.modal-formulario-pista {
+  --height: 90%;
+  --max-height: 82%;
+}
+
+
 @keyframes swipe-bounce {
   0%, 100% { transform: translateX(0); }
   50% { transform: translateX(8px); }
@@ -308,7 +317,7 @@ ion-modal ion-textarea {
 }
 
 .option-content span {
-  text-transform: capitalize; /* primera letra en mayúscula */
+  text-transform: capitalize;
   margin-top: 4px;
 }
   
@@ -341,15 +350,4 @@ ion-modal ion-textarea {
     height: 46px;
     font-size: 14px;
   }
-
-  @media (max-width: 576px) {
-    .option-content {
-      font-size: 11px;
-    }
-  
-    .option-content ion-icon {
-      font-size: 22px;
-    }
-  }
-
 }

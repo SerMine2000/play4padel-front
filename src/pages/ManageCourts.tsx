@@ -86,7 +86,7 @@ const ManageCourts: React.FC = () => {
   // Form state
   const [formData, setFormData] = useState({
     numero: '',
-    tipo: 'standard',
+    tipo: '',
     precio_hora: '',
     iluminacion: true,
     techada: false,
@@ -164,7 +164,7 @@ const ManageCourts: React.FC = () => {
     setEditingPista(null);
     setFormData({
       numero: '',
-      tipo: 'standard',
+      tipo: '',
       precio_hora: '',
       iluminacion: true,
       techada: false,
@@ -198,11 +198,12 @@ const ManageCourts: React.FC = () => {
       setLoading(true);
       
       // Validar datos
-      if (!formData.numero || !formData.precio_hora) {
-        showToastMessage('Por favor, complete los campos requeridos', 'warning');
+      if (!formData.numero || !formData.precio_hora || !['Cristal', 'Muro'].includes(formData.tipo)) {
+        showToastMessage('Debe seleccionar un tipo de pista válido: Cristal o Muro', 'warning');
         setLoading(false);
         return;
       }
+      
       
       // Preparar datos para enviar
       const pistaData = {
@@ -246,19 +247,26 @@ const ManageCourts: React.FC = () => {
   };
   
   // Cambiar estado de la pista
-  const changeCourtStatus = async (pistaId: number, newStatus: string) => {
+  const changeCourtStatus = async (
+    pistaId: number,
+    newStatus: string,
+    event?: React.MouseEvent
+  ) => {
     try {
       setLoading(true);
-      
+  
       await apiService.put(`/pistas/${pistaId}`, { estado: newStatus });
-      
       showToastMessage(`Estado de la pista actualizado a ${newStatus}`);
-      
-      // Actualizar lista de pistas
-      const pistasResponse = await apiService.get(`/clubs/${clubId}/pistas`);
-      if (Array.isArray(pistasResponse)) {
-        setPistas(pistasResponse);
-      }
+  
+      // Actualizar el estado localmente (sin recargar toda la lista)
+      setPistas((prev) =>
+        prev.map((p) => (p.id === pistaId ? { ...p, estado: newStatus } : p))
+      );
+  
+      // Cerrar sliding después de pulsar
+      const sliding = (event?.target as HTMLElement)?.closest('ion-item-sliding') as HTMLIonItemSlidingElement;
+      if (sliding) await sliding.close();
+  
     } catch (error) {
       console.error('Error al cambiar estado de la pista:', error);
       showToastMessage('Error al cambiar el estado de la pista', 'danger');
@@ -266,6 +274,8 @@ const ManageCourts: React.FC = () => {
       setLoading(false);
     }
   };
+  
+  
   
   // Eliminar pista
   const prepareDeleteCourt = (pistaId: number) => {
@@ -361,15 +371,17 @@ const ManageCourts: React.FC = () => {
                     </div>
                   ) : (
                     <IonList>
-                      {pistas.map((pista) => (
-                        <IonItemSliding key={pista.id}>
+                      {[...pistas]
+                        .sort((a, b) => a.numero - b.numero)
+                        .map((pista) => (
+                        <IonItemSliding className="responsive-sliding" key={pista.id}>
                           <IonItem className="court-item">
                             <div className="court-content">
                               <div className="court-text">
                                 <h2>Pista {pista.numero}</h2>
                                 <p>{pista.tipo} - {pista.precio_hora}€/1h 30min</p>
                                 <p>
-                                  {pista.iluminacion ? 'Con iluminación' : 'Sin iluminación'} - {pista.techada ? 'Indoor' : 'Outdoor'}
+                                  {pista.iluminacion ? 'Cuenta con iluminación' : 'Sin iluminación'} - {pista.techada ? 'Indoor' : 'Outdoor'}
                                 </p>
                               </div>
 
@@ -391,10 +403,25 @@ const ManageCourts: React.FC = () => {
 
                           {/* OPCIONES A LA IZQUIERDA */}
                           <IonItemOptions side="start">
+                            {pista.estado !== 'disponible' && (
+                              <IonItemOption
+                                color="success"
+                                onClick={(e) => changeCourtStatus(pista.id, 'disponible', e)}
+                                className="equal-width-option"
+                              >
+                                <div className="option-content">
+                                  <IonIcon icon={checkmarkCircleOutline} />
+                                  <span style={{ marginTop: '4px', textTransform: 'capitalize' }}>
+                                    Abrir
+                                  </span>
+                                </div>
+                              </IonItemOption>
+                            )}
+
                             {pista.estado !== 'mantenimiento' && (
                               <IonItemOption
                                 color="warning"
-                                onClick={() => changeCourtStatus(pista.id, 'mantenimiento')}
+                                onClick={(e) => changeCourtStatus(pista.id, 'mantenimiento', e)}
                                 className="equal-width-option"
                               >
                                 <div className="option-content" style={{ color: 'black' }}>
@@ -409,7 +436,7 @@ const ManageCourts: React.FC = () => {
                             {pista.estado !== 'cerrada' && (
                               <IonItemOption
                                 color="danger"
-                                onClick={() => changeCourtStatus(pista.id, 'cerrada')}
+                                onClick={(e) => changeCourtStatus(pista.id, 'cerrada', e)}
                                 className="equal-width-option"
                               >
                                 <div className="option-content">
@@ -422,18 +449,30 @@ const ManageCourts: React.FC = () => {
                             )}
                           </IonItemOptions>
 
+
+
                           {/* OPCIONES A LA DERECHA */}
                           <IonItemOptions side="end">
-                            <IonItemOption color="primary" onClick={() => openEditModal(pista)}>
-                              <div className="option-content">
-                                <IonIcon icon={createOutline} />
-                                <span>Editar</span>
-                              </div>
-                            </IonItemOption>
-                            <IonItemOption color="danger" onClick={() => prepareDeleteCourt(pista.id)}>
+                          <IonItemOption
+                            color="primary"
+                            onClick={(e) => {
+                              openEditModal(pista);
+                              const sliding = (e.target as HTMLElement)?.closest('ion-item-sliding') as HTMLIonItemSlidingElement;
+                              if (sliding) sliding.close();
+                            }}
+                            className="equal-width-option">
+                            <div className="option-content">
+                              <IonIcon icon={createOutline} />
+                              <span style={{ marginTop: '4px', textTransform: 'capitalize' }}>Editar</span>
+                            </div>
+                          </IonItemOption>
+                            <IonItemOption
+                              color="danger"
+                              onClick={() => prepareDeleteCourt(pista.id)}
+                              className="equal-width-option">
                               <div className="option-content">
                                 <IonIcon icon={trashOutline} />
-                                <span>Eliminar</span>
+                                <span style={{ marginTop: '4px', textTransform: 'capitalize' }}>Eliminar</span>
                               </div>
                             </IonItemOption>
                           </IonItemOptions>
@@ -467,7 +506,7 @@ const ManageCourts: React.FC = () => {
         </IonFab>
         
         {/* Modal para añadir o editar pista */}
-        <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)}>
+        <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)} className="modal-formulario-pista">
           <IonHeader>
             <IonToolbar>
               <IonTitle>
@@ -499,12 +538,13 @@ const ManageCourts: React.FC = () => {
                   <IonItem lines="none">
                     <IonLabel>Tipo de Pista</IonLabel>
                     <div className="button-toggle-container">
-                      <IonButton fill={formData.tipo === 'Cristal' ? 'solid' : 'outline'}
+                      <IonButton
+                        fill={formData.tipo === 'Cristal' ? 'solid' : 'outline'}
                         onClick={() => setFormData({ ...formData, tipo: 'Cristal' })}>
                         Cristal
                       </IonButton>
-
-                      <IonButton fill={formData.tipo === 'Muro' ? 'solid' : 'outline'}
+                      <IonButton
+                        fill={formData.tipo === 'Muro' ? 'solid' : 'outline'}
                         onClick={() => setFormData({ ...formData, tipo: 'Muro' })}>
                         Muro
                       </IonButton>
@@ -523,7 +563,7 @@ const ManageCourts: React.FC = () => {
                   </IonItem>
                   
                   <IonItem lines="full">
-                    <IonLabel className="solo-texto">Con Iluminación</IonLabel>
+                    <IonLabel className="solo-texto">Cuenta con Iluminación</IonLabel>
                     <IonToggle
                       checked={formData.iluminacion}
                       onIonChange={(e) => handleToggleChange(e, 'iluminacion')}

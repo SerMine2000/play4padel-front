@@ -22,7 +22,9 @@ import {
   IonLoading,
   IonList,
   IonRefresher,
-  IonRefresherContent
+  IonRefresherContent,
+  IonAvatar,
+  IonPopover
 } from '@ionic/react';
 import { 
   logOutOutline, 
@@ -278,20 +280,50 @@ const Home: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar className="home-toolbar">
-          <IonTitle>
-            {isClubAdmin && clubData ? clubData.nombre : 'Play4Padel - Inicio'}
-          </IonTitle>
+          <IonTitle>Inicio</IonTitle>
+
           <IonButtons slot="end">
-            <IonButton onClick={goToProfile}>
-              <IonIcon slot="icon-only" icon={personCircleOutline}></IonIcon>
-            </IonButton>
-            <IonButton onClick={handleLogout} className="logout-button">
-              <IonIcon slot="start" icon={logOutOutline}></IonIcon>
-              Cerrar Sesión
+            <IonButton id="profile-menu">
+              <IonAvatar style={{ width: '48px', height: '48px' }}>
+                {user?.avatar_url ? (
+                  <img src={user.avatar_url} alt="Perfil" />
+                ) : (
+                  <div
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      backgroundColor: '#3880ff',
+                      borderRadius: '50%',
+                    }}>
+                    <IonIcon icon={personCircleOutline} size="large" color="light" />
+                  </div>
+                )}
+              </IonAvatar>
             </IonButton>
           </IonButtons>
         </IonToolbar>
+
+        <IonPopover
+          trigger="profile-menu"
+          triggerAction="click"
+          dismissOnSelect={true}>
+          <IonList>
+            <IonItem button routerLink="/profile">
+              <IonIcon icon={personCircleOutline} slot="start" color="light"/>
+              <IonLabel>Perfil</IonLabel>
+            </IonItem>
+            <IonItem button onClick={logout} className="logout-item">
+              <IonIcon icon={logOutOutline} slot="start" color="danger" />
+              <IonLabel>Cerrar sesión</IonLabel>
+            </IonItem>
+          </IonList>
+        </IonPopover>
       </IonHeader>
+
+
       <IonContent className="home-container">
         {isClubAdmin && (
           <IonRefresher slot="fixed" onIonRefresh={loadClubData}>

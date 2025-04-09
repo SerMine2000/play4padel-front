@@ -24,9 +24,10 @@ import {
   IonGrid,
   IonRow,
   IonCol,
-  IonAlert
+  IonAlert,
+  IonModal
 } from '@ionic/react';
-import { personOutline, saveOutline, refreshOutline, mailOutline, callOutline, keyOutline, imageOutline } from 'ionicons/icons';
+import { personOutline, personCircleOutline, saveOutline, refreshOutline, mailOutline, callOutline, keyOutline, imageOutline, closeOutline } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
 import { useHistory } from 'react-router-dom';
 import apiService from '../services/api.service';
@@ -52,7 +53,7 @@ const Profile: React.FC = () => {
   // Nuevo estado para la URL de avatar temporal
   const [tempAvatarUrl, setTempAvatarUrl] = useState('');
   const [showAvatarAlert, setShowAvatarAlert] = useState(false);
-  
+  const [showAvatarModal, setShowAvatarModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -249,13 +250,16 @@ const Profile: React.FC = () => {
         ) : user ? (
           <>
             <div className="profile-header">
-              <IonAvatar className="profile-avatar" onClick={isEditing ? handleAvatarUpdate : undefined}>
-                {tempAvatarUrl ? (
-                  <img src={tempAvatarUrl} alt={user.nombre} />
-                ) : (
-                  <IonIcon icon={personOutline} size="large" />
-                )}
-              </IonAvatar>
+            <IonAvatar className="profile-avatar"
+              onClick={ 
+                isEditing ? handleAvatarUpdate : () => tempAvatarUrl && setShowAvatarModal(true)
+              }>
+              {tempAvatarUrl ? (
+                <img src={tempAvatarUrl} alt={user.nombre} />
+              ) : (
+                <IonIcon icon={personOutline} size="large" />
+              )}
+            </IonAvatar>
               {isEditing && (
                 <IonText color="light" className="edit-avatar-text">
                   <p><small>Toca para cambiar avatar</small></p>
@@ -503,9 +507,50 @@ const Profile: React.FC = () => {
         )}
         
         <IonLoading isOpen={isLoading} message="Procesando..." />
+
+        <IonModal isOpen={showAvatarModal} onDidDismiss={() => setShowAvatarModal(false)}>
+        <IonContent fullscreen className="ion-padding">
+          <div
+            style={{
+              position: 'absolute',
+              top: '16px',
+              right: '16px',
+              zIndex: 10
+            }}
+          >
+            <IonButton fill="clear" onClick={() => setShowAvatarModal(false)}>
+              <IonIcon icon={closeOutline} size="large" color="light" />
+            </IonButton>
+          </div>
+          <div
+            style={{
+              height: '100%',
+              backgroundColor: 'black',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <img
+              src={tempAvatarUrl}
+              alt="avatar ampliado"
+              style={{
+                maxWidth: '100%',
+                maxHeight: '100%',
+                objectFit: 'contain',
+                borderRadius: '8px',
+                boxShadow: '0 0 10px rgba(255,255,255,0.2)'
+              }}
+            />
+          </div>
+        </IonContent>
+      </IonModal>
+
       </IonContent>
     </IonPage>
   );
+
+  
 };
 
 export default Profile;
