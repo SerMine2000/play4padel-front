@@ -1,21 +1,9 @@
-/* src/pages/css/ManageCourts.css */
-
-.manage-courts-container {
+/* .contenedor-gestion-pistas {
   --background: url('/img/fondoLoginRegistro.jpg') no-repeat center center / cover;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+}  */
 
-.info-card,
-.courts-card {
-  margin-bottom: 16px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  background-color: #1c1c1c;
-  color: white;
-  padding: 16px;
-}
-
-.no-courts {
+.sin-pistas {
   text-align: center;
   padding: 30px 20px;
   display: flex;
@@ -23,208 +11,138 @@
   align-items: center;
 }
 
-.no-courts ion-icon {
+.sin-pistas ion-icon {
   font-size: 48px;
-  color: #0066cc;
+  color: var(--ion-color-primary);
   margin-bottom: 16px;
 }
 
-.no-courts p {
+.sin-pistas p {
   font-size: 18px;
-  color: #dddddd;
+  color: var(--ion-text-color);
   margin-bottom: 20px;
 }
 
-
-.court-text {
+.texto-pista {
   flex: 1;
   min-height: 100px;
   padding-bottom: 16px;
   padding: 8px;
 }
 
-.court-text h2,
-.court-text p {
+.texto-pista h2,
+.texto-pista p {
   margin: 0;
   font-size: 14px;
-  color: white;
 }
 
-.court-image {
-  width: 120px;
-  height: auto;
+.imagen-pista {
+  width: 90px;
+  height: 70px;
+  margin: 10px;
   object-fit: cover;
-  margin-left: 12px;
-  margin-bottom: 15px;
-  border-radius: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-
-ion-item-sliding {
+.ion-item-sliding {
   margin-bottom: 8px;
 }
 
-ion-item {
-  --background: #1c1c1c;
-  --color: white;
-  --border-color: rgba(255, 255, 255, 0.1);
-  --padding-start: 16px;
-  margin-bottom: 16px;
+.ion-item {
+  --background: var(--ion-background-color);
+  --color: var(--ion-text-color);
+  --border-color: var(--ion-border-color, rgba(0, 0, 0, 0.08));
 }
 
-ion-item-options {
+.ion-item-options {
   height: auto;
 }
 
-ion-item-option {
+.ion-item-option {
   min-height: 80px;
   display: flex;
   align-items: center;
   padding: 10px;
 }
 
-ion-item h2 {
+.ion-item h2 {
   font-weight: 600;
   font-size: 18px;
   margin-bottom: 4px;
-  color: white;
+  color: var(--ion-text-color);
 }
 
-ion-item p {
-  color: #dddddd;
+.ion-item p {
   font-size: 14px;
   margin: 4px 0;
 }
 
-ion-chip [color="success"]{
-  --background: rgba(255, 165, 0, 0.1);
-  --color: rgb(15, 211, 81);
-  border: 1px solid green;
-}
-
-ion-chip[color="warning"] {
-  --background: rgba(255, 165, 0, 0.1);
-  --color: orange;
-  border: 1px solid orange;
-}
-
-
-ion-modal {
+.ion-modal {
   --border-radius: 20px;
   --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
-ion-modal ion-content {
-  --padding-top: 16px;
-  --padding-bottom: 16px;
-  --background: #111111;
-}
-
-ion-modal ion-toolbar {
-  --background: #0066cc;
-  --color: white;
-  border-top-left-radius: 16px; /* Bordes redondeados en la parte superior del toolbar */
-  border-top-right-radius: 16px;
-}
-
-ion-modal ion-title {
-  font-size: 20px;
-  font-weight: 600;
-}
-
-ion-modal ion-item {
-  --background: #1c1c1c;
-  --color: white;
-  --border-color: rgba(255, 255, 255, 0.1);
-  --padding-start: 16px; /* Margen a la izquierda */
-  margin-bottom: 16px;
-}
-
-ion-modal ion-label {
-  font-weight: 500;
-  color: #dddddd;
-  font-size: 16px;
-}
-
-ion-modal ion-input,
-ion-modal ion-select,
-ion-modal ion-textarea {
-  --color: white;
-  --placeholder-color: #999;
-  --background: #1c1c1c;
-  border-radius: 8px;
-  padding: 12px;
-  margin-top: 8px;
-}
-
-ion-select{
+.ion-select {
   margin-bottom: 18px;
 }
 
-ion-toggle {
+.ion-toggle {
   position: absolute;
   right: 16px;
   transform: translateX(0);
   width: auto;
 }
 
-ion-modal ion-textarea {
+.ion-modal ion-textarea {
   min-height: 100px;
 }
 
-/* Botón de guardar en el modal */
-.save-button {
-  background-color: #0066cc;
+.boton-guardar-modal {
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   font-weight: 600;
-  height: 50px;
+  height: 30px;
   font-size: 16px;
-  margin: 20px 16px;
+  margin-top: 20px;
 }
 
-/* Estilos para los horarios disponibles */
-.available-times {
+.horarios-disponibles {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   margin-top: 10px;
 }
 
-.time-chip {
-  background-color: #2c2c2c;
-  color: white;
-  border-radius: 20px;
-  padding: 8px 12px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.time-chip.selected {
-  background-color: #0066cc;
-  color: white;
-}
-
-
-
-
-.court-item {
+.item-pista {
   --padding-start: 0;
   --inner-padding-end: 0;
 }
 
 
-.court-content {
+.centrar-botones {
   display: flex;
-  flex-direction: row;
-  width: 100%;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
+  justify-content: flex-center; /* usa center si los quieres completamente centrados */
+  gap: 10px;
+  margin-top: 8px;
 }
 
-.modal-image-wrapper {
+
+.contenido-pista {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* 👈 Esto centra verticalmente */
+  width: 100%;
+  gap: 12px;
+  margin: 10px;
+}
+
+
+.info-pista {
+  flex: 1;
+}
+
+.envoltorio-imagen-modal {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -233,19 +151,18 @@ ion-modal ion-textarea {
   gap: 16px;
 }
 
-.modal-image-wrapper img {
+.envoltorio-imagen-modal img {
   max-width: 100%;
   max-height: 80vh;
   border-radius: 12px;
   object-fit: contain;
 }
 
-.close-icon {
+.icono-cerrar {
   position: absolute;
   top: 16px;
   right: 16px;
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
+  color: var(--ion-text-color);
   border: none;
   font-size: 24px;
   padding: 4px 10px;
@@ -254,12 +171,12 @@ ion-modal ion-textarea {
   z-index: 10;
 }
 
-.close-icon:hover {
-  background: rgba(255, 255, 255, 0.2);
+.icono-cerrar:hover {
+  background-color: var(--ion-color-primary-contrast);
+  opacity: 0.1;
 }
 
-
-.slide-indicator {
+.indicador-deslizamiento {
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -269,85 +186,79 @@ ion-modal ion-textarea {
   padding-right: 6px;
 }
 
-
-.swipe-icon {
-  font-size: 20px; /* más grande para que se vea bien */
-  color: #aaa;
+.icono-deslizar {
+  font-size: 20px;
   animation: swipe-bounce 1.2s infinite;
   margin-bottom: 2.5px;
 }
 
-.swipe-text {
+.texto-deslizar {
   font-size: 14px;
-  color: #ccc;
   margin-left: 6px;
 }
 
-
-.modal-formulario-pista {
-  --height: 90%;
-  --max-height: 82%;
+.formulario-modal-pista {
+  --height: 450px;
 }
-
 
 @keyframes swipe-bounce {
   0%, 100% { transform: translateX(0); }
   50% { transform: translateX(8px); }
 }
 
-
-
-
-.option-content {
+.contenido-opcion {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: 13px;
-  color: white;
+  color: var(--ion-text-color);
   text-align: center;
   text-transform: none;
   line-height: 1.2;
 }
 
-.equal-width-option {
+.opcion-ancho-igual {
   min-width: 110px;
   display: inline-flex;
   justify-content: center;
 }
 
-.option-content span {
+.contenido-opcion span {
   text-transform: capitalize;
   margin-top: 4px;
 }
-  
-.option-content ion-icon {
+
+.contenido-opcion ion-icon {
   font-size: 24px;
 }
 
-
-
 /* Responsive */
 @media (max-width: 576px) {
-  .info-card,
-  .courts-card {
+  .tarjeta-info,
+  .tarjeta-pistas {
     padding: 12px;
   }
 
-  .no-courts p {
+  .sin-pistas p {
     font-size: 16px;
   }
 
-  ion-item h2 {
+  .ion-item h2 {
     font-size: 16px;
   }
 
-  ion-item p {
+  .ion-item p {
     font-size: 12px;
   }
 
-  .save-button {
+  .boton-guardar-modal {
     height: 46px;
     font-size: 14px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
+}
+
+.transparentar-fondos{
+  background: transparent;
 }

@@ -1,192 +1,158 @@
-.background-container {
+/* .background-container {
   position: fixed;
   width: 100%;
   height: 100%;
   background: url('/img/fondoLoginRegistro.jpg') no-repeat center center / cover;
-}
+} */
 
 /* Fondo general del contenedor */
-.manage-users-container {
+/* .manage-users-container {
   --background: url('/img/fondoLoginRegistro.jpg') no-repeat center center / cover !important;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+} */
+
+/* Contenedor general */
+.gestion-usuarios {
+  padding: 1rem;
+  color: var(--ion-text-color);
+  background-color: var(--ion-background-color);
 }
 
-/* Destacar elemento de administrador */
-.admin-item {
-  --background: rgba(244, 67, 54, 0.2);
-  border-left: 3px solid rgba(244, 67, 54, 0.2);;
-}
-
-/* Destacar elemento de socio */
-.member-item {
-  --background: rgba(76, 175, 80, 0.1);
-  border-left: 3px solid #4caf50;
-}
-
-/* Tarjetas de información */
-.info-card, .courts-card {
-  margin-bottom: 16px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  background-color: #1c1c1c;
-  color: white;
-  padding: 16px;
-}
-
-/* Encabezado de las tarjetas */
-.info-card h2, .courts-card h2 {
-  font-size: 20px;
-  color: #ffffff;
-}
-
-/* Elementos dentro de las tarjetas */
-.info-card p, .courts-card p {
-  font-size: 14px;
-  color: #dddddd;
-  margin: 0;
-}
-
-/* Barra de búsqueda */
-ion-searchbar {
-  margin: 16px 0;
-}
-
-/* Lista de usuarios */
-ion-list {
-  background: none;
-}
-
-ion-item {
-  --background: #1c1c1c;
-  --color: white;
-  --border-color: rgba(255, 255, 255, 0.1);
-  --padding-start: 16px;
-}
-
-
-
-ion-item h2 {
-  font-size: 16px;
-  color: white;
-}
-
-ion-item p {
-  font-size: 14px;
-  color: #cccccc;
-}
-
-/* Estilo para el avatar */
-.avatar-placeholder {
-  width: 100%;
-  height: 100%;
+/* Ajustes en avatar */
+.avatar-gestion-usuarios {
+  width: 60px !important;
+  height: 60px !important;
+  min-width: 60px !important;
+  min-height: 60px !important;
+  border-radius: 50%;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #0066cc;
-  color: white;
-  font-size: 18px;
+  background-color: transparent;
+}
+
+.avatar-gestion-usuarios img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: none;
+  box-shadow: none;
+  outline: none;
+}
+
+
+
+/* Tarjetas */
+.tarjeta {
+  margin-bottom: 1rem;
+}
+
+/* Avatar circular con inicial */
+.avatar-inicial {
+  width: 100%;
+  height: 100%;
+  font-size: 1.3rem;
   font-weight: bold;
-}
-
-/* Badge de socio */
-.member-badge {
-  margin-top: 4px;
-  --background: rgba(76, 175, 80, 0.2);
-  --color: #4caf50;
-}
-
-/* Chips de roles */
-ion-chip {
-  font-size: 14px;
-  color: white;
-  border-radius: 8px;
-}
-
-ion-chip[color="success"] {
-  --background: rgba(97, 76, 175, 0.2);
-  --color: #4caf50;
-}
-
-ion-chip[color="danger"] {
-  --background: rgba(244, 67, 54, 0.2);
-}
-
-ion-chip[color="warning"] {
-  --background: rgba(255, 152, 0, 0.2);
-  --color: #ff9800;
-}
-
-ion-chip[color="medium"] {
-  --background: rgba(158, 158, 158, 0.2);
-  --color: #9e9e9e;
+  background-color: var(--ion-color-medium);
+  color: var(--ion-color-primary-contrast);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  object-fit: cover;
+  box-sizing: border-box;
 }
 
 
-ion-item ion-button ion-icon {
-  font-size: 24px;
+
+
+/* Barra lateral de color según rol */
+.usuario-admin::before,
+.usuario-socio::before,
+.usuario-usuario::before {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 4px;
+  border-radius: 5px;
 }
 
-/* Estilos para cuando no hay usuarios */
-.no-courts {
+.usuario-admin::before {
+  background-color: var(--ion-color-danger);
+}
+
+.usuario-socio::before {
+  background-color: var(--ion-color-success);
+}
+
+.usuario-usuario::before {
+  background-color: var(--ion-color-medium);
+}
+
+/* Envolver item con clase para barra lateral */
+.ion-item-con-barra {
+  position: relative;
+  padding-left: 12px;
+}
+
+
+
+.mensaje-vacio {
+  text-align: center;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 20px;
-  text-align: center;
+  gap: 1rem;
+  color: var(--ion-text-color);
 }
 
-.no-courts ion-icon {
-  font-size: 56px;
-  color: #ffffff;
-  margin-bottom: 16px;
+.mensaje-vacio-contenido {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
 }
 
-.no-courts p {
-  font-size: 18px;
-  margin-bottom: 20px;
-  color: #ffffff;
+.boton-recargar {
+  padding: 5px 10px;
+  min-width: auto;
+  width: 100px;
+  height: 60px;
+  --border-radius: 6px;
+  font-size: 25px;
 }
 
-.no-courts ion-button {
-  --background: transparent;
-  --color: white;
-  --box-shadow: none;
-  max-width: 200px;
-  margin: 0 auto;
+
+.ion-palette-dark .avatar-gestion-usuarios {
+  border: none !important;
 }
 
-.no-courts ion-button ion-icon {
-  font-size: 50px;
-  color: white;
-  margin: 0;
+.ion-palette-dark .avatar-inicial {
+  border: none !important;
 }
 
-/* Toast */
-ion-toast {
-  --background: #222222;
-  --color: white;
-  --button-color: #3880ff;
+.ion-palette-dark ion-searchbar {
+  --background: #2a2a2a;
+  --color: var(--ion-text-color);
+  --placeholder-color: #aaa;
+  --icon-color: var(--ion-text-color);
+  border-radius: 8px;
 }
 
-/* Alerta */
-ion-alert {
-  --background: #1c1c1c;
-  --color: white;
-  --header-color: #3880ff;
-}
+
 
 /* Responsive */
-@media (max-width: 576px) {
-  ion-card {
-    padding: 12px;
-  }
-
-  ion-item h2 {
-    font-size: 14px;
-  }
-
-  ion-item p {
-    font-size: 12px;
+@media (max-width: 768px) {
+  .avatar-inicial {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
   }
 }

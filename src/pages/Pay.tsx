@@ -18,6 +18,7 @@ import {
   useElements,
 } from '@stripe/react-stripe-js';
 import axios from 'axios';
+import '../theme/variables.css';
 
 const stripePromise = loadStripe('pk_test_51RBDLF2MsbKNiz9B2Wol9ZvHjbvYvhMjVwkQPOvZmBEeyRGBFPAFgkGAhBOzD4FSq1kMxZgjYJGTm9fFhfJuMdA300Vt5jJ7m4');
 
@@ -78,9 +79,9 @@ const CheckoutForm: React.FC<{ reservaId: number; precio: number }> = ({ reserva
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+    <form onSubmit={handleSubmit}>
       <CardElement />
-      <button type="submit" disabled={!stripe || loading} style={{ padding: '1rem' }}>
+      <button type="submit" disabled={!stripe || loading}>
         Pagar {precio.toFixed(2)} €
       </button>
       <IonLoading isOpen={loading} message="Procesando pago..." />
@@ -98,11 +99,11 @@ const Pay: React.FC = () => {
     return (
       <IonPage>
         <IonHeader>
-          <IonToolbar>
+          <IonToolbar color={'primary'}>
             <IonTitle>Error de Pago</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonContent className="ion-padding">
+        <IonContent>
           <p>No se ha podido cargar la información de la reserva.</p>
         </IonContent>
       </IonPage>
@@ -116,7 +117,7 @@ const Pay: React.FC = () => {
           <IonTitle>Pago con Tarjeta</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
+      <IonContent>
         <Elements stripe={stripePromise}>
           <CheckoutForm reservaId={reservaId} precio={precio} />
         </Elements>

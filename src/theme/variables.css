@@ -1,10 +1,268 @@
-/* For information on how to create your own theme, please see:
-http://ionicframework.com/docs/theming/ */
+/* variables.css */
+@import '@ionic/react/css/palettes/dark.class.css';
 
-.marcador-card {
-    max-width: 600px;
-    margin: auto;
-    box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.2);
-    border-radius: 20px;
-  }
-  
+/* ===== MODO CLARO (por defecto) ===== */
+:root {
+  --ion-color-primary: #4CAF50;
+  --ion-color-primary-rgb: 76, 175, 80;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #43a047;
+  --ion-color-primary-tint: #66bb6a;
+  --home-background-image: url('/img/fondoHomeClaro.jpg');
+  --color-panel: #ffffff;
+  --color-icono-empresa: #3a74ff;
+  --color-icono-pistas: #3a74ff;
+  --color-icono-calendario: #2db7ff;
+  --color-icono-usuarios: #a160fb;
+  --color-icono-marcador: #ffc62f;
+  --color-icono-estadisticas: #28c76f;
+  --ion-border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* ===== MODO OSCURO (.ion-palette-dark en <html>) ===== */
+.ion-palette-dark {
+  --ion-color-primary: #4CAF50;
+  --ion-color-primary-contrast: #ffffff;
+
+  --ion-background-color: #121212;
+  --ion-text-color: #f0f0f0;
+
+  --color-primario: #4CAF50;
+  --color-fondo: #121212;
+  --color-texto: #f0f0f0;
+  --color-secundario: #1e1e1e;
+  --color-boton-rojo: #ff4d4d;
+  --home-background-image: url('/img/fondoHomeOscuro.jpg');
+  --color-panel: #1e1e1e;
+  --color-icono-empresa: #82aaff;
+  --color-icono-pistas: #82aaff;
+  --color-icono-calendario: #64d3ff;
+  --color-icono-usuarios: #caa9ff;
+  --color-icono-marcador: #ffe066;
+  --color-icono-estadisticas: #66e096;
+  --ion-border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ===== ESTILOS BASE ===== */
+body, ion-app {
+  background-color: var(--ion-background-color);
+  color: var(--ion-text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  background-image: var(--home-background-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+ion-card,
+ion-toolbar,
+ion-title,
+ion-label,
+ion-text,
+ion-item,
+ion-input,
+ion-textarea,
+ion-button {
+  background-color: var(--ion-background-color);
+  color: var(--ion-text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+ion-card {
+  background-color: var(--ion-background-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+ion-button {
+  --background: var(--ion-color-primary);
+  --color: var(--ion-color-primary-contrast);
+}
+
+ion-button[color="danger"] {
+  --background: var(--ion-color-danger);
+}
+
+ion-card-title[color="danger"] {
+  color: var(--ion-color-danger);
+}
+
+/* ===== AJUSTES MODO OSCURO PERSONALIZADOS ===== */
+body.ion-palette-dark,
+.ion-palette-dark body {
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+.ion-palette-dark h1,
+.ion-palette-dark h2,
+.ion-palette-dark h3,
+.ion-palette-dark h4,
+.ion-palette-dark h5,
+.ion-palette-dark h6,
+.ion-palette-dark p,
+.ion-palette-dark ul,
+.ion-palette-dark li,
+.ion-palette-dark strong,
+.ion-palette-dark small {
+  color: var(--ion-text-color);
+}
+
+.ion-palette-dark p,
+.ion-palette-dark li {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.ion-palette-dark .seccion,
+.ion-palette-dark .card,
+.ion-palette-dark .panel {
+  background-color: var(--color-secundario);
+  color: var(--color-texto);
+}
+
+.ion-palette-dark .boton-rojo {
+  background-color: var(--color-boton-rojo);
+  color: #fff;
+}
+
+.ion-palette-dark input,
+.ion-palette-dark select,
+.ion-palette-dark textarea {
+  background-color: var(--color-secundario);
+  color: var(--color-texto);
+  border: 1px solid var(--color-primario);
+}
+
+/* ===== CORRECCIONES PARA ION-ITEM Y COMPONENTES DENTRO DE CARDS ===== */
+.ion-palette-dark ion-item {
+  --background: var(--color-secundario);
+  --color: var(--color-texto);
+  --border-color: rgba(255, 255, 255, 0.1);
+}
+
+.ion-palette-dark ion-label {
+  color: var(--color-texto);
+}
+
+.ion-palette-dark ion-icon {
+  color: var(--color-texto);
+}
+
+.ion-palette-dark ion-item::part(native) {
+  background-color: var(--color-secundario);
+}
+
+.ion-palette-dark ion-card ion-item {
+  --background: transparent;
+  background-color: transparent !important;
+  --ion-background-color: transparent;
+  --color: var(--color-texto);
+  border: none;
+}
+
+.ion-palette-dark ion-card-title,
+.ion-palette-dark ion-card-header,
+.ion-palette-dark ion-card-content {
+  background-color: transparent;
+  color: var(--ion-text-color);
+}
+
+/* ===== MEJORAS VISUALES: CABECERAS, CARDS, AVATARES ===== */
+ion-header,
+.ion-palette-dark ion-header {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  background-color: var(--ion-background-color);
+}
+
+.ion-palette-dark ion-card {
+  background-color: #1e1e1e;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+ion-avatar img {
+  border-radius: 50%;
+  border: 2px solid var(--ion-color-primary);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.ion-palette-dark ion-avatar {
+  background-color: transparent !important;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--ion-color-primary);
+}
+
+/* Toolbar interior (evita doble fondo en modo oscuro) */
+.ion-palette-dark ion-toolbar,
+.ion-palette-dark ion-toolbar * {
+  background-color: transparent !important;
+  --background: transparent !important;
+}
+
+.ion-palette-dark ion-title {
+  background-color: transparent !important;
+  color: var(--ion-color-primary-contrast);
+}
+
+.ion-palette-dark ion-button {
+  background-color: transparent !important;
+  --background: transparent !important;
+  box-shadow: none !important;
+}
+
+ion-header,
+ion-toolbar {
+  box-shadow: none !important;
+  border-bottom: none !important;
+}
+
+/* ===== MENÚ DESPLEGABLE DEL AVATAR (IONIC 7+) ===== */
+ion-popover::part(content) {
+  background: var(--color-secundario) !important;
+  color: var(--ion-text-color) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border-radius: 12px !important;
+}
+
+ion-popover ion-item:last-child::part(native) {
+  border-bottom: none;
+}
+
+ion-popover ion-item {
+  --color: var(--ion-text-color) !important;
+  color: var(--ion-text-color) !important;
+  fill: var(--ion-text-color) !important;
+}
+
+ion-popover ion-label,
+ion-popover ion-icon {
+  color: var(--ion-text-color) !important;
+  fill: var(--ion-text-color) !important;
+}
+
+.ion-palette-dark ion-popover ion-item::part(native) {
+  background-color: transparent !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ion-palette-dark ion-popover ion-item {
+  --background: transparent !important;
+}
+
+
+/* ===== Cabeceras verdes interiores ===== */
+.cabecera-verde {
+  background-color: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast); /* SIEMPRE blanco */
+  padding: 16px;
+  font-size: 18px;
+  font-weight: 600;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}

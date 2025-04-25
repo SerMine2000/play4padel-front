@@ -1,62 +1,58 @@
+/* General */
 .calendar-view {
-  --background: #111111;
-  color: white;
+  background: var(--ion-background-color);
+  color: var(--ion-text-color);
 }
 
-/* Vista segmentada */
+/* Segmento de vista */
 ion-segment {
-  margin: 10px;
-  --background: #1c1c1c;
+  margin: 12px auto;
+  padding: 4px;
+  --background: transparent; /* para dejarlo limpio */
+  border-radius: 10px;
+  max-width: 90%;
 }
 
 ion-segment-button {
-  --indicator-color: #3880ff;
-  --color-checked: white;
-  --color: #999;
+  --indicator-color: var(--ion-color-primary);
+  --color-checked: var(--ion-color-primary);
+  --color: var(--ion-text-color);
+  font-weight: 500;
+  border-radius: 8px;
+}
+
+ion-segment-button.ion-activated {
+  background-color: rgba(var(--ion-color-primary-rgb), 0.15);
+  color: var(--ion-color-primary);
+  font-weight: 600;
 }
 
 /* Navegación del calendario */
 .navegacion-calendario {
   display: flex;
-  justify-content: space-between; /* Distribuir los elementos correctamente */
+  justify-content: space-between;
   align-items: center;
-  width: 100%;
   max-width: 600px;
   margin: 0 auto 15px auto;
-  padding: 0 15px; /* Espacio a los lados */
-  position: relative;
+  padding: 0 15px;
 }
 
 .titulo-mes {
-  color: white;
+  color: var(--ion-text-color);
   text-transform: capitalize;
   font-size: 1.3rem;
   font-weight: 600;
   text-align: center;
-  flex-grow: 1; /* Para ocupar el espacio disponible */
-  text-align: center;
+  flex-grow: 1;
 }
 
-/* Botones de navegación (flechas) */
 .navegacion-calendario ion-button {
   flex-shrink: 0;
-  min-width: 40px; /* Asegurar un tamaño mínimo */
-}
-
-/* Flecha izquierda */
-.navegacion-calendario ion-button:first-child {
-  left: 10px;
-  margin-right: 0;
-}
-
-/* Flecha derecha */
-.navegacion-calendario ion-button:nth-child(2) {
-  right: 10px;
-  margin-left: 0;
+  min-width: 40px;
 }
 
 .boton-hoy {
-  margin-left: auto; /* Empuja el botón a la derecha */
+  margin-left: 20px;
 }
 
 /* Grid del calendario */
@@ -71,82 +67,117 @@ ion-segment-button {
 ion-grid.grid-calendario {
   width: 90% !important;
   max-width: 1200px !important;
+  border: 1px solid var(--ion-border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--ion-background-color);
 }
 
-/* Asegurar que cada celda de día tenga espacio suficiente */
-.dia {
-  width: calc(100% / 7); /* Cada día ocupa 1/7 del ancho total */
-  min-width: 40px; /* Asegurar un ancho mínimo para los días */
-}
-
+/* Cabecera de días */
 .dias-semana {
-  background-color: #1c1c1c;
-  color: white;
+  background-color: var(--ion-background-color);
+  color: var(--ion-text-color);
   text-align: center;
   font-weight: 600;
   padding: 10px 0;
-  border-bottom: 1px solid #333;
-  border-top: 1px solid #333;
+  border-bottom: 1px solid var(--ion-border-color);
+  border-top: 1px solid var(--ion-border-color);
 }
 
+/* Fila de semana */
 .semana {
-  border-bottom: 1px solid #2c2c2c;
+  border-bottom: 1px solid var(--ion-border-color);
 }
 
+/* Celdas de días */
 .dia {
-  position: relative;
-  height: 50px;
-  text-align: center;
+  width: 100%;
+  height: 90px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-right: 1px solid #2c2c2c;
-  padding: 5px;
-  cursor: pointer;
+  padding-top: 0;
+  border-radius: 12px;
   transition: background-color 0.2s ease;
+  cursor: pointer;
+  position: relative;
+  box-sizing: border-box;
+  border-left: 1px solid var(--ion-border-color);
+  border-right: 1px solid var(--ion-border-color);
 }
 
-.dia:last-child {
+
+.dia.primera-columna {
+  border-left: none;
+}
+
+.dia.ultima-columna {
   border-right: none;
 }
 
-.dia.otro-mes {
-  color: #666;
+
+
+.dia:hover {
+  background-color: rgba(var(--ion-color-primary-rgb), 0.1);
 }
 
-.dia.tiene-reservas {
-  background-color: rgba(56, 128, 255, 0.2);
+/* Estilo del día actual */
+.dia.hoy {
+  background-color: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
+  font-weight: bold;
+  border-radius: 12px;
 }
 
+/* Día seleccionado */
 .dia.seleccionado {
-  background-color: rgba(56, 128, 255, 0.5);
+  background-color: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
   font-weight: bold;
 }
 
-.numero-dia {
-  font-size: 1rem;
-  color: white;
+/* Días con reservas */
+.dia.tiene-reservas:not(.seleccionado):not(.hoy) {
+  background-color: rgba(var(--ion-color-primary-rgb), 0.1);
+  color: var(--ion-text-color);
 }
 
+/* Línea izquierda solo si no es la primera celda */
+.dia:not(:nth-child(7n + 1)) {
+  border-left: 1px solid var(--ion-border-color);
+}
+
+/* Días de otro mes */
+.dia.otro-mes {
+  opacity: 0.4;
+}
+
+.numero-dia {
+  font-size: 1.2rem;
+  margin-bottom: 4px;
+}
+
+/* Indicador de reservas */
 .indicador-reservas {
   position: absolute;
-  bottom: 2px;
-  right: 5px;
-  background-color: #3880ff;
-  color: white;
-  border-radius: 50%;
-  width: 18px;
-  height: 18px;
+  bottom: 6px;
+  right: 6px;
+  background-color: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
   font-size: 0.7rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-weight: bold;
+  border-radius: 50%;
+  padding: 3px 6px;
+  line-height: 1;
+  min-width: 20px;
+  text-align: center;
+  pointer-events: none;
 }
 
 /* Panel de reservas */
 .panel-reservas {
-  background-color: #1c1c1c;
+  background-color: var(--color-panel);
   border-radius: 10px 10px 0 0;
   padding: 15px 10px;
   margin-top: 10px;
@@ -169,41 +200,35 @@ ion-grid.grid-calendario {
   text-transform: capitalize;
 }
 
-.cabecera-lista {
-  padding: 15px;
-  background-color: #2c2c2c;
-  margin-bottom: 10px;
-}
-
-.cabecera-lista h2 {
-  margin: 0;
-  font-size: 1.2rem;
-  text-transform: capitalize;
-}
-
 /* Lista de reservas */
 .lista-reservas {
-  background-color: #1c1c1c;
+  background-color: var(--color-panel);
 }
 
 .reserva-item {
-  --background: #1c1c1c;
-  --border-color: #333333;
+  --background: var(--color-panel);
+  --border-color: var(--ion-border-color);
+}
+
+ion-label {
+  --background: transparent !important;
+  background: transparent !important;
 }
 
 .reserva-item.estado-cancelada {
-  --opacity: 0.6;
+  opacity: 0.6;
 }
 
-/* Estilos para los divisores de fecha en la vista de lista */
+/* Divisores de la lista */
 ion-item-divider {
-  --background: #2c2c2c;
-  --color: white;
+  --background: var(--ion-background-color);
+  --color: var(--ion-text-color);
   font-weight: bold;
   text-transform: capitalize;
   margin-top: 10px;
 }
 
+/* Sin reservas */
 .sin-dia-seleccionado,
 .sin-reservas {
   display: flex;
@@ -212,131 +237,65 @@ ion-item-divider {
   height: 200px;
   text-align: center;
   padding: 20px;
+  color: var(--ion-text-color);
 }
 
-/* Estilos para pantallas más grandes */
+/* Responsive */
+@media (max-width: 768px) {
+  .dia {
+    height: 70px;
+  }
+
+  .numero-dia {
+    font-size: 1rem;
+  }
+
+  .indicador-reservas {
+    font-size: 0.6rem;
+    padding: 2px 5px;
+  }
+}
+
 @media (min-width: 768px) {
   .dia {
-    height: 80px;
+    height: 100px;
   }
-  
+
   .numero-dia {
     font-size: 1.2rem;
-    margin-bottom: 10px;
   }
-  
+
   .indicador-reservas {
     width: 22px;
     height: 22px;
     font-size: 0.8rem;
   }
-  
+
   .panel-reservas {
     min-height: 400px;
   }
 }
 
-/* Para pantallas extra grandes */
-@media (min-width: 1200px) {
-  .grid-calendario {
-    max-width: 900px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
-  .dia {
-    height: 100px;
-  }
-}
-
-/* Estilo para información de depuración */
-pre.debug-info {
-  text-align: left;
-  font-size: 12px;
-  background-color: #333;
-  padding: 10px;
-  border-radius: 5px;
-  white-space: pre-wrap;
-  margin-top: 15px;
-  overflow: auto;
-  max-height: 200px;
-  border: 1px solid #555;
-}
-
-/* Estilo mejorado para cuando no hay reservas */
-.sin-reservas {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  text-align: center;
-  min-height: 200px;
-}
-
-.sin-reservas p {
-  margin-bottom: 15px;
-  color: #999;
-}
-
-/* Estilo para resaltar el día actual */
-.dia.hoy {
-  background-color: rgba(56, 128, 255, 0.2);
-  font-weight: bold;
-}
-
-/* Estilo para el botón de actualización */
+/* Botón de actualización */
 ion-button.refresh-button {
   --padding-start: 12px;
   --padding-end: 12px;
 }
 
+/* Mobile nav */
 @media (max-width: 480px) {
   .navegacion-calendario {
     padding: 0 10px;
   }
-  
+
   .titulo-mes {
     font-size: 1rem;
     width: 60%;
   }
-  
+
   .boton-hoy {
     font-size: 0.8rem;
     --padding-start: 8px;
     --padding-end: 8px;
-    right: 50px;
   }
-}
-
-@media (max-width: 360px) {
-  .navegacion-calendario {
-    padding: 0 5px;
-  }
-  
-  .titulo-mes {
-    font-size: 0.9rem;
-    width: 50%;
-  }
-  
-  .boton-hoy {
-    font-size: 0.7rem;
-    --padding-start: 6px;
-    --padding-end: 6px;
-    right: 45px;
-  }
-}
-
-.lista-reservas ion-item ion-icon[slot="start"],
-.lista-reservas-mes ion-item ion-icon[slot="start"] {
-  color: #28a745 !important;
-}
-
-
-.cargando-lista {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 200px;
-  color: white !important;
 }

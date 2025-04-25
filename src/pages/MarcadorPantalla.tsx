@@ -96,9 +96,26 @@ const MarcadorPantalla: React.FC = () => {
 
   // Efecto para cargar el marcador al iniciar y cada 2 segundos
   useEffect(() => {
+    // Intentar leer configuración desde localStorage al cargar
+    const configRaw = localStorage.getItem('marcador-config');
+    if (configRaw) {
+      try {
+        const parsed = JSON.parse(configRaw);
+        if (parsed.estado) setEstado(parsed.estado);
+        if (parsed.nombreEquipoA || parsed.nombreEquipoB || parsed.tituloPista || parsed.tipoPista) {
+          setConfig({
+            nombreEquipoA: parsed.nombreEquipoA || 'EQUIPO A',
+            nombreEquipoB: parsed.nombreEquipoB || 'EQUIPO B',
+            tituloPista: parsed.tituloPista || 'CENTER COURT',
+            tipoPista: parsed.tipoPista || 'Pista 1',
+          });
+        }
+      } catch (e) {
+        console.error('Error al cargar config desde localStorage', e);
+      }
+    }
+  
     fetchEstado();
-    const interval = setInterval(fetchEstado, 2000);
-    return () => clearInterval(interval);
   }, []);
 
   // Efecto para incrementar el tiempo cada segundo

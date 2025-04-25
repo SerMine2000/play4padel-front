@@ -74,6 +74,7 @@ export interface AuthContextType {
   register: (data: RegisterRequest) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
+  deleteAccount: () => Promise<void>;
 }
 
 export interface ClubData {

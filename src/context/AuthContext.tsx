@@ -14,6 +14,7 @@ const AuthContext = createContext<AuthContextType>({
   register: async () => {},
   logout: () => {},
   refreshUser: async () => {},
+  deleteAccount: async () => {},
 });
 
 // Hook personalizado para usar el contexto
@@ -133,7 +134,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       setIsLoading(true);
       
-      // Si hay un usuario logueado, enviar petición de logout al servidor
       if (user?.id) {
         await authService.logout(user.id);
       }
@@ -148,6 +148,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  //Funcion para eliminar cuenta
+  const deleteAccount = async () => {
+    try {
+      const userId = user?.id;
+      if (!userId) return;
+      await apiService.delete(`/users/${userId}`);
+      logout(); // Cierra sesión tras eliminar
+    } catch (error) {
+      console.error('Error al eliminar cuenta:', error);
+    }
+  };
+
   // Valor del contexto
   const value: AuthContextType = {
     user,
@@ -158,7 +170,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     register,
     logout,
     refreshUser,
+    deleteAccount
   };
+
+
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

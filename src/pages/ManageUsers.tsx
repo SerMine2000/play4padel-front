@@ -35,11 +35,13 @@ import {
   personRemoveOutline,
   refreshOutline,
   personCircleOutline,
-  shieldOutline
+  shieldOutline,
+  personOutline
 } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
 import { useHistory } from 'react-router-dom';
 import apiService from '../services/api.service';
+import '../theme/variables.css';
 import './css/ManageUsers.css';
 
 const ManageUsers: React.FC = () => {
@@ -180,12 +182,18 @@ const ManageUsers: React.FC = () => {
   
   // Filtrar usuarios con búsqueda común
   const applySearchFilter = (userList: any[]) => {
+    const term = searchText.trim().toLowerCase();
+    // \\b hace que busque teniendo en cuenta el inicio de la palabra escrita y no todo el contenido existente
+    const regex = new RegExp(`\\b${term}`, 'i');
+  
     return userList.filter(user => {
-      const fullName = `${user.nombre} ${user.apellidos}`.toLowerCase();
-      return fullName.includes(searchText.toLowerCase()) || 
-             user.email.toLowerCase().includes(searchText.toLowerCase());
+      const fullName = `${user.nombre} ${user.apellidos}`;
+      return (
+        regex.test(fullName) || regex.test(user.email)
+      );
     });
   };
+  
 
   // Obtener todos los usuarios relacionados con este club
   const getClubRelatedUsers = () => {
@@ -431,18 +439,14 @@ const ManageUsers: React.FC = () => {
   const renderUserList = (userList: any[], showHeader: boolean = true) => {
     if (userList.length === 0) {
       return (
-        <div className="no-courts">
-          <IonIcon icon={personCircleOutline} className="empty-icon" />
-          <IonText color="medium" className="empty-text">
-            <p>No se encontraron usuarios</p>
-          </IonText>
-          <IonButton 
-            className="refresh-button"
-            expand="block" 
-            fill="clear"
-            onClick={() => loadUsers()}
-          >
-            <IonIcon slot="icon-only" icon={refreshOutline} />
+
+        <div className="mensaje-vacio">
+          <div className="mensaje-vacio-contenido">
+            <IonIcon icon={personOutline} />
+            <IonText style={{ background : "transparent" }}>No se encontraron usuarios con nombre "{searchText}"</IonText>
+          </div>
+          <IonButton onClick={loadUsers} className="boton-recargar" fill="solid" size="small">
+            <IonIcon icon={refreshOutline} slot="icon-only" />
           </IonButton>
         </div>
       );
@@ -455,17 +459,18 @@ const ManageUsers: React.FC = () => {
           const userIsAdmin = isUserAdmin(userData.id);
           
           return (
-            <IonItem 
-              key={userData.id} 
-              className={`${userIsMember ? 'member-item' : ''} ${userIsAdmin ? 'admin-item' : ''}`}
-            >
-              <IonAvatar slot="start">
+            <IonItem key={userData.id} className={`ion-item-con-barra
+              ${isUserAdmin(userData.id)? 'usuario-admin':
+              isUserMember(userData.id)? 'usuario-socio': 'usuario-usuario'}`}>
+              
+              <IonAvatar slot="start" className="avatar-gestion-usuarios">
                 {userData.avatar_url ? (
                   <img src={userData.avatar_url} alt={userData.nombre} />
                 ) : (
-                  <div className="avatar-placeholder">
-                    {userData.nombre.charAt(0)}
-                  </div>
+                    <div className="avatar-inicial" 
+                    style={{width: "72px", height: "72px", fontSize: "32px"}}>
+                    {userData.nombre.charAt(0).toUpperCase()}
+                    </div>
                 )}
               </IonAvatar>
               
@@ -534,7 +539,6 @@ const ManageUsers: React.FC = () => {
       </IonHeader>
       
       <IonContent>
-      <div className="background-container"></div>
         <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent></IonRefresherContent>
         </IonRefresher>
@@ -542,14 +546,12 @@ const ManageUsers: React.FC = () => {
         <IonGrid>
           <IonRow>
             <IonCol size="12" sizeMd="8" offsetMd="2">
-              <IonCard className="info-card">
+              <IonCard>
                 <IonCardHeader>
-                  <IonCardTitle>
-                    {clubData ? clubData.nombre : 'Club'}
-                    <IonBadge color="success" style={{ float: 'right' }}>
-                       Nº Socios: {getTotalMembers()}
-                    </IonBadge>
-                  </IonCardTitle>
+                <IonCardTitle style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>{clubData ? clubData.nombre : 'Club'}</span>
+                  <IonBadge color="success">Nº Socios: {getTotalMembers()}</IonBadge>
+                </IonCardTitle>
                 </IonCardHeader>
                 <IonCardContent>
                   <p>
@@ -558,13 +560,12 @@ const ManageUsers: React.FC = () => {
                 </IonCardContent>
               </IonCard>
               
-              <IonSearchbar
-                value={searchText}
-                onIonChange={e => setSearchText(e.detail.value || '')}
-                placeholder="Buscar usuarios..."
+              <IonSearchbar placeholder="Buscar usuarios..." value={searchText}
+                onIonInput={(e) => setSearchText(e.detail.value!)}
               />
+
               
-              <IonCard className="courts-card">
+              <IonCard>
                 <IonCardHeader>
                   <IonCardTitle>Personal del club</IonCardTitle>
                 </IonCardHeader>
@@ -573,7 +574,7 @@ const ManageUsers: React.FC = () => {
                 </IonCardContent>
               </IonCard>
 
-              <IonCard className="courts-card">
+              <IonCard>
                 <IonCardHeader>
                   <IonCardTitle>Usuarios</IonCardTitle>
                 </IonCardHeader>

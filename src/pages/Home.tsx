@@ -1,21 +1,21 @@
 // src/pages/Home.tsx
-import React, { useState, useEffect } from 'react';
-import { 
-  IonContent, 
-  IonHeader, 
-  IonPage, 
-  IonTitle, 
-  IonToolbar, 
-  IonButton, 
-  IonCard, 
-  IonCardContent, 
-  IonCardHeader, 
-  IonCardTitle, 
-  IonGrid, 
-  IonRow, 
-  IonCol, 
-  IonItem, 
-  IonLabel, 
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonItem,
+  IonLabel,
   IonText,
   IonIcon,
   IonButtons,
@@ -23,23 +23,24 @@ import {
   IonList,
   IonRefresher,
   IonRefresherContent,
-  IonAvatar,
-  IonPopover
+  IonAvatar
 } from '@ionic/react';
-import { 
-  logOutOutline, 
-  personCircleOutline, 
+import {
+  logOutOutline,
+  personCircleOutline,
   calendarOutline,
   businessOutline,
-  addCircleOutline,
   tennisballOutline,
   peopleOutline,
   statsChartOutline,
-  stopwatchOutline // Icono para el marcador
+  stopwatchOutline,
+  settingsOutline,
+  personOutline
 } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
 import { useHistory } from 'react-router-dom';
 import apiService from '../services/api.service';
+import '../theme/variables.css';
 import './css/Home.css';
 
 const Home: React.FC = () => {
@@ -48,295 +49,231 @@ const Home: React.FC = () => {
   const [isLoadingClub, setIsLoadingClub] = useState<boolean>(false);
   const [pistaCount, setPistaCount] = useState<number>(0);
   const [reservasHoy, setReservasHoy] = useState<number>(0);
+  const [showMenu, setShowMenu] = useState<boolean>(false);
+  const profileMenuRef = useRef<HTMLIonButtonElement>(null);
+
   const history = useHistory();
-  
-  // Determinar si el usuario es un administrador de club
+
   const isClubAdmin = user && user.id_rol === 1;
 
-  // Función para cargar los datos del club (solo para administradores)
   const loadClubData = async (event?: CustomEvent) => {
     if (!user || !isClubAdmin) return;
-    
     try {
       setIsLoadingClub(true);
-      
-      // 1. Obtener información del club filtrando por el administrador actual
-      console.log(`Buscando club con id_administrador: ${user.id}`);
       const clubsResponse = await apiService.get(`/clubs?id_administrador=${user.id}`);
-      
-      console.log('Clubes encontrados:', clubsResponse);
-      
       if (clubsResponse && Array.isArray(clubsResponse) && clubsResponse.length > 0) {
-        // Usar el club asociado a este administrador (no simplemente el primero)
         const club = clubsResponse.find(c => c.id_administrador === user.id) || clubsResponse[0];
         setClubData(club);
-        
-        console.log('Club cargado:', club);
-        
-        // 2. Obtener el número de pistas del club
+
         const pistasResponse = await apiService.get(`/clubs/${club.id}/pistas`);
-        if (Array.isArray(pistasResponse)) {
-          setPistaCount(pistasResponse.length);
-        }
-        
-        // 3. Obtener reservas para hoy
-        const today = new Date().toISOString().split('T')[0]; // formato YYYY-MM-DD
+        if (Array.isArray(pistasResponse)) setPistaCount(pistasResponse.length);
+
+        const today = new Date().toISOString().split('T')[0];
         const reservasResponse = await apiService.get(`/reservas?id_club=${club.id}&fecha=${today}`);
-        if (Array.isArray(reservasResponse)) {
-          setReservasHoy(reservasResponse.length);
-        }
+        if (Array.isArray(reservasResponse)) setReservasHoy(reservasResponse.length);
       } else {
-        console.log('No se encontraron clubes para este administrador');
         setClubData(null);
       }
     } catch (error) {
       console.error('Error al cargar datos del club:', error);
     } finally {
       setIsLoadingClub(false);
-      if (event) event.detail.complete(); // Completar el refresher si existe
+      if (event) event.detail.complete();
     }
   };
 
-  // Cargar datos del club cuando el componente se monta (solo para administradores)
   useEffect(() => {
-    if (isClubAdmin) {
-      loadClubData();
-    }
+    if (isClubAdmin) loadClubData();
   }, [user, isClubAdmin]);
 
-  const handleLogout = async () => {
-    await logout();
-    history.replace('/login');
-  };
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node) && !(event.target as Element).closest('.custom-menu-popup')) {
+        setShowMenu(false);
+      }
+    };
+    if (showMenu) document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [showMenu]);
 
-  const goToProfile = () => {
-    history.push('/profile');
-  };
+  const toggleMenu = () => setShowMenu(!showMenu);
+  const closeMenu = () => setShowMenu(false);
+  const handleLogout = async () => { await logout(); history.replace('/login'); };
+  const goToProfile = () => { history.push('/profile'); setShowMenu(false); };
 
-  const goToReservas = () => {
-    history.push('/reservas');
-  };
-  
-  const goToManageCourts = () => {
-    history.push('/manage-courts');
-  };
+  const goToReservas = () => history.push('/reservas');
+  const goToManageCourts = () => history.push('/manage-courts');
+  const goToCalendar = () => history.push('/calendar');
+  const goToManageUsers = () => history.push('/manage-users');
+  const goToScoreboard = () => history.push('/marcador-control');
+  const goToSettings = () => { history.push('/configuracion'); setShowMenu(false); };
 
-  // Añadimos la función para ir a la vista de calendario
-  const goToCalendar = () => {
-    history.push('/calendar');
-  };
+  const renderClubAdminView = () => (
+    <IonGrid>
+      <IonRow className="fila-centro">
+        <IonCol size="12" sizeMd="8" sizeLg="6">
+          <IonCard className="tarjeta-bienvenida welcome-card">
+            <IonCardHeader className="cabecera-verde">
+              <IonCardTitle color="white">Panel de Administración</IonCardTitle>
+            </IonCardHeader>
+            <IonCardContent className="contenido-tarjeta">
+              {clubData ? (
+                <>
+                  <IonItem lines="none" className="info-club">
+                    <IonIcon icon={businessOutline} slot="start" size="large" className="icono-empresa" />
+                    <IonLabel>
+                      <h2>{clubData.nombre}</h2>
+                      <IonText><p>{clubData.direccion}</p></IonText>
+                    </IonLabel>
+                  </IonItem>
 
-  // Función para ir a la página de gestión de usuarios
-  const goToManageUsers = () => {
-    history.push('/manage-users');
-  };
-
-  // Nueva función para ir al marcador
-  const goToScoreboard = () => {
-    history.push('/marcador-control');
-  };
-
-  // Vista para administradores de club
-  const renderClubAdminView = () => {
-    return (
-      <IonGrid>
-        <IonRow className="ion-justify-content-center">
-          <IonCol size="12" sizeMd="8" sizeLg="6">
-            <IonCard className="welcome-card">
-              <IonCardHeader className="welcome-card-header">
-                <IonCardTitle>Panel de Administración</IonCardTitle>
-              </IonCardHeader>
-              <IonCardContent className="welcome-card-content">
-                {clubData ? (
-                  <>
-                    <div className="club-info">
-                      <IonItem lines="none" className="club-header">
-                        <IonIcon icon={businessOutline} slot="start" size="large" color="primary"></IonIcon>
-                        <IonLabel>
-                          <h2>{clubData.nombre}</h2>
-                          <IonText color="medium">
-                            <p>{clubData.direccion}</p>
-                          </IonText>
-                        </IonLabel>
-                      </IonItem>
-                      
-                      <div className="club-stats">
-                        <IonRow>
-                          <IonCol size="6">
-                            <div className="stat-card">
-                              <IonIcon icon={tennisballOutline} color="primary"></IonIcon>
-                              <h3>{pistaCount}</h3>
-                              <p>Pistas</p>
-                            </div>
-                          </IonCol>
-                          <IonCol size="6">
-                            <div className="stat-card">
-                              <IonIcon icon={calendarOutline} color="success"></IonIcon>
-                              <h3>{reservasHoy}</h3>
-                              <p>Reservas Hoy</p>
-                            </div>
-                          </IonCol>
-                        </IonRow>
+                  <IonRow>
+                    <IonCol size="6">
+                      <div className="tarjeta-estadistica">
+                        <IonIcon icon={tennisballOutline} className="icono-pistas" />
+                        <h3>{pistaCount}</h3>
+                        <p>Pistas</p>
                       </div>
-                      
-                      <h4 className="section-title">Gestión del Club</h4>
-                      <IonList>
-                        <IonItem button onClick={goToManageCourts} detail>
-                          <IonIcon icon={tennisballOutline} slot="start" color="primary"></IonIcon>
-                          <IonLabel>Gestionar Pistas</IonLabel>
-                          <IonText slot="end" color="medium">{pistaCount}</IonText>
-                        </IonItem>
-                        <IonItem button onClick={goToCalendar} detail>
-                          <IonIcon icon={calendarOutline} slot="start" color="secondary"></IonIcon>
-                          <IonLabel>Reservas y Calendario</IonLabel>
-                        </IonItem>
-                        <IonItem button onClick={goToManageUsers} detail>
-                          <IonIcon icon={peopleOutline} slot="start" color="tertiary"></IonIcon>
-                          <IonLabel>Usuarios y Miembros</IonLabel>
-                        </IonItem>
-                        
-                        {/* Nueva opción para el marcador */}
-                        <IonItem button onClick={goToScoreboard} detail>
-                          <IonIcon icon={stopwatchOutline} slot="start" color="warning"></IonIcon>
-                          <IonLabel>Marcador de Partidos</IonLabel>
-                        </IonItem>
-                        
-                        <IonItem button detail>
-                          <IonIcon icon={statsChartOutline} slot="start" color="success"></IonIcon>
-                          <IonLabel>Estadísticas</IonLabel>
-                        </IonItem>
-                      </IonList>
-                      
-                    </div>
-                  </>
-                ) : (
-                  <div className="no-club-data">
-                    <IonText color="medium">
-                      <p>No se ha encontrado información del club.</p>
-                    </IonText>
-                    <IonButton expand="block" color="primary">
-                      <IonIcon slot="start" icon={businessOutline}></IonIcon>
-                      Configurar Datos del Club
-                    </IonButton>
-                  </div>
-                )}
-              </IonCardContent>
-            </IonCard>
-          </IonCol>
-        </IonRow>
-      </IonGrid>
-    );
-  };
+                    </IonCol>
+                    <IonCol size="6">
+                      <div className="tarjeta-estadistica">
+                        <IonIcon icon={calendarOutline} className="icono-calendario" />
+                        <h3>{reservasHoy}</h3>
+                        <p>Reservas Hoy</p>
+                      </div>
+                    </IonCol>
+                  </IonRow>
 
-  // Vista para usuarios normales
-  const renderUserView = () => {
-    return (
-      <IonGrid>
-        <IonRow className="ion-justify-content-center">
-          <IonCol size="12" sizeMd="8" sizeLg="6">
-            <IonCard className="welcome-card">
-              <IonCardHeader className="welcome-card-header">
-                <IonCardTitle>¡Bienvenido a Play4Padel!</IonCardTitle>
-              </IonCardHeader>
-              <IonCardContent className="welcome-card-content">
-                {user && (
-                  <div className="user-info">
-                    {/* Se elimina el button y onClick aquí */}
-                    <IonItem lines="none">
-                      <IonIcon icon={personCircleOutline} slot="start" size="large" color="primary"></IonIcon>
-                      <IonLabel>
-                        <h2>Hola, {user.nombre} {user.apellidos}</h2>
-                        <IonText color="medium">
-                          <p>{user.email}</p>
-                        </IonText>
-                      </IonLabel>
+                  <h4 className="titulo-seccion" color='primary'>Gestión del Club</h4>
+
+                  <IonList>
+                    <IonItem button onClick={goToManageCourts} detail>
+                      <IonIcon icon={tennisballOutline} slot="start" className="icono-pistas" />
+                      <IonLabel>Gestionar Pistas</IonLabel>
+                      <IonText slot="end">{pistaCount}</IonText>
                     </IonItem>
-                    
-                    <p className="ion-padding-top">
-                      Ya has iniciado sesión correctamente en la plataforma. Desde aquí podrás:
-                    </p>
-                    <ul>
-                      <li>Buscar clubes de pádel</li>
-                      <li>Reservar pistas</li>
-                      <li>Participar en torneos</li>
-                      <li>Gestionar tu perfil y preferencias</li>
-                    </ul>
-                  </div>
-                )}
-                
-                <IonButton expand="block" color="primary" onClick={goToReservas}>
-                  <IonIcon slot="start" icon={calendarOutline}></IonIcon>
-                  Reservar Pista
-                </IonButton>
-              </IonCardContent>
-            </IonCard>
-          </IonCol>
-        </IonRow>
-      </IonGrid>
-    );
-  };
+                    <IonItem button onClick={goToCalendar} detail>
+                      <IonIcon icon={calendarOutline} slot="start" className="icono-calendario" />
+                      <IonLabel>Reservas y Calendario</IonLabel>
+                    </IonItem>
+                    <IonItem button onClick={goToManageUsers} detail>
+                      <IonIcon icon={peopleOutline} slot="start" className="icono-usuarios" />
+                      <IonLabel>Usuarios y Miembros</IonLabel>
+                    </IonItem>
+                    <IonItem button onClick={goToScoreboard} detail>
+                      <IonIcon icon={stopwatchOutline} slot="start" className="icono-marcador" />
+                      <IonLabel>Marcador de Partidos</IonLabel>
+                    </IonItem>
+                    <IonItem button detail>
+                      <IonIcon icon={statsChartOutline} slot="start" className="icono-estadisticas" />
+                      <IonLabel>Estadísticas</IonLabel>
+                    </IonItem>
+                  </IonList>
+                </>
+              ) : (
+                <>
+                  <IonText className="sin-club">
+                    <p>No se ha encontrado información del club.</p>
+                  </IonText>
+                  <IonButton expand="block">
+                    <IonIcon slot="start" icon={businessOutline} />
+                    Configurar Datos del Club
+                  </IonButton>
+                </>
+              )}
+            </IonCardContent>
+          </IonCard>
+        </IonCol>
+      </IonRow>
+    </IonGrid>
+  );
+
+  const renderUserView = () => (
+    <IonGrid>
+      <IonRow>
+        <IonCol size="12" sizeMd="8" sizeLg="6">
+          <IonCard className="tarjeta-bienvenida">
+            <IonCardHeader className="cabecera-verde">
+              <IonCardTitle>¡Bienvenido a Play4Padel!</IonCardTitle>
+            </IonCardHeader>
+            <IonCardContent>
+              {user && (
+                <IonItem lines="none" className="info-club">
+                  <IonIcon icon={personCircleOutline} slot="start" size="large" />
+                  <IonLabel>
+                    <h2>Hola, {user.nombre} {user.apellidos}</h2>
+                    <IonText><p>{user.email}</p></IonText>
+                  </IonLabel>
+                </IonItem>
+              )}
+              <p>Desde aquí podrás:</p>
+              <ul>
+                <li>Buscar clubes de pádel</li>
+                <li>Reservar pistas</li>
+                <li>Participar en torneos</li>
+                <li>Gestionar tu perfil y preferencias</li>
+              </ul>
+              <IonButton expand="block" onClick={goToReservas}>
+                <IonIcon slot="start" icon={calendarOutline} />
+                Reservar Pista
+              </IonButton>
+            </IonCardContent>
+          </IonCard>
+        </IonCol>
+      </IonRow>
+    </IonGrid>
+  );
 
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar className="home-toolbar">
+        <IonToolbar color="primary">
           <IonTitle>Inicio</IonTitle>
-
           <IonButtons slot="end">
-            <IonButton id="profile-menu">
-              <IonAvatar style={{ width: '48px', height: '48px' }}>
+            <IonButton ref={profileMenuRef} onClick={toggleMenu} className="profile-button">
+              <IonAvatar>
                 {user?.avatar_url ? (
                   <img src={user.avatar_url} alt="Perfil" />
                 ) : (
-                  <div
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      backgroundColor: '#3880ff',
-                      borderRadius: '50%',
-                    }}>
-                    <IonIcon icon={personCircleOutline} size="large" color="light" />
-                  </div>
+                  <IonIcon icon={personCircleOutline} size="large" />
                 )}
               </IonAvatar>
             </IonButton>
           </IonButtons>
         </IonToolbar>
-
-        <IonPopover
-          trigger="profile-menu"
-          triggerAction="click"
-          dismissOnSelect={true}>
-          <IonList>
-            <IonItem button routerLink="/profile">
-              <IonIcon icon={personCircleOutline} slot="start" color="light"/>
-              <IonLabel>Perfil</IonLabel>
-            </IonItem>
-            <IonItem button onClick={logout} className="logout-item">
-              <IonIcon icon={logOutOutline} slot="start" color="danger" />
-              <IonLabel>Cerrar sesión</IonLabel>
-            </IonItem>
-          </IonList>
-        </IonPopover>
       </IonHeader>
 
+      {showMenu && (
+        <>
+          <div className="menu-perfil" onClick={closeMenu}></div>
+          <div className="menu-avatar">
+            <div className="item-menu-avatar" onClick={goToProfile}>
+              <IonIcon icon={personOutline} className="icono-perfil" />
+              <span>Perfil</span>
+            </div>
+            <div className="item-menu-avatar" onClick={goToSettings}>
+              <IonIcon icon={settingsOutline} className="icono-ajustes" />
+              <span>Configuración</span>
+            </div>
+            <div className="item-menu-avatar" onClick={handleLogout}>
+              <IonIcon icon={logOutOutline} className="icono-logout" />
+              <span style={{ color: "#eb445a" }}>Cerrar sesión</span>
+            </div>
+          </div>
+        </>
+      )}
 
-      <IonContent className="home-container">
+
+      <IonContent className="contenedor-home home-container">
         {isClubAdmin && (
           <IonRefresher slot="fixed" onIonRefresh={loadClubData}>
-            <IonRefresherContent></IonRefresherContent>
+            <IonRefresherContent />
           </IonRefresher>
         )}
-        
         {isLoading || (isClubAdmin && isLoadingClub) ? (
           <IonLoading isOpen={true} message="Cargando..." />
         ) : (
-          <>
-            {isClubAdmin ? renderClubAdminView() : renderUserView()}
-          </>
+          <>{isClubAdmin ? renderClubAdminView() : renderUserView()}</>
         )}
       </IonContent>
     </IonPage>

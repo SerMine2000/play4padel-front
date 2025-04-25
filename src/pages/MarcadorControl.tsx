@@ -190,26 +190,18 @@ const MarcadorControl: React.FC = () => {
    * Abre una ventana con el marcador en pantalla completa
    */
   const abrirMarcador = () => {
-    // Usar la ruta existente
+    // Guardar en localStorage antes de abrir la ventana
+    const config = {
+      estado,
+      nombreEquipoA,
+      nombreEquipoB,
+      tituloPista,
+      tipoPista
+    };
+    localStorage.setItem('marcador-config', JSON.stringify(config));
+  
     const url = `${window.location.origin}/club/marcador`;
-    
-    // Cerrar la ventana anterior si existe
-    if (marcadorWindowRef.current && !marcadorWindowRef.current.closed) {
-      marcadorWindowRef.current.close();
-    }
-    
-    // Abrir nueva ventana con opciones de pantalla completa
-    marcadorWindowRef.current = window.open(
-      url, 
-      'marcador', 
-      'width=1280,height=720,menubar=no,toolbar=no,location=no,status=no'
-    );
-    
-    // Enviar los datos actuales a la nueva ventana
-    setTimeout(() => {
-      // Actualizar con los datos iniciales
-      actualizarVentanaMarcador(estado);
-    }, 1000);
+    marcadorWindowRef.current = window.open(url, 'marcador', 'width=1280,height=720,menubar=no,toolbar=no,location=no,status=no');
   };
 
   /**
@@ -236,25 +228,12 @@ const MarcadorControl: React.FC = () => {
   /**
    * Activar o desactivar manualmente el tie-break
    */
-  const toggleTieBreak = async () => {
+  const toggleTieBreak = async (activar: boolean) => {
     try {
-      // Invertir el estado actual del tie_break
-      const nuevoEstado = !estado.tie_break;
-      
-      // URL para actualizar el estado del tie-break
-      const url = '/marcador/update';
-      const res = await axios.post(url, { tie_break: nuevoEstado });
-      
-      // Actualizar el estado local
-      if (res.data) {
-        setEstado(res.data);
-        actualizarVentanaMarcador(res.data);
-      }
-      
-      mostrarToast(`Tie-break ${nuevoEstado ? 'activado' : 'desactivado'}`, 'success');
-    } catch (err: any) {
-      console.error('Error al cambiar estado de tie-break:', err);
-      mostrarToast('Error al cambiar estado de tie-break', 'danger');
+      await axios.post('/marcador/tiebreak', { activar });
+      fetchMarcador();
+    } catch (err) {
+      console.error("Error al cambiar estado de tie-break:", err);
     }
   };
 
@@ -263,18 +242,10 @@ const MarcadorControl: React.FC = () => {
    */
   const finalizarPartido = async () => {
     try {
-      const url = '/marcador/update';
-      const res = await axios.post(url, { terminado: true });
-      
-      if (res.data) {
-        setEstado(res.data);
-        actualizarVentanaMarcador(res.data);
-      }
-      
-      mostrarToast('Partido finalizado correctamente', 'success');
-    } catch (err: any) {
-      console.error('Error al finalizar partido:', err);
-      mostrarToast('Error al finalizar partido', 'danger');
+      await axios.post('/marcador/finalizar');
+      fetchMarcador();
+    } catch (err) {
+      console.error("Error al finalizar partido:", err);
     }
   };
 
@@ -307,8 +278,6 @@ const MarcadorControl: React.FC = () => {
   // Efecto para cargar el marcador al iniciar y cada 2 segundos
   useEffect(() => {
     fetchMarcador();
-    const interval = setInterval(fetchMarcador, 2000);
-    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -454,7 +423,7 @@ const MarcadorControl: React.FC = () => {
                     {/* Botón para aplicar configuración */}
                     <IonRow className="ion-margin-top">
                       <IonCol>
-                        <IonButton expand="block" onClick={actualizarConfiguracion}>
+                        <IonButton color="primary" expand="block" onClick={actualizarConfiguracion}>
                           <IonIcon slot="start" icon={createOutline} />
                           Aplicar configuración
                         </IonButton>
@@ -476,10 +445,7 @@ const MarcadorControl: React.FC = () => {
                       <IonCol>
                         <IonItem>
                           <IonLabel>Tie-Break</IonLabel>
-                          <IonToggle
-                            checked={estado.tie_break}
-                            onIonChange={() => toggleTieBreak()}
-                          ></IonToggle>
+                          <IonToggle onIonChange={e => toggleTieBreak(e.detail.checked)} />
                         </IonItem>
                       </IonCol>
                     </IonRow>

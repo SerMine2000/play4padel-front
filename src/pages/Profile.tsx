@@ -27,17 +27,29 @@ import {
   IonAlert,
   IonModal
 } from '@ionic/react';
-import { personOutline, personCircleOutline, saveOutline, refreshOutline, mailOutline, callOutline, keyOutline, imageOutline, closeOutline } from 'ionicons/icons';
+import {
+  personOutline,
+  personCircleOutline,
+  saveOutline,
+  refreshOutline,
+  mailOutline,
+  callOutline,
+  keyOutline,
+  imageOutline,
+  closeOutline
+} from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
 import { useHistory } from 'react-router-dom';
 import apiService from '../services/api.service';
 import { API_ENDPOINTS } from '../utils/constants';
+import '../theme/variables.css';
 import './css/Profile.css';
+
 
 const Profile: React.FC = () => {
   const { user, isLoading: authLoading, refreshUser } = useAuth();
   const history = useHistory();
-  
+
   const [formData, setFormData] = useState({
     nombre: '',
     apellidos: '',
@@ -50,7 +62,6 @@ const Profile: React.FC = () => {
     confirmPassword: '',
   });
 
-  // Nuevo estado para la URL de avatar temporal
   const [tempAvatarUrl, setTempAvatarUrl] = useState('');
   const [showAvatarAlert, setShowAvatarAlert] = useState(false);
   const [showAvatarModal, setShowAvatarModal] = useState(false);
@@ -59,12 +70,10 @@ const Profile: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  
-  // Cargar datos del usuario cuando el componente se monta
+
   useEffect(() => {
     if (user) {
       setFormData({
-        ...formData,
         nombre: user.nombre || '',
         apellidos: user.apellidos || '',
         email: user.email || '',
@@ -75,35 +84,28 @@ const Profile: React.FC = () => {
         newPassword: '',
         confirmPassword: '',
       });
-      
-      // También establecer la URL temporal de avatar
       setTempAvatarUrl(user.avatar_url || '');
     }
   }, [user]);
-  
-  const handleInputChange = (e: CustomEvent, fieldName: string) => {
+
+  const handleInputChange = (e: CustomEvent, field: string) => {
     const value = e.detail.value;
-    setFormData(prevState => ({
-      ...prevState,
-      [fieldName]: value
-    }));
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
-  
+
   const handleEditProfile = () => {
     setIsEditing(true);
     setIsChangingPassword(false);
   };
-  
+
   const handleChangePassword = () => {
     setIsChangingPassword(true);
     setIsEditing(false);
   };
-  
+
   const handleCancel = () => {
-    // Restaurar datos originales
     if (user) {
       setFormData({
-        ...formData,
         nombre: user.nombre || '',
         apellidos: user.apellidos || '',
         email: user.email || '',
@@ -114,8 +116,6 @@ const Profile: React.FC = () => {
         newPassword: '',
         confirmPassword: '',
       });
-      
-      // Restaurar URL temporal de avatar
       setTempAvatarUrl(user.avatar_url || '');
     }
     setIsEditing(false);
@@ -123,49 +123,33 @@ const Profile: React.FC = () => {
     setErrorMessage('');
   };
 
-  // Función para manejar la actualización del avatar
-  const handleAvatarUpdate = () => {
-    setShowAvatarAlert(true);
-  };
+  const handleAvatarUpdate = () => setShowAvatarAlert(true);
 
-  // Función para aplicar URL de avatar temporal
   const applyAvatarUrl = () => {
-    setFormData(prevState => ({
-      ...prevState,
+    setFormData(prev => ({
+      ...prev,
       avatar_url: tempAvatarUrl
     }));
     setShowAvatarAlert(false);
   };
-  
+
   const handleUpdateProfile = async () => {
     if (!user) return;
-    
     try {
       setIsLoading(true);
       setErrorMessage('');
-      
-      // Preparar datos para actualizar
-      const updateData = {
+      await apiService.put(`${API_ENDPOINTS.USER}/${user.id}`, {
         nombre: formData.nombre,
         apellidos: formData.apellidos,
         email: formData.email,
         telefono: formData.telefono,
         bio: formData.bio,
-        avatar_url: formData.avatar_url
-      };
-      
-      // Llamar a la API para actualizar el perfil
-      await apiService.put(`${API_ENDPOINTS.USER}/${user.id}`, updateData);
-      
+        avatar_url: formData.avatar_url,
+      });
       setSuccessMessage('Perfil actualizado correctamente');
       setIsEditing(false);
-      
-      // Recargar los datos del usuario
       await refreshUser();
-      
-      setTimeout(() => {
-        setSuccessMessage('');
-      }, 3000);
+      setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error: any) {
       console.error('Error al actualizar perfil:', error);
       setErrorMessage(error.message || 'Error al actualizar el perfil');
@@ -173,281 +157,197 @@ const Profile: React.FC = () => {
       setIsLoading(false);
     }
   };
-  
+
   const handleUpdatePassword = async () => {
     if (!user) return;
-    
-    // Validar que las contraseñas coincidan
+
     if (formData.newPassword !== formData.confirmPassword) {
       setErrorMessage('Las contraseñas no coinciden');
       return;
     }
-    
+
     try {
       setIsLoading(true);
       setErrorMessage('');
-      
-      // Preparar datos para actualizar la contraseña
-      const passwordData = {
+      await apiService.put(API_ENDPOINTS.UPDATE_PASSWORD, {
         user_id: user.id,
         current_password: formData.currentPassword,
         new_password: formData.newPassword
-      };
-      
-      // Llamar a la API para actualizar la contraseña
-      await apiService.put(API_ENDPOINTS.UPDATE_PASSWORD, passwordData);
-      
+      });
       setSuccessMessage('Contraseña actualizada correctamente');
       setIsChangingPassword(false);
-      
-      // Limpiar campos de contraseña
-      setFormData(prevState => ({
-        ...prevState,
+      setFormData(prev => ({
+        ...prev,
         currentPassword: '',
         newPassword: '',
         confirmPassword: ''
       }));
-      
-      setTimeout(() => {
-        setSuccessMessage('');
-      }, 3000);
+      setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error: any) {
       console.error('Error al actualizar contraseña:', error);
-      
-      let errorMsg = 'Error al actualizar la contraseña';
-      if (error.message) {
-        errorMsg = error.message;
-      }
-      
-      setErrorMessage(errorMsg);
+      setErrorMessage(error.message || 'Error al actualizar la contraseña');
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Función para validar URL de imagen
   const validateImageUrl = (url: string) => {
-    // URL vacía es permitida
-    if (!url) return true;
-    
-    // Validación básica: debe iniciar con http:// o https://
-    return url.startsWith('http://') || url.startsWith('https://');
+    return !url || url.startsWith('http://') || url.startsWith('https://');
+  };
+
+  const placeholders: Record<string, string> = {
+    nombre: 'Introduce tu nombre',
+    apellidos: 'Introduce tus apellidos',
+    email: 'Introduce tu email',
+    telefono: 'Introduce tu teléfono',
+    bio: 'Escribe tu biografía',
   };
   
+
   return (
     <IonPage>
+
       <IonHeader>
-        <IonToolbar color="primary">
+        <IonToolbar color={'primary'}>
           <IonButtons slot="start">
             <IonBackButton defaultHref="/home" />
           </IonButtons>
           <IonTitle>Mi Perfil</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="profile-container">
+
+      <IonContent>
         {authLoading ? (
           <IonLoading isOpen={true} message="Cargando perfil..." />
         ) : user ? (
           <>
-            <div className="profile-header">
-            <IonAvatar className="profile-avatar"
-              onClick={ 
+            <div className="encabezado-perfil">
+              <div className="contenedor-avatar" onClick={
                 isEditing ? handleAvatarUpdate : () => tempAvatarUrl && setShowAvatarModal(true)
               }>
-              {tempAvatarUrl ? (
-                <img src={tempAvatarUrl} alt={user.nombre} />
-              ) : (
-                <IonIcon icon={personOutline} size="large" />
-              )}
-            </IonAvatar>
+                <IonAvatar className="avatar-perfil avatar-sin-borde">
+                  <img src={tempAvatarUrl} alt={user.nombre} />
+                </IonAvatar>
+              </div>
+
               {isEditing && (
-                <IonText color="light" className="edit-avatar-text">
+                <IonText className="texto-cambiar-avatar">
                   <p><small>Toca para cambiar avatar</small></p>
                 </IonText>
               )}
-              <h2 className="profile-name">{user.nombre} {user.apellidos}</h2>
+
+              <h2>{user.nombre} {user.apellidos}</h2>
               <p>{user.email}</p>
             </div>
-            
-            <IonCard className="profile-card">
+
+
+
+
+            <IonCard>
               {!isEditing && !isChangingPassword && (
                 <>
                   <IonCardHeader>
                     <IonCardTitle>Información Personal</IonCardTitle>
                   </IonCardHeader>
                   <IonCardContent>
-                    <IonItem>
-                      <IonLabel>
-                        <h2>Nombre</h2>
-                        <p>{user.nombre} {user.apellidos}</p>
-                      </IonLabel>
-                    </IonItem>
-                    <IonItem>
-                      <IonLabel>
-                        <h2>Email</h2>
-                        <p>{user.email}</p>
-                      </IonLabel>
-                    </IonItem>
-                    <IonItem>
-                      <IonLabel>
-                        <h2>Teléfono</h2>
-                        <p>{user.telefono || 'No disponible'}</p>
-                      </IonLabel>
-                    </IonItem>
-                    <IonItem lines="none">
-                      <IonLabel>
-                        <h2>Biografía</h2>
-                        <p>{formData.bio || 'No hay información disponible'}</p>
-                      </IonLabel>
-                    </IonItem>
-                    
+                    <IonItem><IonLabel><h2>Nombre</h2><p>{user.nombre} {user.apellidos}</p></IonLabel></IonItem>
+                    <IonItem><IonLabel><h2>Email</h2><p>{user.email}</p></IonLabel></IonItem>
+                    <IonItem><IonLabel><h2>Teléfono</h2><p>{user.telefono || 'No disponible'}</p></IonLabel></IonItem>
+                    <IonItem lines="none"><IonLabel><h2>Biografía</h2><p>{formData.bio || 'No hay información disponible'}</p></IonLabel></IonItem>
                     <IonGrid>
                       <IonRow>
-                        <IonCol>
-                          <IonButton expand="block" onClick={handleEditProfile}>
-                            Editar Perfil
-                          </IonButton>
-                        </IonCol>
-                        <IonCol>
-                          <IonButton expand="block" color="secondary" onClick={handleChangePassword}>
-                            Cambiar Contraseña
-                          </IonButton>
-                        </IonCol>
+                        <IonCol><IonButton expand="block" color="primary" onClick={handleEditProfile}>Editar Perfil</IonButton></IonCol>
+                        <IonCol><IonButton expand="block" color="secondary" onClick={handleChangePassword}>Cambiar Contraseña</IonButton></IonCol>
                       </IonRow>
                     </IonGrid>
                   </IonCardContent>
                 </>
               )}
-              
+
               {isEditing && (
                 <>
-                  <IonCardHeader>
-                    <IonCardTitle>Editar Perfil</IonCardTitle>
-                  </IonCardHeader>
+                  <IonCardHeader><IonCardTitle>Editar Perfil</IonCardTitle></IonCardHeader>
                   <IonCardContent>
-                    <form className="profile-form">
-                      <IonItem>
-                        <IonLabel position="floating">Nombre</IonLabel>
-                        <IonInput
-                          value={formData.nombre}
-                          onIonChange={(e) => handleInputChange(e, 'nombre')}
-                          required
-                        />
-                      </IonItem>
-                      <IonItem>
-                        <IonLabel position="floating">Apellidos</IonLabel>
-                        <IonInput
-                          value={formData.apellidos}
-                          onIonChange={(e) => handleInputChange(e, 'apellidos')}
-                          required
-                        />
-                      </IonItem>
-                      <IonItem>
-                        <IonLabel position="floating">Email</IonLabel>
-                        <IonInput
-                          type="email"
-                          value={formData.email}
-                          onIonChange={(e) => handleInputChange(e, 'email')}
-                          required
-                        />
-                      </IonItem>
-                      <IonItem>
-                        <IonLabel position="floating">Teléfono</IonLabel>
-                        <IonInput
-                          type="tel"
-                          value={formData.telefono}
-                          onIonChange={(e) => handleInputChange(e, 'telefono')}
-                        />
-                      </IonItem>
-                      <IonItem>
-                        <IonLabel position="floating">Biografía</IonLabel>
-                        <IonInput
-                          value={formData.bio}
-                          onIonChange={(e) => handleInputChange(e, 'bio')}
-                        />
-                      </IonItem>
-                      
-                      <div className="form-buttons">
-                        <IonButton color="medium" onClick={handleCancel}>
-                          Cancelar
-                        </IonButton>
-                        <IonButton onClick={handleUpdateProfile}>
-                          <IonIcon slot="start" icon={saveOutline} />
-                          Guardar Cambios
-                        </IonButton>
-                      </div>
+                    <form>
+                    <div className="camposFormulario">
+                      {['nombre', 'apellidos', 'email', 'telefono', 'bio'].map((field, i) => (
+                        <div key={i}>
+                          <label className="etiqueta-campo">{field[0].toUpperCase() + field.slice(1)}</label>
+                          <IonItem lines="none">
+                            <IonInput value={(formData as any)[field]} placeholder={placeholders[field]}
+                              onIonChange={(e) => handleInputChange(e, field)} style={{ marginTop: '-10px' }}
+                              required={field !== 'telefono' && field !== 'bio'}/>
+                          </IonItem>
+                        </div>
+                      ))}
+                    </div>
+
+                    <IonGrid>
+                      <IonRow>
+                        <IonCol>
+                          <IonButton expand="block" color="medium" onClick={handleCancel}>
+                            Cancelar
+                          </IonButton>
+                        </IonCol>
+                        <IonCol>
+                          <IonButton expand="block" color="primary" onClick={handleUpdateProfile}>
+                            <IonIcon slot="start" icon={saveOutline} />
+                            Guardar Cambios
+                          </IonButton>
+                        </IonCol>
+                      </IonRow>
+                    </IonGrid>
                     </form>
                   </IonCardContent>
                 </>
               )}
-              
+
               {isChangingPassword && (
                 <>
                   <IonCardHeader>
                     <IonCardTitle>Cambiar Contraseña</IonCardTitle>
                   </IonCardHeader>
                   <IonCardContent>
-                    <form className="profile-form">
-                      <IonItem>
-                        <IonLabel position="floating">Contraseña Actual</IonLabel>
-                        <IonInput
-                          type="password"
-                          value={formData.currentPassword}
-                          onIonChange={(e) => handleInputChange(e, 'currentPassword')}
-                          required
-                        />
+                    {[
+                      { label: 'Contraseña Actual', field: 'currentPassword' },
+                      { label: 'Nueva Contraseña', field: 'newPassword' },
+                      { label: 'Confirmar Contraseña', field: 'confirmPassword' }
+                    ].map(({ label, field }, i) => (
+                      <IonItem key={i}>
+                        <IonLabel position="floating">{label}</IonLabel>
+                        <IonInput type="password" value={(formData as any)[field]} onIonChange={(e) => handleInputChange(e, field)}
+                          style={{ marginTop: '10px' }} required/>
                       </IonItem>
-                      <IonItem>
-                        <IonLabel position="floating">Nueva Contraseña</IonLabel>
-                        <IonInput
-                          type="password"
-                          value={formData.newPassword}
-                          onIonChange={(e) => handleInputChange(e, 'newPassword')}
-                          required
-                        />
-                      </IonItem>
-                      <IonItem>
-                        <IonLabel position="floating">Confirmar Contraseña</IonLabel>
-                        <IonInput
-                          type="password"
-                          value={formData.confirmPassword}
-                          onIonChange={(e) => handleInputChange(e, 'confirmPassword')}
-                          required
-                        />
-                      </IonItem>
-                      
-                      <div className="form-buttons">
-                        <IonButton color="medium" onClick={handleCancel}>
-                          Cancelar
-                        </IonButton>
-                        <IonButton onClick={handleUpdatePassword}>
-                          <IonIcon slot="start" icon={saveOutline} />
-                          Actualizar Contraseña
-                        </IonButton>
-                      </div>
-                    </form>
+                    ))}
+                
+                    <IonGrid>
+                      <IonRow>
+                        <IonCol>
+                          <IonButton expand="block" color="medium" onClick={handleCancel}>
+                            Cancelar
+                          </IonButton>
+                        </IonCol>
+                        <IonCol>
+                          <IonButton expand="block" color="primary" onClick={handleUpdatePassword}>
+                            <IonIcon slot="start" icon={saveOutline} />
+                            Actualizar Contraseña
+                          </IonButton>
+                        </IonCol>
+                      </IonRow>
+                    </IonGrid>
+                    
                   </IonCardContent>
-                </>
+                </>              
               )}
             </IonCard>
-            
+
             {successMessage && (
-              <div className="success-message">
-                <IonText color="success">
-                  {successMessage}
-                </IonText>
-              </div>
+              <IonText color="success"><p>{successMessage}</p></IonText>
             )}
-            
             {errorMessage && (
-              <div className="error-message">
-                <IonText color="danger">
-                  {errorMessage}
-                </IonText>
-              </div>
+              <IonText color="danger"><p>{errorMessage}</p></IonText>
             )}
 
-            {/* Alerta para cambiar avatar */}
             <IonAlert
               isOpen={showAvatarAlert}
               onDidDismiss={() => setShowAvatarAlert(false)}
@@ -462,18 +362,15 @@ const Profile: React.FC = () => {
                 }
               ]}
               buttons={[
-                {
-                  text: 'Cancelar',
-                  role: 'cancel'
-                },
+                { text: 'Cancelar', role: 'cancel' },
                 {
                   text: 'Ver previa',
                   handler: (data) => {
                     if (validateImageUrl(data.avatar_url)) {
                       setTempAvatarUrl(data.avatar_url);
-                      return false; // Mantener el diálogo abierto
+                      return false;
                     } else {
-                      setErrorMessage('URL de imagen no válida. Debe comenzar con http:// o https://');
+                      setErrorMessage('URL de imagen no válida');
                       return false;
                     }
                   }
@@ -486,71 +383,39 @@ const Profile: React.FC = () => {
                       applyAvatarUrl();
                       return true;
                     } else {
-                      setErrorMessage('URL de imagen no válida. Debe comenzar con http:// o https://');
+                      setErrorMessage('URL de imagen no válida');
                       return false;
                     }
                   }
                 }
               ]}
             />
+
+            <IonModal isOpen={showAvatarModal} onDidDismiss={() => setShowAvatarModal(false)}>
+              <IonContent fullscreen>
+                <div className="ion-padding">
+                  <IonButton fill="clear" onClick={() => setShowAvatarModal(false)}>
+                    <IonIcon icon={closeOutline} size="large" />
+                  </IonButton>
+                  <img src={tempAvatarUrl} alt="avatar ampliado" />
+                </div>
+              </IonContent>
+            </IonModal>
+
+            <IonLoading isOpen={isLoading} message="Procesando..." />
           </>
         ) : (
-          <div className="ion-padding ion-text-center">
-            <IonText color="medium">
-              <p>No se pudo cargar la información del usuario.</p>
-            </IonText>
+          <IonText color="medium">
+            <p>No se pudo cargar la información del usuario.</p>
             <IonButton onClick={() => window.location.reload()}>
               <IonIcon slot="start" icon={refreshOutline} />
               Recargar
             </IonButton>
-          </div>
+          </IonText>
         )}
-        
-        <IonLoading isOpen={isLoading} message="Procesando..." />
-
-        <IonModal isOpen={showAvatarModal} onDidDismiss={() => setShowAvatarModal(false)}>
-        <IonContent fullscreen className="ion-padding">
-          <div
-            style={{
-              position: 'absolute',
-              top: '16px',
-              right: '16px',
-              zIndex: 10
-            }}
-          >
-            <IonButton fill="clear" onClick={() => setShowAvatarModal(false)}>
-              <IonIcon icon={closeOutline} size="large" color="light" />
-            </IonButton>
-          </div>
-          <div
-            style={{
-              height: '100%',
-              backgroundColor: 'black',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <img
-              src={tempAvatarUrl}
-              alt="avatar ampliado"
-              style={{
-                maxWidth: '100%',
-                maxHeight: '100%',
-                objectFit: 'contain',
-                borderRadius: '8px',
-                boxShadow: '0 0 10px rgba(255,255,255,0.2)'
-              }}
-            />
-          </div>
-        </IonContent>
-      </IonModal>
-
       </IonContent>
     </IonPage>
   );
-
-  
 };
 
 export default Profile;

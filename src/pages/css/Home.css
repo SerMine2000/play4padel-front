@@ -1,196 +1,244 @@
 /* src/pages/css/Home.css */
 
-.home-container {
-  --background: url('/img/fondoHome.jpg') no-repeat center center / cover;
-  background-color: #121212;
+/* Botón del perfil */
+.boton-perfil {
+  --padding-start: 8px;
+  --padding-end: 8px;
 }
 
-.home-toolbar {
-  --background: #3880ff;
-  --color: white;
+/* Contenedor general de la página */
+.contenedor-home {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-height: calc(100vh - 56px);
+  padding: 16px;
+  --ion-background-color: transparent;
 }
 
-.welcome-card {
+.fila-centro {
+  display: flex;
+  justify-content: center;
+}
+
+/* Tarjeta principal de bienvenida o panel */
+.tarjeta-bienvenida {
   margin: 0 auto;
   border-radius: 16px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
   overflow: hidden;
   margin-top: 20px;
-  background-color: #1c1c1c;
+  background-color: var(--color-panel);
 }
 
-.welcome-card-header {
-  background-color: #3880ff;
-  color: white;
-  padding: 20px;
-}
-
-.welcome-card-header h2 {
-  margin: 0;
-  font-size: 24px;
-  font-weight: 600;
-}
-
-.welcome-card-content {
-  padding: 20px;
-  background-color: #1c1c1c;
-  color: white;
-}
-
-
-ion-list {
-  background-color: #1c1c1c !important;
-  --ion-item-background: #1c1c1c !important;
-}
-
-ion-item {
-  --background: #1c1c1c !important;
-  --color: white !important;
-  --border-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-ion-label {
-  color: white !important;
-}
-
-.logout-item ion-label {
-  color: #eb445a !important;
-  font-weight: 600;
-}
-
-.club-section ion-item,
-.club-header ion-item,
-.user-info ion-item {
-  --background: #1c1c1c !important;
-  --color: white !important;
-}
-
-.user-info ion-label h2 {
+/* Cabecera de la tarjeta */
+.cabecera-tarjeta {
+  background-color: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
+  padding: 16px;
   font-size: 18px;
   font-weight: 600;
-  margin-bottom: 8px;
-  color: white;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
 }
 
-.user-info ion-text p {
-  font-size: 14px;
-  color: #cccccc;
+.cabecera-verde {
+  background-color: var(--ion-color-primary) !important;
+  color: var(--ion-color-primary-contrast) !important;
+  padding: 16px;
+  font-size: 18px;
+  font-weight: 600;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
 }
 
-.logout-button {
-  --border-radius: 8px;
+/* Contenido de la tarjeta */
+.contenido-tarjeta {
+  padding: 20px;
+}
+
+/* Iconos coloreados */
+:root .icono-empresa { color: var(--color-icono-empresa); }
+:root .icono-pistas { color: var(--color-icono-pistas); }
+:root .icono-calendario { color: var(--color-icono-calendario); }
+:root .icono-usuarios { color: var(--color-icono-usuarios); }
+:root .icono-marcador { color: var(--color-icono-marcador); }
+:root .icono-estadisticas { color: var(--color-icono-estadisticas); }
+
+.ion-palette-dark .icono-empresa { color: var(--color-icono-empresa); }
+.ion-palette-dark .icono-pistas { color: var(--color-icono-pistas); }
+.ion-palette-dark .icono-calendario { color: var(--color-icono-calendario); }
+.ion-palette-dark .icono-usuarios { color: var(--color-icono-usuarios); }
+.ion-palette-dark .icono-marcador { color: var(--color-icono-marcador); }
+.ion-palette-dark .icono-estadisticas { color: var(--color-icono-estadisticas); }
+
+/* Info del usuario o del club */
+.info-usuario ion-item,
+.info-club ion-item {
   --background: transparent;
-  --color: #fff;
-  font-weight: 600;
-  text-transform: none;
-  font-size: 14px;
+  --color: inherit;
 }
 
-.club-header {
-  margin-bottom: 16px;
-}
-
-.club-header h2 {
-  font-size: 24px;
-  font-weight: 600;
-  color: white;
-}
-
-.club-stats {
-  margin: 20px 0;
-}
-
-.stat-card {
+/* Tarjetas de estadísticas modo claro y oscuro */
+.tarjeta-estadistica {
   text-align: center;
   padding: 16px;
-  border-radius: 8px;
+  border-radius: 12px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  color: #000;
+  margin: 8px;
+  flex: 1 1 0;
+  min-width: 0;
+  transition: background-color 0.3s ease;
+}
+
+.ion-palette-dark .tarjeta-estadistica {
   background-color: #2c2c2c;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   color: white;
 }
 
-.stat-card ion-icon {
+.tarjeta-estadistica ion-icon {
   font-size: 28px;
   margin-bottom: 8px;
 }
 
-.stat-card h3 {
+.tarjeta-estadistica h3 {
   font-size: 24px;
   font-weight: 600;
   margin: 8px 0;
-  color: white;
+  color: inherit;
 }
 
-.stat-card p {
-  color: #cccccc;
+.tarjeta-estadistica p {
+  color: #666;
   margin: 0;
+  font-size: 14px;
 }
 
-ion-avatar img {
-  object-fit: cover;
+.ion-palette-dark .tarjeta-estadistica p {
+  color: #cccccc;
 }
 
-.section-title {
+/* Título de sección */
+.titulo-seccion {
   margin: 24px 0 8px;
   font-size: 18px;
   font-weight: 600;
-  color: white;
 }
 
-.club-action-button {
-  margin-top: 24px;
-}
-
-.no-club-data {
+/* Mensaje cuando no hay datos del club */
+.sin-club {
   text-align: center;
   padding: 20px;
   color: #cccccc;
 }
 
-.no-club-data p {
-  margin-bottom: 20px;
-  color: #cccccc;
+/* Fondo desenfocado al abrir el menú */
+.menu-perfil {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  backdrop-filter: blur(0.5px); /* 👈 más sutil */
+  background-color: rgba(0, 0, 0, 0.25); /* opcional: también más claro */
+  z-index: 999;
 }
 
-.membership-info {
-  background-color: rgba(40, 167, 69, 0.1);
-  border-radius: 8px;
-  margin-top: 16px;
-  margin-bottom: 16px;
-  padding: 8px;
+:root {
+  --color-texto-peligro: #eb445a;
 }
 
-.membership-info ion-icon {
-  color: #28a745 !important;
+.ion-palette-dark {
+  --color-texto-peligro: #eb445a;
 }
 
-.membership-info h2 {
-  color: #28a745;
+
+/* Estilos para iconos del menú de perfil (modo claro y oscuro) */
+.item-menu-avatar .icono-perfil { color: var(--color-icono-usuarios); }
+.item-menu-avatar .icono-ajustes { color: var(--color-icono-calendario); }
+.item-menu-avatar .icono-logout  { color: var(--color-texto-peligro); }
+
+.ion-palette-dark .item-menu-avatar .icono-perfil { color: var(--color-icono-usuarios); }
+.ion-palette-dark .item-menu-avatar .icono-ajustes { color: var(--color-icono-calendario); }
+.ion-palette-dark .item-menu-avatar .icono-logout  { color: var(--color-texto-peligro); }
+
+
+
+.item-menu-avatar.logout span,
+.item-menu-avatar.logout {
+  color: var(--color-texto-peligro);
   font-weight: 600;
-  margin-bottom: 8px;
 }
 
-.membership-info p {
-  margin: 4px 0;
-  color: #e0e0e0;
+.ion-palette-dark .item-menu-avatar.logout span,
+.ion-palette-dark .item-menu-avatar.logout {
+  color: var(--color-texto-peligro);
 }
 
-.membership-info p strong {
-  color: #fff;
+.item-menu-avatar .icono-logout {
+  color: var(--color-texto-peligro);
 }
 
-@media (max-width: 576px) {
-  .welcome-card {
-    margin-top: 10px;
-  }
-  
-  .welcome-card-header h2 {
-    font-size: 20px;
-  }
+
+
+/* Menú emergente personalizado (avatar) */
+.menu-avatar {
+  position: absolute;
+  top: 60px;
+  right: 16px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+  z-index: 1000; /* 👈 más alto que el overlay */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
 }
 
-@media (min-width: 768px) {
-  .home-container {
-    padding: 30px;
-  }
+.ion-palette-dark .menu-avatar {
+  background-color: #2c2c2c;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.item-menu-avatar {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  background-color: transparent;
+}
+
+.ion-palette-dark .item-menu-avatar {
+  color: white;
+}
+
+.item-menu-avatar:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.ion-palette-dark .item-menu-avatar:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.item-menu-avatar ion-icon {
+  margin-right: 12px;
+  font-size: 20px;
+  color: inherit;
+}
+
+.item-menu-avatar span {
+  font-size: 16px;
+}
+
+.item-menu-avatar:not(:last-child) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.ion-palette-dark .item-menu-avatar:not(:last-child) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }

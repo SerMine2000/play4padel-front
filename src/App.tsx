@@ -12,8 +12,11 @@ import ManageUsers from './pages/ManageUsers';
 import CalendarView from './pages/CalendarView';
 import MarcadorControl from './pages/MarcadorControl';
 import MarcadorPantalla from './pages/MarcadorPantalla';
+import Configuracion from './pages/Configuracion';
 import Pay from './pages/Pay';
+
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { useEffect } from 'react';
 
 /* Core CSS required for Ionic components to work properly */
@@ -24,7 +27,7 @@ import '@ionic/react/css/normalize.css';
 import '@ionic/react/css/structure.css';
 import '@ionic/react/css/typography.css';
 
-/* Optional CSS utils that can be commented out */
+// /* Optional CSS utils that can be commented out */
 import '@ionic/react/css/padding.css';
 import '@ionic/react/css/float-elements.css';
 import '@ionic/react/css/text-alignment.css';
@@ -35,7 +38,6 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
-setupIonicReact();
 
 // Componente envoltorio para rutas autenticadas
 const PrivateRoute: React.FC<{
@@ -146,6 +148,7 @@ const AppContent: React.FC = () => {
           {/* Rutas privadas - para todos los usuarios autenticados */}
           <PrivateRoute path="/home" exact component={Home} />
           <PrivateRoute path="/profile" exact component={Profile} />
+          <PrivateRoute path="/configuracion" exact component={Configuracion} />
           <PrivateRoute path="/reservas" exact component={Reservas} />
           <PrivateRoute path="/calendar" exact component={CalendarView} />
           
@@ -188,7 +191,9 @@ const AppContent: React.FC = () => {
 
 const App: React.FC = () => (
   <AuthProvider>
-    <AppContent />
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
   </AuthProvider>
 );
 

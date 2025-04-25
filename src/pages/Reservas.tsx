@@ -37,7 +37,8 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { useHistory } from 'react-router';
 import apiService from '../services/api.service';
-import './css/Reservas.css';
+import '../theme/variables.css';
+//import './css/Reservas.css';
 
 interface FranjaHoraria {
   inicio: string;
@@ -460,7 +461,7 @@ const ReservarPista: React.FC = () => {
     const horariosStr = obtenerHorariosConsolidados();
 
     return (
-      <IonCard className="resumen-card">
+      <IonCard>
         <IonCardHeader>
           <IonCardTitle>Resumen de la Reserva</IonCardTitle>
         </IonCardHeader>
@@ -522,16 +523,13 @@ const ReservarPista: React.FC = () => {
           <IonTitle>Reserva de Pista</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="reservas-page">
-        <div className="reserva-form-container">
-          <form className="reserva-form">
+      <IonContent>
+        <div>
+          <form>
             {/* Selección de Club */}
-            <div className="form-group">
+            <div>
               <label>Selecciona un Club *</label>
-              <IonSelect 
-                value={clubSeleccionado}
-                placeholder="Selecciona un club"
-                interface="action-sheet"
+              <IonSelect value={clubSeleccionado} placeholder="Selecciona un club" interface="action-sheet"
                 onIonChange={e => {
                   setClubSeleccionado(e.detail.value);
                   setPistaSeleccionada(null);
@@ -539,9 +537,7 @@ const ReservarPista: React.FC = () => {
                   setHorasDisponibles([]);
                   setFranjasSeleccionadas([]);
                   setRangosHorarios([]);
-                }}
-                className="reserva-select"
-              >
+                }}>
                 {clubes.map(club => (
                   <IonSelectOption key={club.id} value={club.id}>
                     {club.nombre}
@@ -551,7 +547,7 @@ const ReservarPista: React.FC = () => {
             </div>
             
             {/* Selección de Pista */}
-            <div className="form-group">
+            <div>
               <label>Selecciona una Pista *</label>
               <IonSelect 
                 value={pistaSeleccionada}
@@ -564,9 +560,7 @@ const ReservarPista: React.FC = () => {
                   setHorasDisponibles([]);
                   setFranjasSeleccionadas([]);
                   setRangosHorarios([]);
-                }}
-                className="reserva-select"
-              >
+                }}>
                 {pistas.map(pista => (
                   <IonSelectOption key={pista.id} value={pista.id}>
                     Pista {pista.numero} - {pista.tipo} - {pista.precio_hora}€/90min
@@ -576,57 +570,37 @@ const ReservarPista: React.FC = () => {
             </div>
             
             {/* Selección de Fecha */}
-            <div className="form-group" ref={fechaSelectorRef}>
+            <div ref={fechaSelectorRef}>
               <label>Selecciona una Fecha *</label>
-              <div 
-                id="fecha-selector"
-                className="fecha-selector" 
-                onClick={() => pistaSeleccionada && setIsDateTimeOpen(true)}
-              >
+              <div id="fecha-selector" onClick={(
+              ) => pistaSeleccionada && setIsDateTimeOpen(true)}>
+
                 {fechaSeleccionada ? (
-                  <div className="fecha-seleccionada">
+                  <div >
                     <IonIcon icon={calendarOutline} />
                     <span>{formatearFechaMostrar(fechaSeleccionada)}</span>
                   </div>
                 ) : (
-                  <div className="fecha-placeholder">
-                    <IonIcon icon={calendarOutline} />
+                  <div>
+                    <IonIcon icon={calendarOutline}/>
                     <span>Selecciona fecha</span>
                   </div>
                 )}
               </div>
               
-              <IonPopover
-                isOpen={isDateTimeOpen}
-                onDidDismiss={() => setIsDateTimeOpen(false)}
-                className="date-popover"
-                event={undefined}
-                arrow={false}
-                reference="trigger"
-                trigger="fecha-selector"
-                side="bottom"
-                alignment="start"
-              >
-                <IonDatetime
-                  presentation="date"
-                  min={new Date().toISOString()}
-                  value={fechaSeleccionada}
-                  onIonChange={handleFechaChange}
-                ></IonDatetime>
+              <IonPopover isOpen={isDateTimeOpen} onDidDismiss={() => setIsDateTimeOpen(false)} event={undefined}
+                arrow={false} reference="trigger" trigger="fecha-selector" side="bottom" alignment="start">
+                <IonDatetime presentation="date" min={new Date().toISOString()} value={fechaSeleccionada} onIonChange={handleFechaChange}></IonDatetime>
               </IonPopover>
             </div>
             
             {/* Horarios Disponibles */}
             {horasDisponibles.length > 0 && (
-              <div className="form-group">
+              <div>
                 <label>Selecciona uno o varios Horarios *</label>
-                <div className="horarios-grid">
+                <div>
                   {horasDisponibles.map((franja, index) => (
-                    <div 
-                      key={index}
-                      className={`horario-chip ${franja.seleccionada ? 'selected' : ''}`}
-                      onClick={() => toggleFranjaHoraria(franja)}
-                    >
+                    <div key={index} onClick={() => toggleFranjaHoraria(franja)}>
                       <IonIcon icon={timeOutline} />
                       <span>{formatearHora(franja.inicio)} - {formatearHora(franja.fin)}</span>
                     </div>
@@ -636,15 +610,10 @@ const ReservarPista: React.FC = () => {
             )}
             
             {/* Notas adicionales */}
-            <div className="form-group">
+            <div>
               <label>Notas adicionales</label>
-              <IonTextarea
-                value={notas}
-                placeholder="Escribe aquí cualquier información adicional"
-                onIonChange={e => setNotas(e.detail.value || '')}
-                className="notas-textarea"
-                rows={3}
-              ></IonTextarea>
+              <IonTextarea value={notas} placeholder="Escribe aquí cualquier información adicional"
+                onIonChange={e => setNotas(e.detail.value || '')} rows={3}></IonTextarea>
             </div>
             
             {/* Resumen de la reserva */}
@@ -653,22 +622,18 @@ const ReservarPista: React.FC = () => {
                 {generarResumenReserva()}
                 
                 {/* Precio Total */}
-                <div className="precio-total-container">
-                  <div className="precio-total">
+                <div>
+                  <div>
                     <label>Precio Total:</label>
-                    <div className="precio-valor">{precioTotal.toFixed(2)}€</div>
+                    <div>{precioTotal.toFixed(2)}€</div>
                   </div>
                 </div>
               </>
             )}
             
             {/* Botón de reserva */}
-            <IonButton 
-              expand="block" 
-              onClick={realizarReserva}
-              disabled={!clubSeleccionado || !pistaSeleccionada || !fechaSeleccionada || franjasSeleccionadas.length === 0}
-              className="reservar-button"
-            >
+            <IonButton expand="block" onClick={realizarReserva}
+              disabled={!clubSeleccionado || !pistaSeleccionada || !fechaSeleccionada || franjasSeleccionadas.length === 0}>
               <IonIcon slot="start" icon={tennisballOutline} />
               RESERVAR PISTA
             </IonButton>

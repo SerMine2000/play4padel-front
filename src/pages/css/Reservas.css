@@ -1,6 +1,3 @@
-/* src/pages/css/Reservas.css */
-/* Estilos actualizados para la página de reservas */
-
 .reservas-page {
   --background: url('/img/fondoLoginRegistro.jpg') no-repeat center center / cover;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -12,12 +9,7 @@
   margin: 0 auto;
 }
 
-.reserva-form {
-  background-color: #111111;
-  border-radius: 5px;
-  overflow: hidden;
-  padding: 0;
-}
+
 
 .form-group {
   padding: 15px;
@@ -26,38 +18,6 @@
 
 .form-group:last-child {
   border-bottom: none;
-}
-
-.form-group label {
-  display: block;
-  color: white;
-  font-size: 16px;
-  font-weight: 500;
-  margin-bottom: 8px;
-}
-
-.reserva-select {
-  width: 100%;
-  background-color: #1c1c1c;
-  color: white;
-  border-radius: 4px;
-  --placeholder-color: #999;
-}
-
-.fecha-selector {
-  background-color: #1c1c1c;
-  border-radius: 4px;
-  padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.fecha-placeholder, .fecha-seleccionada {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: white;
 }
 
 .fecha-placeholder span {
@@ -77,22 +37,6 @@
   margin-bottom: 15px;
 }
 
-.horario-chip {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background-color: #1c1c1c;
-  color: white;
-  border-radius: 20px;
-  padding: 8px 12px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.horario-chip.selected {
-  background-color: #0066cc;
-}
 
 .horario-chip ion-icon {
   color: #0066cc;
@@ -103,28 +47,7 @@
   color: white;
 }
 
-/* Estilos para el resumen de reserva */
-.resumen-card {
-  margin: 15px;
-  border-radius: 8px;
-  background-color: #1c1c1c;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
 
-.resumen-card ion-card-header {
-  background-color: #0066cc;
-}
-
-.resumen-card ion-card-title {
-  color: white;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.resumen-card ion-card-content {
-  color: white;
-  padding: 15px;
-}
 
 .resumen-card ion-row {
   margin-bottom: 8px;
@@ -135,13 +58,7 @@
   margin-top: 2px;
 }
 
-/* Estilos para el precio total */
-.precio-total-container {
-  padding: 15px;
-  margin: 0 15px 15px;
-  background-color: rgba(0, 102, 204, 0.1);
-  border-radius: 8px;
-}
+
 
 .precio-total {
   display: flex;
@@ -149,37 +66,11 @@
   align-items: center;
 }
 
-.precio-total label {
-  font-size: 18px;
-  font-weight: 600;
-  color: white;
-  margin: 0;
-}
 
-.precio-valor {
-  font-size: 24px;
-  font-weight: 700;
-  color: #0066cc;
-}
 
-.notas-textarea {
-  width: 100%;
-  background-color: #1c1c1c;
-  border-radius: 4px;
-  --placeholder-color: #999;
-  --color: white;
-}
 
-.reservar-button {
-  margin: 20px 15px;
-  --background: #0066cc;
-  --background-activated: #0055aa;
-  --border-radius: 4px;
-  --box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
-  height: 50px;
-  font-size: 16px;
-  font-weight: 600;
-}
+
+
 
 /* Ajustes para el datetime popover */
 .date-popover {
@@ -191,11 +82,6 @@ ion-popover.date-popover {
   --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
-ion-datetime {
-  --background: #1c1c1c;
-  --color: white;
-  --background-rgb: 28, 28, 28;
-}
 
 /* Media queries para responsividad */
 @media (max-width: 576px) {

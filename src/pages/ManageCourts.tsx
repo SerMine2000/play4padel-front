@@ -1,54 +1,14 @@
 // src/pages/ManageCourts.tsx
 import React, { useState, useEffect } from 'react';
-import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  IonButtons,
-  IonBackButton,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
-  IonItem,
-  IonLabel,
-  IonInput,
-  IonSelect,
-  IonSelectOption,
-  IonToggle,
-  IonButton,
-  IonIcon,
-  IonList,
-  IonItemSliding,
-  IonItemOptions,
-  IonItemOption,
-  IonLoading,
-  IonToast,
-  IonText,
-  IonModal,
-  IonChip,
-  IonFab,
-  IonFabButton,
-  IonAlert
-} from '@ionic/react';
-import {
-  addCircleOutline,
-  createOutline,
-  buildOutline,
-  trashOutline,
-  closeCircleOutline,
-  checkmarkCircleOutline,
-  tennisballOutline
-} from 'ionicons/icons';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonBackButton, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, 
+  IonCardTitle, IonCardContent, IonItem, IonLabel, IonInput, IonToggle, IonButton, IonIcon, IonList, IonItemSliding,
+  IonItemOptions, IonItemOption, IonLoading, IonToast, IonText, IonModal, IonChip, IonFab, IonFabButton, IonAlert } from '@ionic/react';
+import {addCircleOutline, createOutline, buildOutline, trashOutline, closeCircleOutline, checkmarkCircleOutline, tennisballOutline, swapHorizontalOutline } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
 import { useHistory } from 'react-router-dom';
 import apiService from '../services/api.service';
 import { API_ENDPOINTS } from '../utils/constants';
+import '../theme/variables.css';
 import './css/ManageCourts.css';
 
 // Interfaz para los datos de la pista
@@ -331,13 +291,13 @@ const ManageCourts: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       
-      <IonContent className="manage-courts-container">
+      <IonContent className="contenedor-gestion-pistas">
         <IonGrid>
           <IonRow>
             <IonCol size="12" sizeMd="8" offsetMd="2">
-              <IonCard className="info-card">
+              <IonCard>
                 <IonCardHeader>
-                  <IonCardTitle>
+                  <IonCardTitle style={{ fontWeight: 'bold' }}>
                     {clubData ? clubData.nombre : 'Club'}
                   </IonCardTitle>
                 </IonCardHeader>
@@ -348,18 +308,18 @@ const ManageCourts: React.FC = () => {
                 </IonCardContent>
               </IonCard>
               
-              <IonCard className="courts-card">
+              <IonCard>
                 <IonCardHeader>
-                  <IonCardTitle>Pistas</IonCardTitle>
-                  <div className="slide-indicator">
-                    <span className="swipe-icon">↔</span>
-                    <span className="swipe-text">Desliza una pista para cambiar de estado o editar</span>
+                    <IonCardTitle style={{ fontWeight: 'bold' }}>Pistas</IonCardTitle>
+                  <div className="indicador-deslizamiento">
+                    <IonIcon icon={ swapHorizontalOutline } className="icono-deslizar" />
+                    <span className="texto-deslizar">Desliza una pista para cambiar de estado o editar</span>
                   </div>
                 </IonCardHeader>
 
                 <IonCardContent>
                   {pistas.length === 0 ? (
-                    <div className="no-courts">
+                    <div className="sin-pistas">
                       <IonIcon icon={tennisballOutline} size="large" />
                       <IonText color="medium">
                         <p>No hay pistas creadas</p>
@@ -374,25 +334,24 @@ const ManageCourts: React.FC = () => {
                       {[...pistas]
                         .sort((a, b) => a.numero - b.numero)
                         .map((pista) => (
-                        <IonItemSliding className="responsive-sliding" key={pista.id}>
-                          <IonItem className="court-item">
-                            <div className="court-content">
-                              <div className="court-text">
-                                <h2>Pista {pista.numero}</h2>
-                                <p>{pista.tipo} - {pista.precio_hora}€/1h 30min</p>
-                                <p>
+                        <IonItemSliding key={pista.id}>
+                          <IonItem>
+                            <div className="contenido-pista">
+                              <div>
+                                <h2 style={{ fontWeight: 'bold' }}>Pista {pista.numero}</h2>
+                                <p style={{ marginLeft: '10px' }}>{pista.tipo} - {pista.precio_hora}€/1h 30min</p>
+                                <p style={{ marginLeft: '10px' }}>
                                   {pista.iluminacion ? 'Cuenta con iluminación' : 'Sin iluminación'} - {pista.techada ? 'Indoor' : 'Outdoor'}
                                 </p>
                               </div>
 
                               {pista.imagen_url && (
                                 <img
-                                  src={pista.imagen_url}
-                                  alt={`Imagen de pista ${pista.numero}`}
-                                  className="court-image"
-                                  onClick={() => setImagenSeleccionada(pista.imagen_url ?? null)}
-                                  style={{ cursor: 'pointer' }}
-                                />
+                                className="imagen-pista"
+                                src={pista.imagen_url}
+                                alt={`Imagen de pista ${pista.numero}`}
+                                onClick={() => setImagenSeleccionada(pista.imagen_url ?? null)}
+                              />
                               )}
                             </div>
 
@@ -404,46 +363,28 @@ const ManageCourts: React.FC = () => {
                           {/* OPCIONES A LA IZQUIERDA */}
                           <IonItemOptions side="start">
                             {pista.estado !== 'disponible' && (
-                              <IonItemOption
-                                color="success"
-                                onClick={(e) => changeCourtStatus(pista.id, 'disponible', e)}
-                                className="equal-width-option"
-                              >
-                                <div className="option-content">
+                              <IonItemOption color="success" onClick={(e) => changeCourtStatus(pista.id, 'disponible', e)}>
+                                <div>
                                   <IonIcon icon={checkmarkCircleOutline} />
-                                  <span style={{ marginTop: '4px', textTransform: 'capitalize' }}>
-                                    Abrir
-                                  </span>
+                                  <span>Abrir</span>
                                 </div>
                               </IonItemOption>
                             )}
 
                             {pista.estado !== 'mantenimiento' && (
-                              <IonItemOption
-                                color="warning"
-                                onClick={(e) => changeCourtStatus(pista.id, 'mantenimiento', e)}
-                                className="equal-width-option"
-                              >
-                                <div className="option-content" style={{ color: 'black' }}>
-                                  <IonIcon icon={buildOutline} style={{ color: 'black', fontSize: '24px' }} />
-                                  <span style={{ color: 'black', marginTop: '4px', textTransform: 'capitalize' }}>
-                                    Mantenimiento
-                                  </span>
+                              <IonItemOption color="warning" onClick={(e) => changeCourtStatus(pista.id, 'mantenimiento', e)}>
+                                <div>
+                                  <IonIcon icon={buildOutline} />
+                                  <span>Mantenimiento</span>
                                 </div>
                               </IonItemOption>
                             )}
 
                             {pista.estado !== 'cerrada' && (
-                              <IonItemOption
-                                color="danger"
-                                onClick={(e) => changeCourtStatus(pista.id, 'cerrada', e)}
-                                className="equal-width-option"
-                              >
-                                <div className="option-content">
+                              <IonItemOption color="danger" onClick={(e) => changeCourtStatus(pista.id, 'cerrada', e)}>
+                                <div>
                                   <IonIcon icon={closeCircleOutline} />
-                                  <span style={{ marginTop: '4px', textTransform: 'capitalize' }}>
-                                    Cerrada
-                                  </span>
+                                  <span>Cerrada</span>
                                 </div>
                               </IonItemOption>
                             )}
@@ -459,20 +400,16 @@ const ManageCourts: React.FC = () => {
                               openEditModal(pista);
                               const sliding = (e.target as HTMLElement)?.closest('ion-item-sliding') as HTMLIonItemSlidingElement;
                               if (sliding) sliding.close();
-                            }}
-                            className="equal-width-option">
-                            <div className="option-content">
+                            }}>
+                            <div>
                               <IonIcon icon={createOutline} />
-                              <span style={{ marginTop: '4px', textTransform: 'capitalize' }}>Editar</span>
+                              <span>Editar</span>
                             </div>
                           </IonItemOption>
-                            <IonItemOption
-                              color="danger"
-                              onClick={() => prepareDeleteCourt(pista.id)}
-                              className="equal-width-option">
-                              <div className="option-content">
+                            <IonItemOption color="danger" onClick={() => prepareDeleteCourt(pista.id)}>
+                              <div>
                                 <IonIcon icon={trashOutline} />
-                                <span style={{ marginTop: '4px', textTransform: 'capitalize' }}>Eliminar</span>
+                                <span>Eliminar</span>
                               </div>
                             </IonItemOption>
                           </IonItemOptions>
@@ -483,13 +420,13 @@ const ManageCourts: React.FC = () => {
 
                   {/* MODAL PARA IMAGEN AMPLIADA */}
                   <IonModal isOpen={!!imagenSeleccionada} onDidDismiss={() => setImagenSeleccionada(null)}>
-                    <IonContent className="ion-padding">
-                      <div className="modal-image-wrapper">
-                        <button className="close-icon" onClick={() => setImagenSeleccionada(null)}>
-                          ✕
-                        </button>
-                        <img src={imagenSeleccionada!} alt="Vista ampliada" />
-                      </div>
+                    <IonContent >
+                    <div className="envoltorio-imagen-modal">
+                      <button className="icono-cerrar" onClick={() => setImagenSeleccionada(null)}>
+                        ✕
+                      </button>
+                      <img src={imagenSeleccionada!} alt="Vista ampliada" />
+                    </div>
                     </IonContent>
                   </IonModal>
                 </IonCardContent>
@@ -506,10 +443,10 @@ const ManageCourts: React.FC = () => {
         </IonFab>
         
         {/* Modal para añadir o editar pista */}
-        <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)} className="modal-formulario-pista">
+        <IonModal className="formulario-modal-pista" isOpen={showModal} onDidDismiss={() => setShowModal(false)}>
           <IonHeader>
-            <IonToolbar>
-              <IonTitle>
+            <IonToolbar color="primary" style={{ borderRadius: '7px' }}>
+              <IonTitle >
                 {editingPista ? 'Editar Pista' : 'Nueva Pista'}
               </IonTitle>
               <IonButtons slot="end">
@@ -519,82 +456,56 @@ const ManageCourts: React.FC = () => {
               </IonButtons>
             </IonToolbar>
           </IonHeader>
-          <IonContent>
+          <IonContent >
             <IonGrid>
               <IonRow>
                 <IonCol size="12">
                 <IonItem>
-                  <IonLabel slot="start">Número de Pista</IonLabel>
-                  <IonInput
-                    type="number"
-                    min="1"
-                    style={{ textAlign: 'right' }}
-                    value={formData.numero}
-                    onIonChange={(e) => handleInputChange(e, 'numero')}
-                    required
-                  />
+                    <IonLabel className="transparentar-fondos" slot="start">Número de Pista</IonLabel>
+                  <IonInput className="transparentar-fondos" type="number" min="1" 
+                    value={formData.numero} onIonChange={(e) => handleInputChange(e, 'numero')} required/>
                 </IonItem>
                   
                   <IonItem lines="none">
-                    <IonLabel>Tipo de Pista</IonLabel>
-                    <div className="button-toggle-container">
-                      <IonButton
-                        fill={formData.tipo === 'Cristal' ? 'solid' : 'outline'}
-                        onClick={() => setFormData({ ...formData, tipo: 'Cristal' })}>
+                    <IonLabel className="transparentar-fondos">Tipo de Pista</IonLabel>
+                    <div className="centrar-botones">
+                      <IonButton fill={formData.tipo === 'Cristal' ? 'solid' : 'outline'}
+                        onClick={() => setFormData({ ...formData, tipo: 'Cristal' })}
+                        color="primary">
                         Cristal
                       </IonButton>
-                      <IonButton
-                        fill={formData.tipo === 'Muro' ? 'solid' : 'outline'}
-                        onClick={() => setFormData({ ...formData, tipo: 'Muro' })}>
+                      <IonButton fill={formData.tipo === 'Muro' ? 'solid' : 'outline'}
+                        onClick={() => setFormData({ ...formData, tipo: 'Muro' })}
+                        color="primary">
                         Muro
                       </IonButton>
                     </div>
                   </IonItem>
                   
                   <IonItem>
-                  <IonLabel slot="start" style={{ minWidth: '140px' }}>Precio (1h 30min)</IonLabel>
-                    <IonInput 
-                      type="number"
-                      value={formData.precio_hora}
-                      onIonChange={(e) => handleInputChange(e, 'precio_hora')}
-                      required
-                      style={{ textAlign: 'right'}}
-                    />
+                  <IonLabel className="transparentar-fondos" slot="start">Precio (1h 30min)</IonLabel>
+                    <IonInput className="transparentar-fondos" type="number" 
+                      value={formData.precio_hora} onIonChange={(e) => handleInputChange(e, 'precio_hora')} required/>
                   </IonItem>
                   
                   <IonItem lines="full">
-                    <IonLabel className="solo-texto">Cuenta con Iluminación</IonLabel>
-                    <IonToggle
-                      checked={formData.iluminacion}
-                      onIonChange={(e) => handleToggleChange(e, 'iluminacion')}
-                      className="toggle-switch"
-                    />
+                    <IonLabel className="transparentar-fondos">Cuenta con Iluminación</IonLabel>
+                    <IonToggle checked={formData.iluminacion} onIonChange={(e) => handleToggleChange(e, 'iluminacion')}/>
                   </IonItem>
                   
                   <IonItem>
-                    <IonLabel className="solo-texto">Pista Cubierta</IonLabel>
-                    <IonToggle
-                      checked={formData.techada}
-                      onIonChange={(e) => handleToggleChange(e, 'techada')}
-                    />
+                    <IonLabel className="transparentar-fondos">Pista Cubierta</IonLabel>
+                    <IonToggle checked={formData.techada} onIonChange={(e) => handleToggleChange(e, 'techada')}/>
                   </IonItem>
                   
                   <IonItem>
-                  <IonLabel slot="start" style={{ minWidth: '140px' }}>URL de Imagen</IonLabel>
-                    <IonInput
-                      type="text"
-                      value={formData.imagen_url}
-                      onIonChange={(e) => handleInputChange(e, 'imagen_url')}
-                    />
+                  <IonLabel className="transparentar-fondos" slot="start">URL de Imagen</IonLabel>
+                    <IonInput className="transparentar-fondos" type="text" value={formData.imagen_url} 
+                      onIonChange={(e) => handleInputChange(e, 'imagen_url')}/>
                   </IonItem>
                   
-                  <div className="ion-padding">
-                    <IonButton
-                      expand="block"
-                      onClick={saveCourt}
-                    >
-                      {editingPista ? 'Actualizar Pista' : 'Crear Pista'}
-                    </IonButton>
+                  <div>
+                    <IonButton color='primary' expand="block" className="boton-guardar-modal" onClick={saveCourt}>{editingPista ? 'Actualizar Pista' : 'Crear Pista'}</IonButton>
                   </div>
                 </IonCol>
               </IonRow>

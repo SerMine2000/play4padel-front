@@ -1,163 +1,145 @@
-/* src/pages/css/Register.css */
+/* Registro - Modo claro/oscuro adaptado */
 
-.register-container {
-  --background: url('/img/fondoLoginRegistro.jpg') no-repeat center center / cover;
+.contenedor-registro {
+  background-image: var(--home-background-image);
+  background-size: cover;
+  background-position: center;
+  --ion-background-color: transparent !important;
 }
 
-.register-card {
-  margin: 0 auto;
+.tarjeta-registro {
+  text-align: center;
+  margin: 20px auto; /* centrado horizontal y margen superior */
   border-radius: 16px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
   overflow: hidden;
-  margin-top: 20px;
+  max-width: 650px;
+  width: 90%;
+  background-color: var(--color-panel);
+  color: var(--ion-text-color);
 }
 
-.register-card-header {
-  background-color: #3880ff;
-  color: white;
-  padding: 20px;
-}
-
-.register-card-header h2 {
+.cabecera-tarjeta-registro h2 {
   margin: 0;
   font-size: 24px;
   font-weight: 600;
 }
 
-.register-card-content {
-  padding: 20px;
-  background-color: #1c1c1c;
+
+.fila-centro-horizontal {
+  display: flex;
+  justify-content: center;
 }
 
-.register-form {
+.botones-toggle-cuenta {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: -29px;
+  margin-bottom: 15px;
+}
+
+.posicionIcono {
+  margin-top: 22px;
+  display: flex;
+  align-items: center;
+}
+
+
+
+
+.formulario-registro {
   margin-bottom: 20px;
 }
 
-.register-form ion-item {
+.formulario-registro ion-item {
   --border-radius: 8px;
-  --background: #1c1c1c;
   --padding-start: 12px;
   margin-bottom: 25px;
   --border-color: rgba(255, 255, 255, 0.1);
-  --highlight-color-focused: #3880ff;
+  --highlight-color-focused: var(--ion-color-primary);
   --min-height: 75px;
 }
 
-.register-form ion-input {
+.formulario-registro ion-input,
+.formulario-registro ion-select,
+.formulario-registro ion-textarea {
   --padding-start: 8px;
-  --placeholder-color: #999;
   --padding-top: 30px;
   --padding-bottom: 8px;
   font-size: 16px;
-  --color: white;
 }
 
-.register-form ion-label {
+.formulario-registro ion-label {
   font-weight: 500;
   font-size: 16px;
   margin-bottom: 16px;
-  --color: #dddddd;
 }
 
-.register-form ion-select {
-  margin-top: 30px;
-  --color: white;
-  --placeholder-color: #999;
-}
-
-.register-form ion-textarea {
-  --color: white;
-  --placeholder-color: #999;
-}
-
-.register-button {
+.boton-registro {
   margin-top: 20px;
   --border-radius: 8px;
-  --background: #3880ff;
-  --background-hover: #3171e0;
   font-weight: 600;
   height: 48px;
   text-transform: none;
   font-size: 16px;
 }
 
-.register-footer {
+.pie-registro {
   text-align: center;
   margin-top: 30px;
 }
 
-.register-footer p {
-  color: #dddddd;
+.pie-registro p {
   font-size: 15px;
 }
 
-.register-footer ion-router-link {
-  color: #3880ff;
+.pie-registro ion-router-link {
+  color: var(--ion-color-primary);
   font-weight: 500;
   text-decoration: none;
 }
 
-.error-message {
-  color: #eb445a;
-  font-size: 14px;
-  margin-bottom: 15px;
-  padding: 0 12px;
-}
-
-/* Información de campos requeridos */
-.required-info {
+.info-requerida {
   font-size: 13px;
-  color: #dddddd;
+  color: var(--ion-text-color);
   margin-top: 8px;
   margin-bottom: 30px;
   padding-left: 12px;
 }
 
-/* Sección de club */
-.club-section {
+.seccion-club {
   margin-top: 20px;
   padding-top: 10px;
-  border-top: 1px solid #444;
+  border-top: 1px solid var(--ion-text-color);
 }
 
-.section-title {
+.titulo-seccion {
   font-size: 18px;
   font-weight: 600;
-  color: #3880ff;
+  color: var(--ion-color-primary);
   margin-bottom: 16px;
   padding-left: 12px;
 }
 
-/* Animación de carga */
-.loading-animation {
+.animacion-carga {
   display: flex;
   justify-content: center;
   margin: 20px 0;
 }
 
-.register-card {
-  margin: 0 auto;
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-  overflow: hidden;
-  margin-top: 20px;
-  max-width: 650px;
-  width: 90%; 
-}
-
-/* Responsive adjustments */
 @media (max-width: 576px) {
-  .register-card {
+  .tarjeta-registro {
     margin-top: 10px;
   }
-  
-  .register-card-header h2 {
+
+  .cabecera-tarjeta-registro h2 {
     font-size: 20px;
   }
 }
 
 @media (min-width: 768px) {
-  .register-container {
+  .contenedor-registro {
     padding: 30px;
   }
 }

@@ -26,7 +26,7 @@ import {
 import { mailOutline, lockClosedOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router';
 import { useAuth } from '../context/AuthContext';
-import './css/Login.css';
+import '../theme/variables.css';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -42,34 +42,27 @@ const Login: React.FC = () => {
   const { login } = useAuth();
   const history = useHistory();
   
-  // Limpiar el foco antes de abandonar la vista
   useIonViewWillLeave(() => {
     if (document.activeElement instanceof HTMLElement) {
       document.activeElement.blur();
     }
   });
 
-  // Efecto para manejar el envío del formulario después de que los estados se actualicen
   useEffect(() => {
     const performLogin = async () => {
       if (!isSubmitting) return;
-      
+  
       try {
-        // Los estados de email y password ya deberían estar actualizados
-        // Validación básica
         if (!email || !password) {
           setFormError('Por favor, completa todos los campos');
           setIsSubmitting(false);
           return;
         }
-        
+  
         setShowLoading(true);
         setFormError('');
-        
-        // Llamar a la función login del contexto
+  
         await login({ email, password });
-        
-        // Redirigir al home - usar replace en lugar de push para evitar la duplicación
         history.replace('/home');
       } catch (error: any) {
         console.error('Error en login:', error);
@@ -79,37 +72,29 @@ const Login: React.FC = () => {
         setIsSubmitting(false);
       }
     };
-    
+  
     performLogin();
   }, [isSubmitting, email, password, login, history]);
+  
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // En lugar de ejecutar la lógica aquí, sólo marcamos que estamos enviando
-    // y dejamos que el useEffect se encargue de la lógica
     setIsSubmitting(true);
-    
-    // Eliminar el foco de cualquier elemento activo
     if (document.activeElement instanceof HTMLElement) {
       document.activeElement.blur();
     }
   };
   
-  // Manejador para teclas especiales
   const handleKeyDown = (e: React.KeyboardEvent<HTMLIonInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      
-      // Forzar la actualización del estado antes de enviar el formulario
       const target = e.currentTarget;
       if (target.name === 'email') {
         setEmail(target.value?.toString() || '');
       } else if (target.name === 'password') {
         setPassword(target.value?.toString() || '');
       }
-      
-      // Usar setTimeout para asegurar que los estados se actualizan antes de enviar
+
       setTimeout(() => {
         if (formRef.current) {
           formRef.current.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
@@ -121,7 +106,7 @@ const Login: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="primary">
+        <IonToolbar color={'primary'}>
           <IonTitle>Play4Padel - Iniciar Sesión</IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -129,63 +114,40 @@ const Login: React.FC = () => {
         <IonGrid>
           <IonRow className="ion-justify-content-center">
             <IonCol size="12" sizeMd="8" sizeLg="6">
-              <IonCard className="login-card">
-                <IonCardHeader className="login-card-header">
+              <IonCard>
+                <IonCardHeader>
                   <IonCardTitle className="ion-text-center">
                     <h2>Bienvenido a Play4Padel</h2>
                   </IonCardTitle>
                 </IonCardHeader>
-                <IonCardContent className="login-card-content">
-                  <form ref={formRef} className="login-form" onSubmit={handleLogin}>
+                <IonCardContent>
+                  <form ref={formRef} onSubmit={handleLogin}>
                     <IonItem lines="full">
-                      <IonIcon icon={mailOutline} slot="start" color="medium"></IonIcon>
+                      <IonIcon icon={mailOutline} slot="start" color="medium" />
                       <IonLabel position="floating">Email</IonLabel>
-                      <IonInput 
-                        ref={emailInputRef}
-                        name="email"
-                        type="email" 
-                        value={email} 
-                        onIonChange={e => setEmail(e.detail.value?.toString() || '')} 
-                        onKeyDown={handleKeyDown}
-                        required
-                      />
+                      <IonInput ref={emailInputRef} name="email" type="email" value={email} onIonChange={e => setEmail(e.detail.value?.toString() || '')} 
+                        onKeyDown={handleKeyDown} style={{ marginTop: '10px' }} required/>
                     </IonItem>
                     <IonItem lines="full">
-                      <IonIcon icon={lockClosedOutline} slot="start" color="medium"></IonIcon>
+                      <IonIcon icon={lockClosedOutline} slot="start" color="medium" />
                       <IonLabel position="floating">Contraseña</IonLabel>
-                      <IonInput 
-                        ref={passwordInputRef}
-                        name="password"
-                        type="password" 
-                        value={password} 
-                        onIonChange={e => setPassword(e.detail.value?.toString() || '')} 
-                        onKeyDown={handleKeyDown}
-                        required
-                      />
+                      <IonInput ref={passwordInputRef} name="password" type="password" value={password} onIonChange={e => setPassword(e.detail.value?.toString() || '')} 
+                        onKeyDown={handleKeyDown} style={{ marginTop: '10px' }} required/>
                     </IonItem>
                     
                     {formError && (
-                      <div className="error-message">
-                        <IonText color="danger">
-                          <p>{formError}</p>
-                        </IonText>
-                      </div>
+                      <IonText color="danger">
+                        <p>{formError}</p>
+                      </IonText>
                     )}
                     
-                    <IonButton 
-                      expand="block" 
-                      type="submit" 
-                      className="login-button"
-                      disabled={isSubmitting}
-                    >
-                      Iniciar Sesión
-                    </IonButton>
+                    <IonButton expand="block" color="primary" type="submit" disabled={isSubmitting} style={{ marginTop: '20px' }}>Iniciar Sesión</IonButton>
                   </form>
                   
-                  <div className="login-footer">
+                  <div className="ion-margin-top">
                     <p>
-                      ¿No tienes cuenta? 
-                      <IonRouterLink href="/register" className="ion-padding-start">
+                      ¿No tienes cuenta?{' '}
+                      <IonRouterLink href="/register">
                         Regístrate
                       </IonRouterLink>
                     </p>
@@ -198,7 +160,7 @@ const Login: React.FC = () => {
         
         <IonLoading
           isOpen={showLoading}
-          message={'Iniciando sesión...'}
+          message="Iniciando sesión..."
           spinner="circles"
         />
       </IonContent>

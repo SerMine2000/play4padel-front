@@ -1,0 +1,79 @@
+/* src/pages/css/Configuracion.css */
+
+/* Contenedor central igual que Home */
+.configuracion-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: calc(100vh - 56px);
+    padding: 16px;
+    --ion-background-color: transparent;
+  }
+  
+  .configuracion-panel {
+    margin: 0 auto;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    margin-top: 20px;
+    background-color: var(--color-panel);
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .configuracion-panel h2 {
+    margin: 0;
+    padding: 16px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ion-text-color);
+    background-color: var(--color-secundario);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+  }
+  
+  .configuracion-panel ion-item {
+    --background: transparent;
+    --color: var(--ion-text-color);
+    --padding-start: 16px;
+    --inner-padding-end: 16px;
+  }
+  
+  /* ✅ Toggle alineado a la derecha */
+  .configuracion-panel ion-item ion-toggle {
+    margin-inline-start: auto;
+  }
+  
+  /* Variables de color personalizadas */
+  :root {
+    --color-boton-rojo: #ff4d4d;
+    --color-texto-claro: #ffffff;
+  }
+  
+  html.ion-palette-dark,
+  html.ion-palette-dark body,
+  .ion-palette-dark {
+    --color-boton-rojo: #ff4d4d;
+    --color-texto-claro: #ffffff;
+  }
+  
+  /* Estilo para el botón rojo de eliminar cuenta */
+  .boton-rojo {
+    width: calc(100% - 32px);
+    margin: 16px;
+    --background: var(--color-boton-rojo);
+    --color: var(--color-texto-claro);
+    font-weight: bold;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  /* Corrección para modo oscuro (si algún estilo lo anula globalmente) */
+  .ion-palette-dark ion-button.boton-rojo {
+    --background: var(--color-boton-rojo) !important;
+    --color: var(--color-texto-claro) !important;
+    background-color: var(--color-boton-rojo) !important;
+    color: var(--color-texto-claro) !important;
+  }
+  
