@@ -27,8 +27,12 @@ const MarcadorPantalla: React.FC = () => {
   // Estados para UI
   const [tiempo, setTiempo] = useState<number>(0);
   
-  // Función para formatear puntos de tenis (0, 15, 30, 40, AD)
+
   const formatearPuntos = (puntos: number): string => {
+    if (estado.tie_break) {
+      return puntos.toString();
+    }
+
     switch(puntos) {
       case 0: return "0";
       case 1: return "15";
@@ -66,33 +70,36 @@ const MarcadorPantalla: React.FC = () => {
   // Escuchar mensajes de la ventana de control
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      if (event.data && event.data.type === 'ACTUALIZAR_MARCADOR') {
-        const { data } = event.data;
-        
-        // Actualizar estado del marcador
-        if (data) {
-          setEstado({
-            puntos: data.puntos || estado.puntos,
-            juegos: data.juegos || estado.juegos,
-            sets: data.sets || estado.sets,
-            tie_break: data.tie_break !== undefined ? data.tie_break : estado.tie_break,
-            terminado: data.terminado !== undefined ? data.terminado : estado.terminado
-          });
+      if (event.data) {
+        if (event.data.type === 'ACTUALIZAR_MARCADOR') {
+          const { data } = event.data;
           
-          // Actualizar configuración personalizada si está presente
-          if (data.config) {
-            setConfig(data.config);
+          if (data) {
+            setEstado({
+              puntos: data.puntos || estado.puntos,
+              juegos: data.juegos || estado.juegos,
+              sets: data.sets || estado.sets,
+              tie_break: data.tie_break !== undefined ? data.tie_break : estado.tie_break,
+              terminado: data.terminado !== undefined ? data.terminado : estado.terminado
+            });
+      
+            if (data.config) {
+              setConfig(data.config);
+            }
           }
+        } else if (event.data.tipo === 'actualizar_estado') {
+          // 🔥 Este es el añadido nuevo
+          fetchEstado(); // Recarga del backend el estado completo actualizado
         }
       }
     };
-    
+  
     window.addEventListener('message', handleMessage);
-    
+  
     return () => {
       window.removeEventListener('message', handleMessage);
     };
-  }, [estado]);
+  }, [estado]);  
 
   // Efecto para cargar el marcador al iniciar y cada 2 segundos
   useEffect(() => {
@@ -125,9 +132,25 @@ const MarcadorPantalla: React.FC = () => {
         setTiempo(prevTiempo => prevTiempo + 1);
       }
     }, 1000);
-    
+  
     return () => clearInterval(timer);
   }, [estado.terminado]);
+  
+  useEffect(() => {
+    if (
+      estado.juegos.A === 0 && 
+      estado.juegos.B === 0 && 
+      estado.sets.length === 1 && 
+      estado.sets[0].A === 0 && 
+      estado.sets[0].B === 0 &&
+      estado.puntos.A === 0 && 
+      estado.puntos.B === 0 &&
+      !estado.terminado
+    ) {
+      setTiempo(0); // 🔥 Resetear cronómetro
+    }
+  }, [estado]);
+  
 
   // Formatear el tiempo en formato mm:ss
   const formatearTiempo = (): string => {
@@ -135,6 +158,11 @@ const MarcadorPantalla: React.FC = () => {
     const segundos = tiempo % 60;
     return `${minutos}:${segundos < 10 ? '0' + segundos : segundos}`;
   };
+
+  const contarSetsGanados = (equipo: 'A' | 'B'): number => {
+    return estado.sets.filter((set: { A: number, B: number }) => set[equipo] > set[equipo === 'A' ? 'B' : 'A']).length;
+  };
+  
 
   // Obtener el set actual
   const setActual = estado.sets && estado.sets.length > 0 
@@ -148,23 +176,23 @@ const MarcadorPantalla: React.FC = () => {
       <div className="score-table">
         <div className="header-row">
           <div className="header-spacer"></div>
-          <div className="header-cell">PUNTOS</div>
-          <div className="header-cell">JUEGOS</div>
           <div className="header-cell">SETS</div>
+          <div className="header-cell">JUEGOS</div>
+          <div className="header-cell">PUNTOS</div>
         </div>
         
         <div className="team-row team-a">
           <div className="team-name">{config.nombreEquipoA}</div>
-          <div className="score-cell">{formatearPuntos(estado.puntos.A)}</div>
+          <div className="score-cell">{contarSetsGanados('A')}</div>
           <div className="score-cell">{estado.juegos.A}</div>
-          <div className="score-cell">{setActual.A}</div>
+          <div className="score-cell">{formatearPuntos(estado.puntos.A)}</div>
         </div>
         
         <div className="team-row team-b">
           <div className="team-name">{config.nombreEquipoB}</div>
-          <div className="score-cell">{formatearPuntos(estado.puntos.B)}</div>
+          <div className="score-cell">{contarSetsGanados('B')}</div>
           <div className="score-cell">{estado.juegos.B}</div>
-          <div className="score-cell">{setActual.B}</div>
+          <div className="score-cell">{formatearPuntos(estado.puntos.B)}</div>
         </div>
       </div>
       

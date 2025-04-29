@@ -228,12 +228,18 @@ const MarcadorControl: React.FC = () => {
   /**
    * Activar o desactivar manualmente el tie-break
    */
-  const toggleTieBreak = async (activar: boolean) => {
+  const toggleTieBreak = async (checked: boolean) => {
     try {
-      await axios.post('/marcador/tiebreak', { activar });
-      fetchMarcador();
-    } catch (err) {
-      console.error("Error al cambiar estado de tie-break:", err);
+      await axios.post('/marcador/tiebreak', { tie_break: checked });
+  
+      // Enviar mensaje a la ventana abierta del marcador para que recargue
+      if (marcadorWindowRef.current) {
+        marcadorWindowRef.current.postMessage({ tipo: 'actualizar_estado' }, '*');
+      }
+  
+      console.log('Estado de tie-break actualizado:', checked);
+    } catch (error) {
+      console.error('Error al cambiar estado de tie-break:', error);
     }
   };
 
@@ -445,7 +451,8 @@ const MarcadorControl: React.FC = () => {
                       <IonCol>
                         <IonItem>
                           <IonLabel>Tie-Break</IonLabel>
-                          <IonToggle onIonChange={e => toggleTieBreak(e.detail.checked)} />
+                          <IonToggle disabled={estado.terminado || !estado.tie_break && (estado.juegos.A !== 6 || estado.juegos.B !== 6)}
+                            checked={estado.tie_break} onIonChange={(e) => toggleTieBreak(e.detail.checked)}/>
                         </IonItem>
                       </IonCol>
                     </IonRow>
