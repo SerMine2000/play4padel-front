@@ -16,7 +16,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/marcador': {
-        target: 'http://localhost:5000', // Ajusta esto al puerto de tu backend Flask
+        target: 'backend-1-uvqp.onrender.com', // Ajusta esto al puerto de tu backend Flask
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path,
