@@ -126,6 +126,18 @@
   animation: pulse 1.5s infinite alternate;
 }
 
+.match-status.bola-oro {
+  color: gold;
+  font-weight: bold;
+  font-size: 2rem;
+  margin-top: 1rem;
+  text-align: center;
+  background-color: black;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+}
+
+
 .terminado {
   text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }

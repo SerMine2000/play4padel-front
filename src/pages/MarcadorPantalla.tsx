@@ -45,27 +45,17 @@ const MarcadorPantalla: React.FC = () => {
 
   // Obtener el estado actual del marcador desde el servidor
   const fetchEstado = async () => {
-    try {
-      const url = '/marcador';
-      const res = await axios.get(url);
-      
-      if (res.data) {
-        // Asegurar que el estado tiene la estructura esperada
-        const estadoSeguro = {
-          puntos: res.data.puntos || { A: 0, B: 0 },
-          juegos: res.data.juegos || { A: 0, B: 0 },
-          sets: res.data.sets && res.data.sets.length > 0 ? 
-                res.data.sets : [{ A: 0, B: 0 }],
-          tie_break: Boolean(res.data.tie_break),
-          terminado: Boolean(res.data.terminado)
-        };
-        
-        setEstado(estadoSeguro);
-      }
-    } catch (err) {
-      console.error('Error al obtener el marcador:', err);
-    }
-  };
+    const res = await axios.get('/marcador');
+    setEstado({
+      puntos: res.data.puntos,
+      juegos: res.data.juegos,
+      sets: res.data.sets,
+      tie_break: res.data.tie_break,
+      terminado: res.data.terminado,
+      bola_de_oro: res.data.bola_de_oro
+    });
+  }
+  
 
   // Escuchar mensajes de la ventana de control
   useEffect(() => {
@@ -198,6 +188,9 @@ const MarcadorPantalla: React.FC = () => {
       
       {estado.tie_break && <div className="match-status tie-break">TIE BREAK</div>}
       {estado.terminado && <div className="match-status terminado">PARTIDO TERMINADO</div>}
+
+      {estado.tie_break === false && estado.bola_de_oro && estado.puntos.A === 40 && estado.puntos.B === 40 &&
+        <div className="match-status bola-oro">BOLA DE ORO</div>}
       
       <div className="footer">
         <div className="time">{formatearTiempo()}</div>

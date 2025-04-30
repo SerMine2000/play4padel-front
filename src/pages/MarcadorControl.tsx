@@ -78,43 +78,23 @@ const MarcadorControl: React.FC = () => {
    */
   const fetchMarcador = async () => {
     try {
-      setCargando(true);
-      setError(null);
-      console.log('Solicitando datos del marcador...');
-      
-      // Esta URL debe coincidir con la configuración del proxy en vite.config.ts
-      const url = '/marcador';
-      console.log('URL de la solicitud:', url);
-      
-      const res = await axios.get(url);
-      console.log('Datos recibidos:', res.data);
-      
+      const res = await axios.get('/marcador');
       if (res.data) {
-        // Asegurar que el estado tiene la estructura esperada
         const estadoSeguro = {
           puntos: res.data.puntos || { A: 0, B: 0 },
           juegos: res.data.juegos || { A: 0, B: 0 },
-          sets: res.data.sets && res.data.sets.length > 0 ? 
-                res.data.sets : [{ A: 0, B: 0 }],
+          sets: res.data.sets || [{ A: 0, B: 0 }],
           tie_break: Boolean(res.data.tie_break),
-          terminado: Boolean(res.data.terminado)
+          terminado: Boolean(res.data.terminado),
+          bola_de_oro: Boolean(res.data.bola_de_oro) // 👈 Esto garantiza que se mantenga
         };
-        
         setEstado(estadoSeguro);
-        
-        // Actualizar la ventana del marcador si está abierta
-        actualizarVentanaMarcador(estadoSeguro);
-      } else {
-        setError('No se recibieron datos del servidor');
       }
-    } catch (err: any) {
-      console.error('Error al obtener el marcador:', err);
-      console.error('Detalles del error:', err.response || err.message);
-      setError(`Error al obtener datos del marcador: ${err.message || 'Error desconocido'}`);
-    } finally {
-      setCargando(false);
+    } catch (error) {
+      console.error('Error al obtener datos del marcador:', error);
     }
   };
+  
 
   /**
    * Asigna un punto al equipo especificado
@@ -242,6 +222,21 @@ const MarcadorControl: React.FC = () => {
       console.error('Error al cambiar estado de tie-break:', error);
     }
   };
+
+  const toggleBolaDeOro = async (checked: boolean) => {
+    try {
+      await axios.post('/marcador/bolaOro', { bola_de_oro: checked });
+  
+      if (marcadorWindowRef.current) {
+        marcadorWindowRef.current.postMessage({ tipo: 'actualizar_estado' }, '*');
+      }
+  
+      console.log('Bola de oro activada:', checked);
+    } catch (error) {
+      console.error('Error al activar bola de oro:', error);
+    }
+  };
+  
 
   /**
    * Finalizar el partido manualmente
@@ -453,6 +448,10 @@ const MarcadorControl: React.FC = () => {
                           <IonLabel>Tie-Break</IonLabel>
                           <IonToggle disabled={estado.terminado || !estado.tie_break && (estado.juegos.A !== 6 || estado.juegos.B !== 6)}
                             checked={estado.tie_break} onIonChange={(e) => toggleTieBreak(e.detail.checked)}/>
+                        </IonItem>
+                        <IonItem>
+                          <IonLabel>Bola de oro</IonLabel>
+                          <IonToggle checked={estado.bola_de_oro} disabled={estado.terminado} onIonChange={(e) => toggleBolaDeOro(e.detail.checked)}/>
                         </IonItem>
                       </IonCol>
                     </IonRow>
