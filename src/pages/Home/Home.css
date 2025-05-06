@@ -129,6 +129,16 @@
   font-weight: 600;
 }
 
+.titulo-panel {
+  background-color: var(--color-primary);
+  color: white;
+  padding: 12px 16px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  font-weight: bold;
+}
+
+
 /* Mensaje cuando no hay datos del club */
 .sin-club {
   text-align: center;

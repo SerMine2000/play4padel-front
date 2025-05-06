@@ -1,0 +1,8 @@
+.encabezado-dashboard {
+    padding: 16px;
+    background-color: var(--ion-color-primary);
+    color: var(--ion-color-light);
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+  
