@@ -18,6 +18,7 @@ import {
   useElements,
 } from '@stripe/react-stripe-js';
 import axios from 'axios';
+import { API_URL } from '../utils/constants';
 import '../theme/variables.css';
 
 const stripePromise = loadStripe('pk_test_51RBDLF2MsbKNiz9B2Wol9ZvHjbvYvhMjVwkQPOvZmBEeyRGBFPAFgkGAhBOzD4FSq1kMxZgjYJGTm9fFhfJuMdA300Vt5jJ7m4');
@@ -37,7 +38,9 @@ const CheckoutForm: React.FC<{ reservaId: number; precio: number }> = ({ reserva
   useEffect(() => {
     const crearIntent = async () => {
       try {
-        const res = await axios.post('http://localhost:5000/crear-pago', {
+        // Usar el backend en la nube definido en API_URL
+        const { API_URL } = await import('../utils/constants');
+        const res = await axios.post(`${API_URL}/crear-pago`, {
           amount: precio,
           reserva_id: reservaId,
         });
@@ -62,21 +65,32 @@ const CheckoutForm: React.FC<{ reservaId: number; precio: number }> = ({ reserva
     setLoading(true);
   
     try {
-      await stripe.confirmCardPayment(clientSecret, {
+      const result = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: elements.getElement(CardElement)!,
         },
       });
+      if (result.error) {
+        setToast(result.error.message || 'Error al procesar el pago');
+      } else if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
+        setToast('Pago realizado con éxito');
+        setTimeout(() => {
+          history.replace('/home');
+        }, 1800); // Espera a que el usuario vea el toast
+      } else {
+        setToast('No se pudo completar el pago');
+      }
     } catch (err: any) {
       if (err.message?.includes("Failed to fetch")) {
         console.warn("Stripe tracking blocked por el navegador.");
       } else {
         console.error(err);
+        setToast('Error al procesar el pago');
       }
     }
-  
     setLoading(false);
   };
+
 
   return (
     <form onSubmit={handleSubmit}>

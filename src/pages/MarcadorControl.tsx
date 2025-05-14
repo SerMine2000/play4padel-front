@@ -29,6 +29,7 @@ import {
   IonAccordionGroup
 } from '@ionic/react';
 import { useEffect, useState, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
 import { 
   tennisballOutline, 
   refreshOutline, 
@@ -36,7 +37,8 @@ import {
   addOutline,
   settingsOutline,
   createOutline,
-  trophyOutline
+  trophyOutline,
+  arrowBack
 } from 'ionicons/icons';
 import axios from 'axios';
 import MarcadorView from '../pages/MarcadorView';
@@ -48,6 +50,7 @@ import './css/MarcadorView.css';
  * reiniciando el partido y mostrando el marcador en pantalla completa.
  */
 const MarcadorControl: React.FC = () => {
+  const history = useHistory();
   // Estado del marcador con valores iniciales seguros
   const [estado, setEstado] = useState<any>({
     puntos: { A: 0, B: 0 },
@@ -104,10 +107,10 @@ const MarcadorControl: React.FC = () => {
     try {
       // Esta URL debe coincidir con la configuración del proxy en vite.config.ts
       const url = '/marcador/punto';
-      console.log(`Anotando punto para equipo ${equipo}. URL:`, url);
+      // console.log(`Anotando punto para equipo ${equipo}. URL:`, url);
 
       const res = await axios.post(url, { equipo });
-      console.log('Respuesta al anotar punto:', res.data);
+      // console.log('Respuesta al anotar punto:', res.data);
       
       // Actualizar el estado del marcador
       if (res.data) {
@@ -139,10 +142,10 @@ const MarcadorControl: React.FC = () => {
     try {
       // Esta URL debe coincidir con la configuración del proxy en vite.config.ts
       const url = '/marcador/reset';
-      console.log('Reiniciando marcador. URL:', url);
+      // console.log('Reiniciando marcador. URL:', url);
       
       const res = await axios.post(url);
-      console.log('Respuesta al reiniciar marcador:', res.data);
+      // console.log('Respuesta al reiniciar marcador:', res.data);
       
       // Recargar el estado actual
       fetchMarcador();
@@ -217,7 +220,7 @@ const MarcadorControl: React.FC = () => {
         marcadorWindowRef.current.postMessage({ tipo: 'actualizar_estado' }, '*');
       }
   
-      console.log('Estado de tie-break actualizado:', checked);
+      // console.log('Estado de tie-break actualizado:', checked);
     } catch (error) {
       console.error('Error al cambiar estado de tie-break:', error);
     }
@@ -231,7 +234,7 @@ const MarcadorControl: React.FC = () => {
         marcadorWindowRef.current.postMessage({ tipo: 'actualizar_estado' }, '*');
       }
   
-      console.log('Bola de oro activada:', checked);
+      // console.log('Bola de oro activada:', checked);
     } catch (error) {
       console.error('Error al activar bola de oro:', error);
     }
@@ -286,7 +289,9 @@ const MarcadorControl: React.FC = () => {
       <IonHeader>
         <IonToolbar color="primary">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/home" />
+            <IonButton fill="clear" onClick={() => history.replace('/home')}>
+  <IonIcon slot="icon-only" icon={arrowBack} />
+</IonButton>
           </IonButtons>
           <IonTitle>Gestión de Marcador</IonTitle>
         </IonToolbar>

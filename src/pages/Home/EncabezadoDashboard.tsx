@@ -12,9 +12,7 @@ const EncabezadoDashboard: React.FC<Props> = ({ titulo }) => {
       <IonText color="primary">
         <h1 className="titulo-dashboard">{titulo}</h1>
       </IonText>
-      <IonText color="medium">
-        <p className="descripcion-dashboard">Aquí tienes un resumen de tu actividad</p>
-      </IonText>
+
     </div>
   );
 };

@@ -1,0 +1,170 @@
+.barra-lateral {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 250px;
+  background: var(--color-panel);
+  color: #222;
+  z-index: 1000;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.08);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.barra-lateral .ion-item {
+  --border-color: transparent;
+  background: var(--color-panel) !important;
+  padding: 0 !important;
+  border-radius: 8px;
+  margin-bottom: 2px;
+  transition: background-color 0.3s;
+  align-items: center;
+  display: flex;
+  min-height: 36px !important;
+  height: 36px !important;
+}
+
+.barra-lateral .ion-item .item-inner {
+  padding: 0 8px 0 0 !important;
+  min-height: 36px !important;
+  height: 36px !important;
+  align-items: center;
+  display: flex;
+}
+
+.barra-lateral .ion-item ion-label {
+  margin: 0 !important;
+  min-height: 36px !important;
+  height: 36px !important;
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  line-height: 1.1;
+}
+
+
+/* Espaciado extra para el botón de cerrar sesión */
+.barra-lateral .logout-item {
+  margin-top: 24px;
+  color: var(--ion-color-danger, #eb445a) !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.barra-lateral .logout-item .logout-label {
+  color: var(--ion-color-danger, #eb445a) !important;
+  font-weight: 600;
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+.barra-lateral .logout-item .ion-icon {
+  color: var(--ion-color-danger, #eb445a) !important;
+}
+
+/* Elimina cualquier subrayado por hover o focus */
+.barra-lateral .logout-item .logout-label:hover,
+.barra-lateral .logout-item .logout-label:focus {
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+
+/* Elimina el contorno del botón de tema */
+.sidebar-theme-toggle .toggle-theme-button {
+  margin: 0;
+  font-size: 2rem;
+  --background: transparent !important;
+  --box-shadow: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+  --color: var(--ion-text-color, #222);
+}
+.ion-palette-dark .sidebar-theme-toggle .toggle-theme-button {
+  --color: var(--ion-text-color, #fff);
+}
+
+/* Elimina el fondo y borde en hover/focus del botón de tema */
+.sidebar-theme-toggle .toggle-theme-button:hover,
+.sidebar-theme-toggle .toggle-theme-button:focus {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+}
+
+/* Solo el icono de tema en la esquina inferior izquierda */
+.sidebar-theme-toggle {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 20px 0 20px 20px;
+  display: flex;
+  align-items: center;
+  background: transparent;
+  z-index: 10;
+}
+.sidebar-theme-toggle .toggle-theme-button {
+  margin: 0;
+  font-size: 2rem;
+  --background: transparent;
+  --color: var(--ion-text-color, #222);
+}
+.ion-palette-dark .sidebar-theme-toggle .toggle-theme-button {
+  --color: var(--ion-text-color, #fff);
+}
+
+/* ToggleTheme alineado a la derecha en el IonItem */
+.toggle-theme-item .toggle-theme-button {
+  margin-left: auto;
+  font-size: 1.5rem;
+  --background: transparent;
+  --color: var(--ion-text-color, #222);
+}
+
+.ion-palette-dark .toggle-theme-item .toggle-theme-button {
+  --color: var(--ion-text-color, #fff);
+}
+
+/* Personalización del IonAlert para botones en línea */
+.logout-alert-custom .alert-button-group {
+  flex-direction: row !important;
+  justify-content: center;
+  gap: 16px;
+}
+
+.logout-alert-custom .alert-button.alert-logout {
+  color: var(--ion-color-danger, #eb445a) !important;
+  font-weight: bold;
+}
+
+.logout-alert-custom .alert-button.alert-cancel {
+  color: var(--ion-color-medium, #666) !important;
+}
+
+.barra-lateral .ion-item:hover {
+  background: var(--color-panel-hover, #ededed) !important;
+  color: #181818 !important;
+}
+
+body.dark .barra-lateral .ion-item:hover,
+.ion-palette-dark .barra-lateral .ion-item:hover {
+  background: #232323 !important;
+  color: #fff !important;
+}
+
+
+
+.barra-lateral .ion-item {
+  --border-color: transparent;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  transition: background-color 0.3s;
+}
+
+.barra-lateral .ion-item:hover {
+  background-color: #f1f1f1;
+}

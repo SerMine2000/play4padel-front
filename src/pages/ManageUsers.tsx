@@ -36,7 +36,8 @@ import {
   refreshOutline,
   personCircleOutline,
   shieldOutline,
-  personOutline
+  personOutline,
+  arrowBack
 } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
 import { useHistory } from 'react-router-dom';
@@ -527,7 +528,9 @@ const ManageUsers: React.FC = () => {
       <IonHeader>
         <IonToolbar color="primary">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/home" />
+            <IonButton fill="clear" onClick={() => history.replace('/home')}>
+  <IonIcon slot="icon-only" icon={arrowBack} />
+</IonButton>
           </IonButtons>
           <IonTitle>Gestión de Usuarios</IonTitle>
           <IonButtons slot="end">

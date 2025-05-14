@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonBackButton, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, 
   IonCardTitle, IonCardContent, IonItem, IonLabel, IonInput, IonToggle, IonButton, IonIcon, IonList, IonItemSliding,
   IonItemOptions, IonItemOption, IonLoading, IonToast, IonText, IonModal, IonChip, IonFab, IonFabButton, IonAlert } from '@ionic/react';
-import {addCircleOutline, createOutline, buildOutline, trashOutline, closeCircleOutline, checkmarkCircleOutline, tennisballOutline, swapHorizontalOutline } from 'ionicons/icons';
+import { addCircleOutline, createOutline, buildOutline, trashOutline, closeCircleOutline, checkmarkCircleOutline, tennisballOutline, swapHorizontalOutline, arrowBack } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
 import { useHistory } from 'react-router-dom';
 import apiService from '../services/api.service';
@@ -285,7 +285,9 @@ const ManageCourts: React.FC = () => {
       <IonHeader>
         <IonToolbar color="primary">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/home" />
+            <IonButton fill="clear" onClick={() => history.replace('/home')}>
+  <IonIcon slot="icon-only" icon={arrowBack} />
+</IonButton>
           </IonButtons>
           <IonTitle>Gestión de Pistas</IonTitle>
         </IonToolbar>

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { IonButton, IonIcon } from '@ionic/react';
 import { moonOutline, sunnyOutline } from 'ionicons/icons';
-import './ToggleTheme.css';
 
 const ToggleTheme: React.FC = () => {
   const [modoOscuro, setModoOscuro] = useState(document.documentElement.classList.contains('ion-palette-dark'));

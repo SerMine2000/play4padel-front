@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   IonContent,
   IonHeader,
@@ -33,6 +34,7 @@ import {
   IonAlert
 } from '@ionic/react';
 import {
+  arrowBack,
   calendarOutline,
   timeOutline,
   personOutline,
@@ -77,6 +79,7 @@ interface ReservasPorDia {
 }
 
 const CalendarView: React.FC = () => {
+  const history = useHistory();
   const { user } = useAuth();
   const [fechaActual, setFechaActual] = useState<Date>(new Date());
   const [diasCalendario, setDiasCalendario] = useState<DiaCalendario[]>([]);
@@ -853,7 +856,9 @@ const CalendarView: React.FC = () => {
       <IonHeader>
         <IonToolbar color="primary">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/home" />
+            <IonButton fill="clear" onClick={() => history.replace('/home')}>
+  <IonIcon slot="icon-only" icon={arrowBack} />
+</IonButton>
           </IonButtons>
           <IonTitle>Reservas y Calendario</IonTitle>
           <IonButtons slot="end">

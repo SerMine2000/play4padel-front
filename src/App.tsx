@@ -16,6 +16,7 @@ import Configuracion from './pages/Configuracion';
 import Pay from './pages/Pay';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
+import Estructura from './components/Estructura';
 import { ThemeProvider } from './context/ThemeContext';
 import { useEffect } from 'react';
 
@@ -134,47 +135,32 @@ const AppContent: React.FC = () => {
       <IonReactRouter>
         {/* Componente para manejar el foco */}
         <FocusManager />
-        
         <IonRouterOutlet>
           {/* Rutas públicas */}
           <Route path="/login" exact>
             {isAuthenticated ? <Redirect to="/home" /> : <Login />}
           </Route>
-          
           <Route path="/register" exact>
             {isAuthenticated ? <Redirect to="/home" /> : <Register />}
           </Route>
-          
-          {/* Rutas privadas - para todos los usuarios autenticados */}
-          <PrivateRoute path="/home" exact component={Home} />
-          <PrivateRoute path="/profile" exact component={Profile} />
-          <PrivateRoute path="/configuracion" exact component={Configuracion} />
-          <PrivateRoute path="/reservas" exact component={Reservas} />
-          <PrivateRoute path="/calendar" exact component={CalendarView} />
-          
-          {/* Rutas que requieren rol específico - solo administradores (id_rol = 1) */}
-          <RoleRoute 
-            path="/manage-courts" 
-            exact 
-            component={ManageCourts} 
-            roles={[1]} 
-          />
-          
-          <RoleRoute 
-            path="/manage-users" 
-            exact 
-            component={ManageUsers} 
-            roles={[1]} 
-          />
-          
-          {/* Rutas para el marcador */}
-          <PrivateRoute path="/marcador-control" exact component={MarcadorControl} />
-          <PrivateRoute path="/marcador-pantalla" exact component={MarcadorPantalla} />
-          
-          {/* Rutas de compatibilidad para el marcador */}
-          <PrivateRoute path="/marcador" exact component={MarcadorControl} />
-          <PrivateRoute path="/club/marcador-control" exact component={MarcadorControl} />
-          <PrivateRoute path="/club/marcador" exact component={MarcadorPantalla} />
+
+          {/* Rutas privadas envueltas en Estructura (barra lateral solo aquí) */}
+          <Estructura>
+            <PrivateRoute path="/home" exact component={Home} />
+            <PrivateRoute path="/profile" exact component={Profile} />
+            <PrivateRoute path="/configuracion" exact component={Configuracion} />
+            <PrivateRoute path="/reservas" exact component={Reservas} />
+            <PrivateRoute path="/calendar" exact component={CalendarView} />
+
+            <RoleRoute path="/manage-courts" exact component={ManageCourts} roles={[1]} />
+            <RoleRoute path="/manage-users" exact component={ManageUsers} roles={[1]} />
+            
+            <PrivateRoute path="/marcador-control" exact component={MarcadorControl} />
+            <PrivateRoute path="/marcador-pantalla" exact component={MarcadorPantalla} />
+            <PrivateRoute path="/marcador" exact component={MarcadorControl} />
+            <PrivateRoute path="/club/marcador-control" exact component={MarcadorControl} />
+            <PrivateRoute path="/club/marcador" exact component={MarcadorPantalla} />
+          </Estructura>
 
           {/* Redirección por defecto */}
           <Route exact path="/">
@@ -182,7 +168,6 @@ const AppContent: React.FC = () => {
           </Route>
 
           <Route exact path="/pay" component={Pay} />
-
         </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>

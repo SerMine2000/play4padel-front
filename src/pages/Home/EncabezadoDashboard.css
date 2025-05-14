@@ -1,12 +1,12 @@
 /* EncabezadoDashboard.css */
 
 .encabezado-dashboard {
-  padding: 16px;
-  background-color: var(--color-primary);
-  border-radius: 8px;
-  color: var(--ion-color-light);
-  margin-bottom: 16px;
-  text-align: center;
+  padding: 0 0 16px 0;
+  background: none;
+  border-radius: 0;
+  color: #222;
+  margin-bottom: 0;
+  text-align: left;
 }
 
 .titulo-dashboard {

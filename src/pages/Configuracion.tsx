@@ -1,7 +1,8 @@
 // src/pages/Configuracion.tsx
 import React, { useEffect, useState } from 'react';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonLabel, IonToggle, IonButton, IonAlert,
-  IonBackButton, IonButtons } from '@ionic/react';
+import Estructura from '../components/Estructura';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonLabel, IonToggle, IonButton, IonAlert, IonBackButton, IonButtons, IonIcon } from '@ionic/react';
+import { arrowBack } from 'ionicons/icons';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 import { useHistory } from 'react-router-dom';
@@ -9,6 +10,7 @@ import '../theme/variables.css';
 import './css/Configuracion.css';
 
 const Configuracion: React.FC = () => {
+
   const { theme, toggleTheme } = useTheme();
   const { deleteAccount } = useAuth();
   const history = useHistory();
@@ -16,6 +18,7 @@ const Configuracion: React.FC = () => {
   const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
+
     const html = document.documentElement;
     if (theme === 'dark') {
       html.classList.add('ion-palette-dark');
@@ -31,39 +34,49 @@ const Configuracion: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar color="primary">
-          <IonButtons slot="start">
-            <IonBackButton defaultHref="/home" />
-          </IonButtons>
-          <IonTitle>Configuración</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <IonContent>
+          <IonHeader>
+            <IonToolbar color="primary">
+              <IonButtons slot="start">
+                <IonButton fill="clear" onClick={() => history.replace('/home')}>
+  <IonIcon slot="icon-only" icon={arrowBack} />
+</IonButton>
+              </IonButtons>
+              <IonTitle>Configuración</IonTitle>
+            </IonToolbar>
+          </IonHeader>
+          <div className="configuracion-container">
+            <div className="configuracion-panel">
+              <h2>Preferencias</h2>
+              <IonItem>
+                <IonLabel>Cambiar a modo oscuro</IonLabel>
+                <IonToggle checked={theme === 'dark'} onIonChange={toggleTheme} />
+              </IonItem>
 
-      <IonContent className="configuracion-container">
-        <div className="configuracion-panel">
-          <h2>Preferencias</h2>
-          <IonItem>
-            <IonLabel>Cambiar a modo oscuro</IonLabel>
-            <IonToggle checked={theme === 'dark'} onIonChange={toggleTheme} />
-          </IonItem>
+              <h2>Eliminar cuenta</h2>
+              <IonButton className="boton-rojo" onClick={() => setShowAlert(true)}>
+                Borrar cuenta
+              </IonButton>
+            </div>
 
-          <h2>Eliminar cuenta</h2>
-          <IonButton className="boton-rojo" onClick={() => setShowAlert(true)}>
-            Borrar cuenta
-          </IonButton>
-        </div>
-
-        <IonAlert
-          isOpen={showAlert}
-          onDidDismiss={() => setShowAlert(false)}
-          header="Confirmar eliminación"
-          message="¿Estás seguro de que quieres eliminar tu cuenta?"
-          buttons={[
-            { text: 'Cancelar', role: 'cancel' },
-            { text: 'Eliminar', role: 'destructive', handler: handleDelete }
-          ]}
-        />
+            <IonAlert
+              isOpen={showAlert}
+              onDidDismiss={() => setShowAlert(false)}
+              header="Confirmar eliminación"
+              message="¿Estás seguro de que quieres eliminar tu cuenta?"
+              buttons={[
+                {
+                  text: 'Cancelar',
+                  role: 'cancel',
+                  handler: () => {},
+                },
+                {
+                  text: 'Eliminar',
+                  handler: handleDelete,
+                },
+              ]}
+            />
+          </div>
       </IonContent>
     </IonPage>
   );

@@ -1,32 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  IonContent,
-  IonPage,
-  IonButton,
-  IonItem,
-  IonLabel,
-  IonSelect,
-  IonSelectOption,
-  IonTextarea,
-  IonDatetime,
-  IonLoading,
-  IonToast,
-  IonIcon,
-  IonPopover,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonButtons,
-  IonBackButton,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonText
-} from '@ionic/react';
+import { IonPage, IonContent, IonButton, IonItem, IonLabel, IonSelect, IonSelectOption, IonTextarea, IonDatetime, IonLoading, IonToast, IonIcon, IonPopover, IonHeader, IonToolbar, IonTitle, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonGrid, IonRow, IonCol, IonText } from '@ionic/react';
+import { arrowBack } from 'ionicons/icons';
+import DisposicionDashboard from '../componentes/DisposicionDashboard';
 import {
   tennisballOutline,
   calendarOutline,
@@ -35,10 +10,10 @@ import {
   cashOutline
 } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import apiService from '../services/api.service';
 import '../theme/variables.css';
-//import './css/Reservas.css';
+import './css/Reservas.css';
 
 interface FranjaHoraria {
   inicio: string;
@@ -46,12 +21,13 @@ interface FranjaHoraria {
   seleccionada: boolean;
 }
 
+
 interface RangoHorario {
   inicio: string;
   fin: string;
 }
 
-const ReservarPista: React.FC = () => {
+const Reservas: React.FC = () => {
   const { user } = useAuth();
   const history = useHistory();
   const fechaSelectorRef = useRef<HTMLDivElement>(null);
@@ -385,7 +361,7 @@ const ReservarPista: React.FC = () => {
       }
   
       if (ultimaReservaId) {
-        history.push(`/pay?reservaId=${ultimaReservaId}&precio=${pistaDatos.precio_hora}`);
+        history.replace(`/pay?reservaId=${ultimaReservaId}&precio=${pistaDatos.precio_hora}`);
       } else {
         mostrarMensaje('No se pudo crear ninguna reserva', 'danger');
       }
@@ -515,143 +491,74 @@ const ReservarPista: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar color="primary">
-          <IonButtons slot="start">
-            <IonBackButton defaultHref="/home" />
-          </IonButtons>
-          <IonTitle>Reserva de Pista</IonTitle>
-        </IonToolbar>
-      </IonHeader>
       <IonContent>
-        <div>
-          <form>
-            {/* Selección de Club */}
-            <div>
-              <label>Selecciona un Club *</label>
-              <IonSelect value={clubSeleccionado} placeholder="Selecciona un club" interface="action-sheet"
-                onIonChange={e => {
-                  setClubSeleccionado(e.detail.value);
-                  setPistaSeleccionada(null);
-                  setPistaDatos(null);
-                  setHorasDisponibles([]);
-                  setFranjasSeleccionadas([]);
-                  setRangosHorarios([]);
-                }}>
-                {clubes.map(club => (
-                  <IonSelectOption key={club.id} value={club.id}>
-                    {club.nombre}
-                  </IonSelectOption>
-                ))}
-              </IonSelect>
-            </div>
-            
-            {/* Selección de Pista */}
-            <div>
-              <label>Selecciona una Pista *</label>
-              <IonSelect 
-                value={pistaSeleccionada}
-                placeholder="Selecciona una pista"
-                interface="action-sheet"
-                disabled={!clubSeleccionado}
-                onIonChange={e => {
-                  setPistaSeleccionada(e.detail.value);
-                  // Resetear selecciones al cambiar de pista
-                  setHorasDisponibles([]);
-                  setFranjasSeleccionadas([]);
-                  setRangosHorarios([]);
-                }}>
-                {pistas.map(pista => (
-                  <IonSelectOption key={pista.id} value={pista.id}>
-                    Pista {pista.numero} - {pista.tipo} - {pista.precio_hora}€/90min
-                  </IonSelectOption>
-                ))}
-              </IonSelect>
-            </div>
-            
-            {/* Selección de Fecha */}
-            <div ref={fechaSelectorRef}>
-              <label>Selecciona una Fecha *</label>
-              <div id="fecha-selector" onClick={(
-              ) => pistaSeleccionada && setIsDateTimeOpen(true)}>
-
-                {fechaSeleccionada ? (
-                  <div >
-                    <IonIcon icon={calendarOutline} />
-                    <span>{formatearFechaMostrar(fechaSeleccionada)}</span>
-                  </div>
-                ) : (
-                  <div>
-                    <IonIcon icon={calendarOutline}/>
-                    <span>Selecciona fecha</span>
-                  </div>
-                )}
-              </div>
-              
-              <IonPopover isOpen={isDateTimeOpen} onDidDismiss={() => setIsDateTimeOpen(false)} event={undefined}
-                arrow={false} reference="trigger" trigger="fecha-selector" side="bottom" alignment="start">
-                <IonDatetime presentation="date" min={new Date().toISOString()} value={fechaSeleccionada} onIonChange={handleFechaChange}></IonDatetime>
-              </IonPopover>
-            </div>
-            
-            {/* Horarios Disponibles */}
-            {horasDisponibles.length > 0 && (
+          <IonHeader>
+            <IonToolbar color="primary">
+              <IonButtons slot="start">
+                <IonButton fill="clear" onClick={() => history.replace('/home')}>
+                  <IonIcon slot="icon-only" icon={arrowBack} />
+                </IonButton>
+              </IonButtons>
+              <IonTitle>Reserva de Pista</IonTitle>
+            </IonToolbar>
+          </IonHeader>
+          <div className="pagina-reservas">
+            <form>
+              {/* Selección de Club */}
               <div>
-                <label>Selecciona uno o varios Horarios *</label>
-                <div>
-                  {horasDisponibles.map((franja, index) => (
-                    <div key={index} onClick={() => toggleFranjaHoraria(franja)}>
-                      <IonIcon icon={timeOutline} />
-                      <span>{formatearHora(franja.inicio)} - {formatearHora(franja.fin)}</span>
-                    </div>
+                <label>Selecciona un Club *</label>
+                <IonSelect value={clubSeleccionado} placeholder="Selecciona un club" interface="action-sheet"
+                  onIonChange={e => {
+                    setClubSeleccionado(e.detail.value);
+                    setPistaSeleccionada(null);
+                    setPistaDatos(null);
+                    setHorasDisponibles([]);
+                    setFranjasSeleccionadas([]);
+                    setRangosHorarios([]);
+                  }}>
+                  {clubes.map(club => (
+                    <IonSelectOption key={club.id} value={club.id}>{club.nombre}</IonSelectOption>
                   ))}
-                </div>
+                </IonSelect>
               </div>
-            )}
-            
-            {/* Notas adicionales */}
-            <div>
-              <label>Notas adicionales</label>
-              <IonTextarea value={notas} placeholder="Escribe aquí cualquier información adicional"
-                onIonChange={e => setNotas(e.detail.value || '')} rows={3}></IonTextarea>
-            </div>
-            
-            {/* Resumen de la reserva */}
-            {franjasSeleccionadas.length > 0 && (
-              <>
-                {generarResumenReserva()}
-                
-                {/* Precio Total */}
-                <div>
+              {/* Notas adicionales */}
+              <div>
+                <label>Notas adicionales</label>
+                <IonTextarea value={notas} placeholder="Escribe aquí cualquier información adicional"
+                  onIonChange={e => setNotas(e.detail.value || '')} rows={3}></IonTextarea>
+              </div>
+              {/* Resumen de la reserva */}
+              {franjasSeleccionadas.length > 0 && (
+                <>
+                  {generarResumenReserva()}
+                  {/* Precio Total */}
                   <div>
-                    <label>Precio Total:</label>
-                    <div>{precioTotal.toFixed(2)}€</div>
+                    <div>
+                      <label>Precio Total:</label>
+                      <div>{precioTotal.toFixed(2)}€</div>
+                    </div>
                   </div>
-                </div>
-              </>
-            )}
-            
-            {/* Botón de reserva */}
-            <IonButton expand="block" onClick={realizarReserva}
-              disabled={!clubSeleccionado || !pistaSeleccionada || !fechaSeleccionada || franjasSeleccionadas.length === 0}>
-              <IonIcon slot="start" icon={tennisballOutline} />
-              RESERVAR PISTA
-            </IonButton>
-          </form>
-        </div>
-        
-        {/* Loading y Toast */}
-        <IonLoading isOpen={cargando} message={"Cargando..."} />
-        <IonToast
-          isOpen={mostrarToast}
-          onDidDismiss={() => setMostrarToast(false)}
-          message={mensajeToast}
-          duration={2000}
-          color={colorToast}
-        />
+                </>
+              )}
+              {/* Botón de reserva */}
+              <IonButton expand="block" onClick={realizarReserva}
+                disabled={!clubSeleccionado || !pistaSeleccionada || !fechaSeleccionada || franjasSeleccionadas.length === 0}>
+                <IonIcon slot="start" icon={tennisballOutline} />
+                RESERVAR PISTA
+              </IonButton>
+            </form>
+          </div>
+          {/* Loading y Toast */}
+          <IonLoading isOpen={cargando} message={"Cargando..."} />
+          <IonToast
+            isOpen={mostrarToast}
+            onDidDismiss={() => setMostrarToast(false)}
+            message={mensajeToast}
+            duration={2000}
+            color={colorToast}
+          />
       </IonContent>
     </IonPage>
   );
 };
-
-export default ReservarPista;
+export default Reservas;

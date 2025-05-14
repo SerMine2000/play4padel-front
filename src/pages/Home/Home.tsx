@@ -1,67 +1,62 @@
 import React from 'react';
-import { IonContent, IonPage, IonCard } from '@ionic/react';
-import EncabezadoDashboard from './EncabezadoDashboard';
-import TarjetaDashboard from './TarjetaDashboard';
+import { IonPage, IonContent, IonButton, IonIcon } from '@ionic/react';
+import ProximasReservas, { Reserva } from './ProximasReservas';
+import EstadoPistas, { Pista } from './EstadoPistas';
+import CardsResumen from './CardsResumen';
 import './Home.css';
+import { useAuth } from '../../context/AuthContext';
+import BienvenidaDashboard from './BienvenidaDashboard';
+import { useTheme } from '../../context/ThemeContext';
+import { moon, sunny } from 'ionicons/icons';
+import DisposicionDashboard from '../../componentes/DisposicionDashboard';
 
 const Home: React.FC = () => {
+  const { user } = useAuth();
+  const { theme, toggleTheme } = useTheme();
+
+  // Acceso temporal con casting any hasta que la interfaz User se extienda
+  const partidosJugados: string | number = (user && typeof (user as any).partidosJugados === 'number') ? (user as any).partidosJugados : '-';
+  const nivel: string | number = (user && (typeof (user as any).nivel === 'number' || typeof (user as any).nivel === 'string')) ? (user as any).nivel : '-';
+  const victorias: string | number = (user && typeof (user as any).victorias === 'number') ? (user as any).victorias : '-';
+  const torneos: string | number = (user && typeof (user as any).torneos === 'number') ? (user as any).torneos : '-';
+
+  // Datos dinámicos para reservas y pistas
+  // Adaptar reservas para incluir clubNombre
+  const userClubs = (user && 'clubs' in user && Array.isArray(user.clubs)) ? user.clubs : [];
+  const reservas: Reserva[] = (user && 'reservas' in user && Array.isArray(user.reservas))
+    ? user.reservas.map((reserva: any) => {
+        let clubNombre = '';
+        if (reserva.clubId && userClubs.length > 0) {
+          const club = userClubs.find((c: any) => c.id?.toString() === reserva.clubId?.toString());
+          if (club) clubNombre = club.nombre;
+        }
+        return {
+          ...reserva,
+          clubNombre,
+        };
+      })
+    : [];
+
+  const pistas: Pista[] = (user && 'pistas' in user && Array.isArray(user.pistas)) ? user.pistas : [];
+
   return (
     <IonPage>
-      <IonContent className="contenido-home">
-        <EncabezadoDashboard titulo="¡Bienvenido de nuevo!" />
-        <div className="tarjetas-resumen-wrapper">
-          <div className="tarjetas-resumen centrado">
-            <TarjetaDashboard titulo="Partidos Jugados" subtitulo="" valor="24" />
-            <TarjetaDashboard titulo="Nivel" subtitulo="" valor="4.2" />
-            <TarjetaDashboard titulo="Victorias" subtitulo="" valor="18" />
-            <TarjetaDashboard titulo="Torneos" subtitulo="" valor="3" />
-          </div>
-        </div>
-        <div className="reservas-y-pistas">
-          <div className="proximas-reservas">
-            <h2>Próximas Reservas</h2>
-            <IonCard className="reserva-card">
-              <div className="info">
-                <p>Pista 1</p>
-                <p>2025-04-24 - 18:00</p>
-              </div>
-              <div className="iconos">
-                <span className="icono-reserva">J</span>
-                <span className="icono-reserva">M</span>
-                <span className="icono-reserva">C</span>
-                <span className="icono-reserva">A</span>
-              </div>
-            </IonCard>
-            <IonCard className="reserva-card">
-              <div className="info">
-                <p>Pista 3</p>
-                <p>2025-04-26 - 19:30</p>
-              </div>
-              <div className="iconos">
-                <span className="icono-reserva">P</span>
-                <span className="icono-reserva">L</span>
-                <span className="icono-reserva">M</span>
-                <span className="icono-reserva">S</span>
-              </div>
-            </IonCard>
-          </div>
-          <div className="estado-pistas">
-            <h2>Estado de las Pistas</h2>
-            <div className="estado-pista-card">
-              <p>Pista 1</p>
-              <span className="disponible">Disponible</span>
-            </div>
-            <div className="estado-pista-card">
-              <p>Pista 2</p>
-              <span className="ocupada">Ocupada</span>
-            </div>
-            <div className="estado-pista-card">
-              <p>Pista 3</p>
-              <span className="disponible">Disponible</span>
-            </div>
-            <div className="estado-pista-card">
-              <p>Pista 4</p>
-              <span className="mantenimiento">Mantenimiento</span>
+      <IonContent>
+        <div>
+          <div
+            className="dashboard-contenido"
+            style={{ backgroundColor: theme === 'dark' ? '#18191a' : '#f8f9fa', minHeight: '100vh' }}
+          >
+            <BienvenidaDashboard />
+            <CardsResumen
+              partidosJugados={partidosJugados}
+              nivel={nivel}
+              victorias={victorias}
+              torneos={torneos}
+            />
+            <div className="reservas-y-pistas">
+              <ProximasReservas reservas={reservas} />
+              <EstadoPistas />
             </div>
           </div>
         </div>

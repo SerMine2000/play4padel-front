@@ -3,13 +3,15 @@
 .barra-lateral {
   width: 250px;
   background-color: var(--color-panel);
-  color: var(--ion-text-color);
+  color: var(--ion-text-color, #222);
   padding-top: 24px;
   height: 100vh;
   overflow-y: auto;
   position: fixed;
   left: 0;
   top: 0;
+  z-index: 9999;
+  /* Borde de debug eliminado */
   transition: width 0.3s ease;
 }
 
@@ -37,16 +39,74 @@
 
 .barra-lateral .ion-item {
   --border-color: transparent;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
   padding: 12px 16px;
   border-radius: 8px;
   margin-bottom: 8px;
-  transition: background-color 0.3s;
+  color: var(--ion-text-color);
+  transition: background 0.3s, color 0.3s;
 }
 
+.ion-palette-dark .barra-lateral .ion-item {
+  border: 1px solid #232323 !important;
+}
+
+
 .barra-lateral .ion-item:hover {
-  background-color: var(--color-panel-hover);
+  background: #f5f5f5 !important;
+  color: var(--ion-text-color, #222) !important;
+}
+
+html.ion-palette-dark .barra-lateral .ion-item:hover {
+  background: #23272f !important;
+  color: var(--ion-text-color, #fff) !important;
+}
+
+
+.barra-lateral .ion-item.selected {
+  background-color: var(--ion-color-primary, #4CAF50) !important;
+  color: var(--ion-color-primary-contrast, #fff) !important;
+}
+
+html.ion-palette-dark .barra-lateral .ion-item.selected {
+  background-color: var(--ion-color-primary, #4CAF50) !important;
+  color: var(--ion-color-primary-contrast, #fff) !important;
+  box-shadow: 0 2px 8px 0 rgba(76,175,80,0.18);
 }
 
 html.ion-palette-dark .barra-lateral {
-  background-color: var(--color-panel-dark);
+  background-color: var(--color-panel-dark, #18191a) !important;
+  color: var(--ion-text-color, #fff) !important;
 }
+
+/* Sidebar theme toggle button at bottom left */
+.sidebar-theme-toggle {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 16px 0 16px 16px;
+  display: flex;
+  align-items: center;
+  background: transparent;
+  z-index: 10;
+}
+
+.barra-lateral.colapsado .sidebar-theme-toggle {
+  justify-content: center;
+  padding-left: 0;
+}
+
+.sidebar-theme-toggle .toggle-theme-button {
+  --background: transparent;
+  --color: var(--ion-text-color, #222);
+  font-size: 1.6rem;
+}
+
+html.ion-palette-dark .sidebar-theme-toggle .toggle-theme-button {
+  --color: var(--ion-text-color, #fff);
+}
+

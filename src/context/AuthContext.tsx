@@ -65,6 +65,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setError(null);
 
       const response = await authService.login(credentials);
+      console.log('Respuesta completa del backend:', response);
 
       if (response.user_id) {
         const userData = await authService.getCurrentUser(response.user_id);

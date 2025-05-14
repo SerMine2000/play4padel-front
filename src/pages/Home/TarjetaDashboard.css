@@ -4,14 +4,15 @@
     padding: 16px;
     background-color: var(--color-panel);
     border-radius: 12px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: none !important;
+    border: none !important;
     text-align: center;
     transition: background-color 0.3s, box-shadow 0.3s;
   }
   
   .tarjeta-dashboard:hover {
     background-color: var(--color-panel-hover);
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--card-shadow);
   }
   
   .titulo-tarjeta {
