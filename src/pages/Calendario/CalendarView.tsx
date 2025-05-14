@@ -1,52 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  IonButtons,
-  IonBackButton,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonIcon,
-  IonLoading,
-  IonToast,
-  IonChip,
-  IonButton,
-  IonModal,
-  IonSegment,
-  IonSegmentButton,
-  IonText,
-  IonItemDivider,
-  IonSpinner,
-  IonRefresher,
-  IonRefresherContent,
-  IonAlert
-} from '@ionic/react';
-import {
-  arrowBack,
-  calendarOutline,
-  timeOutline,
-  personOutline,
-  cashOutline,
-  tennisballOutline,
-  closeCircleOutline,
-  chevronBackOutline,
-  chevronForwardOutline,
-  refreshOutline
-} from 'ionicons/icons';
-import { useAuth } from '../context/AuthContext';
-import apiService from '../services/api.service';
+import {IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonBackButton, IonGrid,
+  IonRow, IonCol, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonItem, IonLabel, IonList,
+  IonIcon, IonLoading, IonToast, IonChip, IonButton, IonModal, IonSegment, IonSegmentButton, IonText,
+  IonItemDivider, IonSpinner, IonRefresher, IonRefresherContent, IonAlert } from '@ionic/react';
+import {arrowBack, calendarOutline, timeOutline, personOutline, cashOutline, tennisballOutline,
+  closeCircleOutline, chevronBackOutline, chevronForwardOutline, refreshOutline} from 'ionicons/icons';
+import { useAuth } from '../../context/AuthContext';
+import apiService from '../../services/api.service';
 import '../theme/variables.css';
 import './css/CalendarView.css';
 

@@ -39,9 +39,9 @@ import {
   personOutline,
   arrowBack
 } from 'ionicons/icons';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { useHistory } from 'react-router-dom';
-import apiService from '../services/api.service';
+import apiService from '../../services/api.service';
 import '../theme/variables.css';
 import './css/ManageUsers.css';
 
