@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonText } from '@ionic/react';
+import { IonMenuButton, IonText, IonTitle, IonToolbar } from '@ionic/react';
 import './EncabezadoDashboard.css';
 
 interface Props {
@@ -8,12 +8,16 @@ interface Props {
 
 const EncabezadoDashboard: React.FC<Props> = ({ titulo }) => {
   return (
-    <div className="encabezado-dashboard">
-      <IonText color="primary">
-        <h1 className="titulo-dashboard">{titulo}</h1>
-      </IonText>
-
-    </div>
+    <IonToolbar>
+      {/* Botón menú solo en móvil/tablet */}
+      <IonMenuButton slot="start" className="mobile-only" />
+      <IonTitle>Dashboard</IonTitle>
+      <div className="encabezado-dashboard">
+        <IonText color="primary">
+          <h1 className="titulo-dashboard">{titulo}</h1>
+        </IonText>
+      </div>
+    </IonToolbar>
   );
 };
 

@@ -44,9 +44,11 @@ const BarraLateral: React.FC = () => {
   let options: Option[] = [];
   if (user) {
     const rol = Number(user.id_rol);
-    if (rol === 2) {
+    if (rol === 1 || rol === 2) {
+      // 1: ADMIN, 2: CLUB
       options = clubOptions;
-    } else if (rol === 4) {
+    } else if (rol === 4 || rol === 5) {
+      // 4: USUARIO, 5: SOCIO
       options = userOptions;
     } else {
       options = userOptions; // fallback para cualquier usuario autenticado
@@ -97,7 +99,8 @@ const BarraLateral: React.FC = () => {
                   );
                 })}
                 {/* Botón cerrar sesión */}
-                <IonItem button onClick={handleLogout} className="cerrar-sesion">
+                <IonItem button onClick={handleLogout}>
+                  <IonIcon icon={logOutOutline} slot="start" style={{ color: 'darkred' }} />
                   <IonLabel style={{ color: 'darkred', fontWeight: 'bold' }}>Cerrar sesión</IonLabel>
                 </IonItem>
               </IonList>
@@ -153,10 +156,10 @@ const BarraLateral: React.FC = () => {
             );
           })}
           {/* Botón cerrar sesión (desktop) */}
-          <IonItem button onClick={handleLogout} className="cerrar-sesion">
-            <IonIcon icon={logOutOutline} slot="start" style={{ color: 'darkred' }} />
-            <IonLabel style={{ color: 'darkred', fontWeight: 'bold' }}>Cerrar sesión</IonLabel>
-          </IonItem>
+          <IonItem button onClick={handleLogout}>
+  <IonIcon icon={logOutOutline} slot="start" style={{ color: 'darkred' }} />
+  <IonLabel style={{ color: 'darkred', fontWeight: 'bold' }}>Cerrar sesión</IonLabel>
+</IonItem>
         </IonList>
       ) : (
         <div

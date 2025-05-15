@@ -15,10 +15,11 @@ const Estructura: React.FC<EstructuraProps> = ({ children }) => {
 
   return (
     <IonPage>
-      {/* Menú lateral responsive (Ionic Menu) */}
+      {/* Menú lateral responsive solo en móvil/tablet */}
       <IonMenu contentId={contentId}>
         <BarraLateral />
       </IonMenu>
+      {/* Barra lateral fija solo en escritorio */}
       <div className="barra-lateral desktop-only">
         <BarraLateral />
       </div>
