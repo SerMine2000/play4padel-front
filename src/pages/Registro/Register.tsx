@@ -1,7 +1,7 @@
 import React from 'react';
 import { IonContent, IonPage, IonHeader, IonToolbar, IonTitle } from '@ionic/react';
 import FormularioRegister from './FormularioRegister';
-import './css/Register.css';
+import './Register.css';
 
 const Register: React.FC = () => {
   return (

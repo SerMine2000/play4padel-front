@@ -7,12 +7,9 @@ import './Home.css';
 import { useAuth } from '../../context/AuthContext';
 import BienvenidaDashboard from './BienvenidaDashboard';
 import { useTheme } from '../../context/ThemeContext';
-import { moon, sunny } from 'ionicons/icons';
-import DisposicionDashboard from '../../componentes/DisposicionDashboard';
-
 const Home: React.FC = () => {
   const { user } = useAuth();
-  const { theme, toggleTheme } = useTheme();
+  const { theme } = useTheme();
 
   // Acceso temporal con casting any hasta que la interfaz User se extienda
   const partidosJugados: string | number = (user && typeof (user as any).partidosJugados === 'number') ? (user as any).partidosJugados : '-';

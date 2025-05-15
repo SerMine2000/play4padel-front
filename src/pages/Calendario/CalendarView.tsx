@@ -8,8 +8,8 @@ import {arrowBack, calendarOutline, timeOutline, personOutline, cashOutline, ten
   closeCircleOutline, chevronBackOutline, chevronForwardOutline, refreshOutline} from 'ionicons/icons';
 import { useAuth } from '../../context/AuthContext';
 import apiService from '../../services/api.service';
-import '../theme/variables.css';
-import './css/CalendarView.css';
+import "../../theme/variables.css";
+import "./CalendarView.css";
 
 interface ReservaDetalle {
   id: number;

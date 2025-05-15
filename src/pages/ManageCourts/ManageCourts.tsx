@@ -4,12 +4,11 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonBa
   IonCardTitle, IonCardContent, IonItem, IonLabel, IonInput, IonToggle, IonButton, IonIcon, IonList, IonItemSliding,
   IonItemOptions, IonItemOption, IonLoading, IonToast, IonText, IonModal, IonChip, IonFab, IonFabButton, IonAlert } from '@ionic/react';
 import { addCircleOutline, createOutline, buildOutline, trashOutline, closeCircleOutline, checkmarkCircleOutline, tennisballOutline, swapHorizontalOutline, arrowBack } from 'ionicons/icons';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from "../../context/AuthContext";
 import { useHistory } from 'react-router-dom';
-import apiService from '../services/api.service';
-import { API_ENDPOINTS } from '../utils/constants';
-import '../theme/variables.css';
-import './css/ManageCourts.css';
+import apiService from "../../services/api.service";
+import '../../theme/variables.css';
+import './ManageCourts.css';
 
 // Interfaz para los datos de la pista
 interface Pista {

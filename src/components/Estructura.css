@@ -1,5 +1,16 @@
 /* Estructura.css */
 
+/* Solo mostrar en escritorio */
+.desktop-only {
+  display: block;
+}
+@media (max-width: 899px) {
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+
 .estructura-contenedor {
     display: flex;
     height: 100vh;

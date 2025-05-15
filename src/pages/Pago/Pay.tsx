@@ -18,8 +18,8 @@ import {
   useElements,
 } from '@stripe/react-stripe-js';
 import axios from 'axios';
-import { API_URL } from '../utils/constants';
-import '../theme/variables.css';
+import { API_URL } from '../../utils/constants';
+import "../../theme/variables.css";
 
 const stripePromise = loadStripe('pk_test_51RBDLF2MsbKNiz9B2Wol9ZvHjbvYvhMjVwkQPOvZmBEeyRGBFPAFgkGAhBOzD4FSq1kMxZgjYJGTm9fFhfJuMdA300Vt5jJ7m4');
 
@@ -39,7 +39,7 @@ const CheckoutForm: React.FC<{ reservaId: number; precio: number }> = ({ reserva
     const crearIntent = async () => {
       try {
         // Usar el backend en la nube definido en API_URL
-        const { API_URL } = await import('../utils/constants');
+        const { API_URL } = await import('../../utils/constants');
         const res = await axios.post(`${API_URL}/crear-pago`, {
           amount: precio,
           reserva_id: reservaId,

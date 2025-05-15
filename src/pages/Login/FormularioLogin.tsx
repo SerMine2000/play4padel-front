@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { IonInput, IonItem, IonLabel, IonButton, IonText, IonLoading, IonRouterLink } from '@ionic/react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from "../../context/AuthContext";
 import { useHistory } from 'react-router';
-import './css/Login.css';
+import "./Login.css";
 
 const FormularioLogin: React.FC = () => {
   const { login, isLoading, error } = useAuth();

@@ -41,8 +41,8 @@ import {
   arrowBack
 } from 'ionicons/icons';
 import axios from 'axios';
-import MarcadorView from '../pages/MarcadorView';
-import './css/MarcadorView.css';
+import MarcadorView from './MarcadorView';
+import './MarcadorView.css';
 
 /**
  * Página de control del marcador.

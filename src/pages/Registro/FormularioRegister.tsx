@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { IonInput, IonItem, IonLabel, IonButton, IonText, IonLoading, IonRouterLink } from '@ionic/react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from "../../context/AuthContext";
 import { useHistory } from 'react-router';
-import './css/Register.css';
-import { RegisterRequest } from '../interfaces';
+import "./Register.css";
+import { RegisterRequest } from '../../interfaces';
 
 const FormularioRegister: React.FC = () => {
   const { register, isLoading, error } = useAuth();

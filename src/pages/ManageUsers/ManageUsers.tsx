@@ -42,8 +42,8 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { useHistory } from 'react-router-dom';
 import apiService from '../../services/api.service';
-import '../theme/variables.css';
-import './css/ManageUsers.css';
+import "../../theme/variables.css";
+import "./ManageUsers.css";
 
 const ManageUsers: React.FC = () => {
   const { user } = useAuth();

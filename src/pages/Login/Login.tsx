@@ -1,7 +1,7 @@
 import React from 'react';
 import { IonContent, IonPage, IonHeader, IonToolbar, IonTitle } from '@ionic/react';
 import FormularioLogin from './FormularioLogin';
-import './css/Login.css';
+import './Login.css';
 
 const Login: React.FC = () => {
   return (

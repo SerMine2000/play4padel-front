@@ -15,11 +15,15 @@ const Estructura: React.FC<EstructuraProps> = ({ children }) => {
 
   return (
     <IonPage>
-      <div className="barra-lateral">
+      {/* Menú lateral responsive (Ionic Menu) */}
+      <IonMenu contentId={contentId}>
+        <BarraLateral />
+      </IonMenu>
+      <div className="barra-lateral desktop-only">
         <BarraLateral />
       </div>
       <div className="contenedor-con-barra">
-        <IonContent className="contenedor-dashboard">
+        <IonContent id={contentId} className="contenedor-dashboard">
           <div className="contenido-estructura">
             {children}
           </div>

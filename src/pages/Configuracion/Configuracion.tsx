@@ -1,13 +1,13 @@
 // src/pages/Configuracion.tsx
 import React, { useEffect, useState } from 'react';
-import Estructura from '../components/Estructura';
+import Estructura from '../../components/Estructura';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonLabel, IonToggle, IonButton, IonAlert, IonBackButton, IonButtons, IonIcon } from '@ionic/react';
 import { arrowBack } from 'ionicons/icons';
-import { useTheme } from '../context/ThemeContext';
-import { useAuth } from '../context/AuthContext';
+import { useTheme } from "../../context/ThemeContext";
+import { useAuth } from '../../context/AuthContext';
 import { useHistory } from 'react-router-dom';
-import '../theme/variables.css';
-import './css/Configuracion.css';
+import '../../theme/variables.css';
+import "./Configuracion.css";
 
 const Configuracion: React.FC = () => {
 

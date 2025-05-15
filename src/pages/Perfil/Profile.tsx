@@ -27,7 +27,6 @@ import {
   IonModal
 } from '@ionic/react';
 import { arrowBack } from 'ionicons/icons';
-import DisposicionDashboard from '../componentes/DisposicionDashboard';
 import {
   personOutline,
   personCircleOutline,
@@ -39,12 +38,12 @@ import {
   imageOutline,
   closeOutline
 } from 'ionicons/icons';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { useHistory } from 'react-router-dom';
-import apiService from '../services/api.service';
-import { API_ENDPOINTS } from '../utils/constants';
-import '../theme/variables.css';
-import './css/Profile.css';
+import apiService from '../../services/api.service';
+import { API_ENDPOINTS } from '../../utils/constants';
+import '../../theme/variables.css';
+import './Profile.css';
 
 
 const Profile: React.FC = () => {

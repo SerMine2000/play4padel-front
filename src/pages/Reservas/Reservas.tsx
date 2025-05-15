@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { IonPage, IonContent, IonButton, IonItem, IonLabel, IonSelect, IonSelectOption, IonTextarea, IonDatetime, IonLoading, IonToast, IonIcon, IonPopover, IonHeader, IonToolbar, IonTitle, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonGrid, IonRow, IonCol, IonText } from '@ionic/react';
 import { arrowBack } from 'ionicons/icons';
-import DisposicionDashboard from '../componentes/DisposicionDashboard';
 import {
   tennisballOutline,
   calendarOutline,
@@ -9,11 +8,11 @@ import {
   businessOutline,
   cashOutline
 } from 'ionicons/icons';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { useHistory } from 'react-router-dom';
-import apiService from '../services/api.service';
-import '../theme/variables.css';
-import './css/Reservas.css';
+import apiService from '../../services/api.service';
+import '../../theme/variables.css';
+import './Reservas.css';
 
 interface FranjaHoraria {
   inicio: string;

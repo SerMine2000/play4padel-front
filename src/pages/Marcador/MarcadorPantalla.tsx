@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import './css/MarcadorView.css';
+import "./MarcadorView.css";
 
 /**
  * Página de visualización del marcador en formato de tablero deportivo.
