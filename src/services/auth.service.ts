@@ -7,17 +7,33 @@ class AuthService {
   async login(credentials: LoginRequest): Promise<LoginResponse> {
     try {
       const response = await apiService.post(API_ENDPOINTS.LOGIN, credentials);
+      console.log('Respuesta completa del backend:', response);
       
-      // Guardar información del usuario en localStorage
-      localStorage.setItem(STORAGE_KEYS.USER_ID, response.user_id.toString());
-      localStorage.setItem(STORAGE_KEYS.USER_ROLE, response.role);
+      const responseData = response.data || response;
       
-      return response;
-    } catch (error: any) {
-      if (error.message) {
-        throw new Error(error.message);
+      if (!responseData.user_id || !responseData.role) {
+        throw new Error('Respuesta del servidor incompleta');
       }
-      throw new Error('Error al iniciar sesión. Verifica tus credenciales.');
+
+      const normalizedUserData = {
+        ...(responseData.user_data || {}),
+        role: responseData.role.toLowerCase()
+      };
+
+      localStorage.setItem(STORAGE_KEYS.USER_ID, responseData.user_id.toString());
+      localStorage.setItem(STORAGE_KEYS.USER_ROLE, responseData.role.toLowerCase());
+      localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, responseData.access_token);
+
+      return {
+        message: responseData.message || 'Login exitoso',
+        user_id: responseData.user_id,
+        role: responseData.role.toLowerCase(),
+        access_token: responseData.access_token,
+        user_data: normalizedUserData
+      };
+    } catch (error) {
+      console.error('Error en login:', error);
+      throw error;
     }
   }
   

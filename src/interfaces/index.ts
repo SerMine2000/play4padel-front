@@ -4,6 +4,7 @@ export interface User {
   nombre: string;
   apellidos: string;
   email: string;
+  role: string;
   telefono?: string;
   id_rol: number;
   id_club?: number;
@@ -21,6 +22,8 @@ export interface LoginResponse {
   message: string;
   user_id: number;
   role: string;
+  access_token: string;
+  user_data?: User;
 }
 
 export interface RegisterRequest {

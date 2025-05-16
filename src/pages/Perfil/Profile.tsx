@@ -24,7 +24,8 @@ import {
   IonRow,
   IonCol,
   IonAlert,
-  IonModal
+  IonModal,
+  IonPage
 } from '@ionic/react';
 import { arrowBack } from 'ionicons/icons';
 import {
@@ -47,8 +48,9 @@ import './Profile.css';
 
 
 const Profile: React.FC = () => {
-  const { user, isLoading: authLoading, refreshUser } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const history = useHistory();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     nombre: '',
@@ -67,7 +69,6 @@ const Profile: React.FC = () => {
   const [showAvatarModal, setShowAvatarModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -205,213 +206,81 @@ const Profile: React.FC = () => {
   
 
   return (
+    <IonPage>
       <IonContent>
-        <div className="profile-content-wrapper">
-          <IonHeader>
-            <IonToolbar color={'primary'}>
-              <IonButtons slot="start">
-                <IonButton fill="clear" onClick={() => history.replace('/home')}>
-                  <IonIcon slot="icon-only" icon={arrowBack} />
-                </IonButton>
-              </IonButtons>
-              <IonTitle>Mi Perfil</IonTitle>
-            </IonToolbar>
-          </IonHeader>
-          {authLoading ? (
-            <IonLoading isOpen={true} message="Cargando perfil..." />
-          ) : user ? (
-            <div className="ion-padding">
-              <div className="encabezado-perfil">
-                <div className="contenedor-avatar" onClick={
-                  isEditing ? handleAvatarUpdate : () => tempAvatarUrl && setShowAvatarModal(true)
-                }>
-                  <IonAvatar className="avatar-perfil avatar-sin-borde">
-                    <img src={tempAvatarUrl} alt={user.nombre} />
-                  </IonAvatar>
-                </div>
+        <IonHeader>
+          <IonToolbar>
+            <IonButtons slot="start">
+              <IonBackButton defaultHref="/home" />
+            </IonButtons>
+            <IonTitle>Perfil</IonTitle>
+          </IonToolbar>
+        </IonHeader>
 
-                {isEditing && (
-                  <IonText className="texto-cambiar-avatar">
-                    <p><small>Toca para cambiar avatar</small></p>
-                  </IonText>
-                )}
-
-                <h2>{user.nombre} {user.apellidos}</h2>
-                <p>{user.email}</p>
+        {user && (
+          <div className="profile-container">
+            {/* Sección de avatar */}
+            <div className="encabezado-perfil">
+              <div className="contenedor-avatar">
+                <IonAvatar className="avatar-perfil">
+                  {user.avatar_url ? (
+                    <img src={user.avatar_url} alt="Avatar" />
+                  ) : (
+                    <IonIcon icon={personCircleOutline} style={{ fontSize: '100px' }} />
+                  )}
+                </IonAvatar>
               </div>
-
-              <IonCard>
-                {!isEditing && !isChangingPassword && (
-                  <div>
-                    <IonCardHeader>
-                      <IonCardTitle>Información Personal</IonCardTitle>
-                    </IonCardHeader>
-                    <IonCardContent>
-                      <IonItem><IonLabel><h2>Nombre</h2><p>{user.nombre} {user.apellidos}</p></IonLabel></IonItem>
-                      <IonItem><IonLabel><h2>Email</h2><p>{user.email}</p></IonLabel></IonItem>
-                      <IonItem><IonLabel><h2>Teléfono</h2><p>{user.telefono || 'No disponible'}</p></IonLabel></IonItem>
-                      <IonItem lines="none"><IonLabel><h2>Biografía</h2><p>{formData.bio || 'No hay información disponible'}</p></IonLabel></IonItem>
-                      <IonGrid>
-                        <IonRow>
-                          <IonCol><IonButton expand="block" color="primary" onClick={handleEditProfile}>Editar Perfil</IonButton></IonCol>
-                          <IonCol><IonButton expand="block" color="secondary" onClick={handleChangePassword}>Cambiar Contraseña</IonButton></IonCol>
-                        </IonRow>
-                      </IonGrid>
-                    </IonCardContent>
-                  </div>
-                )}
-
-                {isEditing && (
-                  <div>
-                    <IonCardHeader><IonCardTitle>Editar Perfil</IonCardTitle></IonCardHeader>
-                    <IonCardContent>
-                      <form>
-                        <div className="camposFormulario">
-                          {['nombre', 'apellidos', 'email', 'telefono', 'bio'].map((field, i) => (
-                            <div key={i}>
-                              <label className="etiqueta-campo">{field[0].toUpperCase() + field.slice(1)}</label>
-                              <IonItem lines="none">
-                                <IonInput value={(formData as any)[field]} placeholder={placeholders[field]}
-                                  onIonChange={(e) => handleInputChange(e, field)} style={{ marginTop: '-10px' }}
-                                  required={field !== 'telefono' && field !== 'bio'}/>
-                              </IonItem>
-                            </div>
-                          ))}
-                        </div>
-
-                        <IonGrid>
-                          <IonRow>
-                            <IonCol>
-                              <IonButton expand="block" color="medium" onClick={handleCancel}>
-                                Cancelar
-                              </IonButton>
-                            </IonCol>
-                            <IonCol>
-                              <IonButton expand="block" color="primary" onClick={handleUpdateProfile}>
-                                <IonIcon slot="start" icon={saveOutline} />
-                                Guardar Cambios
-                              </IonButton>
-                            </IonCol>
-                          </IonRow>
-                        </IonGrid>
-                      </form>
-                    </IonCardContent>
-                  </div>
-                )}
-
-                {isChangingPassword && (
-                  <div>
-                    <IonCardHeader>
-                      <IonCardTitle>Cambiar Contraseña</IonCardTitle>
-                    </IonCardHeader>
-                    <IonCardContent>
-                      {[
-                        { label: 'Contraseña Actual', field: 'currentPassword' },
-                        { label: 'Nueva Contraseña', field: 'newPassword' },
-                        { label: 'Confirmar Contraseña', field: 'confirmPassword' }
-                      ].map(({ label, field }, i) => (
-                        <IonItem key={i}>
-                          <IonLabel position="floating">{label}</IonLabel>
-                          <IonInput type="password" value={(formData as any)[field]} onIonChange={(e) => handleInputChange(e, field)}
-                            style={{ marginTop: '10px' }} required/>
-                        </IonItem>
-                      ))}
-                  
-                      <IonGrid>
-                        <IonRow>
-                          <IonCol>
-                            <IonButton expand="block" color="medium" onClick={handleCancel}>
-                              Cancelar
-                            </IonButton>
-                          </IonCol>
-                          <IonCol>
-                            <IonButton expand="block" color="primary" onClick={handleUpdatePassword}>
-                              <IonIcon slot="start" icon={saveOutline} />
-                              Actualizar Contraseña
-                            </IonButton>
-                          </IonCol>
-                        </IonRow>
-                      </IonGrid>
-                      
-                    </IonCardContent>
-                  </div>              
-                )}
-              </IonCard>
-
-              {successMessage && (
-                <IonText color="success"><p>{successMessage}</p></IonText>
-              )}
-              {errorMessage && (
-                <IonText color="danger"><p>{errorMessage}</p></IonText>
-              )}
-
-              <IonAlert
-                isOpen={showAvatarAlert}
-                onDidDismiss={() => setShowAvatarAlert(false)}
-                header="Cambiar avatar"
-                subHeader="Introduce la URL de la imagen"
-                inputs={[
-                  {
-                    name: 'avatar_url',
-                    type: 'url',
-                    placeholder: 'https://ejemplo.com/imagen.jpg',
-                    value: tempAvatarUrl
-                  }
-                ]}
-                buttons={[
-                  { text: 'Cancelar', role: 'cancel' },
-                  {
-                    text: 'Ver previa',
-                    handler: (data) => {
-                      if (validateImageUrl(data.avatar_url)) {
-                        setTempAvatarUrl(data.avatar_url);
-                        return false;
-                      } else {
-                        setErrorMessage('URL de imagen no válida');
-                        return false;
-                      }
-                    }
-                  },
-                  {
-                    text: 'Guardar',
-                    handler: (data) => {
-                      if (validateImageUrl(data.avatar_url)) {
-                        setTempAvatarUrl(data.avatar_url);
-                        applyAvatarUrl();
-                        return true;
-                      } else {
-                        setErrorMessage('URL de imagen no válida');
-                        return false;
-                      }
-                    }
-                  }
-                ]}
-              />
-
-              <IonModal isOpen={showAvatarModal} onDidDismiss={() => setShowAvatarModal(false)}>
-                <IonContent fullscreen>
-                  <div className="ion-padding">
-                    <IonButton fill="clear" onClick={() => setShowAvatarModal(false)}>
-                      <IonIcon icon={closeOutline} size="large" />
-                    </IonButton>
-                    <img src={tempAvatarUrl} alt="avatar ampliado" />
-                  </div>
-                </IonContent>
-              </IonModal>
-
-              <IonLoading isOpen={isLoading} message="Procesando..." />
+              <h2>{user.nombre} {user.apellidos}</h2>
+              <p>{user.email}</p>
             </div>
-          ) : (
-            <IonText color="medium">
-              <p>No se pudo cargar la información del usuario.</p>
-              <IonButton onClick={() => window.location.reload()}>
-                <IonIcon slot="start" icon={refreshOutline} />
-                Recargar
-              </IonButton>
-            </IonText>
-          )}
-        </div>
+
+            {/* Información básica */}
+            <IonCard className="tarjeta-informacion">
+              <IonCardHeader>
+                <IonCardTitle>Información Personal</IonCardTitle>
+              </IonCardHeader>
+              <IonCardContent>
+                <IonItem>
+                  <IonLabel>Nombre</IonLabel>
+                  <IonText>{user.nombre}</IonText>
+                </IonItem>
+                <IonItem>
+                  <IonLabel>Apellidos</IonLabel>
+                  <IonText>{user.apellidos}</IonText>
+                </IonItem>
+                <IonItem>
+                  <IonLabel>Email</IonLabel>
+                  <IonText>{user.email}</IonText>
+                </IonItem>
+                {user.telefono && (
+                  <IonItem>
+                    <IonLabel>Teléfono</IonLabel>
+                    <IonText>{user.telefono}</IonText>
+                  </IonItem>
+                )}
+              </IonCardContent>
+            </IonCard>
+          </div>
+        )}
+
+        {/* Loading y Toast */}
+        <IonLoading isOpen={isLoading} message="Cargando..." />
+        <IonToast
+          isOpen={!!successMessage}
+          onDidDismiss={() => setSuccessMessage('')}
+          message={successMessage}
+          duration={3000}
+          color="success"
+        />
+        <IonToast
+          isOpen={!!errorMessage}
+          onDidDismiss={() => setErrorMessage('')}
+          message={errorMessage}
+          duration={3000}
+          color="danger"
+        />
       </IonContent>
+    </IonPage>
   );
 };
 

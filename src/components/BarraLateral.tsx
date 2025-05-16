@@ -1,182 +1,99 @@
-import React, { useState, useEffect } from 'react';
-import { IonList, IonItem, IonIcon, IonLabel, IonMenu, IonContent } from '@ionic/react';
-import { useLocation, useHistory } from 'react-router-dom';
-import { calendarOutline, peopleOutline, settingsOutline, personOutline, tennisballOutline, statsChartOutline, trophyOutline, stopwatchOutline, menuOutline, logOutOutline } from 'ionicons/icons';
+import React from 'react';
+import { IonItem, IonIcon, IonLabel, IonList, IonAvatar, IonButton } from '@ionic/react';
+import { logOutOutline, homeOutline, calendarOutline, tennisballOutline, peopleOutline, stopwatchOutline, statsChartOutline, trophyOutline, settingsOutline } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
-import { menuController } from '@ionic/core';
+import { useTheme } from '../context/ThemeContext';
+import { useLocation, useHistory } from 'react-router-dom';
 import './BarraLateral.css';
-import ToggleTheme from '../pages/ToggleTheme';
+
+type MenuOption = {
+  label: string;
+  path: string;
+  icon: string;
+  action?: never; 
+};
+
+type MenuOptionWithAction = {
+  label: string;
+  path: string;
+  icon: string;
+  action: () => Promise<void>;
+};
+
+const excludedRoutes = ['/login', '/register', '/pay'];
 
 const BarraLateral: React.FC = () => {
-  const { user } = useAuth();
   const location = useLocation();
+  const { user, logout } = useAuth();
   const history = useHistory();
-  const [isMobile, setIsMobile] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 900);
-    };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  if (excludedRoutes.includes(location.pathname)) {
+    return null;
+  }
 
-  // Opciones según el rol exacto
-  const clubOptions = [
-    { label: 'Gestionar Pistas', icon: tennisballOutline, route: '/club/pistas' },
-    { label: 'Calendario de Reservas', icon: calendarOutline, route: '/club/calendario' },
-    { label: 'Administración de Usuarios', icon: peopleOutline, route: '/club/usuarios' },
-    { label: 'Marcador de partidos', icon: stopwatchOutline, route: '/club/marcador' },
-    { label: 'Estadísticas', icon: statsChartOutline, route: '/club/estadisticas' },
-    { label: 'Torneos y Ligas', icon: trophyOutline, route: '/club/torneos' },
+  const baseOptions: MenuOptionWithAction[] = [
+    { 
+      label: 'Cerrar sesión', 
+      path: '', 
+      icon: logOutOutline, 
+      action: async () => { await logout(); }
+    }
   ];
 
-  const userOptions = [
-    { label: 'Inicio', icon: calendarOutline, route: '/home' },
-    { label: 'Reservar pista', icon: calendarOutline, route: '/reservas' },
-    { label: 'Perfil', icon: personOutline, route: '/profile' },
-    { label: 'Configuración', icon: settingsOutline, route: '/configuracion' },
-  ];
+  const roleSpecificOptions: MenuOption[] = user?.id_rol === 2 
+    ? [
+        { label: 'Gestionar Pistas', path: '/manage-courts', icon: tennisballOutline },
+        { label: 'Administrar Usuarios', path: '/manage-users', icon: peopleOutline },
+        { label: 'Calendario', path: '/calendar', icon: calendarOutline },
+        { label: 'Marcador', path: '/marcador', icon: stopwatchOutline },
+        { label: 'Estadísticas', path: '/estadisticas', icon: statsChartOutline },
+        { label: 'Torneos', path: '/torneos', icon: trophyOutline },
+        { label: 'Ligas', path: '/ligas', icon: trophyOutline }
+      ]
+    : [
+        { label: 'Inicio', path: '/home', icon: homeOutline },
+        { label: 'Reservar', path: '/reservas', icon: calendarOutline }
+      ];
 
-  type Option = { label: string; icon: string; route: string };
-  let options: Option[] = [];
-  if (user) {
-    const rol = Number(user.id_rol);
-    if (rol === 1 || rol === 2) {
-      // 1: ADMIN, 2: CLUB
-      options = clubOptions;
-    } else if (rol === 4 || rol === 5) {
-      // 4: USUARIO, 5: SOCIO
-      options = userOptions;
-    } else {
-      options = userOptions; // fallback para cualquier usuario autenticado
-    }
-  }
-
-  // Acción de cerrar sesión
-  const { logout } = useAuth();
-  const handleLogout = () => {
-    logout();
-    history.replace('/login');
-  }
-  // Navegación con replace
-  const handleNav = (route: string) => {
-    if (location.pathname !== route) {
-      history.replace(route);
-      // Forzar un refresco del router para limpiar vistas apiladas (Ionic fix)
-      setTimeout(() => {
-        window.dispatchEvent(new Event('popstate'));
-      }, 10);
-      if (isMobile) setMenuOpen(false);
-    }
-  };
-
-
-  // Detectar modo oscuro del body o preferencia de sistema
-  const isDark = document.body.classList.contains('dark') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
-
-  if (isMobile) {
-    return (
-      <>
-        <IonMenu side="start" menuId="main-menu" contentId="main-content">
-          <IonContent>
-            {user ? (
-              <IonList>
-                {options.map(option => {
-                  const isSelected = location.pathname === option.route || location.pathname.startsWith(option.route + '/');
-                  return (
-                    <IonItem
-                      button
-                      key={option.route}
-                      onClick={() => handleNav(option.route)}
-                      className={`ion-item${isSelected ? ' selected' : ''}`}
-                    >
-                      <IonIcon icon={option.icon} slot="start" />
-                      <IonLabel>{option.label}</IonLabel>
-                    </IonItem>
-                  );
-                })}
-                {/* Botón cerrar sesión */}
-                <IonItem button onClick={handleLogout}>
-                  <IonIcon icon={logOutOutline} slot="start" style={{ color: 'darkred' }} />
-                  <IonLabel style={{ color: 'darkred', fontWeight: 'bold' }}>Cerrar sesión</IonLabel>
-                </IonItem>
-              </IonList>
-            ) : (
-              <div
-                style={{
-                  padding: '16px',
-                  color: (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? '#fff' : '#888',
-                  background: (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? '#18191a' : '#fff',
-                  minHeight: '60px',
-                  borderTop: '1px solid #2222'
-                }}
-              >
-                Cargando menú...
-              </div>
-            )}
-            <div className="sidebar-theme-toggle">
-              <ToggleTheme />
-            </div>
-          </IonContent>
-        </IonMenu>
-        <button
-          style={{ position: 'fixed', left: 10, top: 10, zIndex: 1100, background: 'transparent', border: 'none', padding: 8 }}
-          onClick={() => menuController.open('main-menu')}
-          aria-label="Mostrar menú"
-        >
-          <IonIcon icon={menuOutline} slot="icon-only" style={{ fontSize: 32 }} />
-        </button>
-      </>
-    );
-  }
-
-  // Desktop
   return (
-    <div
-      className="barra-lateral"
-      style={{ minHeight: '100vh', position: 'fixed', left: 0, top: 0 }}
-    >
-      {user ? (
-        <IonList>
-          {options.map(option => {
-            const isSelected = location.pathname === option.route || location.pathname.startsWith(option.route + '/');
-            return (
-              <IonItem
-                button
-                key={option.route}
-                onClick={() => handleNav(option.route)}
-                className={`ion-item${isSelected ? ' selected' : ''}`}
-              >
-                <IonIcon icon={option.icon} slot="start" />
-                <IonLabel>{option.label}</IonLabel>
-              </IonItem>
-            );
-          })}
-          {/* Botón cerrar sesión (desktop) */}
-          <IonItem button onClick={handleLogout}>
-  <IonIcon icon={logOutOutline} slot="start" style={{ color: 'darkred' }} />
-  <IonLabel style={{ color: 'darkred', fontWeight: 'bold' }}>Cerrar sesión</IonLabel>
-</IonItem>
-        </IonList>
-      ) : (
-        <div
+    <div className="barra-lateral">
+      <button 
+        onClick={() => history.push('/login')}
+        style={{
+          background: 'none',
+          border: 'none',
+          padding: '16px',
+          cursor: 'pointer',
+          display: 'flex',
+          justifyContent: 'center',
+          width: '100%',
+          margin: '0 auto'
+        }}
+      >
+        <img 
+          src="/favicon.png" 
+          alt="Logo Play4Padel" 
           style={{
-            padding: '16px',
-            color: (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? '#fff' : '#888',
-            background: (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? '#18191a' : '#fff',
-            minHeight: '60px',
-            borderTop: '1px solid #2222'
-          }}
-        >
-          Cargando menú...
-        </div>
-      )}
-      <div className="sidebar-theme-toggle">
-        <ToggleTheme />
-      </div>
+            width: '60px',
+            height: '60px',
+            objectFit: 'contain'
+          }} 
+        />
+      </button>
+
+      <IonList>
+        {[...roleSpecificOptions, ...baseOptions].map((option, index) => (
+          <IonItem 
+            key={index}
+            routerLink={option.path}
+            onClick={option.action ? option.action : undefined}
+            detail={false}
+          >
+            <IonIcon slot="start" icon={option.icon} />
+            <IonLabel>{option.label}</IonLabel>
+          </IonItem>
+        ))}
+      </IonList>
     </div>
   );
 };

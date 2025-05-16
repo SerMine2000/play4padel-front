@@ -17,6 +17,8 @@ import Pay from './pages/Pago/Pay';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Estructura from './components/Estructura';
+import Header from './components/Header';
+import BarraLateral from './components/BarraLateral';
 import { ThemeProvider } from './context/ThemeContext';
 import { useEffect } from 'react';
 
@@ -127,6 +129,29 @@ const FocusManager: React.FC = () => {
   return null;
 };
 
+// Layout principal para páginas con cabecera y barra lateral
+const MainLayout: React.FC<{children: React.ReactNode}> = ({ children }) => (
+  <>
+    <Header />
+    <div className="main-content">
+      <BarraLateral />
+      <Estructura>
+        {children}
+      </Estructura>
+    </div>
+  </>
+);
+
+// Estilos básicos (puedes ajustarlos después)
+const styles = `
+  .main-content {
+    display: flex;
+    height: calc(100vh - 60px); /* Restar altura del header */
+  }
+`;
+
+document.head.appendChild(document.createElement('style')).textContent = styles;
+
 const AppContent: React.FC = () => {
   const { isAuthenticated } = useAuth();
 
@@ -144,23 +169,41 @@ const AppContent: React.FC = () => {
             {isAuthenticated ? <Redirect to="/home" /> : <Register />}
           </Route>
 
-          {/* Rutas privadas envueltas en Estructura (barra lateral solo aquí) */}
-          <Estructura>
-            <PrivateRoute path="/home" exact component={Home} />
-            <PrivateRoute path="/profile" exact component={Profile} />
-            <PrivateRoute path="/configuracion" exact component={Configuracion} />
-            <PrivateRoute path="/reservas" exact component={Reservas} />
-            <PrivateRoute path="/calendar" exact component={CalendarView} />
+          {/* Rutas privadas envueltas en MainLayout */}
+          <Route path="/home" exact>
+            <MainLayout>
+              <Home />
+            </MainLayout>
+          </Route>
+          <Route path="/profile" exact>
+            <MainLayout>
+              <Profile />
+            </MainLayout>
+          </Route>
+          <Route path="/configuracion" exact>
+            <MainLayout>
+              <Configuracion />
+            </MainLayout>
+          </Route>
+          <Route path="/reservas" exact>
+            <MainLayout>
+              <Reservas />
+            </MainLayout>
+          </Route>
+          <Route path="/calendar" exact>
+            <MainLayout>
+              <CalendarView />
+            </MainLayout>
+          </Route>
 
-            <RoleRoute path="/manage-courts" exact component={ManageCourts} roles={[1]} />
-            <RoleRoute path="/manage-users" exact component={ManageUsers} roles={[1]} />
+          <RoleRoute path="/manage-courts" exact component={ManageCourts} roles={[1]} />
+          <RoleRoute path="/manage-users" exact component={ManageUsers} roles={[1]} />
             
-            <PrivateRoute path="/marcador-control" exact component={MarcadorControl} />
-            <PrivateRoute path="/marcador-pantalla" exact component={MarcadorPantalla} />
-            <PrivateRoute path="/marcador" exact component={MarcadorControl} />
-            <PrivateRoute path="/club/marcador-control" exact component={MarcadorControl} />
-            <PrivateRoute path="/club/marcador" exact component={MarcadorPantalla} />
-          </Estructura>
+          <PrivateRoute path="/marcador-control" exact component={MarcadorControl} />
+          <PrivateRoute path="/marcador-pantalla" exact component={MarcadorPantalla} />
+          <PrivateRoute path="/marcador" exact component={MarcadorControl} />
+          <PrivateRoute path="/club/marcador-control" exact component={MarcadorControl} />
+          <PrivateRoute path="/club/marcador" exact component={MarcadorPantalla} />
 
           {/* Redirección por defecto */}
           <Route exact path="/">

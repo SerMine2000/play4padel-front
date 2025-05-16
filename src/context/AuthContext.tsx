@@ -59,16 +59,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Función para iniciar sesión
   const login = async (credentials: LoginRequest) => {
-    console.log('Auth: Intentando iniciar sesión...');
+    console.log('Iniciando sesión con credenciales:', credentials);
     try {
       setIsLoading(true);
       setError(null);
-
       const response = await authService.login(credentials);
-      console.log('Respuesta completa del backend:', response);
+      console.log('Respuesta del login:', response);
 
       if (response.user_id) {
         const userData = await authService.getCurrentUser(response.user_id);
+        console.log('Datos del usuario obtenidos:', userData);
+        console.log('Rol del usuario:', userData?.role);
         setUser(userData);
         setIsAuthenticated(true);
       } else {

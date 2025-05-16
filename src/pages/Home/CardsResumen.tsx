@@ -1,12 +1,7 @@
 import React from 'react';
+import { CardsResumenProps } from '../../interfaces';
 import './Home.css';
 
-interface CardsResumenProps {
-  partidosJugados: string | number;
-  nivel: string | number;
-  victorias: string | number;
-  torneos: string | number;
-}
 
 const CardsResumen: React.FC<CardsResumenProps> = ({ partidosJugados, nivel, victorias, torneos }) => {
   const cards = [

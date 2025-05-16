@@ -12,8 +12,8 @@ const FormularioLogin: React.FC = () => {
   const [password, setPassword] = useState('');
   const [formError, setFormError] = useState('');
 
-  const handleLogin = async (e?: React.FormEvent<HTMLFormElement>) => {
-    if (e) e.preventDefault();
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
     if (!email || !password) {
       setFormError('Por favor, completa todos los campos');
@@ -22,33 +22,42 @@ const FormularioLogin: React.FC = () => {
 
     try {
       await login({ email, password });
+      setFormError('');
       history.replace('/home');
-    } catch (error) {
-      console.error('Error en el login:', error);
-      setFormError('Credenciales incorrectas');
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
-    if (e.key === 'Enter') {
-      handleLogin(e);
+    } catch (err) {
+      console.error('Error en el login:', err);
+      const mensaje = err instanceof Error ? err.message : 'Credenciales incorrectas';
+      setFormError(mensaje);
     }
   };
 
   return (
-    <form onSubmit={(e) => handleLogin(e)} onKeyDown={handleKeyDown} className="formulario-login">
+    <form onSubmit={handleLogin} className="formulario-login">
       <IonItem lines="full">
         <IonLabel position="floating">Email</IonLabel>
-        <IonInput type="email" value={email} onIonChange={(e) => setEmail(e.detail.value!)} required />
+        <IonInput
+          type="email"
+          value={email}
+          onIonChange={(e) => setEmail(e.detail.value!)}
+          required
+        />
       </IonItem>
 
       <IonItem lines="full">
         <IonLabel position="floating">Contraseña</IonLabel>
-        <IonInput type="password" value={password} onIonChange={(e) => setPassword(e.detail.value!)} required />
+        <IonInput
+          type="password"
+          value={password}
+          onIonChange={(e) => setPassword(e.detail.value!)}
+          required
+        />
       </IonItem>
 
-      {formError && <IonText color="danger">{formError}</IonText>}
-      {error && <IonText color="danger">{error}</IonText>}
+      {(formError || error) && (
+        <IonText color="danger">
+          <p>{formError || error}</p>
+        </IonText>
+      )}
 
       <IonButton expand="block" type="submit" disabled={isLoading}>
         Iniciar Sesión

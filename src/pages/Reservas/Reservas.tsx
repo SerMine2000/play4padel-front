@@ -20,7 +20,6 @@ interface FranjaHoraria {
   seleccionada: boolean;
 }
 
-
 interface RangoHorario {
   inicio: string;
   fin: string;
@@ -520,6 +519,61 @@ const Reservas: React.FC = () => {
                   ))}
                 </IonSelect>
               </div>
+              {/* Selección de Pista (solo visible si hay club seleccionado) */}
+              {clubSeleccionado && (
+                <div>
+                  <label>Selecciona una Pista *</label>
+                  <IonSelect value={pistaSeleccionada} placeholder="Selecciona una pista" interface="action-sheet"
+                    onIonChange={e => {
+                      setPistaSeleccionada(e.detail.value);
+                      setHorasDisponibles([]);
+                      setFranjasSeleccionadas([]);
+                      setRangosHorarios([]);
+                    }}>
+                    {pistas.map(pista => (
+                      <IonSelectOption key={pista.id} value={pista.id}>
+                        Pista {pista.numero} - {pista.tipo} ({pista.precio_hora}€/h)
+                      </IonSelectOption>
+                    ))}
+                  </IonSelect>
+                </div>
+              )}
+              {/* Selección de Fecha (solo visible si hay pista seleccionada) */}
+              {pistaSeleccionada && (
+                <div>
+                  <label>Selecciona una Fecha *</label>
+                  <IonDatetime
+                    presentation="date"
+                    min={new Date().toISOString()}
+                    max={new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()} // 30 días en el futuro
+                    value={fechaSeleccionada}
+                    onIonChange={handleFechaChange}
+                    locale="es-ES"
+                    firstDayOfWeek={1}
+                  />
+                </div>
+              )}
+              {/* Selección de Horario (solo visible si hay fecha seleccionada) */}
+              {fechaSeleccionada && horasDisponibles.length > 0 && (
+                <div>
+                  <label>Selecciona Horario *</label>
+                  <IonGrid>
+                    <IonRow>
+                      {horasDisponibles.map((franja, index) => (
+                        <IonCol size="6" key={index}>
+                          <IonButton
+                            expand="block"
+                            color={franja.seleccionada ? "primary" : "light"}
+                            onClick={() => toggleFranjaHoraria(franja)}
+                          >
+                            {franja.inicio} - {franja.fin}
+                          </IonButton>
+                        </IonCol>
+                      ))}
+                    </IonRow>
+                  </IonGrid>
+                </div>
+              )}
               {/* Notas adicionales */}
               <div>
                 <label>Notas adicionales</label>
