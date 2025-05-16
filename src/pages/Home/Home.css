@@ -1,5 +1,7 @@
 /* Home.css - estilos previos pueden ir aquí */
 
+
+
 .dashboard-toolbar {
   display: flex;
   justify-content: flex-end;
@@ -57,20 +59,6 @@ body {
   min-height: 100vh;
 }
 
-/* Eliminado: .main-con-barra-lateral ya no se usa */
-  display: flex;
-  min-height: 100vh;
-}
-
-/* Eliminado: .contenido-principal ya no se usa */
-  flex: 1;
-  margin-left: 250px;
-  padding: 0 0 0 0;
-  min-height: 100vh;
-  background: var(--ion-background-color, #f9f9f9);
-  box-sizing: border-box;
-  transition: margin-left 0.3s;
-}
 body::before {
   content: '';
   position: fixed;

@@ -112,11 +112,6 @@ const Pay: React.FC = () => {
   if (!reservaId || !precio) {
     return (
       <IonPage>
-        <IonHeader>
-          <IonToolbar color={'primary'}>
-            <IonTitle>Error de Pago</IonTitle>
-          </IonToolbar>
-        </IonHeader>
         <IonContent>
           <p>No se ha podido cargar la información de la reserva.</p>
         </IonContent>
@@ -126,11 +121,6 @@ const Pay: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Pago con Tarjeta</IonTitle>
-        </IonToolbar>
-      </IonHeader>
       <IonContent>
         <Elements stripe={stripePromise}>
           <CheckoutForm reservaId={reservaId} precio={precio} />

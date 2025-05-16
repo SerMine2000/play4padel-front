@@ -490,16 +490,6 @@ const Reservas: React.FC = () => {
   return (
     <IonPage>
       <IonContent>
-          <IonHeader>
-            <IonToolbar color="primary">
-              <IonButtons slot="start">
-                <IonButton fill="clear" onClick={() => history.replace('/home')}>
-                  <IonIcon slot="icon-only" icon={arrowBack} />
-                </IonButton>
-              </IonButtons>
-              <IonTitle>Reserva de Pista</IonTitle>
-            </IonToolbar>
-          </IonHeader>
           <div className="pagina-reservas">
             <form>
               {/* Selección de Club */}

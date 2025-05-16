@@ -48,7 +48,7 @@ import './Profile.css';
 
 
 const Profile: React.FC = () => {
-  const { user, isLoading: authLoading } = useAuth();
+  const { user, isLoading: authLoading, refreshUser } = useAuth();
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -208,14 +208,6 @@ const Profile: React.FC = () => {
   return (
     <IonPage>
       <IonContent>
-        <IonHeader>
-          <IonToolbar>
-            <IonButtons slot="start">
-              <IonBackButton defaultHref="/home" />
-            </IonButtons>
-            <IonTitle>Perfil</IonTitle>
-          </IonToolbar>
-        </IonHeader>
 
         {user && (
           <div className="profile-container">

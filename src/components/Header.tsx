@@ -9,7 +9,7 @@ const Header: React.FC = () => {
   const { user } = useAuth();
 
   const handleProfileClick = () => {
-    history.push('/profile');
+    history.replace('/profile');
   };
 
   return (

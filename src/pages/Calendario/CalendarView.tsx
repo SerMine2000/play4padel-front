@@ -814,27 +814,7 @@ const CalendarView: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar color="primary">
-          <IonButtons slot="start">
-            <IonButton fill="clear" onClick={() => history.replace('/home')}>
-  <IonIcon slot="icon-only" icon={arrowBack} />
-</IonButton>
-          </IonButtons>
-          <IonTitle>Reservas y Calendario</IonTitle>
-          <IonButtons slot="end">
-            <IonButton onClick={actualizarReservas}>
-              <IonIcon slot="icon-only" icon={refreshOutline} />
-            </IonButton>
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
-
       <IonContent className="calendar-view">
-        {/* Pull-to-refresh */}
-        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
-          <IonRefresherContent></IonRefresherContent>
-        </IonRefresher>
 
         {/* Segmento para cambiar entre vista calendario y lista */}
         <IonSegment value={vistaActual} onIonChange={e => cambiarVista(e.detail.value as 'calendario' | 'lista')}>

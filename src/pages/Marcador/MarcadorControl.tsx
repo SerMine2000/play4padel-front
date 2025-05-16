@@ -89,7 +89,7 @@ const MarcadorControl: React.FC = () => {
           sets: res.data.sets || [{ A: 0, B: 0 }],
           tie_break: Boolean(res.data.tie_break),
           terminado: Boolean(res.data.terminado),
-          bola_de_oro: Boolean(res.data.bola_de_oro) // 👈 Esto garantiza que se mantenga
+          bola_de_oro: Boolean(res.data.bola_de_oro) // 
         };
         setEstado(estadoSeguro);
       }
@@ -286,23 +286,11 @@ const MarcadorControl: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar color="primary">
-          <IonButtons slot="start">
-            <IonButton fill="clear" onClick={() => history.replace('/home')}>
-  <IonIcon slot="icon-only" icon={arrowBack} />
-</IonButton>
-          </IonButtons>
-          <IonTitle>Gestión de Marcador</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      
       <IonContent className="ion-padding">
         <IonCard className="marcador-card">
           <IonCardHeader>
             <IonCardTitle>Marcador {tipoPista}</IonCardTitle>
           </IonCardHeader>
-          
           <IonCardContent>
             {/* Siempre muestra algún contenido, incluso durante la carga */}
             {cargando && !estado ? (

@@ -58,7 +58,7 @@ const BarraLateral: React.FC = () => {
   return (
     <div className="barra-lateral">
       <button 
-        onClick={() => history.push('/login')}
+        onClick={() => history.replace('/login')}
         style={{
           background: 'none',
           border: 'none',

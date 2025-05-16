@@ -201,7 +201,14 @@ const AppContent: React.FC = () => {
             
           <PrivateRoute path="/marcador-control" exact component={MarcadorControl} />
           <PrivateRoute path="/marcador-pantalla" exact component={MarcadorPantalla} />
-          <PrivateRoute path="/marcador" exact component={MarcadorControl} />
+          <PrivateRoute 
+            path="/marcador" 
+            component={() => (
+              <Estructura>
+                <MarcadorControl />
+              </Estructura>
+            )} 
+          />
           <PrivateRoute path="/club/marcador-control" exact component={MarcadorControl} />
           <PrivateRoute path="/club/marcador" exact component={MarcadorPantalla} />
 

@@ -15,7 +15,7 @@ const AppHeader: React.FC = () => {
   };
 
   const handleProfileClick = () => {
-    history.push('/profile');
+    history.replace('/profile');
   };
 
   const handleImageError = () => {
