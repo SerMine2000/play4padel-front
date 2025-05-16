@@ -41,19 +41,22 @@ const BarraLateral: React.FC = () => {
   ];
 
   const roleSpecificOptions: MenuOption[] = user?.id_rol === 2 
+  ? [
+      { label: 'Gestionar Pistas', path: '/manage-courts', icon: tennisballOutline },
+      { label: 'Administrar Usuarios', path: '/manage-users', icon: peopleOutline },
+      { label: 'Calendario', path: '/calendar', icon: calendarOutline },
+      { label: 'Marcador', path: '/marcador', icon: stopwatchOutline },
+      { label: 'Estadísticas', path: '/estadisticas', icon: statsChartOutline },
+      { label: 'Torneos', path: '/torneos', icon: trophyOutline },
+      { label: 'Ligas', path: '/ligas', icon: trophyOutline }
+    ]
+  : user?.id_rol === 4
     ? [
-        { label: 'Gestionar Pistas', path: '/manage-courts', icon: tennisballOutline },
-        { label: 'Administrar Usuarios', path: '/manage-users', icon: peopleOutline },
-        { label: 'Calendario', path: '/calendar', icon: calendarOutline },
-        { label: 'Marcador', path: '/marcador', icon: stopwatchOutline },
-        { label: 'Estadísticas', path: '/estadisticas', icon: statsChartOutline },
-        { label: 'Torneos', path: '/torneos', icon: trophyOutline },
-        { label: 'Ligas', path: '/ligas', icon: trophyOutline }
-      ]
-    : [
         { label: 'Inicio', path: '/home', icon: homeOutline },
         { label: 'Reservar', path: '/reservas', icon: calendarOutline }
-      ];
+      ]
+    : [];
+
 
   return (
     <div className="barra-lateral">

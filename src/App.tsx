@@ -14,6 +14,7 @@ import MarcadorControl from './pages/Marcador/MarcadorControl';
 import MarcadorPantalla from './pages/Marcador/MarcadorPantalla';
 import Configuracion from './pages/Configuracion/Configuracion';
 import Pay from './pages/Pago/Pay';
+import RutaPrivada from './components/RutaPrivada';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Estructura from './components/Estructura';
@@ -170,38 +171,38 @@ const AppContent: React.FC = () => {
           </Route>
 
           {/* Rutas privadas envueltas en MainLayout */}
-          <Route path="/home" exact>
+          <RutaPrivada  path="/home" exact>
             <MainLayout>
               <Home />
             </MainLayout>
-          </Route>
-          <Route path="/profile" exact>
+          </RutaPrivada >
+          <RutaPrivada  path="/profile" exact>
             <MainLayout>
               <Profile />
             </MainLayout>
-          </Route>
-          <Route path="/configuracion" exact>
+          </RutaPrivada >
+          <RutaPrivada  path="/configuracion" exact>
             <MainLayout>
               <Configuracion />
             </MainLayout>
-          </Route>
-          <Route path="/reservas" exact>
+          </RutaPrivada >
+          <RutaPrivada  path="/reservas" exact>
             <MainLayout>
               <Reservas />
             </MainLayout>
-          </Route>
+          </RutaPrivada >
           <Route path="/calendar" exact>
             <MainLayout>
               <CalendarView />
             </MainLayout>
           </Route>
 
-          <RoleRoute path="/manage-courts" exact component={ManageCourts} roles={[1]} />
-          <RoleRoute path="/manage-users" exact component={ManageUsers} roles={[1]} />
+          <RutaPrivada  path="/manage-courts" exact component={ManageCourts} roles={[1]} />
+          <RutaPrivada  path="/manage-users" exact component={ManageUsers} roles={[1]} />
             
-          <PrivateRoute path="/marcador-control" exact component={MarcadorControl} />
-          <PrivateRoute path="/marcador-pantalla" exact component={MarcadorPantalla} />
-          <PrivateRoute 
+          <RutaPrivada  path="/marcador-control" exact component={MarcadorControl} />
+          <RutaPrivada  path="/marcador-pantalla" exact component={MarcadorPantalla} />
+          <RutaPrivada  
             path="/marcador" 
             component={() => (
               <Estructura>
@@ -209,8 +210,8 @@ const AppContent: React.FC = () => {
               </Estructura>
             )} 
           />
-          <PrivateRoute path="/club/marcador-control" exact component={MarcadorControl} />
-          <PrivateRoute path="/club/marcador" exact component={MarcadorPantalla} />
+          <RutaPrivada  path="/club/marcador-control" exact component={MarcadorControl} />
+          <RutaPrivada  path="/club/marcador" exact component={MarcadorPantalla} />
 
           {/* Redirección por defecto */}
           <Route exact path="/">
