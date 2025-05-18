@@ -63,19 +63,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       setIsLoading(true);
       setError(null);
+  
       const response = await authService.login(credentials);
       console.log('Respuesta del login:', response);
-
-      if (response.user_id) {
-        const userData = await authService.getCurrentUser(response.user_id);
-        console.log('Datos del usuario obtenidos:', userData);
-        console.log('Rol del usuario:', userData?.role);
-        setUser(userData);
-        setIsAuthenticated(true);
-      } else {
+  
+      if (!response.user_id) {
         setError('Credenciales incorrectas');
         setIsAuthenticated(false);
+        return;
       }
+  
+      const userData = await authService.getCurrentUser(response.user_id);
+      console.log('Datos del usuario obtenidos:', userData);
+  
+      const roleMap = {
+        club: 2,
+        empleado: 4, // 👈 Tu intención original y correcta
+      } as const;
+      
+      const rawRole = typeof response.role === 'string' ? response.role.trim().toLowerCase() : '';
+      const id_rol = rawRole && roleMap[rawRole as keyof typeof roleMap];
+  
+      if (!id_rol) {
+        setError('Rol no reconocido');
+        setIsAuthenticated(false);
+        setUser(null);
+        return;
+      }
+  
+      setUser({ ...userData, id_rol });
+      setIsAuthenticated(true);
+  
+      console.log('Rol mapeado:', rawRole, '→ id_rol:', id_rol);
     } catch (error: any) {
       console.error('Error en login:', error);
       setError(error.message || 'Error al iniciar sesión');
@@ -85,6 +104,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setIsLoading(false);
     }
   };
+  
 
   // Función para registrar un nuevo usuario
   const register = async (userData: RegisterRequest) => {

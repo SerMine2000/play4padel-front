@@ -191,15 +191,17 @@ const AppContent: React.FC = () => {
               <Reservas />
             </MainLayout>
           </RutaPrivada >
-          <Route path="/calendar" exact>
+          <RutaPrivada  path="/manage-courts" exact>
             <MainLayout>
-              <CalendarView />
+              <ManageCourts />
             </MainLayout>
-          </Route>
-
-          <RutaPrivada  path="/manage-courts" exact component={ManageCourts} roles={[1]} />
-          <RutaPrivada  path="/manage-users" exact component={ManageUsers} roles={[1]} />
-            
+          </RutaPrivada >
+          <RutaPrivada  path="/manage-users" exact>
+            <MainLayout>
+              <ManageUsers />
+            </MainLayout>
+          </RutaPrivada >
+          
           <RutaPrivada  path="/marcador-control" exact component={MarcadorControl} />
           <RutaPrivada  path="/marcador-pantalla" exact component={MarcadorPantalla} />
           <RutaPrivada  

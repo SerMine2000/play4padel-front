@@ -281,16 +281,7 @@ const ManageCourts: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar color="primary">
-          <IonButtons slot="start">
-            <IonButton fill="clear" onClick={() => history.replace('/home')}>
-  <IonIcon slot="icon-only" icon={arrowBack} />
-</IonButton>
-          </IonButtons>
-          <IonTitle>Gestión de Pistas</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      
       
       <IonContent className="contenedor-gestion-pistas">
         <IonGrid>

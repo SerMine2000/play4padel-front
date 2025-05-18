@@ -18,23 +18,17 @@ ion-toolbar {
 }
 
 .profile-button {
-  --padding-start: 0;
-  --padding-end: 0;
-  --padding-top: 0;
-  --padding-bottom: 0;
-  --border-radius: 50%;
-  --background: transparent;
-  --background-hover: transparent;
-  --background-activated: transparent;
-  --background-focused: transparent;
-  --background-hover-opacity: 0;
-  --background-activated-opacity: 0;
-  --background-focused-opacity: 0;
+  padding: 0;
+  margin: 0;
+  margin-right: 20px; /* margen derecho añadido */
   width: 40px;
   height: 40px;
-  margin: 0;
+  border-radius: 50%;
+  background-color: #1565C0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
-  position: relative;
 }
 
 /* Eliminar efecto de ripple */
@@ -74,19 +68,14 @@ ion-toolbar {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 50%;
   display: block;
 }
 
 .avatar-initial {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  background-color: var(--ion-color-primary);
-  color: white;
-  font-weight: 600;
-  font-size: 1.2rem;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1rem;
   text-transform: uppercase;
   user-select: none;
 }

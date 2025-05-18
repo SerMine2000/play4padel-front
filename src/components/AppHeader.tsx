@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IonHeader, IonToolbar, IonButtons, IonButton, IonAvatar } from '@ionic/react';
+import { IonHeader, IonToolbar, IonButtons, IonButton } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './AppHeader.css';
@@ -23,27 +23,25 @@ const AppHeader: React.FC = () => {
   };
 
   return (
-    <IonHeader className="app-header">
+    <IonHeader>
       <IonToolbar>
         <IonButtons slot="end">
-          <IonButton 
+          <IonButton
             onClick={handleProfileClick}
-            className="profile-button"
             fill="clear"
             aria-label="Perfil"
+            className="profile-button"
           >
-            <IonAvatar className="profile-avatar">
-              {user?.avatar_url && !imageError ? (
-                <img 
-                  src={user.avatar_url} 
-                  alt={user.nombre || 'Usuario'}
-                  onError={handleImageError}
-                  className="profile-avatar-img"
-                />
-              ) : (
-                <span className="avatar-initial">{getInitial()}</span>
-              )}
-            </IonAvatar>
+            {user?.avatar_url && !imageError ? (
+              <img
+                src={user.avatar_url}
+                alt={user.nombre || 'Usuario'}
+                onError={handleImageError}
+                className="profile-avatar-img"
+              />
+            ) : (
+              <span className="avatar-initial">{getInitial()}</span>
+            )}
           </IonButton>
         </IonButtons>
       </IonToolbar>

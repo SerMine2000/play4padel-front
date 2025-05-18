@@ -525,21 +525,7 @@ const ManageUsers: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar color="primary">
-          <IonButtons slot="start">
-            <IonButton fill="clear" onClick={() => history.replace('/home')}>
-  <IonIcon slot="icon-only" icon={arrowBack} />
-</IonButton>
-          </IonButtons>
-          <IonTitle>Gestión de Usuarios</IonTitle>
-          <IonButtons slot="end">
-            <IonButton onClick={loadUsers}>
-              <IonIcon slot="icon-only" icon={refreshOutline} />
-            </IonButton>
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
+      
       
       <IonContent>
         <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
