@@ -10,6 +10,7 @@ interface AuthContextType {
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -19,6 +20,7 @@ const AuthContext = createContext<AuthContextType>({
   isLoading: true,
   login: async () => {},
   logout: () => {},
+  refreshUser: async () => {},
 });
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -30,14 +32,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     const verificarToken = async () => {
       const storedToken = localStorage.getItem('token');
+  
       if (!storedToken) {
+        setIsAuthenticated(false);
+        setUser(null);
         setIsLoading(false);
         return;
       }
+  
       try {
         const res = await api.get('/verify-token', storedToken);
         const { user_id, role, user_data } = res;
-
+  
         const mapeoRol: { [key: string]: number } = {
           admin: 1,
           club: 2,
@@ -46,43 +52,38 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           usuario: 5,
           socio: 6,
         };
-
+  
         const usuario: User = {
           ...user_data,
           id: user_id,
           role: role.toLowerCase(),
           id_rol: mapeoRol[role.toLowerCase()] || 0,
+          telefono: user_data.telefono || "No especificado",
+          bio: user_data.bio || "No especificado"
         };
-
+  
         setUser(usuario);
         setToken(storedToken);
         setIsAuthenticated(true);
       } catch (error) {
-        if (error instanceof Error && error.message && (error.message.includes('invalid_token') || error.message.includes('401'))) {
-          console.warn('⚠️ Token inválido detectado, cerrando sesión automáticamente.');
-          localStorage.removeItem('token');
-          setUser(null);
-          setToken(null);
-          setIsAuthenticated(false);
-
-        } else {
-          console.error('❌ Error al verificar token:', error);
-        }
+        localStorage.removeItem('token');
+        setUser(null);
+        setToken(null);
+        setIsAuthenticated(false);
       } finally {
         setIsLoading(false);
       }
     };
-
+  
     verificarToken();
   }, []);
 
   const login = async (email: string, password: string) => {
     try {
-      console.log('🔐 Iniciando sesión con credenciales:', { email, password });
-
       const response = await api.post('/login', { email, password });
+      console.log("Datos del usuario al iniciar sesión:", response);
       const { access_token, user_id, role, user_data } = response;
-
+  
       const mapeoRol: { [key: string]: number } = {
         admin: 1,
         club: 2,
@@ -91,20 +92,23 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         usuario: 5,
         socio: 6,
       };
-
+  
       const usuario: User = {
         ...user_data,
         id: user_id,
         role: role.toLowerCase(),
         id_rol: mapeoRol[role.toLowerCase()] || 0,
+        telefono: user_data.telefono || "No especificado",
+        bio: user_data.bio || "No especificado",
       };
-
+  
       localStorage.setItem('token', access_token);
       setToken(access_token);
       setUser(usuario);
       setIsAuthenticated(true);
+  
     } catch (error) {
-      console.error('❌ Error en login:', error);
+      console.error("Error al iniciar sesión:", error);
       throw new Error('Error al iniciar sesión');
     }
   };
@@ -116,9 +120,40 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setIsAuthenticated(false);
   };
 
+  const refreshUser = async () => {
+    if (!user?.id) return;
+  
+    try {
+      setIsLoading(true);
+      const response = await api.get(`/user/${user.id}`);
+      console.log("Respuesta completa del backend al refrescar usuario:", response);
+  
+      const updatedUser = response ?? null;
+      console.log("Objeto actualizado recibido del backend:", updatedUser);
+  
+      if (!updatedUser || Object.keys(updatedUser).length === 0) {
+        console.warn("El objeto actualizado está vacío o indefinido.");
+        return;
+      }
+  
+      setUser({
+        ...user,
+        ...updatedUser,
+        telefono: updatedUser.telefono ?? user.telefono,
+        bio: updatedUser.bio ?? user.bio,
+      });
+  
+    } catch (error) {
+      console.error('Error al refrescar el usuario:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+
   return (
     <AuthContext.Provider
-      value={{ user, token, isAuthenticated, isLoading, login, logout }}>
+      value={{ user, token, isAuthenticated, isLoading, login, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

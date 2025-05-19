@@ -1,44 +1,11 @@
 // src/pages/Profile.tsx
 import React, { useState, useEffect } from 'react';
-import {
-  IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
-  IonItem,
-  IonLabel,
-  IonInput,
-  IonButton,
-  IonBackButton,
-  IonButtons,
-  IonLoading,
-  IonToast,
-  IonIcon,
-  IonAvatar,
-  IonText,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonAlert,
-  IonModal,
-  IonPage
-} from '@ionic/react';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonItem, IonLabel, IonInput,
+  IonButton, IonBackButton, IonButtons, IonLoading, IonToast, IonIcon, IonAvatar, IonText, IonGrid, IonRow, IonCol, IonAlert, IonModal,
+  IonPage} from '@ionic/react';
 import { arrowBack } from 'ionicons/icons';
-import {
-  personOutline,
-  personCircleOutline,
-  saveOutline,
-  refreshOutline,
-  mailOutline,
-  callOutline,
-  keyOutline,
-  imageOutline,
-  closeOutline
-} from 'ionicons/icons';
+import { personOutline, personCircleOutline, saveOutline, refreshOutline, mailOutline, callOutline, keyOutline, imageOutline, 
+  closeOutline } from 'ionicons/icons';
 import { useAuth } from '../../context/AuthContext';
 import { useHistory } from 'react-router-dom';
 import apiService from '../../services/api.service';
@@ -48,7 +15,7 @@ import './Profile.css';
 
 
 const Profile: React.FC = () => {
-  const { user, isLoading: authLoading } = useAuth();
+  const { user, isLoading: authLoading, refreshUser } = useAuth();
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -136,20 +103,27 @@ const Profile: React.FC = () => {
 
   const handleUpdateProfile = async () => {
     if (!user) return;
+  
     try {
       setIsLoading(true);
       setErrorMessage('');
-      await apiService.put(`${API_ENDPOINTS.USER}/${user.id}`, {
-        nombre: formData.nombre,
-        apellidos: formData.apellidos,
-        email: formData.email,
-        telefono: formData.telefono,
-        bio: formData.bio,
-        avatar_url: formData.avatar_url,
-      });
+  
+      // Verificar datos antes de enviar
+      const payload = {
+        nombre: formData.nombre || user.nombre,
+        apellidos: formData.apellidos || user.apellidos,
+        email: formData.email || user.email,
+        telefono: formData.telefono !== 'No especificado' ? formData.telefono : user.telefono,
+        bio: formData.bio !== 'No especificado' ? formData.bio : user.bio,
+        avatar_url: formData.avatar_url || user.avatar_url,
+      };
+  
+      console.log("Payload preparado para enviar:", payload);
+  
+      await apiService.put(`${API_ENDPOINTS.USER}/${user.id}`, payload);
       setSuccessMessage('Perfil actualizado correctamente');
       setIsEditing(false);
-      window.location.reload();
+      await refreshUser();
       setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error: any) {
       console.error('Error al actualizar perfil:', error);
@@ -158,6 +132,7 @@ const Profile: React.FC = () => {
       setIsLoading(false);
     }
   };
+  
 
   const handleUpdatePassword = async () => {
     if (!user) return;
@@ -210,7 +185,6 @@ const Profile: React.FC = () => {
       <IonContent style={{ paddingLeft: 260, boxSizing: 'border-box' }}>
         {user && (
           <div className="profile-container" style={{ maxWidth: 900, margin: '0 auto' }}>
-            {/* Sección de avatar */}
             <div className="encabezado-perfil">
               <div className="contenedor-avatar">
                 <IonAvatar className="avatar-perfil">
@@ -224,39 +198,101 @@ const Profile: React.FC = () => {
               <h2>{user.nombre} {user.apellidos}</h2>
               <p>{user.email}</p>
             </div>
-
-            {/* Información básica */}
+  
             <IonCard className="tarjeta-informacion">
               <IonCardHeader>
                 <IonCardTitle>Información Personal</IonCardTitle>
               </IonCardHeader>
               <IonCardContent>
-                <IonItem>
-                  <IonLabel>Nombre</IonLabel>
-                  <IonText>{user.nombre}</IonText>
-                </IonItem>
-                <IonItem>
-                  <IonLabel>Apellidos</IonLabel>
-                  <IonText>{user.apellidos}</IonText>
-                </IonItem>
-                <IonItem>
-                  <IonLabel>Email</IonLabel>
-                  <IonText>{user.email}</IonText>
-                </IonItem>
-                <IonItem>
-                  <IonLabel>Teléfono</IonLabel>
-                  <IonText>{user.telefono || 'No especificado'}</IonText>
-                </IonItem>
-                <IonItem>
-                  <IonLabel>Biografía</IonLabel>
-                  <IonText>{user.bio || 'No hay información de biografía'}</IonText>
-                </IonItem>
+                {['nombre', 'apellidos', 'email', 'telefono', 'bio'].map((campo) => (
+                  <IonItem key={campo}>
+                    <IonLabel position="stacked">{campo.charAt(0).toUpperCase() + campo.slice(1)}</IonLabel>
+                    {isEditing ? (
+                      <IonInput
+                        value={formData[campo as keyof typeof formData]}
+                        onIonChange={(e) => handleInputChange(e, campo)}
+                      />
+                    ) : (
+                      <IonText>{user[campo as keyof typeof user] || 'No especificado'}</IonText>
+                    )}
+                  </IonItem>
+                ))}
               </IonCardContent>
             </IonCard>
+  
+            {!isEditing ? (
+              <IonGrid className="botones-acciones">
+                <IonRow>
+                  <IonCol>
+                    <IonButton expand="block" onClick={handleEditProfile} color="primary">
+                      Editar perfil
+                    </IonButton>
+                  </IonCol>
+                  <IonCol>
+                    <IonButton expand="block" onClick={handleChangePassword} color="medium">
+                      Cambiar contraseña
+                    </IonButton>
+                  </IonCol>
+                </IonRow>
+              </IonGrid>
+            ) : (
+              <IonGrid className="botones-acciones">
+                <IonRow>
+                  <IonCol>
+                    <IonButton expand="block" onClick={handleUpdateProfile} color="success">
+                      Guardar cambios
+                    </IonButton>
+                  </IonCol>
+                  <IonCol>
+                    <IonButton expand="block" onClick={handleCancel} color="danger" fill="outline">
+                      Cancelar
+                    </IonButton>
+                  </IonCol>
+                </IonRow>
+              </IonGrid>
+            )}
+
+
+  
+            {isChangingPassword && (
+              <IonCard className="tarjeta-informacion">
+                <IonCardHeader>
+                  <IonCardTitle>Cambiar contraseña</IonCardTitle>
+                </IonCardHeader>
+                <IonCardContent>
+                  <IonItem>
+                    <IonLabel position="stacked">Contraseña actual</IonLabel>
+                    <IonInput
+                      type="password"
+                      value={formData.currentPassword}
+                      onIonChange={(e) => handleInputChange(e, 'currentPassword')}
+                    />
+                  </IonItem>
+                  <IonItem>
+                    <IonLabel position="stacked">Nueva contraseña</IonLabel>
+                    <IonInput
+                      type="password"
+                      value={formData.newPassword}
+                      onIonChange={(e) => handleInputChange(e, 'newPassword')}
+                    />
+                  </IonItem>
+                  <IonItem>
+                    <IonLabel position="stacked">Confirmar contraseña</IonLabel>
+                    <IonInput
+                      type="password"
+                      value={formData.confirmPassword}
+                      onIonChange={(e) => handleInputChange(e, 'confirmPassword')}
+                    />
+                  </IonItem>
+                  <IonButton expand="block" onClick={handleUpdatePassword}>
+                    Guardar nueva contraseña
+                  </IonButton>
+                </IonCardContent>
+              </IonCard>
+            )}
           </div>
         )}
-
-        {/* Loading y Toast */}
+  
         <IonLoading isOpen={isLoading} message="Cargando..." />
         <IonToast
           isOpen={!!successMessage}
@@ -272,9 +308,9 @@ const Profile: React.FC = () => {
           duration={3000}
           color="danger"
         />
-              </IonContent>
+      </IonContent>
     </IonPage>
-  );
+  );  
 };
 
 export default Profile;
