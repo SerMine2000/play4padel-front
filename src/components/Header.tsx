@@ -26,9 +26,7 @@ const Header: React.FC = () => {
                   onError={() => setImageError(true)}
                   alt="User Avatar" 
                 />
-              ) : (
-                <div className="avatar-placeholder">{user?.nombre?.charAt(0) || 'U'}</div>
-              )}
+              ) : null}
             </IonAvatar>
           </IonButton>
         </IonButtons>

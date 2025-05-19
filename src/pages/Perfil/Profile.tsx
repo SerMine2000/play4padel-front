@@ -48,7 +48,7 @@ import './Profile.css';
 
 
 const Profile: React.FC = () => {
-  const { user, isLoading: authLoading, refreshUser } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -149,7 +149,7 @@ const Profile: React.FC = () => {
       });
       setSuccessMessage('Perfil actualizado correctamente');
       setIsEditing(false);
-      await refreshUser();
+      window.location.reload();
       setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error: any) {
       console.error('Error al actualizar perfil:', error);
@@ -207,10 +207,9 @@ const Profile: React.FC = () => {
 
   return (
     <IonPage>
-      <IonContent>
-
+      <IonContent style={{ paddingLeft: 260, boxSizing: 'border-box' }}>
         {user && (
-          <div className="profile-container">
+          <div className="profile-container" style={{ maxWidth: 900, margin: '0 auto' }}>
             {/* Sección de avatar */}
             <div className="encabezado-perfil">
               <div className="contenedor-avatar">
@@ -244,12 +243,14 @@ const Profile: React.FC = () => {
                   <IonLabel>Email</IonLabel>
                   <IonText>{user.email}</IonText>
                 </IonItem>
-                {user.telefono && (
-                  <IonItem>
-                    <IonLabel>Teléfono</IonLabel>
-                    <IonText>{user.telefono}</IonText>
-                  </IonItem>
-                )}
+                <IonItem>
+                  <IonLabel>Teléfono</IonLabel>
+                  <IonText>{user.telefono || 'No especificado'}</IonText>
+                </IonItem>
+                <IonItem>
+                  <IonLabel>Biografía</IonLabel>
+                  <IonText>{user.bio || 'No hay información de biografía'}</IonText>
+                </IonItem>
               </IonCardContent>
             </IonCard>
           </div>
@@ -271,7 +272,7 @@ const Profile: React.FC = () => {
           duration={3000}
           color="danger"
         />
-      </IonContent>
+              </IonContent>
     </IonPage>
   );
 };

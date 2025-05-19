@@ -18,6 +18,11 @@ const RutaPrivada: React.FC<RutaPrivadaProps> = ({
 }) => {
   const { user, isAuthenticated, isLoading } = useAuth();
 
+  console.log('🔍 [RutaPrivada] isLoading=', isLoading,
+    ' | isAuthenticated=', isAuthenticated,
+    ' | user.id_rol=', user?.id_rol,
+    ' | user.role (raw)=', user?.role);
+
   return (
     <Route
       {...rest}

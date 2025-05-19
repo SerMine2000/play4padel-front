@@ -1,165 +1,127 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { AuthContextType, LoginRequest, RegisterRequest, User } from '../interfaces';
-import authService from '../services/auth.service';
-import apiService from '../services/api.service';
-import { API_ENDPOINTS } from '../utils/constants';
+// src/context/AuthContext.tsx
+import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import api from '../services/api.service';
+import { User } from '../interfaces';
 
-// Crear el contexto con un valor inicial
+interface AuthContextType {
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => void;
+}
+
 const AuthContext = createContext<AuthContextType>({
   user: null,
+  token: null,
   isAuthenticated: false,
-  isLoading: false,
-  error: null,
+  isLoading: true,
   login: async () => {},
-  register: async () => {},
   logout: () => {},
-  refreshUser: async () => {},
-  deleteAccount: async () => {},
 });
 
-// Hook personalizado para usar el contexto
-export const useAuth = () => useContext(AuthContext);
-
-// Proveedor del contexto
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Función para verificar autenticación tras login
-  const checkAuthStatus = async () => {
-    console.log('Auth: Verificando autenticación...');
-    try {
-      const isAuth = authService.isAuthenticated();
-      console.log('Auth: ¿Está autenticado?:', isAuth);
+  useEffect(() => {
+    const verificarToken = async () => {
+      const storedToken = localStorage.getItem('token');
+      if (!storedToken) {
+        setIsLoading(false);
+        return;
+      }
+      try {
+        const res = await api.get('/verify-token', storedToken);
+        const { user_id, role, user_data } = res;
 
-      if (isAuth) {
-        const userId = authService.getUserId();
-        console.log('Auth: userId encontrado:', userId);
+        const mapeoRol: { [key: string]: number } = {
+          admin: 1,
+          club: 2,
+          profesor: 3,
+          empleado: 4,
+          usuario: 5,
+          socio: 6,
+        };
 
-        if (userId) {
-          const userData = await authService.getCurrentUser(userId);
-          setUser(userData);
-          setIsAuthenticated(true);
+        const usuario: User = {
+          ...user_data,
+          id: user_id,
+          role: role.toLowerCase(),
+          id_rol: mapeoRol[role.toLowerCase()] || 0,
+        };
+
+        setUser(usuario);
+        setToken(storedToken);
+        setIsAuthenticated(true);
+      } catch (error) {
+        if (error instanceof Error && error.message && (error.message.includes('invalid_token') || error.message.includes('401'))) {
+          console.warn('⚠️ Token inválido detectado, cerrando sesión automáticamente.');
+          localStorage.removeItem('token');
+          setUser(null);
+          setToken(null);
+          setIsAuthenticated(false);
+
+        } else {
+          console.error('❌ Error al verificar token:', error);
         }
-      } else {
-        setIsAuthenticated(false);
-        setUser(null);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error: any) {
-      console.error('Error al verificar autenticación:', error);
-      setError(error.message);
-      setIsAuthenticated(false);
-      setUser(null);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    };
 
-  // Función para iniciar sesión
-  const login = async (credentials: LoginRequest) => {
-    console.log('Iniciando sesión con credenciales:', credentials);
+    verificarToken();
+  }, []);
+
+  const login = async (email: string, password: string) => {
     try {
-      setIsLoading(true);
-      setError(null);
-  
-      const response = await authService.login(credentials);
-      console.log('Respuesta del login:', response);
-  
-      if (!response.user_id) {
-        setError('Credenciales incorrectas');
-        setIsAuthenticated(false);
-        return;
-      }
-  
-      const userData = await authService.getCurrentUser(response.user_id);
-      console.log('Datos del usuario obtenidos:', userData);
-  
-      const roleMap = {
+      console.log('🔐 Iniciando sesión con credenciales:', { email, password });
+
+      const response = await api.post('/login', { email, password });
+      const { access_token, user_id, role, user_data } = response;
+
+      const mapeoRol: { [key: string]: number } = {
+        admin: 1,
         club: 2,
-        empleado: 4, // 👈 Tu intención original y correcta
-      } as const;
-      
-      const rawRole = typeof response.role === 'string' ? response.role.trim().toLowerCase() : '';
-      const id_rol = rawRole && roleMap[rawRole as keyof typeof roleMap];
-  
-      if (!id_rol) {
-        setError('Rol no reconocido');
-        setIsAuthenticated(false);
-        setUser(null);
-        return;
-      }
-  
-      setUser({ ...userData, id_rol });
+        profesor: 3,
+        empleado: 4,
+        usuario: 5,
+        socio: 6,
+      };
+
+      const usuario: User = {
+        ...user_data,
+        id: user_id,
+        role: role.toLowerCase(),
+        id_rol: mapeoRol[role.toLowerCase()] || 0,
+      };
+
+      localStorage.setItem('token', access_token);
+      setToken(access_token);
+      setUser(usuario);
       setIsAuthenticated(true);
-  
-      console.log('Rol mapeado:', rawRole, '→ id_rol:', id_rol);
-    } catch (error: any) {
-      console.error('Error en login:', error);
-      setError(error.message || 'Error al iniciar sesión');
-      setIsAuthenticated(false);
-      setUser(null);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
-
-  // Función para registrar un nuevo usuario
-  const register = async (userData: RegisterRequest) => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      await authService.register(userData);
-    } catch (error: any) {
-      console.error('Error en registro:', error);
-      setError(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const logout = async () => {
-    try {
-      setIsLoading(true);
-      if (user?.id) {
-        await authService.logout(user.id);
-      }
     } catch (error) {
-      console.error('Error en logout:', error);
-    } finally {
-      authService.clearSession();
-      setUser(null);
-      setIsAuthenticated(false);
-      setIsLoading(false);
+      console.error('❌ Error en login:', error);
+      throw new Error('Error al iniciar sesión');
     }
   };
 
-  const deleteAccount = async () => {
-    try {
-      const userId = user?.id;
-      if (!userId) return;
-      await apiService.delete(`/users/${userId}`);
-      logout();
-    } catch (error) {
-      console.error('Error al eliminar cuenta:', error);
-    }
+  const logout = () => {
+    localStorage.removeItem('token');
+    setUser(null);
+    setToken(null);
+    setIsAuthenticated(false);
   };
 
-  const value: AuthContextType = {
-    user,
-    isAuthenticated,
-    isLoading,
-    error,
-    login,
-    register,
-    logout,
-    refreshUser: checkAuthStatus,
-    deleteAccount,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{ user, token, isAuthenticated, isLoading, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-export default AuthContext;
+export const useAuth = () => useContext(AuthContext);

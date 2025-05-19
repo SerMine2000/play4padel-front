@@ -160,40 +160,37 @@ const MarcadorPantalla: React.FC = () => {
     : { A: 0, B: 0 };
 
   return (
-    <div className="scoreboard">
-      <div className="header">{config.tituloPista}</div>
+    <div style={{ paddingLeft: 260, boxSizing: 'border-box' }}>
+      <div className="scoreboard" style={{ maxWidth: 900, margin: '0 auto' }}>
+        <div className="header">{config.tituloPista}</div>
       
-      <div className="score-table">
-        <div className="header-row">
-          <div className="header-spacer"></div>
-          <div className="header-cell">SETS</div>
-          <div className="header-cell">JUEGOS</div>
-          <div className="header-cell">PUNTOS</div>
+        <div className="score-table">
+          <div className="header-row">
+            <div className="header-spacer"></div>
+            <div className="header-cell">SETS</div>
+            <div className="header-cell">JUEGOS</div>
+            <div className="header-cell">PUNTOS</div>
+          </div>
+          <div className="team-row team-a">
+            <div className="team-name">{config.nombreEquipoA}</div>
+            <div className="score-cell">{contarSetsGanados('A')}</div>
+            <div className="score-cell">{estado.juegos.A}</div>
+            <div className="score-cell">{formatearPuntos(estado.puntos.A)}</div>
+          </div>
+          <div className="team-row team-b">
+            <div className="team-name">{config.nombreEquipoB}</div>
+            <div className="score-cell">{contarSetsGanados('B')}</div>
+            <div className="score-cell">{estado.juegos.B}</div>
+            <div className="score-cell">{formatearPuntos(estado.puntos.B)}</div>
+          </div>
         </div>
-        
-        <div className="team-row team-a">
-          <div className="team-name">{config.nombreEquipoA}</div>
-          <div className="score-cell">{contarSetsGanados('A')}</div>
-          <div className="score-cell">{estado.juegos.A}</div>
-          <div className="score-cell">{formatearPuntos(estado.puntos.A)}</div>
+        {estado.tie_break && <div className="match-status tie-break">TIE BREAK</div>}
+        {estado.terminado && <div className="match-status terminado">PARTIDO TERMINADO</div>}
+        {estado.tie_break === false && estado.bola_de_oro && estado.puntos.A === 40 && estado.puntos.B === 40 &&
+          <div className="match-status bola-oro">BOLA DE ORO</div>}
+        <div className="footer">
+          <div className="time">{formatearTiempo()}</div>
         </div>
-        
-        <div className="team-row team-b">
-          <div className="team-name">{config.nombreEquipoB}</div>
-          <div className="score-cell">{contarSetsGanados('B')}</div>
-          <div className="score-cell">{estado.juegos.B}</div>
-          <div className="score-cell">{formatearPuntos(estado.puntos.B)}</div>
-        </div>
-      </div>
-      
-      {estado.tie_break && <div className="match-status tie-break">TIE BREAK</div>}
-      {estado.terminado && <div className="match-status terminado">PARTIDO TERMINADO</div>}
-
-      {estado.tie_break === false && estado.bola_de_oro && estado.puntos.A === 40 && estado.puntos.B === 40 &&
-        <div className="match-status bola-oro">BOLA DE ORO</div>}
-      
-      <div className="footer">
-        <div className="time">{formatearTiempo()}</div>
       </div>
     </div>
   );

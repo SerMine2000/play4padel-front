@@ -34,7 +34,7 @@ const Configuracion: React.FC = () => {
 
   return (
     <IonPage>
-      <IonContent>
+      <IonContent style={{ paddingLeft: 260, maxWidth: 900, margin: '0 auto', boxSizing: 'border-box' }}>
           <IonHeader>
             <IonToolbar color="primary">
               <IonButtons slot="start">
@@ -77,7 +77,7 @@ const Configuracion: React.FC = () => {
               ]}
             />
           </div>
-      </IonContent>
+              </IonContent>
     </IonPage>
   );
 };

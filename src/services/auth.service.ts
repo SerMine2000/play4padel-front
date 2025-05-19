@@ -1,60 +1,62 @@
 // src/services/auth.service.ts
-import { LoginRequest, LoginResponse, RegisterRequest, User, UpdatePasswordRequest } from '../interfaces';
+import {
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  User,
+  UpdatePasswordRequest,
+} from '../interfaces';
+
 import { API_ENDPOINTS, STORAGE_KEYS } from '../utils/constants';
 import apiService from './api.service';
+
 
 class AuthService {
   async login(credentials: LoginRequest): Promise<LoginResponse> {
     try {
+      console.log('🔐 Enviando credenciales al backend:', credentials);
+
       const response = await apiService.post(API_ENDPOINTS.LOGIN, credentials);
-      console.log('Respuesta completa del backend:', response);
-      
-      const responseData = response.data || response;
-      
-      if (!responseData.user_id || !responseData.role) {
-        throw new Error('Respuesta del servidor incompleta');
+      const { access_token, user_id, role, user_data, message } = response.data;
+
+      if (!user_id || !role || !access_token) {
+        throw new Error('Faltan datos clave en la respuesta del backend');
       }
 
-      const normalizedUserData = {
-        ...(responseData.user_data || {}),
-        role: responseData.role.toLowerCase()
-      };
-
-      localStorage.setItem(STORAGE_KEYS.USER_ID, responseData.user_id.toString());
-      localStorage.setItem(STORAGE_KEYS.USER_ROLE, responseData.role.toLowerCase());
-      localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, responseData.access_token);
+      // Guardar token en localStorage para persistencia
+      localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, access_token);
 
       return {
-        message: responseData.message || 'Login exitoso',
-        user_id: responseData.user_id,
-        role: responseData.role.toLowerCase(),
-        access_token: responseData.access_token,
-        user_data: normalizedUserData
+        message: message || 'Inicio de sesión correcto',
+        user_id,
+        role: role.toLowerCase(),
+        access_token,
+        user_data: {
+          ...user_data,
+          role: role.toLowerCase(),
+        },
       };
     } catch (error) {
-      console.error('Error en login:', error);
-      throw error;
+      console.error('❌ Error en login:', error);
+      throw new Error('Error al iniciar sesión');
     }
   }
-  
+
   async register(userData: RegisterRequest): Promise<void> {
     try {
-      console.log("Enviando solicitud de creación de usuario", userData);
-      // Si es registro como club, usamos un flujo diferente
+      console.log("📨 Registrando usuario:", userData);
+
       if (userData.tipo_cuenta === 'club') {
-        console.log("Registrando como club:", userData);
-        
-        // Eliminar tipo_cuenta antes de enviar al backend
-        const { tipo_cuenta, club_data, ...userDataToSend } = userData;
-        
-        // Registrar al usuario administrador primero
-        const userResponse = await apiService.post(API_ENDPOINTS.REGISTER, userDataToSend);
-        
-        console.log("Respuesta de creación de usuario:", userResponse);
-        
-        // Luego registrar el club asociado al usuario
-        if (club_data && userResponse?.user_id) {
-          const clubData = {
+        console.log("🏢 Registro como club");
+
+        const { tipo_cuenta, club_data, ...userPayload } = userData;
+
+        // Crear usuario administrador del club
+        const userResponse = await apiService.post(API_ENDPOINTS.REGISTER, userPayload);
+        const createdUserId = userResponse?.user_id;
+
+        if (club_data && createdUserId) {
+          const clubPayload = {
             nombre: club_data.nombre,
             direccion: club_data.direccion,
             horario_apertura: club_data.horario_apertura,
@@ -62,86 +64,77 @@ class AuthService {
             descripcion: club_data.descripcion || '',
             telefono: club_data.telefono || userData.telefono || '',
             email: club_data.email || userData.email,
-            id_administrador: userResponse.user_id
+            id_administrador: createdUserId,
           };
-          
-          console.log("Creando club con datos:", clubData);
-          
-          const clubResponse = await apiService.post(API_ENDPOINTS.CLUBS, clubData);
-          console.log("Respuesta de creación de club:", clubResponse);
+
+          console.log("🏗️ Creando club:", clubPayload);
+          await apiService.post(API_ENDPOINTS.CLUBS, clubPayload);
         } else {
-          console.error("Falta información del club o ID de usuario:", { 
-            clubData: club_data, 
-            userId: userResponse?.user_id 
+          console.error("❌ Faltan datos del club o ID del usuario:", {
+            club_data,
+            createdUserId,
           });
           throw new Error('No se pudo crear el club: faltan datos necesarios');
         }
       } else {
-        // Registro normal de usuario
-        // Eliminar tipo_cuenta si existe
-        const { tipo_cuenta, ...dataToSend } = userData;
-        await apiService.post(API_ENDPOINTS.REGISTER, dataToSend);
+        // Registro estándar
+        const { tipo_cuenta, ...normalUser } = userData;
+        await apiService.post(API_ENDPOINTS.REGISTER, normalUser);
       }
     } catch (error: any) {
-      console.error("Error completo en register:", error);
-      if (error.message) {
-        throw new Error(error.message);
-      }
-      throw new Error('Error al registrar usuario. Inténtalo de nuevo.');
+      console.error("❌ Error completo en register:", error);
+      throw new Error(error.message || 'Error al registrar usuario. Inténtalo de nuevo.');
     }
   }
-  
+
+
   async logout(userId: number): Promise<void> {
     try {
       await apiService.post(API_ENDPOINTS.LOGOUT, { user_id: userId });
     } catch (error) {
-      console.error('Error en logout:', error);
+      console.error('⚠️ Error en logout:', error);
     } finally {
-      // Limpiar localStorage incluso si la petición falla
       this.clearSession();
     }
   }
-  
+
+
+  clearSession(): void {
+    localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
+  }
+
+
   async getCurrentUser(userId: number): Promise<User> {
     try {
-      return await apiService.get(`${API_ENDPOINTS.USER}/${userId}`);
+      const response = await apiService.get(`${API_ENDPOINTS.USER}/${userId}`);
+      return response.data;
     } catch (error: any) {
-      if (error.message) {
-        throw new Error(error.message);
-      }
-      throw new Error('Error al obtener información del usuario.');
+      console.error('❌ Error al obtener el usuario:', error);
+      throw new Error(error.message || 'Error al obtener información del usuario.');
     }
   }
+
 
   async updatePassword(data: UpdatePasswordRequest): Promise<void> {
     try {
       await apiService.put(API_ENDPOINTS.UPDATE_PASSWORD, data);
     } catch (error: any) {
-      if (error.message) {
-        throw new Error(error.message);
-      }
-      throw new Error('Error al actualizar la contraseña.');
+      console.error('❌ Error al actualizar la contraseña:', error);
+      throw new Error(error.message || 'Error al actualizar la contraseña.');
     }
   }
-  
-  isAuthenticated(): boolean {
-    return !!localStorage.getItem(STORAGE_KEYS.USER_ID);
-  }
-  
-  getUserId(): number | null {
-    const userId = localStorage.getItem(STORAGE_KEYS.USER_ID);
-    return userId ? parseInt(userId, 10) : null;
-  }
-  
-  getUserRole(): string | null {
-    return localStorage.getItem(STORAGE_KEYS.USER_ROLE);
-  }
-  
-  clearSession(): void {
-    localStorage.removeItem(STORAGE_KEYS.USER_ID);
-    localStorage.removeItem(STORAGE_KEYS.USER_ROLE);
-    localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
-  }
-}
 
-export default new AuthService();
+
+  isAuthenticated(): boolean {
+    return !!localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
+  }
+
+  getUserId(): number | null {
+    return null;
+  }
+
+  getUserRole(): string | null {
+    return null;
+  }
+
+}

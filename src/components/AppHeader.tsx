@@ -40,7 +40,9 @@ const AppHeader: React.FC = () => {
                 className="profile-avatar-img"
               />
             ) : (
-              <span className="avatar-initial">{getInitial()}</span>
+              <div className="profile-avatar-initial">
+                {getInitial()}
+              </div>
             )}
           </IonButton>
         </IonButtons>

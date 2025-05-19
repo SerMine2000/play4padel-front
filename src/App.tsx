@@ -176,6 +176,11 @@ const AppContent: React.FC = () => {
               <Home />
             </MainLayout>
           </RutaPrivada >
+          <RutaPrivada  path="/calendar" exact>
+            <MainLayout>
+              <CalendarView />
+            </MainLayout>
+          </RutaPrivada >
           <RutaPrivada  path="/profile" exact>
             <MainLayout>
               <Profile />

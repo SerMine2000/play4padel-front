@@ -54,42 +54,74 @@ const ManageCourts: React.FC = () => {
   
   // Cargar datos del club y pistas cuando se monta el componente
   useEffect(() => {
+    console.log('[ManageCourts] useEffect - user:', user);
     const loadClubData = async () => {
-      if (!user || user.id_rol !== 1) {
-        // Redirigir si no es administrador
-        history.replace('/home');
+      if (!user) {
+        console.log('[ManageCourts] No hay usuario autenticado');
         return;
       }
-      
-      try {
-        setLoading(true);
-        // Buscar club por id_administrador
-        const clubsResponse = await apiService.get(`/clubs?id_administrador=${user.id}`);
-        
-        if (clubsResponse && clubsResponse.length > 0) {
-          const club = clubsResponse[0];
-          setClubId(club.id);
-          setClubData(club);
-          
-          // Cargar pistas del club
-          const pistasResponse = await apiService.get(`/clubs/${club.id}/pistas`);
-          if (Array.isArray(pistasResponse)) {
-            setPistas(pistasResponse);
+      if (user.id_rol === 1) {
+        // ADMIN
+        try {
+          setLoading(true);
+          const clubsResponse = await apiService.get(`/clubs?id_administrador=${user.id}`);
+          console.log('[ManageCourts] Clubs para admin:', clubsResponse);
+          if (clubsResponse && clubsResponse.length > 0) {
+            const club = clubsResponse[0];
+            setClubId(club.id);
+            setClubData(club);
+            const pistasResponse = await apiService.get(`/clubs/${club.id}/pistas`);
+            setPistas(Array.isArray(pistasResponse) ? pistasResponse : []);
           } else {
-            // Si no hay pistas o el endpoint devuelve un formato diferente
-            setPistas([]);
+            showToastMessage('No se encontró información del club', 'warning');
+          }
+        } catch (error) {
+          console.error('[ManageCourts] Error al cargar datos para admin:', error);
+          showToastMessage('Error al cargar datos del club', 'danger');
+        } finally {
+          setLoading(false);
+        }
+      } else if (user.id_rol === 2) {
+        // CLUB
+        console.log('[ManageCourts] Usuario tipo club:', user);
+        if (user.id_club) {
+          setClubId(user.id_club);
+          try {
+            setLoading(true);
+            const clubResponse = await apiService.get(`/clubs/${user.id_club}`);
+            setClubData(clubResponse);
+            const pistasResponse = await apiService.get(`/clubs/${user.id_club}/pistas`);
+            setPistas(Array.isArray(pistasResponse) ? pistasResponse : []);
+          } catch (error) {
+            console.error('[ManageCourts] Error al cargar datos para club:', error);
+            showToastMessage('Error al cargar pistas del club', 'danger');
+          } finally {
+            setLoading(false);
           }
         } else {
-          showToastMessage('No se encontró información del club', 'warning');
+          console.error('[ManageCourts] Usuario club sin id_club:', user);
+          // WORKAROUND: Forzar id_club manualmente para pruebas
+          const clubIdToUse = 1; // <-- CAMBIA este valor si tu club tiene otro id
+          console.warn('[ManageCourts][WORKAROUND] Forzando clubId=', clubIdToUse, 'para usuario club sin id_club');
+          setClubId(clubIdToUse);
+          try {
+            setLoading(true);
+            const clubResponse = await apiService.get(`/clubs/${clubIdToUse}`);
+            setClubData(clubResponse);
+            const pistasResponse = await apiService.get(`/clubs/${clubIdToUse}/pistas`);
+            setPistas(Array.isArray(pistasResponse) ? pistasResponse : []);
+          } catch (error) {
+            console.error('[ManageCourts][WORKAROUND] Error al cargar datos para club forzado:', error);
+            showToastMessage('Error al cargar pistas del club (workaround)', 'danger');
+          } finally {
+            setLoading(false);
+          }
         }
-      } catch (error) {
-        console.error('Error al cargar datos:', error);
-        showToastMessage('Error al cargar datos del club', 'danger');
-      } finally {
-        setLoading(false);
+      } else {
+        // Otros roles fuera
+        history.replace('/home');
       }
     };
-    
     loadClubData();
   }, [user, history]);
   
@@ -148,11 +180,14 @@ const ManageCourts: React.FC = () => {
   
   // Guardar pista (crear o actualizar)
   const saveCourt = async () => {
+    console.log('[ManageCourts] saveCourt - user:', user);
+    console.log('[ManageCourts] saveCourt - clubId:', clubId);
+    console.log('[ManageCourts] saveCourt - formData:', formData);
     if (!clubId) {
       showToastMessage('No se ha seleccionado un club', 'danger');
       return;
     }
-    
+
     try {
       setLoading(true);
       

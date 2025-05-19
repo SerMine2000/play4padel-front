@@ -58,7 +58,7 @@ const MarcadorView: React.FC<Props> = ({ estado, estilo = 'simple' }) => {
 
   // Diseño simple (por defecto)
   return (
-    <div>
+    <div style={{ paddingLeft: 260, maxWidth: 900, margin: '0 auto', boxSizing: 'border-box' }}>
       <h2>Marcador</h2>
       <p><strong>Set actual:</strong> A {setActual.A} - B {setActual.B}</p>
       <p><strong>Juegos:</strong> A {juegos.A} - B {juegos.B}</p>

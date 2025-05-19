@@ -40,28 +40,26 @@ const BarraLateral: React.FC = () => {
     }
   ];
 
-  const roleSpecificOptions: MenuOption[] = user?.id_rol === 2 
-  ? [
+  let roleSpecificOptions: MenuOption[] = [];
+  if (user?.id_rol === 2) {
+    roleSpecificOptions = [
       { label: 'Gestionar Pistas', path: '/manage-courts', icon: tennisballOutline },
       { label: 'Administrar Usuarios', path: '/manage-users', icon: peopleOutline },
       { label: 'Calendario', path: '/calendar', icon: calendarOutline },
-      { label: 'Marcador', path: '/marcador', icon: stopwatchOutline },
       { label: 'Estadísticas', path: '/estadisticas', icon: statsChartOutline },
       { label: 'Torneos', path: '/torneos', icon: trophyOutline },
       { label: 'Ligas', path: '/ligas', icon: trophyOutline }
-    ]
-  : user?.id_rol === 4
-    ? [
-        { label: 'Inicio', path: '/home', icon: homeOutline },
-        { label: 'Reservar', path: '/reservas', icon: calendarOutline }
-      ]
-    : [];
-
+    ];
+  } else if (user?.id_rol === 4) {
+    roleSpecificOptions = [
+      { label: 'Reservar', path: '/reservas', icon: calendarOutline }
+    ];
+  }
 
   return (
     <div className="barra-lateral">
       <button 
-        onClick={() => history.replace('/login')}
+        onClick={() => history.replace('/home')}
         style={{
           background: 'none',
           border: 'none',
@@ -88,8 +86,20 @@ const BarraLateral: React.FC = () => {
         {[...roleSpecificOptions, ...baseOptions].map((option, index) => (
           <IonItem 
             key={index}
-            routerLink={option.path}
-            onClick={option.action ? option.action : undefined}
+            button
+            onClick={() => {
+              if (option.action) {
+                option.action();
+              } else if (option.path) {
+                if (history.location.pathname === option.path) {
+                  // Fuerza refresco si ya estás en la ruta
+                  history.replace('/');
+                  setTimeout(() => history.replace(option.path), 0);
+                } else {
+                  history.replace(option.path);
+                }
+              }
+            }}
             detail={false}
           >
             <IonIcon slot="start" icon={option.icon} />
