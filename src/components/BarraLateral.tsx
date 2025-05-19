@@ -50,7 +50,7 @@ const BarraLateral: React.FC = () => {
       { label: 'Torneos', path: '/torneos', icon: trophyOutline },
       { label: 'Ligas', path: '/ligas', icon: trophyOutline }
     ];
-  } else if (user?.id_rol === 4) {
+  } else if (user?.id_rol === 4 || user?.id_rol === 5) {
     roleSpecificOptions = [
       { label: 'Reservar', path: '/reservas', icon: calendarOutline }
     ];

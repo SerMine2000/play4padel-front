@@ -64,7 +64,7 @@ const ManageUsers: React.FC = () => {
   const getRolName = (rolId: number): string => {
     switch (rolId) {
       case 1: return 'ADMIN';
-      case 2: return 'PROFESOR';
+      case 2: return 'ADMIN DE CLUB';
       case 3: return 'EMPLEADO';
       case 4: return 'USUARIO';
       case 5: return 'SOCIO';
@@ -91,15 +91,15 @@ const ManageUsers: React.FC = () => {
 
   const isUserMember = (userId: number): boolean => {
     const userFound = users.find(u => u.id === userId);
-    if (userFound && userFound.club_socio && userFound.id_rol === 5) {
-      return userFound.club_socio.id === clubId;
+    if (userFound && userFound.id_rol === 5) {
+      return userFound.id_club_socio === clubId;
     }
-    return Boolean(userFound && userFound.id_rol === 5 && userFound.id_club_socio === clubId);
+    return false;
   };
 
   const isUserAdmin = (userId: number): boolean => {
     const userFound = users.find(u => u.id === userId);
-    return userFound?.id_rol === 1;
+    return userFound?.id_rol === 2;
   };
 
   const getTotalMembers = (): number => {
@@ -209,97 +209,43 @@ const ManageUsers: React.FC = () => {
   };
 
   const filteredStaffUsers = users.filter(user =>
-    [1, 2, 3].includes(user.id_rol) &&
-    `${user.nombre} ${user.apellidos}`.toLowerCase().includes(searchText.toLowerCase())
+    user.id_rol === 2 && user.id === user.id
   );
 
-  const filteredRegularUsers = users.filter(user =>
-    [4, 5].includes(user.id_rol) &&
-    `${user.nombre} ${user.apellidos}`.toLowerCase().includes(searchText.toLowerCase())
+  const filteredSocios = users.filter(user =>
+    user.id_rol === 5 &&
+    `${user.nombre} ${user.apellidos}`.toLowerCase().startsWith(searchText.toLowerCase())
   );
 
-  const renderUserList = (userList: any[]) => {
+  const renderUserList = (userList: any[], emptyMessage: string) => {
     if (userList.length === 0) {
       return (
         <div className="mensaje-vacio">
-          <div className="mensaje-vacio-contenido">
-            <IonIcon icon={personOutline} />
-            <IonText style={{ background: "transparent" }}>
-              No se encontraron usuarios con nombre "{searchText}"
-            </IonText>
-          </div>
-          <IonButton onClick={loadUsers} className="boton-recargar" fill="solid" size="small">
-            <IonIcon icon={refreshOutline} slot="icon-only" />
-          </IonButton>
+          <IonText>{emptyMessage}</IonText>
         </div>
       );
     }
 
     return (
       <IonList>
-        {userList.map((userData) => {
-          const userIsMember = isUserMember(userData.id);
-          const userIsAdmin = isUserAdmin(userData.id);
-
-          return (
-            <IonItem
-              key={userData.id}
-              className={`ion-item-con-barra ${userIsAdmin ? 'usuario-admin' : userIsMember ? 'usuario-socio' : 'usuario-usuario'}`}
-            >
-              <IonAvatar slot="start" className="avatar-gestion-usuarios">
-                {userData.avatar_url ? (
-                  <img src={userData.avatar_url} alt={userData.nombre} />
-                ) : (
-                  <div className="avatar-inicial" style={{ width: '72px', height: '72px', fontSize: '32px' }}>
-                    {userData.nombre.charAt(0).toUpperCase()}
-                  </div>
-                )}
-              </IonAvatar>
-              <IonLabel>
-                <h2>{userData.nombre} {userData.apellidos}</h2>
-                <p>{userData.email}</p>
-              </IonLabel>
-              <IonChip color={getRolColor(userData.id_rol)} slot="end">
-                {getRolName(userData.id_rol)}
-              </IonChip>
-              {!userIsAdmin && userData.id_rol === 4 && (
-                <IonButton slot="end" fill="clear" color="success" onClick={() => prepareAddAsMember(userData.id)}>
-                  <IonIcon slot="icon-only" icon={personAddOutline} />
-                </IonButton>
-              )}
-              {!userIsAdmin && userData.id_rol === 5 && (
-                <IonButton slot="end" fill="clear" color="danger" onClick={() => prepareRemoveAsMember(userData.id)}>
-                  <IonIcon slot="icon-only" icon={personRemoveOutline} />
-                </IonButton>
-              )}
-            </IonItem>
-          );
-        })}
+        {userList.map((userData) => (
+          <IonItem key={userData.id}>
+            <IonAvatar slot="start">
+              <img src={userData.avatar_url || ''} alt={userData.nombre} />
+            </IonAvatar>
+            <IonLabel>
+              <h2>{userData.nombre} {userData.apellidos}</h2>
+              <p>{userData.email}</p>
+            </IonLabel>
+            <IonChip color={getRolColor(userData.id_rol)} slot="end">
+              {getRolName(userData.id_rol)}
+            </IonChip>
+          </IonItem>
+        ))}
       </IonList>
     );
   };
-
-  if (!user) {
-    return <IonContent><IonText color="danger"><p>Debes iniciar sesión para acceder a esta página.</p></IonText></IonContent>;
-  }
-
-  if (![1, 2].includes(user.id_rol)) {
-    return (
-      <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Gestión de Usuarios</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent className="gestion-usuarios">
-          <IonText color="warning">
-            <p>Solo los administradores pueden gestionar usuarios de club.</p>
-          </IonText>
-        </IonContent>
-      </IonPage>
-    );
-  }
-
+  
   return (
     <IonPage>
       <IonContent>
@@ -315,7 +261,7 @@ const ManageUsers: React.FC = () => {
                   <IonCardTitle>
                     {clubData ? clubData.nombre : 'Club'}
                     <IonBadge color="success" style={{ float: 'right' }}>
-                      Nº Socios: {getTotalMembers()}
+                      Nº Socios: {filteredSocios.length}
                     </IonBadge>
                   </IonCardTitle>
                 </IonCardHeader>
@@ -328,25 +274,34 @@ const ManageUsers: React.FC = () => {
 
               <IonSearchbar
                 value={searchText}
-                onIonChange={e => setSearchText(e.detail.value || '')}
-                placeholder="Buscar usuarios..."
+                debounce={300}
+                onIonInput={e => setSearchText(e.detail.value!)}
+                placeholder="Buscar socios..."
               />
 
+              {/* Card Personal del Club */}
               <IonCard className="courts-card">
                 <IonCardHeader>
-                  <IonCardTitle>Personal del club</IonCardTitle>
+                  <IonCardTitle>Personal del Club</IonCardTitle>
                 </IonCardHeader>
                 <IonCardContent>
-                  {renderUserList(filteredStaffUsers)}
+                  {renderUserList(filteredStaffUsers, "No hay personal del club disponible.")}
                 </IonCardContent>
               </IonCard>
 
+              {/* Card Socios */}
               <IonCard className="courts-card">
                 <IonCardHeader>
-                  <IonCardTitle>Usuarios</IonCardTitle>
+                  <IonCardTitle>Socios</IonCardTitle>
                 </IonCardHeader>
                 <IonCardContent>
-                  {renderUserList(filteredRegularUsers)}
+                  {searchText.trim() === "" && filteredSocios.length === 0 ? (
+                    <div className="mensaje-vacio">
+                      <IonText>No hay socios en el club</IonText>
+                    </div>
+                  ) : (
+                    renderUserList(filteredSocios, "No se encontraron socios.")
+                  )}
                 </IonCardContent>
               </IonCard>
             </IonCol>

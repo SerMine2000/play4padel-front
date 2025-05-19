@@ -94,7 +94,7 @@ return jsonData;
     headers['Authorization'] = `Bearer ${authToken}`;
   }
 
-  console.log("Payload enviado al backend (PUT):", data);
+  console.log("Payload enviado al backend (PUT):", JSON.stringify(data));
 
   try {
     const response = await fetch(`${API_URL}${endpoint}`, {

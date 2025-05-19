@@ -84,6 +84,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.log("Datos del usuario al iniciar sesión:", response);
       const { access_token, user_id, role, user_data } = response;
   
+      const userResponse = await api.get(`/user/${user_id}`, access_token);
+      const fullUserData = userResponse ? userResponse : {};
+  
       const mapeoRol: { [key: string]: number } = {
         admin: 1,
         club: 2,
@@ -95,11 +98,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   
       const usuario: User = {
         ...user_data,
+        ...fullUserData,
         id: user_id,
         role: role.toLowerCase(),
         id_rol: mapeoRol[role.toLowerCase()] || 0,
-        telefono: user_data.telefono || "No especificado",
-        bio: user_data.bio || "No especificado",
+        telefono: fullUserData.telefono ?? user_data.telefono ?? "No especificado",
+        bio: fullUserData.bio ?? user_data.bio ?? "No especificado"
       };
   
       localStorage.setItem('token', access_token);
@@ -139,8 +143,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setUser({
         ...user,
         ...updatedUser,
-        telefono: updatedUser.telefono ?? user.telefono,
-        bio: updatedUser.bio ?? user.bio,
+        telefono: updatedUser.telefono !== undefined ? updatedUser.telefono : user.telefono,
+        bio: updatedUser.bio !== undefined ? updatedUser.bio : user.bio,
       });
   
     } catch (error) {
