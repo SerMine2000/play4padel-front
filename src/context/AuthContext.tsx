@@ -1,33 +1,42 @@
 // src/context/AuthContext.tsx
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import api from '../services/api.service';
-import { User } from '../interfaces';
+import { RegisterRequest, User } from '../interfaces';
 
 interface AuthContextType {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  error: string | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
+  register: (data: RegisterRequest) => Promise<void>;
+  deleteAccount: () => Promise<void>;
 }
+
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   token: null,
   isAuthenticated: false,
   isLoading: true,
+  error: null,
   login: async () => {},
   logout: () => {},
   refreshUser: async () => {},
+  register: async () => {},
+  deleteAccount: async () => {},
 });
+
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const verificarToken = async () => {
@@ -155,9 +164,36 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
   
 
+  const register = async (data: RegisterRequest): Promise<void> => {
+    try {
+      setIsLoading(true);
+      await api.post('/register', data);
+      setError(null);
+    } catch (err) {
+      console.error("Error en el registro:", err);
+      setError('Error en el registro');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  const deleteAccount = async (): Promise<void> => {
+    try {
+      setIsLoading(true);
+      await api.delete('/delete-account');
+      logout();
+      setError(null);
+    } catch (err) {
+      console.error("Error al eliminar la cuenta:", err);
+      setError('Error al eliminar la cuenta');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
   return (
     <AuthContext.Provider
-      value={{ user, token, isAuthenticated, isLoading, login, logout, refreshUser }}>
+      value={{ user, token, isAuthenticated, isLoading, error, login, logout, refreshUser, register, deleteAccount }}>
       {children}
     </AuthContext.Provider>
   );

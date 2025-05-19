@@ -96,3 +96,10 @@ export interface ClubData {
   sitio_web?: string;
   redes_sociales?: any;
 }
+
+export interface CardsResumenProps {
+  partidosJugados: number;
+  nivel: number;
+  victorias: number;
+  torneos: number;
+}

@@ -1,7 +1,4 @@
-import React from 'react';
 import { CardsResumenProps } from '../../interfaces';
-import './Home.css';
-
 
 const CardsResumen: React.FC<CardsResumenProps> = ({ partidosJugados, nivel, victorias, torneos }) => {
   const cards = [
@@ -22,5 +19,3 @@ const CardsResumen: React.FC<CardsResumenProps> = ({ partidosJugados, nivel, vic
     </div>
   );
 };
-
-export default CardsResumen;
