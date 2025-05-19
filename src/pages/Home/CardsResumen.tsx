@@ -19,3 +19,5 @@ const CardsResumen: React.FC<CardsResumenProps> = ({ partidosJugados, nivel, vic
     </div>
   );
 };
+
+export default CardsResumen;
