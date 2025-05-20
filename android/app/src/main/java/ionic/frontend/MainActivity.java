@@ -1,4 +1,4 @@
-package ionic.frontend;
+package play4padel;
 
 import com.getcapacitor.BridgeActivity;
 

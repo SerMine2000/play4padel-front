@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "ionic.frontend"
+    namespace "play4padel"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "ionic.frontend"
+        applicationId "play4padel"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
