@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import '@ionic/react/css/core.css';
 import './theme/variables.css';
+import './index.css';
 import App from './App';
 
 import { setupIonicReact } from '@ionic/react';
