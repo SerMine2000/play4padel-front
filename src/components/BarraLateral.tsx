@@ -32,6 +32,12 @@ const BarraLateral: React.FC = () => {
   }
 
   const baseOptions: MenuOptionWithAction[] = [
+    {
+      label: 'Configuración',
+      path: '/configuracion',
+      icon: settingsOutline,
+      action: async () => { history.replace('/configuracion'); }
+    },
     { 
       label: 'Cerrar sesión', 
       path: '', 

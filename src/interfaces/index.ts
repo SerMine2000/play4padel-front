@@ -98,8 +98,8 @@ export interface ClubData {
 }
 
 export interface CardsResumenProps {
-  partidosJugados: number;
-  nivel: number;
-  victorias: number;
-  torneos: number;
+  partidosJugados: string | number;
+  nivel: string | number;
+  victorias: string | number;
+  torneos: string | number;
 }
