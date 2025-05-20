@@ -1,10 +1,16 @@
 import React from 'react';
-import { IonItem, IonIcon, IonLabel, IonList, IonAvatar, IonButton } from '@ionic/react';
-import { logOutOutline, homeOutline, calendarOutline, tennisballOutline, peopleOutline, stopwatchOutline, statsChartOutline, trophyOutline, settingsOutline } from 'ionicons/icons';
+import { IonItem, IonIcon, IonLabel, IonList, IonButton } from '@ionic/react';
+import { logOutOutline, homeOutline, calendarOutline, tennisballOutline, peopleOutline, 
+         stopwatchOutline, statsChartOutline, trophyOutline, settingsOutline, 
+         menuOutline, closeOutline } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
 import { useLocation, useHistory } from 'react-router-dom';
 import './BarraLateral.css';
+
+// Colores del logo Play4Padel
+const primaryPurple = '#2D0A31'; // Púrpura oscuro del fondo del logo
+const brightGreen = '#00FF66'; // Verde brillante de la "P" en el logo
+const pureWhite = '#FFFFFF'; // Blanco del "4" en el logo
 
 type MenuOption = {
   label: string;
@@ -22,7 +28,17 @@ type MenuOptionWithAction = {
 
 const excludedRoutes = ['/login', '/register', '/pay'];
 
-const BarraLateral: React.FC = () => {
+type BarraLateralProps = {
+  isMobile?: boolean;
+  isOpen?: boolean;
+  onToggle?: () => void;
+};
+
+const BarraLateral: React.FC<BarraLateralProps> = ({ 
+  isMobile = false, 
+  isOpen = true, 
+  onToggle 
+}) => {
   const location = useLocation();
   const { user, logout } = useAuth();
   const history = useHistory();
@@ -36,7 +52,10 @@ const BarraLateral: React.FC = () => {
       label: 'Configuración',
       path: '/configuracion',
       icon: settingsOutline,
-      action: async () => { history.replace('/configuracion'); }
+      action: async () => { 
+        history.replace('/configuracion');
+        if (isMobile) onToggle?.(); // Cerrar al navegar en móvil
+      }
     },
     { 
       label: 'Cerrar sesión', 
@@ -62,58 +81,132 @@ const BarraLateral: React.FC = () => {
     ];
   }
 
-  return (
-    <div className="barra-lateral">
-      <button 
-        onClick={() => history.replace('/home')}
-        style={{
-          background: 'none',
-          border: 'none',
-          padding: '16px',
-          cursor: 'pointer',
-          display: 'flex',
-          justifyContent: 'center',
-          width: '100%',
-          margin: '0 auto'
-        }}
-      >
-        <img 
-          src="/favicon.png" 
-          alt="Logo Play4Padel" 
-          style={{
-            width: '60px',
-            height: '60px',
-            objectFit: 'contain'
-          }} 
-        />
-      </button>
+  // Estilo para los ítems del menú
+  const menuItemStyle = {
+    '--background': 'transparent',
+    '--background-hover': 'rgba(255, 255, 255, 0.1)',
+    '--color': pureWhite,
+    '--border-color': 'rgba(255, 255, 255, 0.1)',
+    marginBottom: '8px',
+    borderRadius: '8px',
+    fontSize: '16px'
+  };
 
-      <IonList>
-        {[...roleSpecificOptions, ...baseOptions].map((option, index) => (
-          <IonItem 
-            key={index}
-            button
-            onClick={() => {
-              if (option.action) {
-                option.action();
-              } else if (option.path) {
-                if (history.location.pathname === option.path) {
-                  // Fuerza refresco si ya estás en la ruta
-                  history.replace('/');
-                  setTimeout(() => history.replace(option.path), 0);
-                } else {
-                  history.replace(option.path);
-                }
-              }
-            }}
-            detail={false}
-          >
-            <IonIcon slot="start" icon={option.icon} />
-            <IonLabel>{option.label}</IonLabel>
-          </IonItem>
-        ))}
-      </IonList>
-    </div>
+  // Estilo para los iconos del menú
+  const menuIconStyle = {
+    color: brightGreen,
+    fontSize: '20px',
+    marginRight: '8px'
+  };
+
+  // Estilo para el contenedor de logo
+  const logoContainerStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: '16px 0',
+    marginBottom: '20px'
+  };
+
+  // Clase condicional para mostrar/ocultar la barra lateral
+  const sidebarClass = isMobile
+    ? `barra-lateral mobile ${isOpen ? 'open' : 'closed'}`
+    : 'barra-lateral';
+
+  return (
+    <>
+      {/* Botón más equilibrado para móviles */}
+      {isMobile && (
+        <div className="menu-button-container" onClick={onToggle}>
+          <div className="menu-button-float">
+            <IonIcon icon={menuOutline} className="menu-icon" />
+          </div>
+        </div>
+      )}
+
+      {/* Barra lateral */}
+      <div 
+        className={sidebarClass} 
+        style={{backgroundColor: primaryPurple, borderRight: '1px solid rgba(255, 255, 255, 0.1)'}}
+      >
+        {/* Botón para cerrar en móvil */}
+        {isMobile && (
+          <div className="close-button-container">
+            <IonButton 
+              fill="clear" 
+              onClick={onToggle}
+              className="close-button"
+            >
+              <IonIcon 
+                icon={closeOutline} 
+                style={{ fontSize: '24px' }} 
+              />
+            </IonButton>
+          </div>
+        )}
+
+        <div style={logoContainerStyle}>
+          <div style={{
+            color: pureWhite, 
+            fontWeight: 'bold', 
+            fontSize: '1.5rem',
+            backgroundColor: 'rgba(45, 10, 49, 0.7)',
+            padding: '0.5rem 1rem',
+            borderRadius: '0.5rem',
+            cursor: 'pointer'
+          }} onClick={() => {
+            history.replace('/home');
+            if (isMobile) onToggle?.(); // Cerrar al navegar en móvil
+          }}>
+            Play<span style={{ color: brightGreen }}>4</span>Padel
+          </div>
+        </div>
+
+        <IonList style={{backgroundColor: 'transparent', padding: '0 10px'}}>
+          {[...roleSpecificOptions, ...baseOptions].map((option, index) => {
+            const isActive = location.pathname === option.path;
+            const activeStyle = isActive ? {
+              '--background': 'rgba(0, 255, 102, 0.2)',
+              '--color': brightGreen,
+              fontWeight: 'bold'
+            } : {};
+            
+            return (
+              <IonItem 
+                key={index}
+                button
+                onClick={() => {
+                  if (option.action) {
+                    option.action();
+                  } else if (option.path) {
+                    if (history.location.pathname === option.path) {
+                      // Fuerza refresco si ya estás en la ruta
+                      history.replace('/');
+                      setTimeout(() => history.replace(option.path), 0);
+                    } else {
+                      history.replace(option.path);
+                    }
+                    // Cerrar el menú en móvil después de navegar
+                    if (isMobile) onToggle?.();
+                  }
+                }}
+                detail={false}
+                style={{...menuItemStyle, ...activeStyle}}
+                className={isActive ? 'item-active' : ''}
+              >
+                <IonIcon slot="start" icon={option.icon} style={menuIconStyle} />
+                <IonLabel>{option.label}</IonLabel>
+              </IonItem>
+            );
+          })}
+        </IonList>
+      </div>
+      
+      {/* Overlay para móviles */}
+      {isMobile && isOpen && (
+        <div className="sidebar-overlay" onClick={onToggle}></div>
+      )}
+    </>
   );
 };
 

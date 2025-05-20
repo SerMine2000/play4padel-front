@@ -1,14 +1,14 @@
 /* AppHeader.css */
 
 .app-header {
-  --background: transparent;
+  --background: #2D0A31;
   --border-style: none;
   --padding-top: 0;
   --padding-bottom: 0;
 }
 
 ion-toolbar {
-  --background: transparent;
+  --background: #2D0A31;
   --border-style: none;
   --padding-top: 8px;
   --padding-bottom: 8px;
@@ -18,14 +18,8 @@ ion-toolbar {
 }
 
 .profile-button {
-  --size: 72px;
   padding: 0;
-  margin: 0;
-  width: var(--size);
-  height: var(--size);
-  min-width: var(--size);
-  min-height: var(--size);
-  border-radius: 50%;
+  margin-right: 16px;
   background-color: transparent;
   border: none !important;
   display: flex;
@@ -39,12 +33,10 @@ ion-toolbar {
   --border: none;
   --border-style: none;
   --border-width: 0;
-  transform: scale(1.1);
 }
 
 .profile-button:hover {
   transform: scale(1.05);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 /* Eliminar efecto de ripple */
@@ -60,42 +52,26 @@ ion-toolbar {
   box-shadow: none !important;
 }
 
-.profile-avatar {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: transparent;
-  color: #1565C0;
-  font-weight: 500;
-  font-size: 14px;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border-radius: 50%;
-  overflow: hidden;
-}
-
-.profile-avatar:active {
-  transform: scale(0.95);
-}
-
 .profile-avatar-img {
-  width: 100%;
-  height: 100%;
+  width: 42px;
+  height: 42px;
   object-fit: cover;
   border-radius: 50%;
   display: block;
-  padding: 0;
-  margin: 0;
+  border: 2px solid #00FF66; /* Borde verde brillante */
 }
 
-.avatar-initial {
-  color: #fff;
+.profile-avatar-initial {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-weight: bold;
-  font-size: 1rem;
-  text-transform: uppercase;
-  user-select: none;
+  font-size: 18px;
+  background-color: #00FF66; /* Verde brillante del logo */
+  color: #2D0A31; /* Color principal púrpura del logo */
 }
 
 /* Asegurar que el contenido no se oculte detrás del header */
@@ -110,16 +86,13 @@ ion-content {
     --padding-end: 8px;
   }
   
-  .profile-button {
+  .profile-avatar-img,
+  .profile-avatar-initial {
     width: 36px;
     height: 36px;
   }
   
-  .profile-avatar {
-    font-size: 1rem;
-  }
-  
-  .avatar-initial {
-    font-size: 1rem;
+  .profile-avatar-initial {
+    font-size: 16px;
   }
 }

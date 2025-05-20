@@ -1,122 +1,225 @@
-/* BarraLateral.css */
+/* BarraLateral.css - Con botón equilibrado */
 
 .barra-lateral {
   width: 250px;
-  background-color: var(--color-panel);
-  color: var(--ion-text-color, #222);
-  padding-top: 24px;
+  background-color: #2D0A31; /* Color principal púrpura del logo */
+  color: #FFFFFF;
   height: 100vh;
   overflow-y: auto;
   position: fixed;
   left: 0;
   top: 0;
   z-index: 9999;
-  /* Borde de debug eliminado */
-  transition: width 0.3s ease;
+  transition: all 0.3s ease;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
 }
 
-.barra-lateral.colapsado {
-  width: 80px;
-}
-
-.boton-toggle {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  background-color: var(--color-panel);
-  color: var(--ion-text-color);
-}
-
-.barra-lateral .label {
-  opacity: 1;
-  transition: opacity 0.3s ease;
-}
-
-.barra-lateral.colapsado .label {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.barra-lateral .ion-item {
-  --border-color: transparent;
-  background: transparent !important;
-  box-shadow: none !important;
-  border: none !important;
-  outline: none !important;
-  padding: 12px 16px;
-  border-radius: 8px;
-  margin-bottom: 8px;
-  color: var(--ion-text-color);
-  transition: background 0.3s, color 0.3s;
-}
-
-.ion-palette-dark .barra-lateral .ion-item {
-  border: 1px solid #232323 !important;
-}
-
-.barra-lateral .ion-item:hover {
-  background: #f5f5f5 !important;
-  color: var(--ion-text-color, #222) !important;
-}
-
-html.ion-palette-dark .barra-lateral .ion-item:hover {
-  background: #23272f !important;
-  color: var(--ion-text-color, #fff) !important;
-}
-
-.barra-lateral .ion-item.selected {
-  background-color: var(--ion-color-primary, #4CAF50) !important;
-  color: var(--ion-color-primary-contrast, #fff) !important;
-}
-
-html.ion-palette-dark .barra-lateral .ion-item.selected {
-  background-color: var(--ion-color-primary, #4CAF50) !important;
-  color: var(--ion-color-primary-contrast, #fff) !important;
-  box-shadow: 0 2px 8px 0 rgba(76,175,80,0.18);
-}
-
-html.ion-palette-dark .barra-lateral {
-  background-color: var(--color-panel-dark, #18191a) !important;
-  color: var(--ion-text-color, #fff) !important;
-}
-
-/* Sidebar theme toggle button at bottom left */
-.sidebar-theme-toggle {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  padding: 16px 0 16px 16px;
-  display: flex;
-  align-items: center;
-  background: transparent;
-  z-index: 10;
-}
-
-.barra-lateral.colapsado .sidebar-theme-toggle {
-  justify-content: center;
-  padding-left: 0;
-}
-
-.sidebar-theme-toggle .toggle-theme-button {
+/* Estilos para los ítems del menú */
+.barra-lateral ion-item {
   --background: transparent;
-  --color: var(--ion-text-color, #222);
-  font-size: 1.6rem;
+  --background-hover: rgba(255, 255, 255, 0.1);
+  --color: #FFFFFF;
+  --border-style: none;
+  margin-bottom: 8px;
+  padding: 10px 8px;
+  border-radius: 8px;
 }
 
-html.ion-palette-dark .sidebar-theme-toggle .toggle-theme-button {
-  --color: var(--ion-text-color, #fff);
+/* Estilo para ítem activo */
+.barra-lateral ion-item.item-active {
+  --background: rgba(0, 255, 102, 0.2); /* Color del verde (00FF66) con transparencia */
+  --color: #00FF66; /* Verde brillante del logo para el ítem activo */
+  font-weight: bold;
 }
 
+/* Estilo para ítem al pasar el mouse */
+.barra-lateral ion-item:hover {
+  --background: rgba(255, 255, 255, 0.15);
+  --color: #FFFFFF;
+}
+
+/* Estilo para los iconos de los ítems */
+.barra-lateral ion-icon {
+  color: #00FF66; /* Verde brillante del logo */
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+/* Eliminar bordes de todos los ítems */
+.barra-lateral ion-item::part(native) {
+  border: none !important;
+}
+
+/* Estilo de la lista */
+.barra-lateral ion-list {
+  background-color: transparent;
+  padding: 0 10px;
+}
+
+/* Animaciones para efectos hover */
+.barra-lateral ion-item {
+  transition: all 0.2s ease;
+}
+
+/* Eliminar estilos innecesarios de Ionic */
+.barra-lateral ion-item::part(detail-icon) {
+  display: none;
+}
+
+/* Modo oscuro - no es necesario porque usamos un fondo oscuro por defecto */
+html.ion-palette-dark .barra-lateral {
+  background-color: #2D0A31;
+  color: #FFFFFF;
+}
+
+/* Estilo del logo */
 .logo-container {
-  width: 60px;
-  height: 60px;
-  margin: 10px auto;
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+  margin-bottom: 20px;
 }
 
-.logo-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+.logo-text {
+  color: #FFFFFF;
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background-color: rgba(45, 10, 49, 0.7);
+}
+
+.logo-accent {
+  color: #00FF66;
+}
+
+/* ---- ESTILOS RESPONSIVE ---- */
+
+/* Nuevo botón de menú con buen equilibrio */
+.menu-button-container {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 9998;
+  display: none; /* Se mostrará con media query */
+}
+
+/* Botón equilibrado - visible pero no exagerado */
+.menu-button-float {
+  width: 42px;
+  height: 42px;
+  background: #2D0A31; /* Fondo púrpura */
+  border: 2px solid #FFFFFF; /* Borde blanco */
+  border-radius: 8px; /* Bordes redondeados pero no circular */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Icono dentro del botón */
+.menu-icon {
+  color: #00FF66 !important; /* Verde para el icono */
+  font-size: 24px !important;
+}
+
+.menu-button-float:hover {
+  background: #3D1A41; /* Púrpura ligeramente más claro al hover */
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* Botón de cerrar dentro del menú */
+.close-button {
+  --background: rgba(255, 255, 255, 0.1) !important;
+  --color: #FFFFFF !important;
+  --border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+}
+
+.close-button:hover {
+  --background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.close-button-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+}
+
+/* Overlay para cuando se abre el menú en móvil */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9997;
+}
+
+/* Estilos específicos para móvil */
+.barra-lateral.mobile {
+  z-index: 9998;
+  transition: transform 0.3s ease;
+}
+
+.barra-lateral.mobile.open {
+  transform: translateX(0);
+}
+
+.barra-lateral.mobile.closed {
+  transform: translateX(-100%);
+}
+
+/* Media queries para responsive */
+@media (max-width: 768px) {
+  .barra-lateral {
+    width: 250px;
+    transform: translateX(-100%);
+  }
+  
+  .barra-lateral.open {
+    transform: translateX(0);
+  }
+  
+  .menu-button-container {
+    display: block;
+  }
+  
+  /* Ajustar el espacio del contenido principal cuando se oculta la barra */
+  .content-with-sidebar {
+    margin-left: 0;
+  }
+  
+  /* Mostrar botón de cerrar en la barra lateral */
+  .close-button-container {
+    display: flex;
+  }
+}
+
+/* Para tablets */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .barra-lateral {
+    width: 200px;
+  }
+  
+  .content-with-sidebar {
+    margin-left: 200px;
+  }
+}
+
+/* Para pantallas más grandes */
+@media (min-width: 1025px) {
+  .barra-lateral {
+    width: 250px;
+  }
+  
+  .content-with-sidebar {
+    margin-left: 250px;
+  }
 }

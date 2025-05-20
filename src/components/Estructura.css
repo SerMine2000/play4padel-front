@@ -1,53 +1,66 @@
-/* Estructura.css */
+/* Estructura.css - Estilos responsive para el layout principal */
 
-.estructura-contenedor {
+.layout-container {
   display: flex;
   min-height: 100vh;
-  width: 100%;
-  background-color: var(--ion-background-color, var(--color-fondo));
+  overflow: hidden;
 }
 
-.contenedor-con-barra {
-  margin-left: 250px;
-  width: calc(100% - 250px);
-  min-height: 100vh;
-  overflow-y: auto;
+.main-content {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  background-color: transparent;
-  position: relative;
-  z-index: 1;
+  background-color: #2D0A31;
+  transition: margin-left 0.3s ease;
 }
 
-/* CABECERA GENERAL */
-.app-header {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  --background: var(--ion-background-color);
-  background-color: var(--ion-background-color);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+.header-container {
+  height: 80px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* CONTENIDO PRINCIPAL */
-.contenido-estructura {
+.page-content {
   flex: 1;
-  padding: 16px;
-  background-color: transparent;
+  padding: 24px;
+  overflow-y: auto;
+  --background: #2D0A31;
+  --color: #FFFFFF;
 }
 
-/* TÍTULO O ENCABEZADO INTERIOR */
-.estructura-encabezado {
-  font-size: 1.6rem;
-  font-weight: bold;
-  color: var(--ion-text-color);
-  margin-bottom: 16px;
+/* Estilos responsive */
+.layout-container.desktop .main-content {
+  margin-left: 250px; /* Ancho de la barra lateral */
 }
 
-/* GRID INTERIOR REUTILIZABLE */
-.estructura-rejilla {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 16px;
-  padding: 16px;
+.layout-container.mobile .main-content {
+  margin-left: 0;
+  width: 100%;
+}
+
+/* Si el sidebar está abierto en móvil, añadir un poco de margen para evitar superposición */
+.layout-container.mobile.sidebar-open .main-content {
+  opacity: 0.7;
+}
+
+/* Responsive para diferentes tamaños de pantalla */
+@media (max-width: 768px) {
+  .header-container {
+    height: 60px; /* Más compacta en móvil */
+    padding-left: 60px; /* Espacio para el botón de menú */
+  }
+  
+  .page-content {
+    padding: 16px; /* Menos padding en móvil */
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .layout-container.desktop .main-content {
+    margin-left: 200px; /* Ancho ajustado para tablets */
+  }
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ProximasReservas, { Reserva } from './ProximasReservas';
 import EstadoPistas, { Pista } from './EstadoPistas';
 import CardsResumen from './CardsResumen';
@@ -10,6 +10,21 @@ import { useTheme } from '../../context/ThemeContext';
 const Home: React.FC = () => {
   const { user } = useAuth();
   const { theme } = useTheme();
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  // Manejador para cambios en el tamaño de pantalla
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const partidosJugados: string | number =
     user && typeof (user as any).partidosJugados === 'number'
@@ -54,8 +69,8 @@ const Home: React.FC = () => {
 
   return (
     <div
-      className="dashboard-contenido"
-      style={{ backgroundColor: theme === 'dark' ? '#18191a' : '#f8f9fa', minHeight: '100vh' }}
+      className={`dashboard-contenido ${isMobile ? 'mobile' : 'desktop'}`}
+      style={{ backgroundColor: theme === 'dark' ? '#18191a' : '#f8f9fa' }}
     >
       <BienvenidaDashboard />
       <CardsResumen

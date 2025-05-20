@@ -473,14 +473,6 @@ const Reservas: React.FC = () => {
                 <strong>Horario:</strong> {horariosStr}
               </IonCol>
             </IonRow>
-            <IonRow>
-              <IonCol size="1">
-                <IonIcon icon={cashOutline} color="success" />
-              </IonCol>
-              <IonCol size="11">
-                <strong>Tarifa:</strong> {tarifaTotal}€
-              </IonCol>
-            </IonRow>
           </IonGrid>
         </IonCardContent>
       </IonCard>
@@ -490,47 +482,61 @@ const Reservas: React.FC = () => {
   return (
     <IonPage>
       <IonContent>
-          <div className="pagina-reservas">
-            <form>
-              {/* Selección de Club */}
+        <div className="pagina-reservas">
+          <form>
+            <h2>Reserva tu Pista de Pádel</h2>
+            
+            {/* Selección de Club */}
+            <div>
+              <label>Selecciona un Club *</label>
+              <IonSelect 
+                value={clubSeleccionado} 
+                placeholder="Selecciona un club" 
+                interface="action-sheet"
+                onIonChange={e => {
+                  setClubSeleccionado(e.detail.value);
+                  setPistaSeleccionada(null);
+                  setPistaDatos(null);
+                  setHorasDisponibles([]);
+                  setFranjasSeleccionadas([]);
+                  setRangosHorarios([]);
+                }}
+              >
+                {clubes.map(club => (
+                  <IonSelectOption key={club.id} value={club.id}>{club.nombre}</IonSelectOption>
+                ))}
+              </IonSelect>
+            </div>
+            
+            {/* Selección de Pista (solo visible si hay club seleccionado) */}
+            {clubSeleccionado && (
               <div>
-                <label>Selecciona un Club *</label>
-                <IonSelect value={clubSeleccionado} placeholder="Selecciona un club" interface="action-sheet"
+                <label>Selecciona una Pista *</label>
+                <IonSelect 
+                  value={pistaSeleccionada} 
+                  placeholder="Selecciona una pista" 
+                  interface="action-sheet"
                   onIonChange={e => {
-                    setClubSeleccionado(e.detail.value);
-                    setPistaSeleccionada(null);
-                    setPistaDatos(null);
+                    setPistaSeleccionada(e.detail.value);
                     setHorasDisponibles([]);
                     setFranjasSeleccionadas([]);
                     setRangosHorarios([]);
-                  }}>
-                  {clubes.map(club => (
-                    <IonSelectOption key={club.id} value={club.id}>{club.nombre}</IonSelectOption>
+                  }}
+                >
+                  {pistas.map(pista => (
+                    <IonSelectOption key={pista.id} value={pista.id}>
+                      Pista {pista.numero} - {pista.tipo} ({pista.precio_hora}€/h)
+                    </IonSelectOption>
                   ))}
                 </IonSelect>
               </div>
-              {/* Selección de Pista (solo visible si hay club seleccionado) */}
-              {clubSeleccionado && (
-                <div>
-                  <label>Selecciona una Pista *</label>
-                  <IonSelect value={pistaSeleccionada} placeholder="Selecciona una pista" interface="action-sheet"
-                    onIonChange={e => {
-                      setPistaSeleccionada(e.detail.value);
-                      setHorasDisponibles([]);
-                      setFranjasSeleccionadas([]);
-                      setRangosHorarios([]);
-                    }}>
-                    {pistas.map(pista => (
-                      <IonSelectOption key={pista.id} value={pista.id}>
-                        Pista {pista.numero} - {pista.tipo} ({pista.precio_hora}€/h)
-                      </IonSelectOption>
-                    ))}
-                  </IonSelect>
-                </div>
-              )}
-              {/* Selección de Fecha (solo visible si hay pista seleccionada) */}
-              {pistaSeleccionada && (
-                <div>
+            )}
+            
+            {/* Selección de Fecha y Horario en layout horizontal */}
+            {pistaSeleccionada && (
+              <div className="fecha-horario-container">
+                {/* Columna de Fecha */}
+                <div className="fecha-container">
                   <label>Selecciona una Fecha *</label>
                   <IonDatetime
                     presentation="date"
@@ -542,66 +548,76 @@ const Reservas: React.FC = () => {
                     firstDayOfWeek={1}
                   />
                 </div>
-              )}
-              {/* Selección de Horario (solo visible si hay fecha seleccionada) */}
-              {fechaSeleccionada && horasDisponibles.length > 0 && (
-                <div>
-                  <label>Selecciona Horario *</label>
-                  <IonGrid>
-                    <IonRow>
+                
+                {/* Columna de Horario (solo visible si hay fecha seleccionada) */}
+                {fechaSeleccionada && horasDisponibles.length > 0 && (
+                  <div className="horario-container">
+                    <label>Selecciona Horario *</label>
+                    <div className="horario-grid">
                       {horasDisponibles.map((franja, index) => (
-                        <IonCol size="6" key={index}>
-                          <IonButton
-                            expand="block"
-                            color={franja.seleccionada ? "primary" : "light"}
-                            onClick={() => toggleFranjaHoraria(franja)}
-                          >
-                            {franja.inicio} - {franja.fin}
-                          </IonButton>
-                        </IonCol>
+                        <IonButton
+                          key={index}
+                          expand="block"
+                          color={franja.seleccionada ? "primary" : "light"}
+                          onClick={() => toggleFranjaHoraria(franja)}
+                        >
+                          {franja.inicio} - {franja.fin}
+                        </IonButton>
                       ))}
-                    </IonRow>
-                  </IonGrid>
-                </div>
-              )}
-              {/* Notas adicionales */}
-              <div>
-                <label>Notas adicionales</label>
-                <IonTextarea value={notas} placeholder="Escribe aquí cualquier información adicional"
-                  onIonChange={e => setNotas(e.detail.value || '')} rows={3}></IonTextarea>
-              </div>
-              {/* Resumen de la reserva */}
-              {franjasSeleccionadas.length > 0 && (
-                <>
-                  {generarResumenReserva()}
-                  {/* Precio Total */}
-                  <div>
-                    <div>
-                      <label>Precio Total:</label>
-                      <div>{precioTotal.toFixed(2)}€</div>
                     </div>
                   </div>
-                </>
-              )}
-              {/* Botón de reserva */}
-              <IonButton expand="block" onClick={realizarReserva}
-                disabled={!clubSeleccionado || !pistaSeleccionada || !fechaSeleccionada || franjasSeleccionadas.length === 0}>
-                <IonIcon slot="start" icon={tennisballOutline} />
-                RESERVAR PISTA
-              </IonButton>
-            </form>
-          </div>
-          {/* Loading y Toast */}
-          <IonLoading isOpen={cargando} message={"Cargando..."} />
-          <IonToast
-            isOpen={mostrarToast}
-            onDidDismiss={() => setMostrarToast(false)}
-            message={mensajeToast}
-            duration={2000}
-            color={colorToast}
-          />
+                )}
+              </div>
+            )}
+            
+            {/* Notas adicionales */}
+            <div>
+              <label>Notas adicionales</label>
+              <IonTextarea 
+                value={notas} 
+                placeholder="Escribe aquí cualquier información adicional"
+                onIonChange={e => setNotas(e.detail.value || '')} 
+                rows={3}
+              ></IonTextarea>
+            </div>
+            
+            {/* Resumen de la reserva */}
+            {franjasSeleccionadas.length > 0 && (
+              <>
+                {generarResumenReserva()}
+                
+                {/* Precio Total */}
+                <div className="precio-total">
+                  <label>Precio Total:</label>
+                  <div>{precioTotal.toFixed(2)}€</div>
+                </div>
+              </>
+            )}
+            
+            {/* Botón de reserva */}
+            <IonButton 
+              expand="block" 
+              onClick={realizarReserva}
+              disabled={!clubSeleccionado || !pistaSeleccionada || !fechaSeleccionada || franjasSeleccionadas.length === 0}
+            >
+              <IonIcon slot="start" icon={tennisballOutline} />
+              RESERVAR PISTA
+            </IonButton>
+          </form>
+        </div>
+        
+        {/* Loading y Toast */}
+        <IonLoading isOpen={cargando} message={"Cargando..."} />
+        <IonToast
+          isOpen={mostrarToast}
+          onDidDismiss={() => setMostrarToast(false)}
+          message={mensajeToast}
+          duration={2000}
+          color={colorToast}
+        />
       </IonContent>
     </IonPage>
   );
 };
+
 export default Reservas;
