@@ -35,16 +35,6 @@ const Configuracion: React.FC = () => {
   return (
     <IonPage>
       <IonContent style={{ paddingLeft: 260, maxWidth: 900, margin: '0 auto', boxSizing: 'border-box' }}>
-          <IonHeader>
-            <IonToolbar color="primary">
-              <IonButtons slot="start">
-                <IonButton fill="clear" onClick={() => history.replace('/home')}>
-  <IonIcon slot="icon-only" icon={arrowBack} />
-</IonButton>
-              </IonButtons>
-              <IonTitle>Configuración</IonTitle>
-            </IonToolbar>
-          </IonHeader>
           <div className="configuracion-container">
             <div className="configuracion-panel">
               <h2>Preferencias</h2>

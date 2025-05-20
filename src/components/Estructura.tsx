@@ -18,7 +18,7 @@ const Estructura: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         {/* Contenido principal */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
           {/* Cabecera fija arriba */}
-          <div style={{ height: '60px', flexShrink: 0 }}>
+          <div style={{ height: '80px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: '16px' }}>
             <AppHeader />
           </div>
 

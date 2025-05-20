@@ -115,7 +115,7 @@ const Profile: React.FC = () => {
         email: formData.email || user.email,
         telefono: formData.telefono !== 'No especificado' ? formData.telefono : user.telefono,
         bio: formData.bio !== 'No especificado' ? formData.bio : user.bio,
-        avatar_url: formData.avatar_url || user.avatar_url,
+        avatar_url: cleanImageUrl((formData.avatar_url || user.avatar_url) ?? '')
       };
   
       console.log("Payload preparado para enviar:", payload);
@@ -168,8 +168,14 @@ const Profile: React.FC = () => {
   };
 
   const validateImageUrl = (url: string) => {
-    return !url || url.startsWith('http://') || url.startsWith('https://');
+    return url.startsWith('http://') || url.startsWith('https://');
   };
+
+  const cleanImageUrl = (url: string) => {
+    const match = url.match(/[?&]u=([^&]+)/);
+    return match ? decodeURIComponent(match[1]) : url;
+  };
+  
 
   const placeholders: Record<string, string> = {
     nombre: 'Introduce tu nombre',
@@ -187,13 +193,21 @@ const Profile: React.FC = () => {
           <div className="profile-container" style={{ maxWidth: 900, margin: '0 auto' }}>
             <div className="encabezado-perfil">
               <div className="contenedor-avatar">
-                <IonAvatar className="avatar-perfil">
-                  {user.avatar_url ? (
-                    <img src={user.avatar_url} alt="Avatar" />
-                  ) : (
-                    <IonIcon icon={personCircleOutline} style={{ fontSize: '100px' }} />
-                  )}
-                </IonAvatar>
+              <IonAvatar
+                className="avatar-perfil"
+                onClick={isEditing ? handleAvatarUpdate : () => tempAvatarUrl && setShowAvatarModal(true)}>
+                {tempAvatarUrl ? (
+                  <img src={tempAvatarUrl} alt="Avatar" />
+                ) : (
+                  <IonIcon icon={personCircleOutline} style={{ fontSize: '100px' }} />
+                )}
+
+              </IonAvatar>
+              {isEditing && (
+                <IonText color="medium" className="edit-avatar-text">
+                  <small>Haz clic para cambiar avatar</small>
+                </IonText>
+              )}
               </div>
               <h2>{user.nombre} {user.apellidos}</h2>
               <p>{user.email}</p>
@@ -292,6 +306,78 @@ const Profile: React.FC = () => {
             )}
           </div>
         )}
+
+        <IonAlert isOpen={showAvatarAlert} onDidDismiss={() => setShowAvatarAlert(false)}
+          header="Cambiar avatar" subHeader="Introduce la URL de la imagen" 
+          inputs={[
+            {
+              name: 'avatar_url',
+              type: 'url',
+              placeholder: 'https://ejemplo.com/avatar.jpg',
+              value: tempAvatarUrl
+            }
+          ]}
+          buttons={[
+            {
+              text: 'Cancelar',
+              role: 'cancel'
+            },
+            {
+              text: 'Ver previa',
+              handler: (data) => {
+                if (validateImageUrl(data.avatar_url)) {
+                  setTempAvatarUrl(data.avatar_url);
+                  return false;
+                } else {
+                  setErrorMessage('URL no válida (debe empezar por http:// o https://)');
+                  return false;
+                }
+              }
+            },
+            {
+              text: 'Guardar',
+              handler: (data) => {
+                if (!validateImageUrl(data.avatar_url)) {
+                  setErrorMessage('URL no válida (debe empezar por http:// o https://)');
+                  return false;
+                }
+                setTempAvatarUrl(data.avatar_url);
+                applyAvatarUrl();
+                return true;
+              }
+            }
+          ]}
+        />
+
+        <IonModal isOpen={showAvatarModal} onDidDismiss={() => setShowAvatarModal(false)}>
+          <IonContent fullscreen className="ion-padding">
+            <div style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 10 }}>
+              <IonButton fill="clear" onClick={() => setShowAvatarModal(false)}>
+                <IonIcon icon={closeOutline} size="large" color="light" />
+              </IonButton>
+            </div>
+            <div style={{
+              height: '100%',
+              backgroundColor: 'black',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}>
+              <img
+                src={tempAvatarUrl}
+                alt="Avatar ampliado"
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                  objectFit: 'contain',
+                  borderRadius: '8px',
+                  boxShadow: '0 0 10px rgba(255,255,255,0.2)'
+                }}
+              />
+            </div>
+          </IonContent>
+        </IonModal>
+
   
         <IonLoading isOpen={isLoading} message="Cargando..." />
         <IonToast

@@ -18,7 +18,6 @@ import RutaPrivada from './components/RutaPrivada';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Estructura from './components/Estructura';
-import Header from './components/Header';
 import BarraLateral from './components/BarraLateral';
 import { ThemeProvider } from './context/ThemeContext';
 import { useEffect } from 'react';
@@ -132,15 +131,11 @@ const FocusManager: React.FC = () => {
 
 // Layout principal para páginas con cabecera y barra lateral
 const MainLayout: React.FC<{children: React.ReactNode}> = ({ children }) => (
-  <>
-    <Header />
-    <div className="main-content">
-      <BarraLateral />
-      <Estructura>
-        {children}
-      </Estructura>
-    </div>
-  </>
+  <div className="main-content">
+    <Estructura>
+      {children}
+    </Estructura>
+  </div>
 );
 
 // Estilos básicos (puedes ajustarlos después)
