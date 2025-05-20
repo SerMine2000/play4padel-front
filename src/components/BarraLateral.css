@@ -1,4 +1,4 @@
-/* BarraLateral.css - Con botón equilibrado */
+/* BarraLateral.css - Volviendo a la versión anterior */
 
 .barra-lateral {
   width: 250px;
@@ -72,22 +72,28 @@ html.ion-palette-dark .barra-lateral {
   color: #FFFFFF;
 }
 
-/* Estilo del logo */
+/* LOGO CONTAINER - Ajustado para bajar un poco el nombre */
 .logo-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px 0;
+  padding: 25px 0 18px 0; /* Más padding arriba */
   margin-bottom: 20px;
+  position: relative; /* Para posicionamiento del logo */
 }
 
-.logo-text {
+/* Estilo específico para el logo */
+.sidebar-logo {
   color: #FFFFFF;
-  font-size: 1.5rem;
   font-weight: bold;
-  padding: 8px 16px;
-  border-radius: 8px;
-  background-color: rgba(45, 10, 49, 0.7);
+  font-size: 1.5rem;
+  padding: 0 0 0 15px; /* Solo padding a la izquierda */
+  cursor: pointer;
+  text-align: left; /* Alineado a la izquierda como en la captura */
+  display: inline-block;
+  position: relative; /* Para posicionamiento correcto */
+  left: -25px; /* Ajuste para alinear con la captura */
+  top: 5px; /* Movido un poco más abajo */
 }
 
 .logo-accent {
@@ -96,7 +102,7 @@ html.ion-palette-dark .barra-lateral {
 
 /* ---- ESTILOS RESPONSIVE ---- */
 
-/* Nuevo botón de menú con buen equilibrio */
+/* Botón de menú hamburguesa */
 .menu-button-container {
   position: fixed;
   top: 10px;
@@ -105,7 +111,7 @@ html.ion-palette-dark .barra-lateral {
   display: none; /* Se mostrará con media query */
 }
 
-/* Botón equilibrado - visible pero no exagerado */
+/* Botón equilibrado */
 .menu-button-float {
   width: 42px;
   height: 42px;
@@ -131,24 +137,38 @@ html.ion-palette-dark .barra-lateral {
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
 }
 
-/* Botón de cerrar dentro del menú */
-.close-button {
-  --background: rgba(255, 255, 255, 0.1) !important;
-  --color: #FFFFFF !important;
-  --border-radius: 8px;
-  width: 40px;
-  height: 40px;
+/* BOTÓN DE CIERRE EN ESQUINA SUPERIOR DERECHA - Ajustado al color exacto de la captura */
+.sidebar-close-button {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background-color: #42284A; /* Color púrpura más claro como en la captura */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  padding: 0;
   margin: 0;
 }
 
-.close-button:hover {
-  --background: rgba(255, 255, 255, 0.2) !important;
+.sidebar-close-button:hover {
+  background-color: #543D5C; /* Un poco más claro al hover */
 }
 
-.close-button-container {
-  display: flex;
-  justify-content: flex-end;
-  padding: 10px;
+.sidebar-close-icon {
+  display: block;
+  font-size: 30px;
+  color: #00FF66; /* Verde como en la captura */
+  line-height: 1;
+  text-align: center;
+  width: 30px;
+  height: 30px;
+  margin: auto;
+  padding: 0;
 }
 
 /* Overlay para cuando se abre el menú en móvil */
@@ -194,11 +214,6 @@ html.ion-palette-dark .barra-lateral {
   /* Ajustar el espacio del contenido principal cuando se oculta la barra */
   .content-with-sidebar {
     margin-left: 0;
-  }
-  
-  /* Mostrar botón de cerrar en la barra lateral */
-  .close-button-container {
-    display: flex;
   }
 }
 

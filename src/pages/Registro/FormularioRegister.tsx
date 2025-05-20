@@ -51,7 +51,7 @@ const buttonStyle = {
 };
 
 // Estilos específicos para iconos - SUBIDOS MUCHO MÁS
-const iconContainerStyle = {
+const iconContainerStyle: React.CSSProperties = {
   position: 'absolute',
   left: '0.8rem',
   top: '38%', // Subido mucho más (antes era 45%)

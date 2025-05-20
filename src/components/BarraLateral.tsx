@@ -99,23 +99,9 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
     marginRight: '8px'
   };
 
-  // Estilo para el contenedor de logo
-  const logoContainerStyle = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: '16px 0',
-    marginBottom: '20px'
-  };
-
-  // Clase condicional para mostrar/ocultar la barra lateral
-  const sidebarClass = isMobile
-    ? `barra-lateral mobile ${isOpen ? 'open' : 'closed'}`
-    : 'barra-lateral';
-
   return (
     <>
-      {/* Botón más equilibrado para móviles */}
+      {/* Botón de hamburguesa para móviles */}
       {isMobile && (
         <div className="menu-button-container" onClick={onToggle}>
           <div className="menu-button-float">
@@ -126,39 +112,25 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
 
       {/* Barra lateral */}
       <div 
-        className={sidebarClass} 
+        className={isMobile
+          ? `barra-lateral mobile ${isOpen ? 'open' : 'closed'}`
+          : 'barra-lateral'
+        } 
         style={{backgroundColor: primaryPurple, borderRight: '1px solid rgba(255, 255, 255, 0.1)'}}
       >
-        {/* Botón para cerrar en móvil */}
-        {isMobile && (
-          <div className="close-button-container">
-            <IonButton 
-              fill="clear" 
-              onClick={onToggle}
-              className="close-button"
-            >
-              <IonIcon 
-                icon={closeOutline} 
-                style={{ fontSize: '24px' }} 
-              />
-            </IonButton>
-          </div>
-        )}
-
-        <div style={logoContainerStyle}>
-          <div style={{
-            color: pureWhite, 
-            fontWeight: 'bold', 
-            fontSize: '1.5rem',
-            backgroundColor: 'rgba(45, 10, 49, 0.7)',
-            padding: '0.5rem 1rem',
-            borderRadius: '0.5rem',
-            cursor: 'pointer'
-          }} onClick={() => {
+        {/* Cabecera con logo y botón de cierre */}
+        <div className="logo-container">
+          {/* Logo */}
+          <div className="sidebar-logo" onClick={() => {
             history.replace('/home');
-            if (isMobile) onToggle?.(); // Cerrar al navegar en móvil
+            if (isMobile) onToggle?.();
           }}>
             Play<span style={{ color: brightGreen }}>4</span>Padel
+          </div>
+          
+          {/* Botón de cierre */}
+          <div className="sidebar-close-button" onClick={onToggle}>
+            <IonIcon icon={closeOutline} className="sidebar-close-icon" />
           </div>
         </div>
 
