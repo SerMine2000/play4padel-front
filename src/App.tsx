@@ -18,7 +18,6 @@ import RutaPrivada from './components/RutaPrivada';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Estructura from './components/Estructura';
-import Header from './components/Header';
 import BarraLateral from './components/BarraLateral';
 import { ThemeProvider } from './context/ThemeContext';
 import { useEffect } from 'react';
