@@ -1,34 +1,41 @@
-/* Estructura.css - Estilos responsive para el layout principal */
+/* Estructura.css - Rediseño completo 2025 */
+
+.app-container {
+  --background: #110514;
+}
 
 .layout-container {
   display: flex;
   min-height: 100vh;
   overflow: hidden;
+  background-color: #110514;
 }
 
 .main-content {
   flex: 1;
   display: flex;
   flex-direction: column;
-  background-color: #2D0A31;
-  transition: margin-left 0.3s ease;
+  background-color: #110514;
+  transition: margin-left 0.3s ease, opacity 0.3s ease;
 }
 
 .header-container {
-  height: 80px;
+  height: 64px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding-right: 16px;
+  padding: 0 20px;
+  background-color: #2D0A31;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .page-content {
   flex: 1;
   padding: 24px;
   overflow-y: auto;
-  --background: #2D0A31;
+  --background: #110514;
   --color: #FFFFFF;
 }
 
@@ -61,6 +68,6 @@
 
 @media (min-width: 769px) and (max-width: 1024px) {
   .layout-container.desktop .main-content {
-    margin-left: 200px; /* Ancho ajustado para tablets */
+    margin-left: 220px; /* Ancho ajustado para tablets */
   }
 }

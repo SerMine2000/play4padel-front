@@ -8,6 +8,7 @@ import './Estructura.css';
 // Colores del logo Play4Padel
 const primaryPurple = '#2D0A31'; // Púrpura oscuro del fondo del logo
 const brightGreen = '#00FF66'; // Verde brillante de la "P" en el logo
+const darkPurple = '#110514'; // Fondo más oscuro
 
 const Estructura: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
@@ -36,7 +37,7 @@ const Estructura: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   };
 
   return (
-    <IonPage>
+    <IonPage className="app-container">
       <div className={`layout-container ${isMobile ? 'mobile' : 'desktop'} ${sidebarOpen && isMobile ? 'sidebar-open' : ''}`}>
         {/* Barra lateral */}
         <BarraLateral 

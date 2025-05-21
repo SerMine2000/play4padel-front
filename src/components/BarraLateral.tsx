@@ -11,6 +11,8 @@ import './BarraLateral.css';
 const primaryPurple = '#2D0A31'; // Púrpura oscuro del fondo del logo
 const brightGreen = '#00FF66'; // Verde brillante de la "P" en el logo
 const pureWhite = '#FFFFFF'; // Blanco del "4" en el logo
+const darkPurple = '#110514'; // Fondo más oscuro
+const mediumPurple = '#3D1A41'; // Color para cards
 
 type MenuOption = {
   label: string;
@@ -68,6 +70,7 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
   let roleSpecificOptions: MenuOption[] = [];
   if (user?.id_rol === 2) {
     roleSpecificOptions = [
+      { label: 'Inicio', path: '/home', icon: homeOutline },
       { label: 'Gestionar Pistas', path: '/manage-courts', icon: tennisballOutline },
       { label: 'Administrar Usuarios', path: '/manage-users', icon: peopleOutline },
       { label: 'Calendario', path: '/calendar', icon: calendarOutline },
@@ -77,27 +80,15 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
     ];
   } else if (user?.id_rol === 4 || user?.id_rol === 5) {
     roleSpecificOptions = [
+      { label: 'Inicio', path: '/home', icon: homeOutline },
       { label: 'Reservar', path: '/reservas', icon: calendarOutline }
     ];
+  } else {
+    // Asegurarse de que siempre haya opción de inicio
+    roleSpecificOptions = [
+      { label: 'Inicio', path: '/home', icon: homeOutline }
+    ];
   }
-
-  // Estilo para los ítems del menú
-  const menuItemStyle = {
-    '--background': 'transparent',
-    '--background-hover': 'rgba(255, 255, 255, 0.1)',
-    '--color': pureWhite,
-    '--border-color': 'rgba(255, 255, 255, 0.1)',
-    marginBottom: '8px',
-    borderRadius: '8px',
-    fontSize: '16px'
-  };
-
-  // Estilo para los iconos del menú
-  const menuIconStyle = {
-    color: brightGreen,
-    fontSize: '20px',
-    marginRight: '8px'
-  };
 
   return (
     <>
@@ -110,13 +101,12 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
         </div>
       )}
 
-      {/* Barra lateral */}
+      {/* Barra lateral mejorada */}
       <div 
         className={isMobile
           ? `barra-lateral mobile ${isOpen ? 'open' : 'closed'}`
           : 'barra-lateral'
-        } 
-        style={{backgroundColor: primaryPurple, borderRight: '1px solid rgba(255, 255, 255, 0.1)'}}
+        }
       >
         {/* Cabecera con logo y botón de cierre */}
         <div className="logo-container">
@@ -128,25 +118,23 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
             Play<span style={{ color: brightGreen }}>4</span>Padel
           </div>
           
-          {/* Botón de cierre */}
-          <div className="sidebar-close-button" onClick={onToggle}>
-            <IonIcon icon={closeOutline} className="sidebar-close-icon" />
-          </div>
+          {/* Botón de cierre - solo mostrar en móvil */}
+          {isMobile && (
+            <div className="sidebar-close-button" onClick={onToggle}>
+              <IonIcon icon={closeOutline} className="sidebar-close-icon" />
+            </div>
+          )}
         </div>
 
-        <IonList style={{backgroundColor: 'transparent', padding: '0 10px'}}>
+        {/* Menú mejorado */}
+        <div className="menu-container">
           {[...roleSpecificOptions, ...baseOptions].map((option, index) => {
             const isActive = location.pathname === option.path;
-            const activeStyle = isActive ? {
-              '--background': 'rgba(0, 255, 102, 0.2)',
-              '--color': brightGreen,
-              fontWeight: 'bold'
-            } : {};
             
             return (
-              <IonItem 
+              <div 
                 key={index}
-                button
+                className={`menu-item ${isActive ? 'active' : ''}`}
                 onClick={() => {
                   if (option.action) {
                     option.action();
@@ -162,16 +150,13 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
                     if (isMobile) onToggle?.();
                   }
                 }}
-                detail={false}
-                style={{...menuItemStyle, ...activeStyle}}
-                className={isActive ? 'item-active' : ''}
               >
-                <IonIcon slot="start" icon={option.icon} style={menuIconStyle} />
-                <IonLabel>{option.label}</IonLabel>
-              </IonItem>
+                <IonIcon icon={option.icon} className="menu-item-icon" />
+                <span className="menu-item-text">{option.label}</span>
+              </div>
             );
           })}
-        </IonList>
+        </div>
       </div>
       
       {/* Overlay para móviles */}

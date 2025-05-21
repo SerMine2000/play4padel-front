@@ -1,43 +1,34 @@
-/* Home.css mejorado para responsividad */
-
-.dashboard-toolbar {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 16px 32px 0 0;
-  background: transparent !important;
-  box-shadow: none !important;
-  border: none !important;
-}
+/* Home.css - Rediseño moderno 2025 */
 
 .dashboard-contenido {
-  padding: 20px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  background: var(--ion-background-color, #f8f9fa) !important;
+  background: #110514 !important;
   min-height: 100vh;
 }
 
+/* Bienvenida Dashboard */
 .bienvenida-container {
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .titulo-dashboard {
   font-size: 1.8rem;
   font-weight: 700;
   margin: 0 0 8px 0;
-  color: var(--ion-text-color, #181818);
+  color: #FFFFFF;
 }
 
 .descripcion-dashboard {
   font-size: 1rem;
   margin: 0;
-  color: var(--ion-text-color-secondary, #666);
+  color: #9988a0;
 }
 
-/* Grid de tarjetas mejorado para responsividad */
+/* Grid de tarjetas en formato moderno */
 .cards-resumen-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -47,29 +38,27 @@
 }
 
 .card-resumen {
-  background: var(--color-panel, #ffffff);
+  background: #3D1A41;
   border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  border: 1px solid var(--ion-border-color, #e5e5e5);
-  padding: 16px 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  padding: 16px;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  text-align: center;
 }
 
 .card-titulo {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--ion-text-color, #222);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #9988a0;
   margin-bottom: 12px;
 }
 
 .card-valor {
   font-size: 1.8rem;
   font-weight: bold;
-  color: var(--ion-color-primary, #2D0A31);
+  color: #FFFFFF;
 }
 
 /* Containers de reservas y pistas */
@@ -81,10 +70,9 @@
 }
 
 .proximas-reservas, .estado-pistas {
-  background: var(--color-panel, #ffffff);
+  background: #3D1A41;
   border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  border: 1px solid var(--ion-border-color, #e5e5e5);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   padding: 20px;
   height: 100%;
   display: flex;
@@ -96,7 +84,7 @@
   font-weight: 600;
   margin-top: 0;
   margin-bottom: 16px;
-  color: var(--ion-text-color, #222);
+  color: #FFFFFF;
 }
 
 .sin-reservas, .sin-pistas {
@@ -105,15 +93,15 @@
   align-items: center;
   text-align: center;
   height: 120px;
-  color: var(--ion-text-color-secondary, #666);
+  color: #9988a0;
 }
 
 .reserva-card {
-  background: var(--ion-background-color, #f8f9fa);
+  background: rgba(17, 5, 20, 0.3);
   margin: 0 0 12px 0;
   padding: 16px;
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -125,12 +113,12 @@
 
 .reserva-card .info p:first-child {
   font-weight: 600;
-  color: var(--ion-text-color, #222);
+  color: #FFFFFF;
 }
 
 .reserva-card .info p:last-child {
   font-size: 0.9rem;
-  color: var(--ion-text-color-secondary, #666);
+  color: #9988a0;
 }
 
 .estado-pistas-header {
@@ -142,18 +130,24 @@
 
 .club-nombre-bajo {
   font-size: 0.9rem;
-  color: var(--ion-text-color-secondary, #666);
+  color: #9988a0;
   margin-top: 4px;
 }
 
 .btn-cambiar-club {
-  background: var(--ion-color-primary, #2D0A31);
-  color: #fff;
+  background: #00FF66;
+  color: #2D0A31;
   border: none;
   border-radius: 8px;
   padding: 8px 16px;
   font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-cambiar-club:hover {
+  opacity: 0.9;
 }
 
 .estado-pistas-grid-real {
@@ -166,16 +160,16 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: var(--ion-background-color, #f8f9fa);
+  background: rgba(17, 5, 20, 0.3);
   padding: 12px 16px;
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .estado-pista-card p {
   margin: 0;
   font-weight: 600;
-  color: var(--ion-text-color, #222);
+  color: #FFFFFF;
 }
 
 .estado-pista-card span {
@@ -186,21 +180,21 @@
 }
 
 .disponible {
-  background: #e8f5e9;
-  color: #2e7d32;
-  border: 1px solid #a5d6a7;
+  background: rgba(46, 125, 50, 0.2);
+  color: #81c784;
+  border: 1px solid #2e7d32;
 }
 
 .ocupada {
-  background: #ffebee;
-  color: #c62828;
-  border: 1px solid #ef9a9a;
+  background: rgba(198, 40, 40, 0.2);
+  color: #ef9a9a;
+  border: 1px solid #c62828;
 }
 
 .mantenimiento {
-  background: #fff3e0;
-  color: #ef6c00;
-  border: 1px solid #ffcc80;
+  background: rgba(239, 108, 0, 0.2);
+  color: #ffcc80;
+  border: 1px solid #ef6c00;
 }
 
 /* RESPONSIVE STYLES */
@@ -242,15 +236,15 @@
 @media (max-width: 576px) {
   .cards-resumen-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    gap: 12px;
   }
   
   .card-resumen {
-    padding: 12px 8px;
+    padding: 12px;
   }
   
   .card-titulo {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     margin-bottom: 8px;
   }
   
@@ -259,7 +253,7 @@
   }
   
   .proximas-reservas, .estado-pistas {
-    padding: 16px 12px;
+    padding: 16px;
   }
   
   .proximas-reservas h2, .estado-pistas h2 {
@@ -273,92 +267,55 @@
   }
 }
 
-/* Soporte para modo oscuro */
-body.dark .dashboard-contenido {
-  background: var(--ion-background-color, #18191a) !important;
-}
-
-body.dark .card-resumen,
-body.dark .proximas-reservas,
-body.dark .estado-pistas {
-  background: var(--ion-card-background, #23272f) !important;
-  color: var(--ion-text-color, #fff) !important;
-  border-color: var(--ion-border-color, #333);
-}
-
-body.dark .card-titulo,
-body.dark .card-valor,
-body.dark .proximas-reservas h2,
-body.dark .estado-pistas h2 {
-  color: var(--ion-text-color, #fff) !important;
-}
-
-body.dark .sin-reservas,
-body.dark .sin-pistas {
-  color: var(--ion-text-color-secondary, #aaa);
-}
-
-body.dark .reserva-card,
-body.dark .estado-pista-card {
-  background: var(--ion-background-color, #2a2a2a);
-}
-
-body.dark .club-nombre-bajo {
-  color: var(--ion-text-color-secondary, #aaa);
-}
-
-body.dark .reserva-card .info p:first-child,
-body.dark .estado-pista-card p {
-  color: var(--ion-text-color, #fff);
-}
-
-body.dark .disponible {
-  background: rgba(46, 125, 50, 0.2);
-  color: #81c784;
-  border-color: #2e7d32;
-}
-
-body.dark .ocupada {
-  background: rgba(198, 40, 40, 0.2);
-  color: #ef9a9a;
-  border-color: #c62828;
-}
-
-body.dark .mantenimiento {
-  background: rgba(239, 108, 0, 0.2);
-  color: #ffcc80;
-  border-color: #ef6c00;
-}
-
 /* Modal de clubes */
 .modal-club-ionic {
   --width: 520px;
   --height: 400px;
   --border-radius: 16px;
-  --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  --background: #3D1A41;
 }
 
 .modal-club-content {
-  background: var(--ion-background-color, #fff);
+  background: #3D1A41;
   padding: 20px;
   border-radius: 16px;
+  color: #FFFFFF;
 }
 
 .modal-club-title {
   font-size: 1.2rem;
   font-weight: 600;
+  color: #FFFFFF;
 }
 
 .club-option-btn-modern {
   width: 100%;
   margin-bottom: 8px;
-  --background: var(--ion-color-primary);
-  --color: #fff;
+  --background: #2D0A31;
+  --color: #FFFFFF;
   font-weight: 500;
   text-transform: none;
   border-radius: 8px;
 }
 
-body.dark .modal-club-content {
-  background: var(--ion-card-background, #23272f);
+.club-option-btn-modern:hover {
+  --background: #3D1A41;
+}
+
+.cerrar-modal-btn-ion {
+  --color: #00FF66;
+}
+
+.modal-club-list-container {
+  margin-top: 16px;
+}
+
+.modal-club-list {
+  background: transparent;
+}
+
+.modal-club-item {
+  --background: transparent;
+  --border-color: rgba(255, 255, 255, 0.1);
 }

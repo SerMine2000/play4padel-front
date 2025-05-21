@@ -8,14 +8,10 @@ const BienvenidaDashboard: React.FC = () => {
   
   return (
     <div className="bienvenida-container">
-      <IonText color="primary">
-        <h1 className="titulo-dashboard">
-          ¡Bienvenido de nuevo{user && user.nombre ? `, ${user.nombre}` : ''}!
-        </h1>
-      </IonText>
-      <IonText color="medium">
-        <p className="descripcion-dashboard">Aquí tienes un resumen de tu actividad</p>
-      </IonText>
+      <h1 className="titulo-dashboard">
+        ¡Bienvenido de nuevo{user && user.nombre ? `, ${user.nombre}` : ''}!
+      </h1>
+      <p className="descripcion-dashboard">Aquí tienes un resumen de tu actividad</p>
     </div>
   );
 };
