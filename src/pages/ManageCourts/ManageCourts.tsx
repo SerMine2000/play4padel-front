@@ -7,21 +7,28 @@ import { addCircleOutline, createOutline, buildOutline, trashOutline, closeCircl
 import { useAuth } from "../../context/AuthContext";
 import { useHistory } from 'react-router-dom';
 import apiService from "../../services/api.service";
+import { Pista } from "../../interfaces";
 import '../../theme/variables.css';
 import './ManageCourts.css';
 
-// Interfaz para los datos de la pista
-interface Pista {
-  id: number;
-  numero: number;
-  id_club: number;
-  tipo: string;
-  estado: string;
-  precio_hora: number;
-  iluminacion: boolean;
-  techada: boolean;
-  imagen_url?: string;
-}
+
+
+
+const getStatusColor = (estado: string): string => {
+  switch (estado.toLowerCase()) {
+    case 'activo':
+      return 'success';
+    case 'inactivo':
+      return 'medium';
+    case 'mantenimiento':
+      return 'warning';
+    case 'cerrado':
+      return 'danger';
+    default:
+      return 'primary';
+  }
+};
+
 
 const ManageCourts: React.FC = () => {
   const { user } = useAuth();
@@ -55,35 +62,16 @@ const ManageCourts: React.FC = () => {
   // Cargar datos del club y pistas cuando se monta el componente
   useEffect(() => {
     console.log('[ManageCourts] useEffect - user:', user);
+  
     const loadClubData = async () => {
       if (!user) {
         console.log('[ManageCourts] No hay usuario autenticado');
         return;
       }
-      if (user.id_rol === 1) {
-        // ADMIN
-        try {
-          setLoading(true);
-          const clubsResponse = await apiService.get(`/clubs?id_administrador=${user.id}`);
-          console.log('[ManageCourts] Clubs para admin:', clubsResponse);
-          if (clubsResponse && clubsResponse.length > 0) {
-            const club = clubsResponse[0];
-            setClubId(club.id);
-            setClubData(club);
-            const pistasResponse = await apiService.get(`/clubs/${club.id}/pistas`);
-            setPistas(Array.isArray(pistasResponse) ? pistasResponse : []);
-          } else {
-            showToastMessage('No se encontró información del club', 'warning');
-          }
-        } catch (error) {
-          console.error('[ManageCourts] Error al cargar datos para admin:', error);
-          showToastMessage('Error al cargar datos del club', 'danger');
-        } finally {
-          setLoading(false);
-        }
-      } else if (user.id_rol === 2) {
-        // CLUB
+  
+      if (user.id_rol === 'CLUB') {
         console.log('[ManageCourts] Usuario tipo club:', user);
+  
         if (user.id_club) {
           setClubId(user.id_club);
           try {
@@ -100,8 +88,9 @@ const ManageCourts: React.FC = () => {
           }
         } else {
           console.error('[ManageCourts] Usuario club sin id_club:', user);
+  
           // WORKAROUND: Forzar id_club manualmente para pruebas
-          const clubIdToUse = 1; // <-- CAMBIA este valor si tu club tiene otro id
+          const clubIdToUse = 1; // Cambia este valor según sea necesario
           console.warn('[ManageCourts][WORKAROUND] Forzando clubId=', clubIdToUse, 'para usuario club sin id_club');
           setClubId(clubIdToUse);
           try {
@@ -122,8 +111,10 @@ const ManageCourts: React.FC = () => {
         history.replace('/home');
       }
     };
+  
     loadClubData();
   }, [user, history]);
+  
   
   // Mostrar mensaje de toast
   const showToastMessage = (message: string, color: string = 'success') => {
@@ -299,20 +290,7 @@ const ManageCourts: React.FC = () => {
       setCourtToDelete(null);
     }
   };
-  
-  // Obtener color según estado
-  const getStatusColor = (estado: string): string => {
-    switch (estado) {
-      case 'disponible':
-        return 'success';
-      case 'mantenimiento':
-        return 'warning';
-      case 'cerrada':
-        return 'danger';
-      default:
-        return 'medium';
-    }
-  };
+
 
   return (
     <IonPage>

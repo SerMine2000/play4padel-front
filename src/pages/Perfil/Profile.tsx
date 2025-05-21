@@ -193,48 +193,103 @@ const Profile: React.FC = () => {
           <div className="profile-container" style={{ maxWidth: 900, margin: '0 auto' }}>
             <div className="encabezado-perfil">
               <div className="contenedor-avatar">
-              <IonAvatar
-                className="avatar-perfil"
-                onClick={isEditing ? handleAvatarUpdate : () => tempAvatarUrl && setShowAvatarModal(true)}>
-                {tempAvatarUrl ? (
-                  <img src={tempAvatarUrl} alt="Avatar" />
-                ) : (
-                  <IonIcon icon={personCircleOutline} style={{ fontSize: '100px' }} />
+                <IonAvatar
+                  className="avatar-perfil"
+                  onClick={isEditing ? handleAvatarUpdate : () => tempAvatarUrl && setShowAvatarModal(true)}>
+                  {tempAvatarUrl ? (
+                    <img src={tempAvatarUrl} alt="Avatar" />
+                  ) : (
+                    <IonIcon icon={personCircleOutline} style={{ fontSize: '100px' }} />
+                  )}
+                </IonAvatar>
+                {isEditing && (
+                  <IonText color="medium" className="edit-avatar-text">
+                    <small>Haz clic para cambiar avatar</small>
+                  </IonText>
                 )}
-
-              </IonAvatar>
-              {isEditing && (
-                <IonText color="medium" className="edit-avatar-text">
-                  <small>Haz clic para cambiar avatar</small>
-                </IonText>
-              )}
               </div>
               <h2>{user.nombre} {user.apellidos}</h2>
               <p>{user.email}</p>
             </div>
   
             <IonCard className="tarjeta-informacion">
-              <IonCardHeader>
-                <IonCardTitle>Información Personal</IonCardTitle>
-              </IonCardHeader>
-              <IonCardContent>
-                {['nombre', 'apellidos', 'email', 'telefono', 'bio'].map((campo) => (
-                  <IonItem key={campo}>
-                    <IonLabel position="stacked">{campo.charAt(0).toUpperCase() + campo.slice(1)}</IonLabel>
-                    {isEditing ? (
+              {(!isEditing && !isChangingPassword) && (
+                <>
+                  <IonCardHeader>
+                    <IonCardTitle>Información Personal</IonCardTitle>
+                  </IonCardHeader>
+                  <IonCardContent>
+                    {['nombre', 'apellidos', 'email', 'telefono', 'bio'].map((campo) => (
+                      <IonItem key={campo}>
+                        <IonLabel position="stacked">{campo.charAt(0).toUpperCase() + campo.slice(1)}</IonLabel>
+                        <IonText>{user[campo as keyof typeof user] || 'No especificado'}</IonText>
+                      </IonItem>
+                    ))}
+                  </IonCardContent>
+                </>
+              )}
+  
+              {isEditing && (
+                <>
+                  <IonCardHeader>
+                    <IonCardTitle>Editar Información</IonCardTitle>
+                  </IonCardHeader>
+                  <IonCardContent>
+                    {['nombre', 'apellidos', 'email', 'telefono', 'bio'].map((campo) => (
+                      <IonItem key={campo}>
+                        <IonLabel position="stacked">{campo.charAt(0).toUpperCase() + campo.slice(1)}</IonLabel>
+                        <IonInput
+                          value={formData[campo as keyof typeof formData]}
+                          onIonChange={(e) => handleInputChange(e, campo)}
+                        />
+                      </IonItem>
+                    ))}
+                  </IonCardContent>
+                </>
+              )}
+  
+              {isChangingPassword && (
+                <>
+                  <IonCardHeader>
+                    <IonCardTitle>Cambiar Contraseña</IonCardTitle>
+                  </IonCardHeader>
+                  <IonCardContent>
+                    <IonItem>
+                      <IonLabel position="stacked">Contraseña actual</IonLabel>
                       <IonInput
-                        value={formData[campo as keyof typeof formData]}
-                        onIonChange={(e) => handleInputChange(e, campo)}
+                        type="password"
+                        value={formData.currentPassword}
+                        onIonChange={(e) => handleInputChange(e, 'currentPassword')}
                       />
-                    ) : (
-                      <IonText>{user[campo as keyof typeof user] || 'No especificado'}</IonText>
-                    )}
-                  </IonItem>
-                ))}
-              </IonCardContent>
+                    </IonItem>
+                    <IonItem>
+                      <IonLabel position="stacked">Nueva contraseña</IonLabel>
+                      <IonInput
+                        type="password"
+                        value={formData.newPassword}
+                        onIonChange={(e) => handleInputChange(e, 'newPassword')}
+                      />
+                    </IonItem>
+                    <IonItem>
+                      <IonLabel position="stacked">Confirmar contraseña</IonLabel>
+                      <IonInput
+                        type="password"
+                        value={formData.confirmPassword}
+                        onIonChange={(e) => handleInputChange(e, 'confirmPassword')}
+                      />
+                    </IonItem>
+                    <IonButton expand="block" onClick={handleUpdatePassword} color="success">
+                      Guardar nueva contraseña
+                    </IonButton>
+                    <IonButton expand="block" onClick={handleCancel} color="medium" fill="outline">
+                      Cancelar
+                    </IonButton>
+                  </IonCardContent>
+                </>
+              )}
             </IonCard>
   
-            {!isEditing ? (
+            {!isEditing && !isChangingPassword ? (
               <IonGrid className="botones-acciones">
                 <IonRow>
                   <IonCol>
@@ -249,7 +304,7 @@ const Profile: React.FC = () => {
                   </IonCol>
                 </IonRow>
               </IonGrid>
-            ) : (
+            ) : isEditing && (
               <IonGrid className="botones-acciones">
                 <IonRow>
                   <IonCol>
@@ -265,48 +320,11 @@ const Profile: React.FC = () => {
                 </IonRow>
               </IonGrid>
             )}
-
-
-  
-            {isChangingPassword && (
-              <IonCard className="tarjeta-informacion">
-                <IonCardHeader>
-                  <IonCardTitle>Cambiar contraseña</IonCardTitle>
-                </IonCardHeader>
-                <IonCardContent>
-                  <IonItem>
-                    <IonLabel position="stacked">Contraseña actual</IonLabel>
-                    <IonInput
-                      type="password"
-                      value={formData.currentPassword}
-                      onIonChange={(e) => handleInputChange(e, 'currentPassword')}
-                    />
-                  </IonItem>
-                  <IonItem>
-                    <IonLabel position="stacked">Nueva contraseña</IonLabel>
-                    <IonInput
-                      type="password"
-                      value={formData.newPassword}
-                      onIonChange={(e) => handleInputChange(e, 'newPassword')}
-                    />
-                  </IonItem>
-                  <IonItem>
-                    <IonLabel position="stacked">Confirmar contraseña</IonLabel>
-                    <IonInput
-                      type="password"
-                      value={formData.confirmPassword}
-                      onIonChange={(e) => handleInputChange(e, 'confirmPassword')}
-                    />
-                  </IonItem>
-                  <IonButton expand="block" onClick={handleUpdatePassword}>
-                    Guardar nueva contraseña
-                  </IonButton>
-                </IonCardContent>
-              </IonCard>
-            )}
           </div>
         )}
-
+  
+        {/* El resto (modals, alertas, toasts) se queda igual */}
+  
         <IonAlert isOpen={showAvatarAlert} onDidDismiss={() => setShowAvatarAlert(false)}
           header="Cambiar avatar" subHeader="Introduce la URL de la imagen" 
           inputs={[
@@ -335,7 +353,7 @@ const Profile: React.FC = () => {
               }
             },
             {
-              text: 'Guardar',
+              text: 'Aceptar',
               handler: (data) => {
                 if (!validateImageUrl(data.avatar_url)) {
                   setErrorMessage('URL no válida (debe empezar por http:// o https://)');
@@ -348,7 +366,7 @@ const Profile: React.FC = () => {
             }
           ]}
         />
-
+  
         <IonModal isOpen={showAvatarModal} onDidDismiss={() => setShowAvatarModal(false)}>
           <IonContent fullscreen className="ion-padding">
             <div style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 10 }}>
@@ -377,7 +395,6 @@ const Profile: React.FC = () => {
             </div>
           </IonContent>
         </IonModal>
-
   
         <IonLoading isOpen={isLoading} message="Cargando..." />
         <IonToast
@@ -396,7 +413,7 @@ const Profile: React.FC = () => {
         />
       </IonContent>
     </IonPage>
-  );  
+  );
 };
 
 export default Profile;

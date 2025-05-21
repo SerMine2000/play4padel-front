@@ -26,7 +26,9 @@ import {
   IonBadge,
   IonCol,
   IonGrid,
-  IonRow
+  IonRow,
+  IonCheckbox,
+  IonModal
 } from '@ionic/react';
 import {
   personAddOutline,
@@ -53,6 +55,8 @@ const ManageUsers: React.FC = () => {
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string>('');
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [mostrarModalAñadirSocios, setMostrarModalAñadirSocios] = useState(false);
+  const [usuariosSeleccionados, setUsuariosSeleccionados] = useState<number[]>([]);
   const [alertAction, setAlertAction] = useState<'add' | 'remove'>('add');
 
   useEffect(() => {
@@ -61,27 +65,6 @@ const ManageUsers: React.FC = () => {
     }
   }, [user]);
 
-  const getRolName = (rolId: number): string => {
-    switch (rolId) {
-      case 1: return 'ADMIN';
-      case 2: return 'ADMIN DE CLUB';
-      case 3: return 'EMPLEADO';
-      case 4: return 'USUARIO';
-      case 5: return 'SOCIO';
-      default: return 'DESCONOCIDO';
-    }
-  };
-
-  const getRolColor = (rolId: number): string => {
-    switch (rolId) {
-      case 1: return 'danger';
-      case 2: return 'secondary';
-      case 3: return 'tertiary';
-      case 4: return 'medium';
-      case 5: return 'success';
-      default: return 'medium';
-    }
-  };
 
   const showToastMessage = (message: string, color: string = 'success') => {
     setToastMessage(message);
@@ -91,15 +74,16 @@ const ManageUsers: React.FC = () => {
 
   const isUserMember = (userId: number): boolean => {
     const userFound = users.find(u => u.id === userId);
-    if (userFound && userFound.id_rol === 5) {
+    if (userFound && userFound.id_rol === 'SOCIO') {
       return userFound.id_club_socio === clubId;
     }
     return false;
   };
+  
 
   const isUserAdmin = (userId: number): boolean => {
     const userFound = users.find(u => u.id === userId);
-    return userFound?.id_rol === 2;
+    return userFound?.id_rol === 'CLUB';
   };
 
   const getTotalMembers = (): number => {
@@ -183,7 +167,6 @@ const ManageUsers: React.FC = () => {
     try {
       setLoading(true);
       await apiService.post('/add-club-member', { user_id: userId, club_id: clubId });
-      await loadUsers();
       showToastMessage('Usuario añadido como socio correctamente', 'success');
     } catch (error) {
       console.error('Error al añadir socio:', error);
@@ -192,6 +175,7 @@ const ManageUsers: React.FC = () => {
       setLoading(false);
     }
   };
+  
 
   const removeAsMember = async (userId: number) => {
     if (!clubId) return showToastMessage('No se ha seleccionado un club', 'danger');
@@ -209,11 +193,11 @@ const ManageUsers: React.FC = () => {
   };
 
   const filteredStaffUsers = users.filter(user =>
-    user.id_rol === 2 && user.id === user.id
+    user.id_rol === 'CLUB'
   );
 
   const filteredSocios = users.filter(user =>
-    user.id_rol === 5 &&
+    user.id_rol === 'SOCIO' &&
     `${user.nombre} ${user.apellidos}`.toLowerCase().startsWith(searchText.toLowerCase())
   );
 
@@ -237,8 +221,8 @@ const ManageUsers: React.FC = () => {
               <h2>{userData.nombre} {userData.apellidos}</h2>
               <p>{userData.email}</p>
             </IonLabel>
-            <IonChip color={getRolColor(userData.id_rol)} slot="end">
-              {getRolName(userData.id_rol)}
+            <IonChip color="medium" slot="end">
+              {userData.id_rol}
             </IonChip>
           </IonItem>
         ))}
@@ -291,9 +275,15 @@ const ManageUsers: React.FC = () => {
 
               {/* Card Socios */}
               <IonCard className="courts-card">
-                <IonCardHeader>
+              <IonCardHeader>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <IonCardTitle>Socios</IonCardTitle>
-                </IonCardHeader>
+                  <IonButton size="small" color="primary" onClick={() => setMostrarModalAñadirSocios(true)}>
+                    <IonIcon icon={personAddOutline} slot="start" />
+                    Añadir socios
+                  </IonButton>
+                </div>
+              </IonCardHeader>
                 <IonCardContent>
                   {searchText.trim() === "" && filteredSocios.length === 0 ? (
                     <div className="mensaje-vacio">
@@ -329,6 +319,68 @@ const ManageUsers: React.FC = () => {
           position="bottom"
           color={toastColor}
         />
+
+        <IonModal isOpen={mostrarModalAñadirSocios} onDidDismiss={() => setMostrarModalAñadirSocios(false)}>
+          <IonContent className="ion-padding">
+            <h2>Añadir socios</h2>
+            <p>Selecciona los usuarios que deseas añadir como socios del club.</p>
+            <IonList>
+              {users
+                // Ordena para que los usuarios habilitados aparezcan antes
+                .sort((a, b) => {
+                  const aDisabled = isUserMember(a.id) || isUserAdmin(a.id);
+                  const bDisabled = isUserMember(b.id) || isUserAdmin(b.id);
+                  return aDisabled === bDisabled ? 0 : aDisabled ? 1 : -1;
+                })
+                // Filtra los usuarios que tienen el rol 4 (USUARIO) y no están ya en el club
+                .map(user => {
+                  const esSocio = isUserMember(user.id);
+                  const esAdmin = isUserAdmin(user.id);
+                  const deshabilitado = esSocio || esAdmin;
+                  const seleccionado = usuariosSeleccionados.includes(user.id);
+
+                  return (
+                    <IonItem key={user.id} disabled={deshabilitado} style={deshabilitado ? { opacity: 0.5 } : {}}>
+                      <IonLabel>
+                        {user.nombre} {user.apellidos} ({user.email})
+                      </IonLabel>
+                      <IonCheckbox
+                        checked={seleccionado}
+                        disabled={deshabilitado}
+                        onIonChange={(e) => {
+                          const checked = e.detail.checked;
+                          setUsuariosSeleccionados(prev =>
+                            checked
+                              ? [...prev, user.id]
+                              : prev.filter(id => id !== user.id)
+                          );
+                        }}
+                        slot="end"
+                      />
+                    </IonItem>
+                  );
+                })}
+            </IonList>
+            <IonButton expand="block" onClick={async () => {
+              for (const id of usuariosSeleccionados) {
+                await addAsMember(id);
+              }
+              setUsuariosSeleccionados([]);
+              await loadUsers();
+              setMostrarModalAñadirSocios(false);
+            }}>
+              Añadir seleccionados
+            </IonButton>
+            <IonButton expand="block" fill="clear" onClick={() => {
+              setUsuariosSeleccionados([]);
+              setMostrarModalAñadirSocios(false);
+            }}>
+              Cancelar
+            </IonButton>
+          </IonContent>
+        </IonModal>
+
+
       </IonContent>
     </IonPage>
   );

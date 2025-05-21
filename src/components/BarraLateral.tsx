@@ -68,7 +68,7 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
   ];
 
   let roleSpecificOptions: MenuOption[] = [];
-  if (user?.id_rol === 2) {
+  if (user?.id_rol === 'CLUB') {
     roleSpecificOptions = [
       { label: 'Inicio', path: '/home', icon: homeOutline },
       { label: 'Gestionar Pistas', path: '/manage-courts', icon: tennisballOutline },
@@ -78,7 +78,7 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
       { label: 'Torneos', path: '/torneos', icon: trophyOutline },
       { label: 'Ligas', path: '/ligas', icon: trophyOutline }
     ];
-  } else if (user?.id_rol === 4 || user?.id_rol === 5) {
+  } else if (user?.id_rol === 'USUARIO' || user?.id_rol === 'SOCIO') {
     roleSpecificOptions = [
       { label: 'Inicio', path: '/home', icon: homeOutline },
       { label: 'Reservar', path: '/reservas', icon: calendarOutline }

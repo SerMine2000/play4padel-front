@@ -6,11 +6,23 @@ export interface User {
   email: string;
   role: string;
   telefono?: string;
-  id_rol: number;
+  id_rol: string;
   id_club?: number;
   avatar_url?: string;
   bio?: string;
   activo: boolean;
+}
+
+export interface Pista {
+  id: number;
+  numero: number;
+  id_club: number;
+  tipo: string;
+  estado: string;
+  precio_hora: number;
+  iluminacion: boolean;
+  techada: boolean;
+  imagen_url?: string;
 }
 
 export interface LoginRequest {

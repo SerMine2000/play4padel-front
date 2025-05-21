@@ -5,8 +5,8 @@ import { useAuth } from '../context/AuthContext';
 interface RutaPrivadaProps {
   path: string;
   exact?: boolean;
-  component?: React.ComponentType<any>; // Opcional si usas children
-  roles?: number[];
+  component?: React.ComponentType<any>;
+  roles?: string[];
   children?: React.ReactNode;
 }
 
@@ -20,8 +20,7 @@ const RutaPrivada: React.FC<RutaPrivadaProps> = ({
 
   console.log('🔍 [RutaPrivada] isLoading=', isLoading,
     ' | isAuthenticated=', isAuthenticated,
-    ' | user.id_rol=', user?.id_rol,
-    ' | user.role (raw)=', user?.role);
+    ' | user.id_rol=', user?.id_rol);
 
   return (
     <Route

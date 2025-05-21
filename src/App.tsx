@@ -72,7 +72,7 @@ const PrivateRoute: React.FC<{
 const RoleRoute: React.FC<{
   component: React.ComponentType<any>;
   path: string;
-  roles: number[];
+  roles: string[];
   exact?: boolean;
 }> = ({ component: Component, roles, ...rest }) => {
   const { user, isAuthenticated, isLoading } = useAuth();
