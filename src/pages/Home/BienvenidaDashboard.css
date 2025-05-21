@@ -2,29 +2,43 @@
 
 .bienvenida-container {
   width: 100%;
-  margin-bottom: 24px;
+  margin-bottom: 30px;
   padding: 0;
 }
 
 .titulo-dashboard {
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 700;
-  margin: 0 0 8px 0;
+  margin: 0 0 10px 0;
   color: #FFFFFF;
+  letter-spacing: 0.5px;
+  position: relative;
+}
+
+.titulo-dashboard::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  width: 50px;
+  height: 3px;
+  background: #00FF66;
+  border-radius: 3px;
 }
 
 .descripcion-dashboard {
   font-size: 1rem;
-  margin: 0;
-  color: #9988a0;
+  margin: 20px 0 0 0;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 @media (max-width: 768px) {
   .titulo-dashboard {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
   }
   
   .descripcion-dashboard {
     font-size: 0.9rem;
+    margin-top: 16px;
   }
 }
