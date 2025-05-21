@@ -15,7 +15,7 @@ import './Profile.css';
 
 
 const Profile: React.FC = () => {
-  const { user, isLoading: authLoading, refreshUser } = useAuth();
+  const { user, setUser, isLoading: authLoading, refreshUser } = useAuth();
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -108,7 +108,6 @@ const Profile: React.FC = () => {
       setIsLoading(true);
       setErrorMessage('');
   
-      // Verificar datos antes de enviar
       const payload = {
         nombre: formData.nombre || user.nombre,
         apellidos: formData.apellidos || user.apellidos,
@@ -120,11 +119,19 @@ const Profile: React.FC = () => {
   
       console.log("Payload preparado para enviar:", payload);
   
-      await apiService.put(`${API_ENDPOINTS.USER}/${user.id}`, payload);
+      const res = await apiService.put(`${API_ENDPOINTS.USER}/${user.id}`, payload);
+  
+      // ⚠️ En lugar de llamar a refreshUser (que puede romper el token),
+      // actualizamos manualmente el usuario
+      setUser({
+        ...user,
+        ...payload,
+      });
+  
       setSuccessMessage('Perfil actualizado correctamente');
       setIsEditing(false);
-      await refreshUser();
       setTimeout(() => setSuccessMessage(''), 3000);
+  
     } catch (error: any) {
       console.error('Error al actualizar perfil:', error);
       setErrorMessage(error.message || 'Error al actualizar el perfil');
@@ -132,7 +139,6 @@ const Profile: React.FC = () => {
       setIsLoading(false);
     }
   };
-  
 
   const handleUpdatePassword = async () => {
     if (!user) return;

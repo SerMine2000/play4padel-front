@@ -5,6 +5,7 @@ import { RegisterRequest, User } from '../interfaces';
 
 interface AuthContextType {
   user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -18,6 +19,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
+  setUser: () => {},
   token: null,
   isAuthenticated: false,
   isLoading: true,
@@ -172,7 +174,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         logout,
         refreshUser,
         register,
-        deleteAccount
+        deleteAccount,
+        setUser
       }}
     >
       {children}

@@ -79,6 +79,7 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
 
   let roleSpecificOptions: MenuOption[] = [];
 
+  console.log('ROL DETECTADO:', user.id_rol);
   switch (user.id_rol) {
     case 'CLUB':
       roleSpecificOptions = [
