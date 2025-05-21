@@ -22,6 +22,7 @@ export const STORAGE_KEYS = {
 
 export const ROLES = {
   ADMIN: 'ADMIN',
+  CLUB: 'CLUB',
   PROFESOR: 'PROFESOR',
   EMPLEADO: 'EMPLEADO',
   USUARIO: 'USUARIO',
@@ -36,6 +37,6 @@ export const ESTADOS_RESERVA = {
 };
 
 export const TIPOS_CUENTA = {
-  USUARIO: 'usuario',
-  CLUB: 'club'
+  USUARIO: 'USUARIO',
+  CLUB: 'CLUB'
 };

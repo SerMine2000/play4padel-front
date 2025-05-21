@@ -1,13 +1,15 @@
+// src/components/BarraLateral.tsx
 import React from 'react';
 import { IonItem, IonIcon, IonLabel, IonList, IonButton } from '@ionic/react';
-import { logOutOutline, homeOutline, calendarOutline, tennisballOutline, peopleOutline, 
-         stopwatchOutline, statsChartOutline, trophyOutline, settingsOutline, 
-         menuOutline, closeOutline } from 'ionicons/icons';
+import {
+  logOutOutline, homeOutline, calendarOutline, tennisballOutline,
+  peopleOutline, stopwatchOutline, statsChartOutline, trophyOutline,
+  settingsOutline, menuOutline, closeOutline
+} from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
 import { useLocation, useHistory } from 'react-router-dom';
 import './BarraLateral.css';
 
-// Colores del logo Play4Padel
 const primaryPurple = '#2D0A31'; // Púrpura oscuro del fondo del logo
 const brightGreen = '#00FF66'; // Verde brillante de la "P" en el logo
 const pureWhite = '#FFFFFF'; // Blanco del "4" en el logo
@@ -18,7 +20,7 @@ type MenuOption = {
   label: string;
   path: string;
   icon: string;
-  action?: never; 
+  action?: never;
 };
 
 type MenuOptionWithAction = {
@@ -36,16 +38,22 @@ type BarraLateralProps = {
   onToggle?: () => void;
 };
 
-const BarraLateral: React.FC<BarraLateralProps> = ({ 
-  isMobile = false, 
-  isOpen = true, 
-  onToggle 
+const BarraLateral: React.FC<BarraLateralProps> = ({
+  isMobile = false,
+  isOpen = true,
+  onToggle
 }) => {
   const location = useLocation();
   const { user, logout } = useAuth();
   const history = useHistory();
 
+  // Ocultar barra lateral en rutas excluidas
   if (excludedRoutes.includes(location.pathname)) {
+    return null;
+  }
+
+  // Prevenir render si aún no se ha definido el rol del usuario
+  if (!user || !user.id_rol) {
     return null;
   }
 
@@ -54,45 +62,50 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
       label: 'Configuración',
       path: '/configuracion',
       icon: settingsOutline,
-      action: async () => { 
+      action: async () => {
         history.replace('/configuracion');
-        if (isMobile) onToggle?.(); // Cerrar al navegar en móvil
+        if (isMobile) onToggle?.();
       }
     },
-    { 
-      label: 'Cerrar sesión', 
-      path: '', 
-      icon: logOutOutline, 
-      action: async () => { await logout(); }
+    {
+      label: 'Cerrar sesión',
+      path: '',
+      icon: logOutOutline,
+      action: async () => {
+        await logout();
+      }
     }
   ];
 
   let roleSpecificOptions: MenuOption[] = [];
-  if (user?.id_rol === 'CLUB') {
-    roleSpecificOptions = [
-      { label: 'Inicio', path: '/home', icon: homeOutline },
-      { label: 'Gestionar Pistas', path: '/manage-courts', icon: tennisballOutline },
-      { label: 'Administrar Usuarios', path: '/manage-users', icon: peopleOutline },
-      { label: 'Calendario', path: '/calendar', icon: calendarOutline },
-      { label: 'Estadísticas', path: '/estadisticas', icon: statsChartOutline },
-      { label: 'Torneos', path: '/torneos', icon: trophyOutline },
-      { label: 'Ligas', path: '/ligas', icon: trophyOutline }
-    ];
-  } else if (user?.id_rol === 'USUARIO' || user?.id_rol === 'SOCIO') {
-    roleSpecificOptions = [
-      { label: 'Inicio', path: '/home', icon: homeOutline },
-      { label: 'Reservar', path: '/reservas', icon: calendarOutline }
-    ];
-  } else {
-    // Asegurarse de que siempre haya opción de inicio
-    roleSpecificOptions = [
-      { label: 'Inicio', path: '/home', icon: homeOutline }
-    ];
+
+  switch (user.id_rol) {
+    case 'CLUB':
+      roleSpecificOptions = [
+        { label: 'Inicio', path: '/home', icon: homeOutline },
+        { label: 'Gestionar Pistas', path: '/manage-courts', icon: tennisballOutline },
+        { label: 'Administrar Usuarios', path: '/manage-users', icon: peopleOutline },
+        { label: 'Calendario', path: '/calendar', icon: calendarOutline },
+        { label: 'Estadísticas', path: '/estadisticas', icon: statsChartOutline },
+        { label: 'Torneos', path: '/torneos', icon: trophyOutline },
+        { label: 'Ligas', path: '/ligas', icon: trophyOutline }
+      ];
+      break;
+    case 'USUARIO':
+    case 'SOCIO':
+      roleSpecificOptions = [
+        { label: 'Inicio', path: '/home', icon: homeOutline },
+        { label: 'Reservar', path: '/reservas', icon: calendarOutline }
+      ];
+      break;
+    default:
+      roleSpecificOptions = [
+        { label: 'Inicio', path: '/home', icon: homeOutline }
+      ];
   }
 
   return (
     <>
-      {/* Botón de hamburguesa para móviles */}
       {isMobile && (
         <div className="menu-button-container" onClick={onToggle}>
           <div className="menu-button-float">
@@ -101,24 +114,19 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
         </div>
       )}
 
-      {/* Barra lateral mejorada */}
-      <div 
+      <div
         className={isMobile
           ? `barra-lateral mobile ${isOpen ? 'open' : 'closed'}`
-          : 'barra-lateral'
-        }
+          : 'barra-lateral'}
       >
-        {/* Cabecera con logo y botón de cierre */}
         <div className="logo-container">
-          {/* Logo */}
           <div className="sidebar-logo" onClick={() => {
             history.replace('/home');
             if (isMobile) onToggle?.();
           }}>
             Play<span style={{ color: brightGreen }}>4</span>Padel
           </div>
-          
-          {/* Botón de cierre - solo mostrar en móvil */}
+
           {isMobile && (
             <div className="sidebar-close-button" onClick={onToggle}>
               <IonIcon icon={closeOutline} className="sidebar-close-icon" />
@@ -126,13 +134,12 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
           )}
         </div>
 
-        {/* Menú mejorado */}
         <div className="menu-container">
           {[...roleSpecificOptions, ...baseOptions].map((option, index) => {
             const isActive = location.pathname === option.path;
-            
+
             return (
-              <div 
+              <div
                 key={index}
                 className={`menu-item ${isActive ? 'active' : ''}`}
                 onClick={() => {
@@ -140,13 +147,11 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
                     option.action();
                   } else if (option.path) {
                     if (history.location.pathname === option.path) {
-                      // Fuerza refresco si ya estás en la ruta
                       history.replace('/');
                       setTimeout(() => history.replace(option.path), 0);
                     } else {
                       history.replace(option.path);
                     }
-                    // Cerrar el menú en móvil después de navegar
                     if (isMobile) onToggle?.();
                   }
                 }}
@@ -158,8 +163,7 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
           })}
         </div>
       </div>
-      
-      {/* Overlay para móviles */}
+
       {isMobile && isOpen && (
         <div className="sidebar-overlay" onClick={onToggle}></div>
       )}
