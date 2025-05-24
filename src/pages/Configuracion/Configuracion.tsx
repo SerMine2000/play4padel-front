@@ -5,7 +5,7 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonLabel
 import { arrowBack } from 'ionicons/icons';
 import { useTheme } from "../../context/ThemeContext";
 import { useAuth } from '../../context/AuthContext';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../../theme/variables.css';
 import "./Configuracion.css";
 
@@ -13,7 +13,7 @@ const Configuracion: React.FC = () => {
 
   const { theme, toggleTheme } = useTheme();
   const { deleteAccount } = useAuth();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [showAlert, setShowAlert] = useState(false);
 
@@ -29,7 +29,7 @@ const Configuracion: React.FC = () => {
 
   const handleDelete = async () => {
     await deleteAccount();
-    history.replace('/login');
+    navigate('/login');
   };
 
   return (

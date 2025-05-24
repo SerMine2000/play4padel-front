@@ -39,71 +39,50 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const verificarToken = async () => {
-      const storedToken = localStorage.getItem('token');
-
-      if (!storedToken) {
-        setIsAuthenticated(false);
-        setUser(null);
-        setIsLoading(false);
-        return;
-      }
-
-      try {
-        const res = await api.get('/verify-token', storedToken);
-        const { user_id, role, user_data } = res;
-
-        const usuario: User = {
-          ...user_data,
-          id: user_id,
-          role: role.toLowerCase(),       // e.g. "club"
-          id_rol: role.toUpperCase(),     // e.g. "CLUB"
-          telefono: user_data.telefono || "No especificado",
-          bio: user_data.bio || "No especificado"
-        };
-
-        setUser(usuario);
-        setToken(storedToken);
-        setIsAuthenticated(true);
-      } catch (error) {
-        localStorage.removeItem('token');
-        setUser(null);
-        setToken(null);
-        setIsAuthenticated(false);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    verificarToken();
+    refreshUser();
   }, []);
 
   const login = async (email: string, password: string) => {
     try {
+      setIsLoading(true);
       const response = await api.post('/login', { email, password });
+      
+      // Verificar la estructura de respuesta
+      console.log('Respuesta del backend:', response);
+      
       const { access_token, user_id, role, user_data } = response;
 
-      const userResponse = await api.get(`/user/${user_id}`, access_token);
-      const fullUserData = userResponse ? userResponse : {};
+      if (!access_token || !user_id || !role) {
+        throw new Error('Respuesta del servidor incompleta');
+      }
 
+      // Guardar token en localStorage
+      localStorage.setItem('token', access_token);
+      setToken(access_token);
+      setIsAuthenticated(true);
+
+      // Construir objeto usuario con los datos recibidos
       const usuario: User = {
         ...user_data,
-        ...fullUserData,
         id: user_id,
         role: role.toLowerCase(),
         id_rol: role.toUpperCase(),
-        telefono: fullUserData.telefono ?? user_data.telefono ?? "No especificado",
-        bio: fullUserData.bio ?? user_data.bio ?? "No especificado"
+        telefono: user_data.telefono ?? "No especificado",
+        bio: user_data.bio ?? "No especificado"
       };
 
-      localStorage.setItem('token', access_token);
-      setToken(access_token);
       setUser(usuario);
-      setIsAuthenticated(true);
-
+      setError(null);
+      
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
+      localStorage.removeItem('token');
+      setToken(null);
+      setUser(null);
+      setIsAuthenticated(false);
       throw new Error('Error al iniciar sesión');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -115,21 +94,52 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const refreshUser = async () => {
-    if (!user?.id) return;
+    const storedToken = localStorage.getItem('token');
+    if (!storedToken) {
+      setIsAuthenticated(false);
+      setUser(null);
+      setIsLoading(false);
+      return;
+    }
 
     try {
       setIsLoading(true);
-      const response = await api.get(`/user/${user.id}`);
-      if (!response || Object.keys(response).length === 0) return;
+      
+      // Usar el endpoint de verificación de token en lugar de obtener usuario directamente
+      const response = await api.get('/verify-token', storedToken);
+      
+      if (!response) {
+        throw new Error('Token inválido');
+      }
+      
+      const { user_id, role } = response;
+      
+      // Ahora obtener los datos completos del usuario
+      const userResponse = await api.get(`/user/${user_id}`, storedToken);
+      
+      if (!userResponse) {
+        throw new Error('No se pudieron obtener los datos del usuario');
+      }
 
-      setUser({
-        ...user,
-        ...response,
-        telefono: response.telefono ?? user.telefono,
-        bio: response.bio ?? user.bio,
-      });
+      const usuario: User = {
+        ...userResponse,
+        id: user_id,
+        role: role.toLowerCase(),
+        id_rol: role.toUpperCase(),
+        telefono: userResponse.telefono ?? "No especificado",
+        bio: userResponse.bio ?? "No especificado"
+      };
+
+      setUser(usuario);
+      setToken(storedToken);
+      setIsAuthenticated(true);
+      
     } catch (error) {
       console.error('Error al refrescar el usuario:', error);
+      localStorage.removeItem('token');
+      setUser(null);
+      setToken(null);
+      setIsAuthenticated(false);
     } finally {
       setIsLoading(false);
     }

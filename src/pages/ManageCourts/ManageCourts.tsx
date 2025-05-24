@@ -5,7 +5,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonBa
   IonItemOptions, IonItemOption, IonLoading, IonToast, IonText, IonModal, IonChip, IonFab, IonFabButton, IonAlert } from '@ionic/react';
 import { addCircleOutline, createOutline, buildOutline, trashOutline, closeCircleOutline, checkmarkCircleOutline, tennisballOutline, swapHorizontalOutline, arrowBack } from 'ionicons/icons';
 import { useAuth } from "../../context/AuthContext";
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import apiService from "../../services/api.service";
 import { Pista } from "../../interfaces";
 import '../../theme/variables.css';
@@ -32,7 +32,7 @@ const getStatusColor = (estado: string): string => {
 
 const ManageCourts: React.FC = () => {
   const { user } = useAuth();
-  const history = useHistory();
+  const navigate = useNavigate();
   
   // Estados
   const [clubId, setClubId] = useState<number | null>(null);
@@ -95,25 +95,28 @@ const ManageCourts: React.FC = () => {
           setClubId(clubIdToUse);
           try {
             setLoading(true);
-            const clubResponse = await apiService.get(`/clubs/${clubIdToUse}`);
+            const clubResponse = await apiService.get(`/clubs/${user.id_club}`);
             setClubData(clubResponse);
-            const pistasResponse = await apiService.get(`/clubs/${clubIdToUse}/pistas`);
+            const pistasResponse = await apiService.get(`/clubs/${user.id_club}/pistas`);
             setPistas(Array.isArray(pistasResponse) ? pistasResponse : []);
-          } catch (error) {
-            console.error('[ManageCourts][WORKAROUND] Error al cargar datos para club forzado:', error);
-            showToastMessage('Error al cargar pistas del club (workaround)', 'danger');
-          } finally {
+          } catch (error: any) {
+            console.error('[ManageCourts] Error al cargar datos para club:', error);
+          
+            
+          }
+          
+           finally {
             setLoading(false);
           }
         }
       } else {
         // Otros roles fuera
-        history.replace('/home');
+        navigate('/home');
       }
     };
   
     loadClubData();
-  }, [user, history]);
+  }, [user, navigate]);
   
   
   // Mostrar mensaje de toast

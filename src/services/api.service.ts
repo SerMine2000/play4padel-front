@@ -17,43 +17,59 @@ class ApiService {
     }
 
     try {
-      console.log(`Realizando petición GET a: ${API_URL}${endpoint}`);
+      console.log("🚀 GET Request:", {
+        url: `${API_URL}${endpoint}`,
+        headers: { ...headers, Authorization: authToken ? `Bearer ${authToken.substring(0, 20)}...` : 'No token' }
+      });
 
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'GET',
         headers,
       });
 
-      console.log("Respuesta completa del fetch:", response);
+      console.log("📥 GET Response Status:", response.status);
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Error desconocido' }));
-        console.error("Error en la respuesta del fetch:", errorData);
-        throw new Error(errorData.error || `Error: ${response.status}`);
+        let errorData;
+        try {
+          errorData = await response.json();
+        } catch {
+          errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
+        }
+        
+        console.error("❌ GET Error Response:", errorData);
+        
+        // Si es un error 401, limpiar el token
+        if (response.status === 401) {
+          // localStorage.removeItem('token');  // ← COMENTAR ESTA LÍNEA
+          console.log('🚨 Error 401 - manteniendo token para debug');
+        }
+        
+        throw new Error(errorData.error || errorData.message || `Error: ${response.status}`);
       }
 
-      // Verificamos el contenido antes de intentar convertirlo a JSON
       const contentType = response.headers.get('Content-Type');
       let jsonData: T | null = null;
 
       if (contentType && contentType.includes('application/json')) {
         try {
           jsonData = await response.json();
-          console.log("JSON Data final:", jsonData);
+          console.log("✅ GET Success Response:", jsonData);
         } catch (error) {
-          console.error("Error al convertir a JSON:", error);
-          jsonData = { error: "Error al convertir la respuesta a JSON" } as T;
+          console.error("❌ Error parsing JSON:", error);
+          throw new Error("Error al convertir la respuesta a JSON");
         }
       } else {
-        console.warn("Respuesta no es JSON, tipo de contenido:", contentType);
-        console.log("Texto bruto de la respuesta:", await response.text());
+        console.warn("⚠️ Response is not JSON:", contentType);
+        const textResponse = await response.text();
+        console.log("📝 Text Response:", textResponse);
+        throw new Error("La respuesta no es JSON válido");
       }
 
-return jsonData;
-
+      return jsonData;
     } catch (error) {
-      console.error("Error en la función get:", error);
-      throw new Error('Error al realizar la petición GET');
+      console.error("💥 GET Request Failed:", error);
+      throw error;
     }
   }
 
@@ -67,61 +83,108 @@ return jsonData;
       headers['Authorization'] = `Bearer ${authToken}`;
     }
 
-
-    console.log("Payload enviado al backend (PUT):", data)
-
-    const response = await fetch(`${API_URL}${endpoint}`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(data),
+    console.log("🚀 POST Request:", {
+      url: `${API_URL}${endpoint}`,
+      data,
+      headers: { ...headers, Authorization: authToken ? `Bearer ${authToken.substring(0, 20)}...` : 'No token' }
     });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ error: 'Error desconocido' }));
-      throw new Error(errorData.error || `Error: ${response.status}`);
-    }
+    try {
+      const response = await fetch(`${API_URL}${endpoint}`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(data),
+      });
 
-    return await response.json();
+      console.log("📥 POST Response Status:", response.status);
+
+      if (!response.ok) {
+        let errorData;
+        try {
+          errorData = await response.json();
+        } catch {
+          errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
+        }
+        
+        console.error("❌ POST Error Response:", errorData);
+        
+        // Si es un error 401, limpiar el token
+        if (response.status === 401) {
+          // localStorage.removeItem('token');  // ← COMENTAR ESTA LÍNEA
+          console.log('🚨 Error 401 - manteniendo token para debug');
+        }
+        
+        throw new Error(errorData.error || errorData.message || `Error: ${response.status}`);
+      }
+
+      const responseData = await response.json();
+      console.log("✅ POST Success Response:", responseData);
+      return responseData;
+
+    } catch (error) {
+      console.error("💥 POST Request Failed:", error);
+      throw error;
+    }
   }
 
   async put(endpoint: string, data: any, token?: string) {
-  const headers: HeadersInit = {
-    'Content-Type': 'application/json',
-  };
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+    };
 
-  const authToken = token || this.getToken();
-  if (authToken) {
-    headers['Authorization'] = `Bearer ${authToken}`;
-  }
-
-  console.log("Payload enviado al backend (PUT):", JSON.stringify(data));
-
-  try {
-    const response = await fetch(`${API_URL}${endpoint}`, {
-      method: 'PUT',
-      headers,
-      body: JSON.stringify(data),
-    });
-
-    console.log("Respuesta completa del PUT:", response);
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ error: 'Error desconocido' }));
-      console.error("Error en la respuesta del PUT:", errorData);
-      throw new Error(errorData.error || `Error: ${response.status}`);
+    const authToken = token || this.getToken();
+    if (authToken) {
+      headers['Authorization'] = `Bearer ${authToken}`;
     }
 
-    const responseData = await response.json().catch(() => null);
-    console.log("JSON Data recibido del backend (PUT):", responseData);
+    console.log("🚀 PUT Request:", {
+      url: `${API_URL}${endpoint}`,
+      data,
+      headers: { ...headers, Authorization: authToken ? `Bearer ${authToken.substring(0, 20)}...` : 'No token' }
+    });
 
-    return responseData;
+    try {
+      const response = await fetch(`${API_URL}${endpoint}`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify(data),
+      });
 
-  } catch (error) {
-    console.error("Error al realizar la petición PUT:", error);
-    throw new Error('Error al actualizar el perfil');
+      console.log("📥 PUT Response Status:", response.status);
+
+      if (!response.ok) {
+        let errorData;
+        try {
+          errorData = await response.json();
+        } catch {
+          errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
+        }
+        
+        console.error("❌ PUT Error Response:", errorData);
+        
+        // Si es un error 401, limpiar el token
+        if (response.status === 401) {
+          // localStorage.removeItem('token');  // ← COMENTAR ESTA LÍNEA
+          console.log('🚨 Error 401 - manteniendo token para debug');
+        }
+        
+        throw new Error(errorData.error || errorData.message || `Error: ${response.status}`);
+      }
+
+      try {
+        const responseData = await response.json();
+        console.log("✅ PUT Success Response:", responseData);
+        return responseData;
+      } catch {
+        // Algunas respuestas PUT pueden no tener contenido JSON
+        return null;
+      }
+
+    } catch (error) {
+      console.error("💥 PUT Request Failed:", error);
+      throw error;
+    }
   }
-}
-
 
   async delete(endpoint: string, token?: string) {
     const headers: HeadersInit = {
@@ -133,17 +196,51 @@ return jsonData;
       headers['Authorization'] = `Bearer ${authToken}`;
     }
 
-    const response = await fetch(`${API_URL}${endpoint}`, {
-      method: 'DELETE',
-      headers,
+    console.log("🚀 DELETE Request:", {
+      url: `${API_URL}${endpoint}`,
+      headers: { ...headers, Authorization: authToken ? `Bearer ${authToken.substring(0, 20)}...` : 'No token' }
     });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ error: 'Error desconocido' }));
-      throw new Error(errorData.error || `Error: ${response.status}`);
-    }
+    try {
+      const response = await fetch(`${API_URL}${endpoint}`, {
+        method: 'DELETE',
+        headers,
+      });
 
-    return await response.json();
+      console.log("📥 DELETE Response Status:", response.status);
+
+      if (!response.ok) {
+        let errorData;
+        try {
+          errorData = await response.json();
+        } catch {
+          errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
+        }
+        
+        console.error("❌ DELETE Error Response:", errorData);
+        
+        // Si es un error 401, limpiar el token
+        if (response.status === 401) {
+          // localStorage.removeItem('token');  // ← COMENTAR ESTA LÍNEA
+          console.log('🚨 Error 401 - manteniendo token para debug');
+        }
+        
+        throw new Error(errorData.error || errorData.message || `Error: ${response.status}`);
+      }
+
+      try {
+        const responseData = await response.json();
+        console.log("✅ DELETE Success Response:", responseData);
+        return responseData;
+      } catch {
+        // Algunas respuestas DELETE pueden no tener contenido JSON
+        return null;
+      }
+
+    } catch (error) {
+      console.error("💥 DELETE Request Failed:", error);
+      throw error;
+    }
   }
 }
 

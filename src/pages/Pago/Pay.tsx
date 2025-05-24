@@ -1,36 +1,48 @@
 import React, { useState, useEffect } from 'react';
-import { IonPage, IonContent, IonIcon } from '@ionic/react';
-import { cardOutline, timeOutline, documentTextOutline, checkmarkCircleOutline } from 'ionicons/icons';
-import './Pagos.css';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { IonPage, IonContent, IonIcon, IonToast } from '@ionic/react';
+import { documentTextOutline, checkmarkCircleOutline, arrowBackOutline } from 'ionicons/icons';
+import { useStripe, useElements, CardElement, CardCvcElement, CardNumberElement, CardExpiryElement } from '@stripe/react-stripe-js';
 import { useAuth } from '../../context/AuthContext';
-import { useTheme } from '../../context/ThemeContext';
 import apiService from '../../services/api.service';
+import './Pagos.css';
 
 const Pay: React.FC = () => {
+
+  interface DatosReserva {
+    id_pista: number;
+    fecha: string;
+    hora_inicio: string;
+    hora_fin: string;
+    precio: number;
+  }
+
   const { user } = useAuth();
-  const { theme } = useTheme();
-  const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
+  const stripe = useStripe();
+  const elements = useElements();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const { id_pista, fecha, hora_inicio, hora_fin, precio } = (location.state as DatosReserva);
+
   const [paymentHistory, setPaymentHistory] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    amount: '',
-    concept: ''
+    numeroTarjeta: '',
+    fechaExpiracion: '',
+    cvv: '',
+    codigoPostal: ''
   });
 
+  const [toast, setToast] = useState({ show: false, message: '', color: 'success' });
+  const showToast = (message: string, color: 'success' | 'danger') => {
+    setToast({ show: true, message, color });
+  };
   useEffect(() => {
-    // Cargar historial de pagos
     const fetchPaymentHistory = async () => {
       try {
-        // Comentado hasta que exista la API real
-        // const response = await apiService.get('/payments/history');
-        // setPaymentHistory(response);
-        
-        // Datos de muestra
-        setPaymentHistory([
-          { id: 1, date: '15/05/2025', amount: '25,00 €', concept: 'Reserva Pista 3', status: 'success' },
-          { id: 2, date: '02/05/2025', amount: '25,00 €', concept: 'Reserva Pista 1', status: 'success' },
-          { id: 3, date: '28/04/2025', amount: '50,00 €', concept: 'Torneo Mayo', status: 'pending' },
-        ]);
+        const response = await apiService.get('/payments/history');
+        setPaymentHistory(response);
       } catch (error) {
         console.error('Error al cargar el historial de pagos:', error);
       }
@@ -39,46 +51,63 @@ const Pay: React.FC = () => {
     fetchPaymentHistory();
   }, []);
 
-  const handlePaymentSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!selectedMethod) {
-      alert('Por favor, seleccione un método de pago');
-      return;
-    }
-    
-    setIsLoading(true);
-    
-    try {
-      // Simulación de procesamiento de pago
-      // En producción, aquí se integraría con el backend
-      
-      // Comentado hasta que exista la API real
-      // const response = await apiService.post('/payments/process', {
-      //   method: selectedMethod,
-      //   amount: formData.amount,
-      //   concept: formData.concept
-      // });
-      
-      // Simulación
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      alert('Pago procesado correctamente');
-      setFormData({ amount: '', concept: '' });
-      
-      // Recargar historial de pagos
-      // fetchPaymentHistory();
-    } catch (error) {
-      console.error('Error al procesar el pago:', error);
-      alert('Error al procesar el pago. Inténtelo de nuevo.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const procesarPago = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!user || !user.id) {
+      showToast('El usuario no está autenticado.', 'danger');
+      return;
+    }
+
+    if (!stripe || !elements) {
+      showToast('Stripe no está listo.', 'danger');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await apiService.post('/crear-pago', {
+        method: 'card',
+        amount: precio,
+        reserva: {
+          id_usuario: user?.id,
+          id_pista,
+          fecha,
+          hora_inicio,
+          hora_fin
+        }
+      });
+
+      const clientSecret = response.clientSecret;
+
+      const result = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: elements.getElement(CardNumberElement)!,
+          billing_details: {
+            address: {
+              postal_code: formData.codigoPostal
+            }
+          }
+        }
+      });      
+      if (result.error) {
+        showToast(`Error en el pago: ${result.error.message}`, 'danger');
+      } else if (result.paymentIntent.status === 'succeeded') {
+        showToast('Pago realizado correctamente', 'success');
+        setFormData({ numeroTarjeta: '', fechaExpiracion: '', cvv: '', codigoPostal: '' });
+        setTimeout(() => navigate('/login'), 2000);
+      }
+    } catch (error) {
+      console.error('Error al procesar el pago, comprueba si tu sesión expiró', error);
+      showToast('Ha ocurrido un error al procesar el pago.', 'danger');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -86,127 +115,53 @@ const Pay: React.FC = () => {
       <IonContent>
         <div className="pagos-container">
           <div className="pagos-header">
-            <h1 className="pagos-title">Pagos</h1>
-            <p className="pagos-description">Gestiona tus pagos y revisa tu historial de transacciones</p>
-          </div>
 
-          {/* Métodos de pago */}
-          <div className="payment-methods">
-            <div 
-              className={`payment-method-card ${selectedMethod === 'card' ? 'selected' : ''}`}
-              onClick={() => setSelectedMethod('card')}
-            >
-              <IonIcon icon={cardOutline} className="payment-icon" />
-              <span className="payment-method-name">Tarjeta de crédito</span>
-            </div>
-            
-            <div 
-              className={`payment-method-card ${selectedMethod === 'transfer' ? 'selected' : ''}`}
-              onClick={() => setSelectedMethod('transfer')}
-            >
-              <IonIcon icon={timeOutline} className="payment-icon" />
-              <span className="payment-method-name">Transferencia bancaria</span>
-            </div>
-            
-            <div 
-              className={`payment-method-card ${selectedMethod === 'paypal' ? 'selected' : ''}`}
-              onClick={() => setSelectedMethod('paypal')}
-            >
-              <span className="payment-icon">P</span>
-              <span className="payment-method-name">PayPal</span>
-            </div>
-          </div>
+            {/* Botón de retroceso */}
+            <IonIcon icon={arrowBackOutline} style={{ fontSize: '24px', cursor: 'pointer', marginRight: '10px' }} onClick={() => navigate(-1)} />
 
+            <h1 className="pagos-title">Proceso de pago</h1>
+            <p className="pagos-description">Realización del pago mediante tarjeta bancaria</p>
+          </div>
+  
           {/* Formulario de pago */}
-          {selectedMethod && (
             <div className="payment-form">
-              <h2 className="section-title">Completar pago</h2>
-              
-              <form onSubmit={handlePaymentSubmit}>
-                {selectedMethod === 'card' && (
-                  <>
-                    <div className="form-group">
-                      <label className="form-label">Número de tarjeta</label>
-                      <input 
-                        type="text" 
-                        className="form-input" 
-                        placeholder="1234 5678 9012 3456"
-                      />
-                    </div>
-                    
-                    <div className="form-row">
-                      <div className="form-group">
-                        <label className="form-label">Fecha de expiración</label>
-                        <input 
-                          type="text" 
-                          className="form-input" 
-                          placeholder="MM/AA"
-                        />
-                      </div>
-                      
-                      <div className="form-group">
-                        <label className="form-label">CVV</label>
-                        <input 
-                          type="text" 
-                          className="form-input" 
-                          placeholder="123"
-                        />
-                      </div>
-                    </div>
-                  </>
-                )}
-                
-                {selectedMethod === 'transfer' && (
-                  <div className="form-group">
-                    <p>Realiza una transferencia a la siguiente cuenta bancaria:</p>
-                    <p><strong>IBAN:</strong> ES91 2100 0418 4502 0005 1332</p>
-                    <p><strong>Beneficiario:</strong> Play4Padel S.L.</p>
-                    <p><strong>Concepto:</strong> {user?.id || '[Tu número de usuario]'}</p>
-                  </div>
-                )}
-                
-                {selectedMethod === 'paypal' && (
-                  <div className="form-group">
-                    <p>Serás redirigido a PayPal para completar el pago.</p>
-                  </div>
-                )}
-                
+              <form onSubmit={procesarPago}>
                 <div className="form-group">
                   <label className="form-label">Importe</label>
-                  <input 
-                    type="text" 
-                    className="form-input" 
-                    placeholder="25,00 €"
-                    name="amount"
-                    value={formData.amount}
-                    onChange={handleInputChange}
-                  />
+                  <p>{precio} €</p>
                 </div>
-                
+
                 <div className="form-group">
-                  <label className="form-label">Concepto</label>
-                  <input 
-                    type="text" 
-                    className="form-input" 
-                    placeholder="Reserva de pista"
-                    name="concept"
-                    value={formData.concept}
-                    onChange={handleInputChange}
-                  />
+                  <label className="form-label">Datos de la tarjeta</label>
+                  <div className="form-input">
+                    <CardElement
+                      options={{
+                        style: {
+                          base: {
+                            fontSize: '16px',
+                            color: '#ffffff',
+                            '::placeholder': { color: '#aaaaaa' }
+                          },
+                          invalid: { color: '#ff6b6b' }
+                        }
+                      }}
+                    />
+                  </div>
                 </div>
-                
+
                 <button className="payment-btn" disabled={isLoading} type="submit">
                   {isLoading ? 'Procesando...' : 'Realizar pago'}
                   {!isLoading && <IonIcon icon={checkmarkCircleOutline} className="payment-icon-small" />}
                 </button>
               </form>
             </div>
-          )}
 
+
+  
           {/* Historial de pagos */}
           <div className="payment-history">
             <h2 className="section-title">Historial de pagos</h2>
-            
+  
             {paymentHistory.length > 0 ? (
               <table className="payment-table">
                 <thead>
@@ -226,8 +181,8 @@ const Pay: React.FC = () => {
                       <td data-label="Importe">{payment.amount}</td>
                       <td data-label="Estado">
                         <span className={`payment-status status-${payment.status}`}>
-                          {payment.status === 'success' ? 'Completado' : 
-                           payment.status === 'pending' ? 'Pendiente' : 'Fallido'}
+                          {payment.status === 'success' ? 'Completado' :
+                            payment.status === 'pending' ? 'Pendiente' : 'Fallido'}
                         </span>
                       </td>
                       <td data-label="Factura">
@@ -246,6 +201,14 @@ const Pay: React.FC = () => {
             )}
           </div>
         </div>
+  
+        <IonToast
+          isOpen={toast.show}
+          onDidDismiss={() => setToast({ ...toast, show: false })}
+          message={toast.message}
+          duration={2000}
+          color={toast.color}
+        />
       </IonContent>
     </IonPage>
   );

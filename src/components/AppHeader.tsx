@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { IonHeader, IonToolbar, IonButtons, IonButton } from '@ionic/react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './AppHeader.css';
 
@@ -11,7 +11,7 @@ const pureWhite = '#FFFFFF'; // Blanco del "4" en el logo
 
 const AppHeader: React.FC = () => {
   const { user } = useAuth();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [imageError, setImageError] = useState(false);
 
   const getInitial = () => {
@@ -20,7 +20,7 @@ const AppHeader: React.FC = () => {
   };
 
   const handleProfileClick = () => {
-    history.replace('/profile');
+    navigate('/profile');
   };
 
   const handleImageError = () => {

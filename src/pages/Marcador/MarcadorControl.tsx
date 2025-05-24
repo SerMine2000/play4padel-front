@@ -29,7 +29,7 @@ import {
   IonAccordionGroup
 } from '@ionic/react';
 import { useEffect, useState, useRef } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { 
   tennisballOutline, 
   refreshOutline, 
@@ -50,7 +50,7 @@ import './MarcadorView.css';
  * reiniciando el partido y mostrando el marcador en pantalla completa.
  */
 const MarcadorControl: React.FC = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   // Estado del marcador con valores iniciales seguros
   const [estado, setEstado] = useState<any>({
     puntos: { A: 0, B: 0 },

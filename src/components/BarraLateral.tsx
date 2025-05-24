@@ -7,14 +7,23 @@ import {
   settingsOutline, menuOutline, closeOutline
 } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './BarraLateral.css';
 
-const primaryPurple = '#2D0A31'; // Púrpura oscuro del fondo del logo
-const brightGreen = '#00FF66'; // Verde brillante de la "P" en el logo
-const pureWhite = '#FFFFFF'; // Blanco del "4" en el logo
-const darkPurple = '#110514'; // Fondo más oscuro
-const mediumPurple = '#3D1A41'; // Color para cards
+const primaryPurple = '#2D0A31';
+const brightGreen = '#00FF66';
+const pureWhite = '#FFFFFF';
+const darkPurple = '#110514';
+const mediumPurple = '#3D1A41';
+
+const ROLES = {
+  ADMIN: 1,
+  CLUB: 2,
+  PROFESOR: 3,
+  EMPLEADO: 4,
+  USUARIO: 5,
+  SOCIO: 6,
+};
 
 type MenuOption = {
   label: string;
@@ -44,18 +53,17 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
   onToggle
 }) => {
   const location = useLocation();
-  const { user, logout } = useAuth();
-  const history = useHistory();
+  const { user, logout, isLoading } = useAuth();
+  const navigate = useNavigate();
 
-  // Ocultar barra lateral en rutas excluidas
-  if (excludedRoutes.includes(location.pathname)) {
-    return null;
-  }
-
-  // Prevenir render si aún no se ha definido el rol del usuario
-  if (!user || !user.id_rol) {
-    return null;
-  }
+  // No mostrar la barra lateral en rutas excluidas
+  if (excludedRoutes.includes(location.pathname)) return null;
+  
+  // No mostrar mientras está cargando
+  if (isLoading) return null;
+  
+  // No mostrar si no hay usuario
+  if (!user) return null;
 
   const baseOptions: MenuOptionWithAction[] = [
     {
@@ -63,7 +71,7 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
       path: '/configuracion',
       icon: settingsOutline,
       action: async () => {
-        history.replace('/configuracion');
+        navigate('/configuracion');
         if (isMobile) onToggle?.();
       }
     },
@@ -79,8 +87,30 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
 
   let roleSpecificOptions: MenuOption[] = [];
 
-  console.log('ROL DETECTADO:', user.id_rol);
-  switch (user.id_rol) {
+  // Debug logging
+  console.log('👤 Usuario actual:', {
+    id: user?.id,
+    role: user?.role,
+    id_rol: user?.id_rol,
+    nombre: user?.nombre
+  });
+
+  // Determinar opciones del menú basado en el rol
+  const userRole = (user.role || '').toUpperCase();
+  
+  switch (userRole) {
+    case 'ADMIN':
+      roleSpecificOptions = [
+        { label: 'Inicio', path: '/home', icon: homeOutline },
+        { label: 'Gestionar Pistas', path: '/manage-courts', icon: tennisballOutline },
+        { label: 'Administrar Usuarios', path: '/manage-users', icon: peopleOutline },
+        { label: 'Calendario', path: '/calendar', icon: calendarOutline },
+        { label: 'Estadísticas', path: '/estadisticas', icon: statsChartOutline },
+        { label: 'Torneos', path: '/torneos', icon: trophyOutline },
+        { label: 'Ligas', path: '/ligas', icon: trophyOutline }
+      ];
+      break;
+      
     case 'CLUB':
       roleSpecificOptions = [
         { label: 'Inicio', path: '/home', icon: homeOutline },
@@ -92,6 +122,23 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
         { label: 'Ligas', path: '/ligas', icon: trophyOutline }
       ];
       break;
+      
+    case 'PROFESOR':
+      roleSpecificOptions = [
+        { label: 'Inicio', path: '/home', icon: homeOutline },
+        { label: 'Mis Clases', path: '/clases', icon: calendarOutline },
+        { label: 'Calendario', path: '/calendar', icon: calendarOutline }
+      ];
+      break;
+      
+    case 'EMPLEADO':
+      roleSpecificOptions = [
+        { label: 'Inicio', path: '/home', icon: homeOutline },
+        { label: 'Gestionar Pistas', path: '/manage-courts', icon: tennisballOutline },
+        { label: 'Calendario', path: '/calendar', icon: calendarOutline }
+      ];
+      break;
+      
     case 'USUARIO':
     case 'SOCIO':
       roleSpecificOptions = [
@@ -99,9 +146,13 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
         { label: 'Reservar', path: '/reservas', icon: calendarOutline }
       ];
       break;
+      
     default:
+      console.warn(`⚠️ Rol no reconocido: ${userRole}`);
+      // Opciones por defecto para usuarios
       roleSpecificOptions = [
-        { label: 'Inicio', path: '/home', icon: homeOutline }
+        { label: 'Inicio', path: '/home', icon: homeOutline },
+        { label: 'Reservar', path: '/reservas', icon: calendarOutline }
       ];
   }
 
@@ -114,17 +165,21 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
           </div>
         </div>
       )}
-
       <div
-        className={isMobile
-          ? `barra-lateral mobile ${isOpen ? 'open' : 'closed'}`
-          : 'barra-lateral'}
+        className={
+          isMobile
+            ? `barra-lateral mobile ${isOpen ? 'open' : 'closed'}`
+            : 'barra-lateral'
+        }
       >
         <div className="logo-container">
-          <div className="sidebar-logo" onClick={() => {
-            history.replace('/home');
-            if (isMobile) onToggle?.();
-          }}>
+          <div
+            className="sidebar-logo"
+            onClick={() => {
+              navigate('/home');
+              if (isMobile) onToggle?.();
+            }}
+          >
             Play<span style={{ color: brightGreen }}>4</span>Padel
           </div>
 
@@ -134,6 +189,8 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
             </div>
           )}
         </div>
+
+        
 
         <div className="menu-container">
           {[...roleSpecificOptions, ...baseOptions].map((option, index) => {
@@ -147,11 +204,11 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
                   if (option.action) {
                     option.action();
                   } else if (option.path) {
-                    if (history.location.pathname === option.path) {
-                      history.replace('/');
-                      setTimeout(() => history.replace(option.path), 0);
+                    if (location.pathname === option.path) {
+                      navigate('/');
+                      setTimeout(() => navigate(option.path), 0);
                     } else {
-                      history.replace(option.path);
+                      navigate(option.path);
                     }
                     if (isMobile) onToggle?.();
                   }

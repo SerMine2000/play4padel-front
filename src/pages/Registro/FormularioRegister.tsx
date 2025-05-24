@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from "../../context/AuthContext";
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import "./Register.css";
 import { RegisterRequest } from '../../interfaces';
 
@@ -66,7 +66,7 @@ const iconContainerStyle: React.CSSProperties = {
 
 const FormularioRegister: React.FC = () => {
   const { register } = useAuth();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [nombre, setNombre] = useState('');
   const [apellidos, setApellidos] = useState('');
@@ -116,7 +116,7 @@ const FormularioRegister: React.FC = () => {
       await register(registerData);
       
       // Redirigir al login solo después de un registro exitoso
-      history.replace('/login');
+      navigate('/login');
     } catch (error) {
       console.error('Error en el registro:', error);
       setFormError('Error al procesar el registro. Por favor, inténtalo de nuevo.');

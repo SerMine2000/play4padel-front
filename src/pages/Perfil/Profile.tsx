@@ -7,7 +7,7 @@ import { arrowBack } from 'ionicons/icons';
 import { personOutline, personCircleOutline, saveOutline, refreshOutline, mailOutline, callOutline, keyOutline, imageOutline, 
   closeOutline } from 'ionicons/icons';
 import { useAuth } from '../../context/AuthContext';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import apiService from '../../services/api.service';
 import { API_ENDPOINTS } from '../../utils/constants';
 import '../../theme/variables.css';
@@ -16,7 +16,7 @@ import './Profile.css';
 
 const Profile: React.FC = () => {
   const { user, setUser, isLoading: authLoading, refreshUser } = useAuth();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({

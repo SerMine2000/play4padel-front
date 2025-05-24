@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonBackButton, IonGrid,
   IonRow, IonCol, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonItem, IonLabel, IonList,
   IonIcon, IonLoading, IonToast, IonChip, IonButton, IonModal, IonSegment, IonSegmentButton, IonText,
@@ -40,7 +40,7 @@ interface ReservasPorDia {
 }
 
 const CalendarView: React.FC = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [fechaActual, setFechaActual] = useState<Date>(new Date());
   const [diasCalendario, setDiasCalendario] = useState<DiaCalendario[]>([]);
@@ -156,21 +156,21 @@ const CalendarView: React.FC = () => {
 
     // Obtener ID del club
     let idClub = user.id_club;
-    if (!idClub) {
-      try {
-        const clubsResponse = await apiService.get(`/clubs?id_administrador=${user.id}`);
-        if (Array.isArray(clubsResponse) && clubsResponse.length > 0) {
-          idClub = clubsResponse[0].id;
-        } else {
-          mostrarMensaje('No se encontró un club asignado a tu cuenta', 'warning');
-          return;
-        }
-      } catch (error) {
-        console.error('Error al buscar clubes del administrador:', error);
-        mostrarMensaje('Error al obtener información del club', 'danger');
-        return;
-      }
+if (!idClub) {
+  try {
+    const clubsResponse = await apiService.get(`/clubs?id_administrador=${user.id}`);
+    if (Array.isArray(clubsResponse) && clubsResponse.length > 0) {
+      idClub = clubsResponse[0].id;
+    } else {
+      console.log('Usuario sin club asignado. No se mostrará toast de advertencia.');
+      return;
     }
+  } catch (error) {
+    console.error('Error al buscar clubes del administrador:', error);
+    mostrarMensaje('Error al obtener información del club', 'danger');
+    return;
+  }
+}
 
     try {
       // Si estamos en la vista de lista, mostrar el spinner específico
@@ -352,7 +352,7 @@ const CalendarView: React.FC = () => {
         if (Array.isArray(clubsResponse) && clubsResponse.length > 0) {
           idClub = clubsResponse[0].id;
         } else {
-          mostrarMensaje('No se encontró un club asignado a tu cuenta', 'warning');
+          console.log('Usuario sin club asignado. No se mostrará toast de advertencia.');
           return;
         }
       } catch (error) {

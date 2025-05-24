@@ -1,7 +1,6 @@
 // src/App.tsx
-import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet, setupIonicReact, useIonRouter } from '@ionic/react';
-import { IonReactRouter } from '@ionic/react-router';
+import { IonApp, IonRouterOutlet, useIonRouter } from '@ionic/react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Login from './pages/Login/Login';
 import Register from './pages/Registro/Register';
@@ -14,13 +13,14 @@ import MarcadorControl from './pages/Marcador/MarcadorControl';
 import MarcadorPantalla from './pages/Marcador/MarcadorPantalla';
 import Configuracion from './pages/Configuracion/Configuracion';
 import Pay from './pages/Pago/Pay';
-import RutaPrivada from './components/RutaPrivada';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Estructura from './components/Estructura';
-import BarraLateral from './components/BarraLateral';
 import { ThemeProvider } from './context/ThemeContext';
 import { useEffect } from 'react';
+
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -30,7 +30,7 @@ import '@ionic/react/css/normalize.css';
 import '@ionic/react/css/structure.css';
 import '@ionic/react/css/typography.css';
 
-// /* Optional CSS utils that can be commented out */
+/* Optional CSS utils */
 import '@ionic/react/css/padding.css';
 import '@ionic/react/css/float-elements.css';
 import '@ionic/react/css/text-alignment.css';
@@ -41,73 +41,38 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
+const stripePromise = loadStripe('pk_test_51RBDLF2MsbKNiz9B2Wol9ZvHjbvYvhMjVwkQPOvZmBEeyRGBFPAFgkGAhBOzD4FSq1kMxZgjYJGTm9fFhfJuMdA300Vt5jJ7m4');
 
-// Componente envoltorio para rutas autenticadas
-const PrivateRoute: React.FC<{
-  component: React.ComponentType<any>;
-  path: string;
-  exact?: boolean;
-}> = ({ component: Component, ...rest }) => {
+// Componente para rutas privadas
+const PrivateRoute = ({ element }: { element: JSX.Element }) => {
   const { isAuthenticated, isLoading } = useAuth();
-  
-  return (
-    <Route
-      {...rest}
-      render={(props) => {
-        if (isLoading) {
-          return <div>Cargando...</div>;
-        }
-        
-        return isAuthenticated ? (
-          <Component {...props} />
-        ) : (
-          <Redirect to="/login" />
-        );
-      }}
-    />
-  );
+
+  if (isLoading) return <div>Cargando...</div>;
+  return isAuthenticated ? element : <Navigate to="/login" />;
 };
 
-// Componente para rutas que requieren rol específico
-const RoleRoute: React.FC<{
-  component: React.ComponentType<any>;
-  path: string;
+// Componente para rutas con roles específicos
+const RoleRoute = ({
+  element,
+  roles
+}: {
+  element: JSX.Element;
   roles: string[];
-  exact?: boolean;
-}> = ({ component: Component, roles, ...rest }) => {
+}) => {
   const { user, isAuthenticated, isLoading } = useAuth();
-  
-  return (
-    <Route
-      {...rest}
-      render={(props) => {
-        if (isLoading) {
-          return <div>Cargando...</div>;
-        }
-        
-        if (!isAuthenticated) {
-          return <Redirect to="/login" />;
-        }
-        
-        // Verificar si el usuario tiene uno de los roles permitidos
-        if (user && roles.includes(user.id_rol)) {
-          return <Component {...props} />;
-        }
-        
-        // Redirigir al home si no tiene el rol adecuado
-        return <Redirect to="/home" />;
-      }}
-    />
-  );
+
+  if (isLoading) return <div>Cargando...</div>;
+  if (!isAuthenticated) return <Navigate to="/login" />;
+  if (user && roles.includes(user.id_rol)) return element;
+  return <Navigate to="/home" />;
 };
 
-// Componente para manejar la limpieza de foco en cambios de ruta
+// Componente para manejar el foco al cambiar de ruta
 const FocusManager: React.FC = () => {
   const ionRouter = useIonRouter();
 
   useEffect(() => {
     const handleRouteChange = () => {
-      // Pequeño delay para asegurar que el cambio de página haya ocurrido
       setTimeout(() => {
         if (document.activeElement instanceof HTMLElement) {
           document.activeElement.blur();
@@ -115,12 +80,9 @@ const FocusManager: React.FC = () => {
       }, 100);
     };
 
-    // Limpiar el foco en el montaje inicial
     handleRouteChange();
-
-    // Suscribirse a cambios de ruta
     document.addEventListener('ionRouterOutletActivated', handleRouteChange);
-    
+
     return () => {
       document.removeEventListener('ionRouterOutletActivated', handleRouteChange);
     };
@@ -130,7 +92,7 @@ const FocusManager: React.FC = () => {
 };
 
 // Layout principal para páginas con cabecera y barra lateral
-const MainLayout: React.FC<{children: React.ReactNode}> = ({ children }) => (
+const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div className="main-content">
     <Estructura>
       {children}
@@ -138,11 +100,11 @@ const MainLayout: React.FC<{children: React.ReactNode}> = ({ children }) => (
   </div>
 );
 
-// Estilos básicos (puedes ajustarlos después)
+// Estilos básicos
 const styles = `
   .main-content {
     display: flex;
-    height: calc(100vh - 60px); /* Restar altura del header */
+    height: calc(100vh - 60px);
   }
 `;
 
@@ -153,67 +115,34 @@ const AppContent: React.FC = () => {
 
   return (
     <IonApp>
-      <IonReactRouter>
-        {/* Componente para manejar el foco */}
+      <BrowserRouter>
         <FocusManager />
         <IonRouterOutlet>
-          {/* Rutas públicas */}
-          <Route path="/login" exact>
-            {isAuthenticated ? <Redirect to="/home" /> : <Login />}
-          </Route>
-          <Route path="/register" exact>
-            {isAuthenticated ? <Redirect to="/home" /> : <Register />}
-          </Route>
+          <Routes>
+            {/* Rutas públicas */}
+            <Route path="/login" element={isAuthenticated ? <Navigate to="/home" /> : <Login />} />
+            <Route path="/register" element={isAuthenticated ? <Navigate to="/home" /> : <Register />} />
 
-          {/* Rutas privadas envueltas en MainLayout */}
-          <RutaPrivada  path="/home" exact>
-            <MainLayout>
-              <Home />
-            </MainLayout>
-          </RutaPrivada >
-          <RutaPrivada  path="/calendar" exact>
-            <MainLayout>
-              <CalendarView />
-            </MainLayout>
-          </RutaPrivada >
-          <RutaPrivada  path="/profile" exact>
-            <MainLayout>
-              <Profile />
-            </MainLayout>
-          </RutaPrivada >
-          <RutaPrivada  path="/configuracion" exact>
-            <MainLayout>
-              <Configuracion />
-            </MainLayout>
-          </RutaPrivada >
-          <RutaPrivada  path="/reservas" exact>
-            <MainLayout>
-              <Reservas />
-            </MainLayout>
-          </RutaPrivada >
-          <RutaPrivada  path="/manage-courts" exact>
-            <MainLayout>
-              <ManageCourts />
-            </MainLayout>
-          </RutaPrivada >
-          <RutaPrivada  path="/manage-users" exact>
-            <MainLayout>
-              <ManageUsers />
-            </MainLayout>
-          </RutaPrivada >
-          
-          <RutaPrivada  path="/marcador-control" exact component={MarcadorControl} />
-          <RutaPrivada  path="/marcador-pantalla" exact component={MarcadorPantalla} />
-          <RutaPrivada  path="/marcador" component={() => (<Estructura><MarcadorControl /></Estructura>)} />
+            {/* Rutas privadas */}
+            <Route path="/home" element={<PrivateRoute element={<MainLayout><Home /></MainLayout>} />} />
+            <Route path="/calendar" element={<PrivateRoute element={<MainLayout><CalendarView /></MainLayout>} />} />
+            <Route path="/profile" element={<PrivateRoute element={<MainLayout><Profile /></MainLayout>} />} />
+            <Route path="/configuracion" element={<PrivateRoute element={<MainLayout><Configuracion /></MainLayout>} />} />
+            <Route path="/reservas" element={<PrivateRoute element={<MainLayout><Reservas /></MainLayout>} />} />
+            <Route path="/manage-courts" element={<PrivateRoute element={<MainLayout><ManageCourts /></MainLayout>} />} />
+            <Route path="/manage-users" element={<PrivateRoute element={<MainLayout><ManageUsers /></MainLayout>} />} />
+            <Route path="/marcador-control" element={<PrivateRoute element={<MarcadorControl />} />} />
+            <Route path="/marcador-pantalla" element={<PrivateRoute element={<MarcadorPantalla />} />} />
+            <Route path="/marcador" element={<PrivateRoute element={<Estructura><MarcadorControl /></Estructura>} />} />
 
-          {/* Redirección por defecto */}
-          <Route exact path="/">
-            {isAuthenticated ? <Redirect to="/home" /> : <Redirect to="/login" />}
-          </Route>
+            {/* Ruta pública de pago */}
+            <Route path="/pay" element={ <Elements stripe={stripePromise}> <Pay /></Elements>}/>
 
-          <Route exact path="/pay" component={Pay} />
+            {/* Redirección por defecto */}
+            <Route path="/" element={<Navigate to={isAuthenticated ? "/home" : "/login"} />} />
+          </Routes>
         </IonRouterOutlet>
-      </IonReactRouter>
+      </BrowserRouter>
     </IonApp>
   );
 };

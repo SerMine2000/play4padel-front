@@ -74,7 +74,7 @@ const ManageUsers: React.FC = () => {
         setClubId(res[0].id);
         await loadUsers();
       } else {
-        showToastMessage('No se encontró información del club', 'warning');
+        console.log('No hay club asignado, pero no se mostrará toast porque no es error.');
       }
     } catch (error) {
       console.error(error);

@@ -1,15 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { IonPage, IonContent, IonButton, IonItem, IonLabel, IonSelect, IonSelectOption, IonTextarea, IonDatetime, IonLoading, IonToast, IonIcon, IonPopover, IonHeader, IonToolbar, IonTitle, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonGrid, IonRow, IonCol, IonText } from '@ionic/react';
-import { arrowBack } from 'ionicons/icons';
-import {
-  tennisballOutline,
-  calendarOutline,
-  timeOutline,
-  businessOutline,
-  cashOutline
-} from 'ionicons/icons';
+import { IonPage, IonContent, IonButton, IonSelect, IonSelectOption, IonTextarea, IonDatetime, IonLoading, IonToast, IonIcon, IonPopover, IonHeader, IonToolbar, IonTitle, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonGrid, IonRow, IonCol, IonText } from '@ionic/react';
+import { tennisballOutline, calendarOutline, timeOutline, businessOutline} from 'ionicons/icons';
 import { useAuth } from '../../context/AuthContext';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import apiService from '../../services/api.service';
 import '../../theme/variables.css';
 import './Reservas.css';
@@ -27,7 +20,7 @@ interface RangoHorario {
 
 const Reservas: React.FC = () => {
   const { user } = useAuth();
-  const history = useHistory();
+  const navigate = useNavigate();
   const fechaSelectorRef = useRef<HTMLDivElement>(null);
   
   // Estados para los datos de la reserva
@@ -92,7 +85,7 @@ const Reservas: React.FC = () => {
     try {
       setCargando(true);
       const response = await apiService.get(`/clubs/${clubSeleccionado}/pistas`);
-      console.log("Pistas cargadas:", response);
+      // console.log("Pistas cargadas:", response);
       setPistas(response);
     } catch (error) {
       console.error('Error al cargar pistas:', error);
@@ -106,7 +99,7 @@ const Reservas: React.FC = () => {
   useEffect(() => {
     if (pistaSeleccionada) {
       const pistaInfo = pistas.find(p => p.id === pistaSeleccionada);
-      console.log("Pista seleccionada:", pistaInfo);
+      // console.log("Pista seleccionada:", pistaInfo);
       setPistaDatos(pistaInfo);
     } else {
       setPistaDatos(null);
@@ -201,12 +194,12 @@ const Reservas: React.FC = () => {
       
       // Obtener todas las reservas existentes para esta pista y fecha
       const reservasResponse = await apiService.get(`/reservas?id_pista=${pistaSeleccionada}&fecha=${fechaFormateada}`);
-      console.log("Reservas existentes:", reservasResponse);
+      //console.log("Reservas existentes:", reservasResponse);
       const reservasExistentes = Array.isArray(reservasResponse) ? reservasResponse : [];
       
       // Obtener horario del club
       const disponibilidadResponse = await apiService.get(`/pistas/${pistaSeleccionada}/disponibilidad?fecha=${fechaFormateada}`);
-      console.log("Disponibilidad:", disponibilidadResponse);
+      //console.log("Disponibilidad:", disponibilidadResponse);
       
       if (disponibilidadResponse.disponible) {
         // Generar todas las franjas horarias fijas de 90 minutos
@@ -349,7 +342,6 @@ const Reservas: React.FC = () => {
         console.log("Respuesta crear-reserva:", respuesta);
   
         const idReserva = respuesta?.reserva_id || respuesta?.data?.reserva_id;
-  
         if (!idReserva) {
           mostrarMensaje('No se pudo obtener el ID de la reserva creada', 'danger');
           return;
@@ -359,11 +351,20 @@ const Reservas: React.FC = () => {
       }
   
       if (ultimaReservaId) {
-        history.replace(`/pay?reservaId=${ultimaReservaId}&precio=${pistaDatos.precio_hora}`);
+        const primeraFranja = franjasSeleccionadas[0]; // usamos la primera franja para pasar los datos
+  
+        navigate('/pay', {
+          state: {
+            id_pista: pistaSeleccionada,
+            fecha: formatearFecha(fechaSeleccionada),
+            hora_inicio: formatearHoraAPI(primeraFranja.inicio),
+            hora_fin: formatearHoraAPI(primeraFranja.fin),
+            precio: pistaDatos.precio_hora
+          }
+        });
       } else {
         mostrarMensaje('No se pudo crear ninguna reserva', 'danger');
       }
-  
     } catch (error) {
       console.error('Error al realizar la reserva:', error);
       mostrarMensaje('No se ha podido realizar la reserva.', 'danger');
@@ -371,6 +372,7 @@ const Reservas: React.FC = () => {
       setCargando(false);
     }
   };
+  
     
   
   // Función para mostrar mensajes

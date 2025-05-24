@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from "../../context/AuthContext";
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 // Colores del logo Play4Padel
 const primaryPurple = '#2D0A31'; // Púrpura oscuro del fondo del logo
@@ -64,7 +64,7 @@ const iconContainerStyle: React.CSSProperties = {
 
 const FormularioLogin: React.FC = () => {
   const { login } = useAuth();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -81,7 +81,7 @@ const FormularioLogin: React.FC = () => {
     try {
       await login(email, password);
       setFormError('');
-      history.replace('/home');
+      navigate('/home');
     } catch (err) {
       const mensaje = err instanceof Error ? err.message : 'Credenciales incorrectas';
       setFormError(mensaje);
