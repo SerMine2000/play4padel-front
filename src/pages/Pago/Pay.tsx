@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { IonPage, IonContent, IonIcon, IonToast } from '@ionic/react';
 import { documentTextOutline, checkmarkCircleOutline, arrowBackOutline } from 'ionicons/icons';
-import { useStripe, useElements, CardElement, CardCvcElement, CardNumberElement, CardExpiryElement } from '@stripe/react-stripe-js';
+import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useAuth } from '../../context/AuthContext';
 import apiService from '../../services/api.service';
 import './Pagos.css';
@@ -10,6 +10,7 @@ import './Pagos.css';
 const Pay: React.FC = () => {
 
   interface DatosReserva {
+    reserva_id: number;  // ✅ AÑADIR RESERVA_ID
     id_pista: number;
     fecha: string;
     hora_inicio: string;
@@ -23,38 +24,63 @@ const Pay: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { id_pista, fecha, hora_inicio, hora_fin, precio } = (location.state as DatosReserva);
-
-  const [paymentHistory, setPaymentHistory] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    numeroTarjeta: '',
-    fechaExpiracion: '',
-    cvv: '',
-    codigoPostal: ''
-  });
-
-  const [toast, setToast] = useState({ show: false, message: '', color: 'success' });
+  const [toast, setToast] = useState({ show: false, message: '', color: 'success' as 'success' | 'danger' });
   const showToast = (message: string, color: 'success' | 'danger') => {
     setToast({ show: true, message, color });
   };
+
+  // ✅ VALIDAR QUE TENEMOS LOS DATOS NECESARIOS
+  if (!location.state) {
+    console.error('No hay datos de reserva. Redirigiendo a reservas...');
+    setTimeout(() => navigate('/reservas'), 1000);
+    return <div>No hay datos de reserva. Redirigiendo...</div>;
+  }
+
+  const { reserva_id, id_pista, fecha, hora_inicio, hora_fin, precio } = (location.state as DatosReserva);
+
+  // ✅ VALIDAR CAMPOS CRÍTICOS
+  if (!reserva_id || !precio) {
+    console.error('Faltan datos críticos:', { reserva_id, precio });
+    setTimeout(() => navigate('/reservas'), 1000);
+    return <div>Error: faltan datos de la reserva. Redirigiendo...</div>;
+  }
+
+  const [paymentHistory, setPaymentHistory] = useState<any[]>([]);
+  const [historialDisponible, setHistorialDisponible] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [codigoPostal, setCodigoPostal] = useState('');
   useEffect(() => {
     const fetchPaymentHistory = async () => {
       try {
-        const response = await apiService.get('/payments/history');
-        setPaymentHistory(response);
+        if (!user?.id) {
+          console.log('No hay usuario logueado, omitiendo carga de historial');
+          return;
+        }
+        
+        console.log('Intentando cargar historial de pagos para usuario:', user.id);
+        
+        // Usar el endpoint del backend
+        const response = await apiService.get(`/pagos/usuario/${user.id}`);
+        console.log('Historial de pagos cargado:', response);
+        setPaymentHistory(response || []);
+        
       } catch (error) {
-        console.error('Error al cargar el historial de pagos:', error);
+        console.warn('No se pudo cargar el historial de pagos (esto no afecta el pago actual):', error);
+        setHistorialDisponible(false);
+        
+        // Usar datos de muestra solo para mostrar la interfaz
+        setPaymentHistory([
+          { id: 'demo1', date: '15/05/2025', amount: '25,00 €', concept: 'Reserva Pista 3', status: 'success' },
+          { id: 'demo2', date: '02/05/2025', amount: '25,00 €', concept: 'Reserva Pista 1', status: 'success' },
+        ]);
+        
+        // Mostrar una nota informativa sin bloquear la funcionalidad
+        console.info('💡 Tip: Para ver tu historial real de pagos, asegúrate de que el backend esté ejecutándose en http://localhost:5000');
       }
     };
 
     fetchPaymentHistory();
-  }, []);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  }, [user]);
 
   const procesarPago = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,28 +95,39 @@ const Pay: React.FC = () => {
       return;
     }
 
+    // ✅ VALIDAR QUE EL ELEMENTO DE LA TARJETA ESTÉ DISPONIBLE
+    const cardElement = elements.getElement(CardElement);
+    if (!cardElement) {
+      showToast('El formulario de tarjeta no está listo. Recarga la página e inténtalo de nuevo.', 'danger');
+      return;
+    }
+
+    // ✅ VALIDAR DATOS CRÍTICOS ANTES DE PROCESAR
+    if (!reserva_id || !precio) {
+      showToast('Faltan datos de la reserva. Regresa y vuelve a intentar.', 'danger');
+      console.error('Datos faltantes:', { reserva_id, precio });
+      return;
+    }
+
+    console.log('Enviando al backend:', { amount: precio, reserva_id });
+
     setIsLoading(true);
     try {
       const response = await apiService.post('/crear-pago', {
-        method: 'card',
-        amount: precio,
-        reserva: {
-          id_usuario: user?.id,
-          id_pista,
-          fecha,
-          hora_inicio,
-          hora_fin
-        }
+        amount: precio,          // ✅ FORMATO CORRECTO
+        reserva_id: reserva_id   // ✅ FORMATO CORRECTO
       });
+
+      console.log('Respuesta del backend:', response);
 
       const clientSecret = response.clientSecret;
 
       const result = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
-          card: elements.getElement(CardNumberElement)!,
+          card: cardElement,
           billing_details: {
             address: {
-              postal_code: formData.codigoPostal
+              postal_code: codigoPostal
             }
           }
         }
@@ -99,8 +136,8 @@ const Pay: React.FC = () => {
         showToast(`Error en el pago: ${result.error.message}`, 'danger');
       } else if (result.paymentIntent.status === 'succeeded') {
         showToast('Pago realizado correctamente', 'success');
-        setFormData({ numeroTarjeta: '', fechaExpiracion: '', cvv: '', codigoPostal: '' });
-        setTimeout(() => navigate('/login'), 2000);
+        setCodigoPostal(''); // Limpiar código postal
+        setTimeout(() => navigate('/reservas'), 2000);
       }
     } catch (error) {
       console.error('Error al procesar el pago, comprueba si tu sesión expiró', error);
@@ -149,6 +186,26 @@ const Pay: React.FC = () => {
                   </div>
                 </div>
 
+                <div className="form-group">
+                  <label className="form-label">Código Postal (opcional)</label>
+                  <input
+                    type="text"
+                    value={codigoPostal}
+                    onChange={(e) => setCodigoPostal(e.target.value)}
+                    placeholder="12345"
+                    className="form-input"
+                    style={{
+                      width: '100%',
+                      padding: '12px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      border: '1px solid rgba(255, 255, 255, 0.3)',
+                      borderRadius: '8px',
+                      color: '#ffffff',
+                      fontSize: '16px'
+                    }}
+                  />
+                </div>
+
                 <button className="payment-btn" disabled={isLoading} type="submit">
                   {isLoading ? 'Procesando...' : 'Realizar pago'}
                   {!isLoading && <IonIcon icon={checkmarkCircleOutline} className="payment-icon-small" />}
@@ -160,7 +217,14 @@ const Pay: React.FC = () => {
   
           {/* Historial de pagos */}
           <div className="payment-history">
-            <h2 className="section-title">Historial de pagos</h2>
+            <h2 className="section-title">
+              Historial de pagos
+              {!historialDisponible && (
+                <span style={{ fontSize: '0.8em', color: '#ff9500', marginLeft: '10px' }}>
+                  (Datos de ejemplo - Servidor no disponible)
+                </span>
+              )}
+            </h2>
   
             {paymentHistory.length > 0 ? (
               <table className="payment-table">

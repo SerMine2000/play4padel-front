@@ -351,15 +351,45 @@ const Reservas: React.FC = () => {
       }
   
       if (ultimaReservaId) {
+        // ✅ NUEVA: Obtener los datos completos de la reserva creada para asegurar el precio correcto
+        let precioFinal = pistaDatos.precio_hora; // Fallback al precio de la pista
+        
+        try {
+          console.log("Obteniendo datos completos de la reserva:", ultimaReservaId);
+          const reservaCompleta = await apiService.get(`/reservas/${ultimaReservaId}`);
+          console.log("Reserva completa obtenida:", reservaCompleta);
+          
+          // Usar el precio de la reserva si está disponible
+          if (reservaCompleta && reservaCompleta.precio_total) {
+            precioFinal = reservaCompleta.precio_total;
+            console.log("✅ Usando precio de la reserva:", precioFinal);
+          } else {
+            console.log("⚠️ No se pudo obtener precio de la reserva, usando precio de pista:", precioFinal);
+          }
+        } catch (error) {
+          console.warn("⚠️ Error al obtener datos de la reserva, usando precio de pista como fallback:", error);
+          console.log("Precio fallback:", precioFinal);
+        }
+        
         const primeraFranja = franjasSeleccionadas[0]; // usamos la primera franja para pasar los datos
+        
+        // Datos para debugging
+        console.log('Datos enviados al pago:', {
+          reserva_id: ultimaReservaId,
+          precio_enviado: precioFinal,
+          precio_pista_original: pistaDatos.precio_hora,
+          precio_total_calculado: precioTotal,
+          franjas_seleccionadas: franjasSeleccionadas.length
+        });
   
         navigate('/pay', {
           state: {
+            reserva_id: ultimaReservaId,
             id_pista: pistaSeleccionada,
             fecha: formatearFecha(fechaSeleccionada),
             hora_inicio: formatearHoraAPI(primeraFranja.inicio),
             hora_fin: formatearHoraAPI(primeraFranja.fin),
-            precio: pistaDatos.precio_hora
+            precio: precioFinal  // ✅ Usar el precio final (reserva o fallback)
           }
         });
       } else {
