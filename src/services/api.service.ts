@@ -41,8 +41,13 @@ class ApiService {
         
         // Si es un error 401, limpiar el token
         if (response.status === 401) {
-          // localStorage.removeItem('token');  // ← COMENTAR ESTA LÍNEA
-          console.log('🚨 Error 401 - manteniendo token para debug');
+          localStorage.removeItem('token');
+          localStorage.removeItem('refresh_token');
+          console.log('🚨 Error 401 - Token expirado, limpiando tokens');
+          // Opcional: redirigir al login
+          if (window.location.pathname !== '/login') {
+            window.location.href = '/login';
+          }
         }
         
         throw new Error(errorData.error || errorData.message || `Error: ${response.status}`);
@@ -110,8 +115,13 @@ class ApiService {
         
         // Si es un error 401, limpiar el token
         if (response.status === 401) {
-          // localStorage.removeItem('token');  // ← COMENTAR ESTA LÍNEA
-          console.log('🚨 Error 401 - manteniendo token para debug');
+          localStorage.removeItem('token');
+          localStorage.removeItem('refresh_token');
+          console.log('🚨 Error 401 - Token expirado, limpiando tokens');
+          // Opcional: redirigir al login
+          if (window.location.pathname !== '/login') {
+            window.location.href = '/login';
+          }
         }
         
         throw new Error(errorData.error || errorData.message || `Error: ${response.status}`);
@@ -164,8 +174,13 @@ class ApiService {
         
         // Si es un error 401, limpiar el token
         if (response.status === 401) {
-          // localStorage.removeItem('token');  // ← COMENTAR ESTA LÍNEA
-          console.log('🚨 Error 401 - manteniendo token para debug');
+          localStorage.removeItem('token');
+          localStorage.removeItem('refresh_token');
+          console.log('🚨 Error 401 - Token expirado, limpiando tokens');
+          // Opcional: redirigir al login
+          if (window.location.pathname !== '/login') {
+            window.location.href = '/login';
+          }
         }
         
         throw new Error(errorData.error || errorData.message || `Error: ${response.status}`);
@@ -221,8 +236,13 @@ class ApiService {
         
         // Si es un error 401, limpiar el token
         if (response.status === 401) {
-          // localStorage.removeItem('token');  // ← COMENTAR ESTA LÍNEA
-          console.log('🚨 Error 401 - manteniendo token para debug');
+          localStorage.removeItem('token');
+          localStorage.removeItem('refresh_token');
+          console.log('🚨 Error 401 - Token expirado, limpiando tokens');
+          // Opcional: redirigir al login
+          if (window.location.pathname !== '/login') {
+            window.location.href = '/login';
+          }
         }
         
         throw new Error(errorData.error || errorData.message || `Error: ${response.status}`);

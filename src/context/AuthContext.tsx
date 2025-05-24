@@ -2,17 +2,20 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import api from '../services/api.service';
 import { RegisterRequest, User } from '../interfaces';
+import { API_URL } from '../utils/constants';
 
 interface AuthContextType {
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   token: string | null;
+  refreshToken: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
+  refreshAccessToken: () => Promise<void>;
   register: (data: RegisterRequest) => Promise<void>;
   deleteAccount: () => Promise<void>;
 }
@@ -21,12 +24,14 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   setUser: () => {},
   token: null,
+  refreshToken: null,
   isAuthenticated: false,
   isLoading: true,
   error: null,
   login: async () => {},
   logout: () => {},
   refreshUser: async () => {},
+  refreshAccessToken: async () => {},
   register: async () => {},
   deleteAccount: async () => {},
 });
@@ -34,6 +39,7 @@ const AuthContext = createContext<AuthContextType>({
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -50,14 +56,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       // Verificar la estructura de respuesta
       console.log('Respuesta del backend:', response);
       
-      const { access_token, user_id, role, user_data } = response;
+      const { access_token, refresh_token, user_id, role, user_data } = response;
 
       if (!access_token || !user_id || !role) {
         throw new Error('Respuesta del servidor incompleta');
       }
 
-      // Guardar token en localStorage
+      // Guardar ambos tokens en localStorage
       localStorage.setItem('token', access_token);
+      if (refresh_token) {
+        localStorage.setItem('refresh_token', refresh_token);
+        setRefreshToken(refresh_token);
+      }
+      
       setToken(access_token);
       setIsAuthenticated(true);
 
@@ -77,7 +88,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
       localStorage.removeItem('token');
+      localStorage.removeItem('refresh_token');
       setToken(null);
+      setRefreshToken(null);
       setUser(null);
       setIsAuthenticated(false);
       throw new Error('Error al iniciar sesión');
@@ -88,13 +101,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('refresh_token');
     setUser(null);
     setToken(null);
+    setRefreshToken(null);
     setIsAuthenticated(false);
   };
 
   const refreshUser = async () => {
     const storedToken = localStorage.getItem('token');
+    const storedRefreshToken = localStorage.getItem('refresh_token');
+    
     if (!storedToken) {
       setIsAuthenticated(false);
       setUser(null);
@@ -132,16 +149,62 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
       setUser(usuario);
       setToken(storedToken);
+      setRefreshToken(storedRefreshToken);
       setIsAuthenticated(true);
       
     } catch (error) {
       console.error('Error al refrescar el usuario:', error);
       localStorage.removeItem('token');
+      localStorage.removeItem('refresh_token');
       setUser(null);
       setToken(null);
+      setRefreshToken(null);
       setIsAuthenticated(false);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const refreshAccessToken = async () => {
+    const storedRefreshToken = localStorage.getItem('refresh_token');
+    
+    if (!storedRefreshToken) {
+      throw new Error('No refresh token available');
+    }
+
+    try {
+      console.log('🔄 Intentando refrescar access token...');
+      
+      // Enviar el refresh_token en el header Authorization
+      const response = await fetch(`${API_URL}/refresh-token`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${storedRefreshToken}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to refresh token');
+      }
+
+      const data = await response.json();
+      
+      if (!data.access_token) {
+        throw new Error('No se recibió un nuevo access token');
+      }
+
+      // Guardar el nuevo token
+      localStorage.setItem('token', data.access_token);
+      setToken(data.access_token);
+      
+      console.log('✅ Access token refrescado exitosamente');
+      
+    } catch (error) {
+      console.error('❌ Error al refrescar access token:', error);
+      // Si falla el refresh, hacer logout completo
+      logout();
+      throw error;
     }
   };
 
@@ -177,12 +240,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       value={{
         user,
         token,
+        refreshToken,
         isAuthenticated,
         isLoading,
         error,
         login,
         logout,
         refreshUser,
+        refreshAccessToken,
         register,
         deleteAccount,
         setUser
