@@ -69,49 +69,87 @@ const ManageCourts: React.FC = () => {
         return;
       }
   
-      if (user.id_rol === 'CLUB') {
-        console.log('[ManageCourts] Usuario tipo club:', user);
-  
-        if (user.id_club) {
-          setClubId(user.id_club);
-          try {
-            setLoading(true);
-            const clubResponse = await apiService.get(`/clubs/${user.id_club}`);
-            setClubData(clubResponse);
-            const pistasResponse = await apiService.get(`/clubs/${user.id_club}/pistas`);
-            setPistas(Array.isArray(pistasResponse) ? pistasResponse : []);
-          } catch (error) {
-            console.error('[ManageCourts] Error al cargar datos para club:', error);
-            showToastMessage('Error al cargar pistas del club', 'danger');
-          } finally {
-            setLoading(false);
+      // Verificar que el usuario tenga rol de CLUB
+      if (user.id_rol !== 'CLUB') {
+        console.log('[ManageCourts] Usuario sin permisos de administrador de club:', user.id_rol);
+        showToastMessage('No tienes permisos para gestionar pistas', 'danger');
+        navigate('/home');
+        return;
+      }
+
+      try {
+        setLoading(true);
+        console.log('[ManageCourts] Verificando conectividad del backend...');
+        
+        // Primero verificar que el backend esté funcionando
+        try {
+          const healthCheck = await apiService.get('/health-check');
+          console.log('[ManageCourts] Backend conectado:', healthCheck);
+        } catch (healthError) {
+          console.warn('[ManageCourts] Health check falló, pero continuando:', healthError);
+        }
+        
+        console.log('[ManageCourts] Cargando datos del club administrado por el usuario...');
+        console.log('[ManageCourts] User ID:', user.id);
+        
+        let clubResponse;
+        
+        try {
+          // Intentar usar el nuevo endpoint /my-club
+          console.log('[ManageCourts] Intentando /my-club...');
+          clubResponse = await apiService.get('/my-club');
+          console.log('[ManageCourts] ✅ Club obtenido via /my-club:', clubResponse);
+        } catch (error) {
+          console.log('[ManageCourts] ❌ /my-club falló:', error);
+          console.log('[ManageCourts] 🔄 Usando fallback con /clubs?id_administrador...');
+          
+          // Fallback: usar endpoint existente con filtro por administrador
+          const clubsResponse = await apiService.get(`/clubs?id_administrador=${user.id}`);
+          console.log('[ManageCourts] Clubes filtrados por administrador:', clubsResponse);
+          
+          if (!Array.isArray(clubsResponse) || clubsResponse.length === 0) {
+            console.log('[ManageCourts] ❌ No se encontraron clubes para administrador:', user.id);
+            throw new Error('No administras ningún club');
+          }
+          
+          // Tomar el primer club (normalmente un usuario solo administra uno)
+          clubResponse = clubsResponse[0];
+          console.log('[ManageCourts] ✅ Club obtenido via fallback:', clubResponse);
+        }
+        
+        if (!clubResponse || !clubResponse.id) {
+          throw new Error('No se pudo obtener el club administrado');
+        }
+        
+        setClubId(clubResponse.id);
+        setClubData(clubResponse);
+        
+        // Cargar las pistas del club
+        console.log('[ManageCourts] 🏟️ Cargando pistas del club:', clubResponse.id);
+        const pistasResponse = await apiService.get(`/clubs/${clubResponse.id}/pistas`);
+        console.log('[ManageCourts] Pistas obtenidas:', pistasResponse);
+        
+        setPistas(Array.isArray(pistasResponse) ? pistasResponse : []);
+        console.log('[ManageCourts] ✅ Datos cargados exitosamente');
+        
+      } catch (error) {
+        console.error('[ManageCourts] Error al cargar datos del club:', error);
+        
+        // Manejar diferentes tipos de errores
+        if (error instanceof Error) {
+          if (error.message.includes('No administras ningún club')) {
+            showToastMessage('Tu cuenta no está asociada a ningún club. Contacta al administrador.', 'warning');
+          } else if (error.message.includes('401')) {
+            showToastMessage('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.', 'danger');
+            navigate('/login');
+          } else {
+            showToastMessage('Error al cargar los datos del club. Inténtalo de nuevo.', 'danger');
           }
         } else {
-          console.error('[ManageCourts] Usuario club sin id_club:', user);
-  
-          // WORKAROUND: Forzar id_club manualmente para pruebas
-          const clubIdToUse = 1; // Cambia este valor según sea necesario
-          console.warn('[ManageCourts][WORKAROUND] Forzando clubId=', clubIdToUse, 'para usuario club sin id_club');
-          setClubId(clubIdToUse);
-          try {
-            setLoading(true);
-            const clubResponse = await apiService.get(`/clubs/${user.id_club}`);
-            setClubData(clubResponse);
-            const pistasResponse = await apiService.get(`/clubs/${user.id_club}/pistas`);
-            setPistas(Array.isArray(pistasResponse) ? pistasResponse : []);
-          } catch (error: any) {
-            console.error('[ManageCourts] Error al cargar datos para club:', error);
-          
-            
-          }
-          
-           finally {
-            setLoading(false);
-          }
+          showToastMessage('Error de conexión. Verifica tu conexión a internet.', 'danger');
         }
-      } else {
-        // Otros roles fuera
-        navigate('/home');
+      } finally {
+        setLoading(false);
       }
     };
   
@@ -177,58 +215,86 @@ const ManageCourts: React.FC = () => {
     console.log('[ManageCourts] saveCourt - user:', user);
     console.log('[ManageCourts] saveCourt - clubId:', clubId);
     console.log('[ManageCourts] saveCourt - formData:', formData);
+    
     if (!clubId) {
-      showToastMessage('No se ha seleccionado un club', 'danger');
+      showToastMessage('Error: No se ha podido identificar el club. Recarga la página.', 'danger');
+      return;
+    }
+
+    // Validar datos del formulario
+    if (!formData.numero || !formData.precio_hora || !['Cristal', 'Muro'].includes(formData.tipo)) {
+      showToastMessage('Completa todos los campos requeridos. Tipo de pista debe ser: Cristal o Muro', 'warning');
+      return;
+    }
+    
+    // Validar número de pista
+    const numeroInt = parseInt(formData.numero, 10);
+    if (isNaN(numeroInt) || numeroInt <= 0) {
+      showToastMessage('El número de pista debe ser un número positivo', 'warning');
+      return;
+    }
+    
+    // Validar precio
+    const precioFloat = parseFloat(formData.precio_hora);
+    if (isNaN(precioFloat) || precioFloat <= 0) {
+      showToastMessage('El precio debe ser un número positivo', 'warning');
       return;
     }
 
     try {
       setLoading(true);
       
-      // Validar datos
-      if (!formData.numero || !formData.precio_hora || !['Cristal', 'Muro'].includes(formData.tipo)) {
-        showToastMessage('Debe seleccionar un tipo de pista válido: Cristal o Muro', 'warning');
-        setLoading(false);
-        return;
-      }
-      
-      
       // Preparar datos para enviar
       const pistaData = {
-        numero: parseInt(formData.numero, 10),
+        numero: numeroInt,
         id_club: clubId,
         tipo: formData.tipo,
         estado: 'disponible',
-        precio_hora: parseFloat(formData.precio_hora),
+        precio_hora: precioFloat,
         iluminacion: formData.iluminacion,
         techada: formData.techada,
         imagen_url: formData.imagen_url
       };
       
-      let response;
+      console.log('[ManageCourts] Datos a enviar:', pistaData);
       
       if (editingPista) {
         // Actualizar pista existente
-        response = await apiService.put(`/pistas/${editingPista.id}`, pistaData);
+        await apiService.put(`/pistas/${editingPista.id}`, pistaData);
         showToastMessage('Pista actualizada correctamente');
       } else {
         // Crear nueva pista
-        response = await apiService.post(`/clubs/${clubId}/pistas`, pistaData);
+        await apiService.post(`/clubs/${clubId}/pistas`, pistaData);
         showToastMessage('Pista creada correctamente');
       }
       
       // Actualizar lista de pistas
+      console.log('[ManageCourts] Recargando lista de pistas...');
       const pistasResponse = await apiService.get(`/clubs/${clubId}/pistas`);
       if (Array.isArray(pistasResponse)) {
         setPistas(pistasResponse);
+        console.log('[ManageCourts] Lista de pistas actualizada:', pistasResponse);
       }
       
       // Cerrar modal
       setShowModal(false);
       
     } catch (error) {
-      console.error('Error al guardar pista:', error);
-      showToastMessage('Error al guardar la pista', 'danger');
+      console.error('[ManageCourts] Error al guardar pista:', error);
+      
+      if (error instanceof Error) {
+        if (error.message.includes('401')) {
+          showToastMessage('Tu sesión ha expirado. Inicia sesión nuevamente.', 'danger');
+        } else if (error.message.includes('403')) {
+          showToastMessage('No tienes permisos para realizar esta acción.', 'danger');
+        } else if (error.message.includes('400')) {
+          showToastMessage('Datos inválidos. Verifica la información ingresada.', 'warning');
+        } else {
+          showToastMessage('Error al guardar la pista. Inténtalo de nuevo.', 'danger');
+        }
+      } else {
+        showToastMessage('Error de conexión. Verifica tu conexión a internet.', 'danger');
+      }
     } finally {
       setLoading(false);
     }
@@ -297,24 +363,75 @@ const ManageCourts: React.FC = () => {
 
   return (
     <IonPage>
-      
-      
       <IonContent className="contenedor-gestion-pistas">
-        <IonGrid>
-          <IonRow>
-            <IonCol size="12" sizeMd="8" offsetMd="2">
-              <IonCard>
-                <IonCardHeader>
-                  <IonCardTitle style={{ fontWeight: 'bold' }}>
-                    {clubData ? clubData.nombre : 'Club'}
-                  </IonCardTitle>
-                </IonCardHeader>
-                <IonCardContent>
-                  <p>
-                    Gestione las pistas de su club. Puede crear, editar y cambiar el estado de las pistas.
-                  </p>
-                </IonCardContent>
-              </IonCard>
+        {/* Mostrar estado de carga inicial */}
+        {loading && !clubData && (
+          <IonGrid>
+            <IonRow>
+              <IonCol size="12" sizeMd="8" offsetMd="2">
+                <IonCard>
+                  <IonCardContent style={{ textAlign: 'center', padding: '40px' }}>
+                    <IonLoading isOpen={true} message="Cargando datos del club..." />
+                    <p style={{ marginTop: '20px' }}>Cargando información del club...</p>
+                  </IonCardContent>
+                </IonCard>
+              </IonCol>
+            </IonRow>
+          </IonGrid>
+        )}
+
+        {/* Mostrar error si no hay club */}
+        {!loading && !clubData && (
+          <IonGrid>
+            <IonRow>
+              <IonCol size="12" sizeMd="8" offsetMd="2">
+                <IonCard>
+                  <IonCardHeader>
+                    <IonCardTitle color="danger">❌ Error de Acceso</IonCardTitle>
+                  </IonCardHeader>
+                  <IonCardContent>
+                    <p>No se pudo cargar la información del club.</p>
+                    <p>Posibles causas:</p>
+                    <ul>
+                      <li>Tu cuenta no está asociada a ningún club</li>
+                      <li>No tienes permisos de administrador</li>
+                      <li>Error de conexión con el servidor</li>
+                    </ul>
+                    <IonButton 
+                      expand="block" 
+                      color="primary" 
+                      onClick={() => navigate('/home')}
+                      style={{ marginTop: '20px' }}
+                    >
+                      Volver al Inicio
+                    </IonButton>
+                  </IonCardContent>
+                </IonCard>
+              </IonCol>
+            </IonRow>
+          </IonGrid>
+        )}
+
+        {/* Contenido principal - solo mostrar si hay datos del club */}
+        {!loading && clubData && (
+          <IonGrid>
+            <IonRow>
+              <IonCol size="12" sizeMd="8" offsetMd="2">
+                <IonCard>
+                  <IonCardHeader>
+                    <IonCardTitle style={{ fontWeight: 'bold' }}>
+                      {clubData.nombre}
+                    </IonCardTitle>
+                  </IonCardHeader>
+                  <IonCardContent>
+                    <p>
+                      Gestione las pistas de su club. Puede crear, editar y cambiar el estado de las pistas.
+                    </p>
+                    <p style={{ fontSize: '0.9em', color: '#666' }}>
+                      <strong>ID del Club:</strong> {clubData.id} | <strong>Pistas:</strong> {pistas.length}
+                    </p>
+                  </IonCardContent>
+                </IonCard>
               
               <IonCard>
                 <IonCardHeader>
@@ -443,12 +560,16 @@ const ManageCourts: React.FC = () => {
             </IonCol>
           </IonRow>
         </IonGrid>
+        )}
         
-        <IonFab vertical="bottom" horizontal="end" slot="fixed">
-          <IonFabButton onClick={openCreateModal}>
-            <IonIcon icon={addCircleOutline} />
-          </IonFabButton>
-        </IonFab>
+        {/* FAB para añadir pista - solo mostrar si hay datos del club */}
+        {!loading && clubData && (
+          <IonFab vertical="bottom" horizontal="end" slot="fixed">
+            <IonFabButton onClick={openCreateModal}>
+              <IonIcon icon={addCircleOutline} />
+            </IonFabButton>
+          </IonFab>
+        )}
         
         {/* Modal para añadir o editar pista */}
         <IonModal className="formulario-modal-pista" isOpen={showModal} onDidDismiss={() => setShowModal(false)}>
