@@ -7,7 +7,7 @@ import {
   UpdatePasswordRequest,
 } from '../interfaces';
 
-import { API_ENDPOINTS, STORAGE_KEYS } from '../utils/constants';
+import { API_ENDPOINTS, STORAGE_KEYS, API_URL } from '../utils/constants';
 import apiService from './api.service';
 
 
@@ -143,7 +143,7 @@ class AuthService {
         throw new Error('No hay refresh token disponible');
       }
       
-      const response = await fetch(`${API_ENDPOINTS.BASE_URL}/refresh-token`, {
+      const response = await fetch(`${API_URL}/refresh-token`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
