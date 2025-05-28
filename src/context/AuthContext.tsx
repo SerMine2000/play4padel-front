@@ -43,6 +43,70 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isRefreshingToken, setIsRefreshingToken] = useState(false);
+
+  // Función interna para renovar token (evita problemas de referencia circular)
+  const refreshAccessTokenInternal = async (): Promise<void> => {
+    // Evitar renovaciones concurrentes
+    if (isRefreshingToken) {
+      throw new Error('Token refresh already in progress');
+    }
+
+    const storedRefreshToken = localStorage.getItem('refresh_token');
+    
+    if (!storedRefreshToken) {
+      throw new Error('No refresh token available');
+    }
+
+    try {
+      setIsRefreshingToken(true);
+      
+      // Enviar el refresh_token en el header Authorization
+      const response = await fetch(`${API_URL}/refresh-token`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${storedRefreshToken}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        if (response.status === 401 || response.status === 403) {
+          throw new Error('Refresh token expired - login required');
+        }
+        throw new Error('Failed to refresh token');
+      }
+
+      const data = await response.json();
+      
+      if (!data.access_token) {
+        throw new Error('No se recibió un nuevo access token');
+      }
+
+      // Guardar el nuevo token
+      localStorage.setItem('token', data.access_token);
+      setToken(data.access_token);
+      
+    } catch (error) {
+      console.error('❌ Error al refrescar access token:', error);
+      // Si falla el refresh, hacer logout completo
+      logout();
+      throw error;
+    } finally {
+      setIsRefreshingToken(false);
+    }
+  };
+
+  // Crear objeto con métodos que necesita api.service
+  const authContextForAPI = {
+    refreshAccessToken: refreshAccessTokenInternal,
+    logout: () => logout()
+  };
+
+  // Inyectar el contexto en api.service al inicializar
+  useEffect(() => {
+    api.setAuthContext(authContextForAPI);
+  }, []); // Solo una vez al montar
 
   useEffect(() => {
     refreshUser();
@@ -54,8 +118,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const response = await api.post('/login', { email, password });
       
       // Verificar la estructura de respuesta
-      console.log('Respuesta del backend:', response);
-      
       const { access_token, refresh_token, user_id, role, user_data } = response;
 
       if (!access_token || !user_id || !role) {
@@ -166,46 +228,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const refreshAccessToken = async () => {
-    const storedRefreshToken = localStorage.getItem('refresh_token');
-    
-    if (!storedRefreshToken) {
-      throw new Error('No refresh token available');
-    }
-
-    try {
-      console.log('🔄 Intentando refrescar access token...');
-      
-      // Enviar el refresh_token en el header Authorization
-      const response = await fetch(`${API_URL}/refresh-token`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${storedRefreshToken}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to refresh token');
-      }
-
-      const data = await response.json();
-      
-      if (!data.access_token) {
-        throw new Error('No se recibió un nuevo access token');
-      }
-
-      // Guardar el nuevo token
-      localStorage.setItem('token', data.access_token);
-      setToken(data.access_token);
-      
-      console.log('✅ Access token refrescado exitosamente');
-      
-    } catch (error) {
-      console.error('❌ Error al refrescar access token:', error);
-      // Si falla el refresh, hacer logout completo
-      logout();
-      throw error;
-    }
+    return refreshAccessTokenInternal();
   };
 
   const register = async (data: RegisterRequest): Promise<void> => {

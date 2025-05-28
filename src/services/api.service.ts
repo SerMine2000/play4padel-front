@@ -1,9 +1,72 @@
 import { API_URL } from "../utils/constants";
 
+// Definimos un tipo para el contexto de autenticación
+interface AuthContextType {
+  refreshAccessToken: () => Promise<void>;
+  logout: () => void;
+}
+
 class ApiService {
+  private authContext: AuthContextType | null = null;
+  private isRefreshing = false;
+  private refreshPromise: Promise<void> | null = null;
+
+  // Método para inyectar el contexto de autenticación
+  setAuthContext(authContext: AuthContextType) {
+    this.authContext = authContext;
+  }
+
   // Método auxiliar para obtener el token automáticamente
   private getToken(): string | null {
     return localStorage.getItem('token');
+  }
+
+  // Método para intentar renovar el token
+  private async tryRefreshToken(): Promise<boolean> {
+    const refreshToken = localStorage.getItem('refresh_token');
+    
+    if (!refreshToken) {
+      console.error("❌ No hay refresh token disponible");
+      return false;
+    }
+
+    // Si ya se está renovando, esperar a que termine
+    if (this.isRefreshing && this.refreshPromise) {
+      try {
+        await this.refreshPromise;
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
+    // Marcar que estamos renovando
+    this.isRefreshing = true;
+
+    try {
+      const response = await fetch(`${API_URL}/refresh-token`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${refreshToken}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al renovar token');
+      }
+
+      const data = await response.json();
+      localStorage.setItem('token', data.access_token);
+      
+      return true;
+    } catch (error) {
+      console.error("❌ Error al renovar token:", error);
+      return false;
+    } finally {
+      this.isRefreshing = false;
+      this.refreshPromise = null;
+    }
   }
 
   async get<T = any>(endpoint: string, token?: string): Promise<T | null> {
@@ -17,17 +80,10 @@ class ApiService {
     }
 
     try {
-      console.log("🚀 GET Request:", {
-        url: `${API_URL}${endpoint}`,
-        headers: { ...headers, Authorization: authToken ? `Bearer ${authToken.substring(0, 20)}...` : 'No token' }
-      });
-
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'GET',
         headers,
       });
-
-      console.log("📥 GET Response Status:", response.status);
 
       if (!response.ok) {
         let errorData;
@@ -39,13 +95,38 @@ class ApiService {
         
         console.error("❌ GET Error Response:", errorData);
         
-        // Si es un error 401, limpiar el token
+        // Si es un error 401, intentar renovar el token
         if (response.status === 401) {
+          const refreshSuccessful = await this.tryRefreshToken();
+          
+          if (refreshSuccessful) {
+            // Reintentar la petición con el nuevo token
+            const newToken = this.getToken();
+            if (newToken) {
+              const newHeaders: HeadersInit = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${newToken}`
+              };
+              
+              const retryResponse = await fetch(`${API_URL}${endpoint}`, {
+                method: 'GET',
+                headers: newHeaders,
+              });
+
+              if (retryResponse.ok) {
+                const retryData = await retryResponse.json();
+                return retryData;
+              }
+            }
+          }
+          
+          // Si la renovación falló, limpiar tokens y hacer logout
           localStorage.removeItem('token');
           localStorage.removeItem('refresh_token');
-          console.log('🚨 Error 401 - Token expirado, limpiando tokens');
-          // Opcional: redirigir al login
-          if (window.location.pathname !== '/login') {
+          
+          if (this.authContext) {
+            this.authContext.logout();
+          } else if (window.location.pathname !== '/login') {
             window.location.href = '/login';
           }
         }
@@ -59,7 +140,6 @@ class ApiService {
       if (contentType && contentType.includes('application/json')) {
         try {
           jsonData = await response.json();
-          console.log("✅ GET Success Response:", jsonData);
         } catch (error) {
           console.error("❌ Error parsing JSON:", error);
           throw new Error("Error al convertir la respuesta a JSON");
@@ -67,7 +147,6 @@ class ApiService {
       } else {
         console.warn("⚠️ Response is not JSON:", contentType);
         const textResponse = await response.text();
-        console.log("📝 Text Response:", textResponse);
         throw new Error("La respuesta no es JSON válido");
       }
 
@@ -88,20 +167,12 @@ class ApiService {
       headers['Authorization'] = `Bearer ${authToken}`;
     }
 
-    console.log("🚀 POST Request:", {
-      url: `${API_URL}${endpoint}`,
-      data,
-      headers: { ...headers, Authorization: authToken ? `Bearer ${authToken.substring(0, 20)}...` : 'No token' }
-    });
-
     try {
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers,
         body: JSON.stringify(data),
       });
-
-      console.log("📥 POST Response Status:", response.status);
 
       if (!response.ok) {
         let errorData;
@@ -113,13 +184,39 @@ class ApiService {
         
         console.error("❌ POST Error Response:", errorData);
         
-        // Si es un error 401, limpiar el token
+        // Si es un error 401, intentar renovar el token
         if (response.status === 401) {
+          const refreshSuccessful = await this.tryRefreshToken();
+          
+          if (refreshSuccessful) {
+            // Reintentar la petición con el nuevo token
+            const newToken = this.getToken();
+            if (newToken) {
+              const newHeaders: HeadersInit = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${newToken}`
+              };
+              
+              const retryResponse = await fetch(`${API_URL}${endpoint}`, {
+                method: 'POST',
+                headers: newHeaders,
+                body: JSON.stringify(data),
+              });
+
+              if (retryResponse.ok) {
+                const retryData = await retryResponse.json();
+                return retryData;
+              }
+            }
+          }
+          
+          // Si la renovación falló, limpiar tokens y hacer logout
           localStorage.removeItem('token');
           localStorage.removeItem('refresh_token');
-          console.log('🚨 Error 401 - Token expirado, limpiando tokens');
-          // Opcional: redirigir al login
-          if (window.location.pathname !== '/login') {
+          
+          if (this.authContext) {
+            this.authContext.logout();
+          } else if (window.location.pathname !== '/login') {
             window.location.href = '/login';
           }
         }
@@ -128,7 +225,6 @@ class ApiService {
       }
 
       const responseData = await response.json();
-      console.log("✅ POST Success Response:", responseData);
       return responseData;
 
     } catch (error) {
@@ -147,20 +243,12 @@ class ApiService {
       headers['Authorization'] = `Bearer ${authToken}`;
     }
 
-    console.log("🚀 PUT Request:", {
-      url: `${API_URL}${endpoint}`,
-      data,
-      headers: { ...headers, Authorization: authToken ? `Bearer ${authToken.substring(0, 20)}...` : 'No token' }
-    });
-
     try {
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'PUT',
         headers,
         body: JSON.stringify(data),
       });
-
-      console.log("📥 PUT Response Status:", response.status);
 
       if (!response.ok) {
         let errorData;
@@ -172,13 +260,43 @@ class ApiService {
         
         console.error("❌ PUT Error Response:", errorData);
         
-        // Si es un error 401, limpiar el token
+        // Si es un error 401, intentar renovar el token
         if (response.status === 401) {
+          const refreshSuccessful = await this.tryRefreshToken();
+          
+          if (refreshSuccessful) {
+            // Reintentar la petición con el nuevo token
+            const newToken = this.getToken();
+            if (newToken) {
+              const newHeaders: HeadersInit = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${newToken}`
+              };
+              
+              const retryResponse = await fetch(`${API_URL}${endpoint}`, {
+                method: 'PUT',
+                headers: newHeaders,
+                body: JSON.stringify(data),
+              });
+
+              if (retryResponse.ok) {
+                try {
+                  const retryData = await retryResponse.json();
+                  return retryData;
+                } catch {
+                  return null;
+                }
+              }
+            }
+          }
+          
+          // Si la renovación falló, limpiar tokens y hacer logout
           localStorage.removeItem('token');
           localStorage.removeItem('refresh_token');
-          console.log('🚨 Error 401 - Token expirado, limpiando tokens');
-          // Opcional: redirigir al login
-          if (window.location.pathname !== '/login') {
+          
+          if (this.authContext) {
+            this.authContext.logout();
+          } else if (window.location.pathname !== '/login') {
             window.location.href = '/login';
           }
         }
@@ -188,7 +306,6 @@ class ApiService {
 
       try {
         const responseData = await response.json();
-        console.log("✅ PUT Success Response:", responseData);
         return responseData;
       } catch {
         // Algunas respuestas PUT pueden no tener contenido JSON
@@ -211,18 +328,11 @@ class ApiService {
       headers['Authorization'] = `Bearer ${authToken}`;
     }
 
-    console.log("🚀 DELETE Request:", {
-      url: `${API_URL}${endpoint}`,
-      headers: { ...headers, Authorization: authToken ? `Bearer ${authToken.substring(0, 20)}...` : 'No token' }
-    });
-
     try {
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'DELETE',
         headers,
       });
-
-      console.log("📥 DELETE Response Status:", response.status);
 
       if (!response.ok) {
         let errorData;
@@ -234,13 +344,42 @@ class ApiService {
         
         console.error("❌ DELETE Error Response:", errorData);
         
-        // Si es un error 401, limpiar el token
+        // Si es un error 401, intentar renovar el token
         if (response.status === 401) {
+          const refreshSuccessful = await this.tryRefreshToken();
+          
+          if (refreshSuccessful) {
+            // Reintentar la petición con el nuevo token
+            const newToken = this.getToken();
+            if (newToken) {
+              const newHeaders: HeadersInit = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${newToken}`
+              };
+              
+              const retryResponse = await fetch(`${API_URL}${endpoint}`, {
+                method: 'DELETE',
+                headers: newHeaders,
+              });
+
+              if (retryResponse.ok) {
+                try {
+                  const retryData = await retryResponse.json();
+                  return retryData;
+                } catch {
+                  return null;
+                }
+              }
+            }
+          }
+          
+          // Si la renovación falló, limpiar tokens y hacer logout
           localStorage.removeItem('token');
           localStorage.removeItem('refresh_token');
-          console.log('🚨 Error 401 - Token expirado, limpiando tokens');
-          // Opcional: redirigir al login
-          if (window.location.pathname !== '/login') {
+          
+          if (this.authContext) {
+            this.authContext.logout();
+          } else if (window.location.pathname !== '/login') {
             window.location.href = '/login';
           }
         }
@@ -250,7 +389,6 @@ class ApiService {
 
       try {
         const responseData = await response.json();
-        console.log("✅ DELETE Success Response:", responseData);
         return responseData;
       } catch {
         // Algunas respuestas DELETE pueden no tener contenido JSON

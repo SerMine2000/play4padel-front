@@ -61,17 +61,13 @@ const ManageCourts: React.FC = () => {
   
   // Cargar datos del club y pistas cuando se monta el componente
   useEffect(() => {
-    console.log('[ManageCourts] useEffect - user:', user);
-  
     const loadClubData = async () => {
       if (!user) {
-        console.log('[ManageCourts] No hay usuario autenticado');
         return;
       }
   
       // Verificar que el usuario tenga rol de CLUB
       if (user.id_rol !== 'CLUB') {
-        console.log('[ManageCourts] Usuario sin permisos de administrador de club:', user.id_rol);
         showToastMessage('No tienes permisos para gestionar pistas', 'danger');
         navigate('/home');
         return;
@@ -79,42 +75,22 @@ const ManageCourts: React.FC = () => {
 
       try {
         setLoading(true);
-        console.log('[ManageCourts] Verificando conectividad del backend...');
-        
-        // Primero verificar que el backend esté funcionando
-        try {
-          const healthCheck = await apiService.get('/health-check');
-          console.log('[ManageCourts] Backend conectado:', healthCheck);
-        } catch (healthError) {
-          console.warn('[ManageCourts] Health check falló, pero continuando:', healthError);
-        }
-        
-        console.log('[ManageCourts] Cargando datos del club administrado por el usuario...');
-        console.log('[ManageCourts] User ID:', user.id);
         
         let clubResponse;
         
         try {
           // Intentar usar el nuevo endpoint /my-club
-          console.log('[ManageCourts] Intentando /my-club...');
           clubResponse = await apiService.get('/my-club');
-          console.log('[ManageCourts] ✅ Club obtenido via /my-club:', clubResponse);
         } catch (error) {
-          console.log('[ManageCourts] ❌ /my-club falló:', error);
-          console.log('[ManageCourts] 🔄 Usando fallback con /clubs?id_administrador...');
-          
           // Fallback: usar endpoint existente con filtro por administrador
           const clubsResponse = await apiService.get(`/clubs?id_administrador=${user.id}`);
-          console.log('[ManageCourts] Clubes filtrados por administrador:', clubsResponse);
           
           if (!Array.isArray(clubsResponse) || clubsResponse.length === 0) {
-            console.log('[ManageCourts] ❌ No se encontraron clubes para administrador:', user.id);
             throw new Error('No administras ningún club');
           }
           
           // Tomar el primer club (normalmente un usuario solo administra uno)
           clubResponse = clubsResponse[0];
-          console.log('[ManageCourts] ✅ Club obtenido via fallback:', clubResponse);
         }
         
         if (!clubResponse || !clubResponse.id) {
@@ -125,12 +101,9 @@ const ManageCourts: React.FC = () => {
         setClubData(clubResponse);
         
         // Cargar las pistas del club
-        console.log('[ManageCourts] 🏟️ Cargando pistas del club:', clubResponse.id);
         const pistasResponse = await apiService.get(`/clubs/${clubResponse.id}/pistas`);
-        console.log('[ManageCourts] Pistas obtenidas:', pistasResponse);
         
         setPistas(Array.isArray(pistasResponse) ? pistasResponse : []);
-        console.log('[ManageCourts] ✅ Datos cargados exitosamente');
         
       } catch (error) {
         console.error('[ManageCourts] Error al cargar datos del club:', error);
@@ -212,10 +185,6 @@ const ManageCourts: React.FC = () => {
   
   // Guardar pista (crear o actualizar)
   const saveCourt = async () => {
-    console.log('[ManageCourts] saveCourt - user:', user);
-    console.log('[ManageCourts] saveCourt - clubId:', clubId);
-    console.log('[ManageCourts] saveCourt - formData:', formData);
-    
     if (!clubId) {
       showToastMessage('Error: No se ha podido identificar el club. Recarga la página.', 'danger');
       return;
@@ -256,8 +225,6 @@ const ManageCourts: React.FC = () => {
         imagen_url: formData.imagen_url
       };
       
-      console.log('[ManageCourts] Datos a enviar:', pistaData);
-      
       if (editingPista) {
         // Actualizar pista existente
         await apiService.put(`/pistas/${editingPista.id}`, pistaData);
@@ -269,11 +236,9 @@ const ManageCourts: React.FC = () => {
       }
       
       // Actualizar lista de pistas
-      console.log('[ManageCourts] Recargando lista de pistas...');
       const pistasResponse = await apiService.get(`/clubs/${clubId}/pistas`);
       if (Array.isArray(pistasResponse)) {
         setPistas(pistasResponse);
-        console.log('[ManageCourts] Lista de pistas actualizada:', pistasResponse);
       }
       
       // Cerrar modal

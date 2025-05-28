@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonBackButton, IonGrid,
   IonRow, IonCol, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonItem, IonLabel, IonList,
   IonIcon, IonLoading, IonToast, IonChip, IonButton, IonModal, IonSegment, IonSegmentButton, IonText,
@@ -40,7 +39,6 @@ interface ReservasPorDia {
 }
 
 const CalendarView: React.FC = () => {
-  const navigate = useNavigate();
   const { user } = useAuth();
   const [fechaActual, setFechaActual] = useState<Date>(new Date());
   const [diasCalendario, setDiasCalendario] = useState<DiaCalendario[]>([]);
@@ -54,7 +52,7 @@ const CalendarView: React.FC = () => {
   const [colorToast, setColorToast] = useState<string>('success');
   const [mostrarDetalleReserva, setMostrarDetalleReserva] = useState<boolean>(false);
   const [reservaSeleccionada, setReservaSeleccionada] = useState<ReservaDetalle | null>(null);
-  const [vistaActual, setVistaActual] = useState<'calendario' | 'lista'>('calendario');
+  const [vistaActual, setVistaActual] = useState<'calendario' | 'lista'>('calendario'); // Eliminada vista diagnóstico
   const [fechasConReservas, setFechasConReservas] = useState<{ [key: string]: number }>({});
   const [mensajeError, setMensajeError] = useState<string>('');
   const [showCancelConfirm, setShowCancelConfirm] = useState<boolean>(false);
@@ -65,6 +63,7 @@ const CalendarView: React.FC = () => {
   // Cargar datos iniciales
   useEffect(() => {
     if (user) {
+      console.log('🔄 Inicializando calendario con token renovación automática...');
       generarDiasCalendario(fechaActual);
       cargarReservasMes(fechaActual);
 
@@ -154,6 +153,8 @@ const CalendarView: React.FC = () => {
   const cargarReservasMes = async (fecha: Date, forceReload: boolean = false) => {
     if (!user) return;
 
+    console.log('🔄 Cargando reservas del mes con renovación automática de tokens...');
+
     // Obtener ID del club
     let idClub = user.id_club;
 if (!idClub) {
@@ -194,6 +195,7 @@ if (!idClub) {
       const response = await apiService.get(`/reservas?id_club=${idClub}`);
 
       if (Array.isArray(response)) {
+        console.log('✅ Reservas del mes cargadas exitosamente');
         // Contar reservas por fecha (para el calendario)
         const reservasPorFecha: { [key: string]: number } = {};
 
@@ -341,6 +343,8 @@ if (!idClub) {
   const cargarReservasDia = async (fecha: Date) => {
     if (!user) return;
 
+    console.log('🔄 Cargando reservas del día con renovación automática de tokens...');
+
     // Obtener el ID del club manualmente si no está en el objeto user
     let idClub = user.id_club;
 
@@ -386,10 +390,13 @@ if (!idClub) {
 
       // Si no hay reservas, actualizar el estado y salir
       if (response.length === 0) {
+        console.log('ℹ️ No hay reservas para el día seleccionado');
         setReservasDelDia([]);
         setCargando(false);
         return;
       }
+
+      console.log('✅ Reservas del día cargadas exitosamente');
 
       // Procesar cada reserva para añadir detalles
       const reservasPromesas = response.map(async (reserva) => {
@@ -490,7 +497,7 @@ if (!idClub) {
     setVistaActual(nuevaVista);
 
     // Si cambiamos a lista y no hay datos, intentar cargar
-    if (nuevaVista === 'lista' && reservasDelMes.length === 0) {
+    if (nuevaVista === 'lista' && user && reservasDelMes.length === 0) {
       cargarReservasMes(fechaActual, true);
     }
   };

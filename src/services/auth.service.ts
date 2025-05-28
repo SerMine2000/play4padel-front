@@ -14,17 +14,19 @@ import apiService from './api.service';
 class AuthService {
   async login(credentials: LoginRequest): Promise<LoginResponse> {
     try {
-      console.log('🔐 Enviando credenciales al backend:', credentials);
-
       const response = await apiService.post(API_ENDPOINTS.LOGIN, credentials);
-      const { access_token, user_id, role, user_data, message } = response.data;
+      
+      // La respuesta viene directamente del backend, no anidada bajo .data
+      const { access_token, refresh_token, user_id, role, user_data, message } = response;
 
-      if (!user_id || !role || !access_token) {
+      if (!user_id || !role || !access_token || !refresh_token) {
+        console.error('❌ Respuesta incompleta del backend:', response);
         throw new Error('Faltan datos clave en la respuesta del backend');
       }
 
-      // Guardar token en localStorage para persistencia
-      localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, access_token);
+      // Guardar ambos tokens en localStorage
+      localStorage.setItem('token', access_token);
+      localStorage.setItem('refresh_token', refresh_token);
 
       return {
         message: message || 'Inicio de sesión correcto',
@@ -38,17 +40,13 @@ class AuthService {
       };
     } catch (error) {
       console.error('❌ Error en login:', error);
-      throw new Error('Error al iniciar sesión');
+      throw error; // Mantener el error original para mejor debugging
     }
   }
 
   async register(userData: RegisterRequest): Promise<void> {
     try {
-      console.log("📨 Registrando usuario:", userData);
-
       if (userData.tipo_cuenta === 'club') {
-        console.log("🏢 Registro como club");
-
         const { tipo_cuenta, club_data, ...userPayload } = userData;
 
         // Crear usuario administrador del club
@@ -67,7 +65,6 @@ class AuthService {
             id_administrador: createdUserId,
           };
 
-          console.log("🏗️ Creando club:", clubPayload);
           await apiService.post(API_ENDPOINTS.CLUBS, clubPayload);
         } else {
           console.error("❌ Faltan datos del club o ID del usuario:", {
@@ -100,14 +97,16 @@ class AuthService {
 
 
   clearSession(): void {
-    localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
+    // Usar la misma clave que api.service
+    localStorage.removeItem('token');
+    localStorage.removeItem('refresh_token');
   }
 
 
   async getCurrentUser(userId: number): Promise<User> {
     try {
       const response = await apiService.get(`${API_ENDPOINTS.USER}/${userId}`);
-      return response.data;
+      return response;
     } catch (error: any) {
       console.error('❌ Error al obtener el usuario:', error);
       throw new Error(error.message || 'Error al obtener información del usuario.');
@@ -126,7 +125,7 @@ class AuthService {
 
 
   isAuthenticated(): boolean {
-    return !!localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
+    return !!localStorage.getItem('token');
   }
 
   getUserId(): number | null {
@@ -137,4 +136,35 @@ class AuthService {
     return null;
   }
 
+  async refreshAccessToken(): Promise<void> {
+    try {
+      const refreshToken = localStorage.getItem('refresh_token');
+      if (!refreshToken) {
+        throw new Error('No hay refresh token disponible');
+      }
+      
+      const response = await fetch(`${API_ENDPOINTS.BASE_URL}/refresh-token`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${refreshToken}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al renovar token');
+      }
+
+      const data = await response.json();
+      localStorage.setItem('token', data.access_token);
+      
+    } catch (error) {
+      console.error('❌ Error al renovar token:', error);
+      this.clearSession();
+      throw error;
+    }
+  }
+
 }
+
+export default new AuthService();
