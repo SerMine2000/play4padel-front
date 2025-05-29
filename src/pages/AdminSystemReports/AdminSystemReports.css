@@ -1,0 +1,357 @@
+.admin-reports-container {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.reports-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.reports-header h1 {
+  color: var(--ion-color-primary);
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.reports-header p {
+  color: var(--ion-color-medium);
+  font-size: 1.1rem;
+}
+
+.period-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.period-controls ion-segment {
+  flex: 1;
+  max-width: 400px;
+}
+
+.metric-card {
+  --background: var(--ion-color-light);
+  --border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+  height: 100%;
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.metric-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.metric-header ion-icon {
+  font-size: 1.5rem;
+}
+
+.metric-title {
+  font-size: 0.9rem;
+  color: var(--ion-color-medium);
+  font-weight: 500;
+}
+
+.metric-value {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.metric-value h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+  color: var(--ion-color-dark);
+}
+
+.metric-comparison {
+  font-size: 0.85rem;
+  color: var(--ion-color-medium);
+  margin: 0;
+}
+
+.activity-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.activity-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--ion-color-light);
+  border-radius: 8px;
+}
+
+.activity-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ion-color-medium);
+}
+
+.activity-label ion-icon {
+  font-size: 1.2rem;
+  color: var(--ion-color-primary);
+}
+
+.activity-value {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--ion-color-dark);
+}
+
+.hourly-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hour-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hour-label {
+  min-width: 50px;
+  font-size: 0.85rem;
+  color: var(--ion-color-medium);
+  font-weight: 500;
+}
+
+.bar-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bar-container ion-progress-bar {
+  flex: 1;
+  height: 8px;
+}
+
+.bar-value {
+  min-width: 30px;
+  font-size: 0.8rem;
+  color: var(--ion-color-dark);
+  font-weight: 500;
+  text-align: right;
+}
+
+.club-rank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--ion-color-primary);
+  color: white;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.club-metrics {
+  display: flex;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.club-metrics span {
+  font-size: 0.85rem;
+  color: var(--ion-color-medium);
+  padding: 2px 6px;
+  background: var(--ion-color-light);
+  border-radius: 4px;
+}
+
+.geographic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.region-card {
+  padding: 16px;
+  background: var(--ion-color-light);
+  border-radius: 8px;
+  border-left: 4px solid var(--ion-color-primary);
+}
+
+.region-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.region-header h4 {
+  margin: 0;
+  color: var(--ion-color-dark);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.region-header ion-icon {
+  color: var(--ion-color-primary);
+  font-size: 1.2rem;
+}
+
+.region-stats {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.region-stat {
+  text-align: center;
+}
+
+.region-stat .stat-value {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: var(--ion-color-dark);
+}
+
+.region-stat .stat-label {
+  font-size: 0.75rem;
+  color: var(--ion-color-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .admin-reports-container {
+    padding: 16px;
+  }
+  
+  .reports-header h1 {
+    font-size: 2rem;
+  }
+  
+  .period-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .period-controls ion-segment {
+    max-width: none;
+  }
+  
+  .metric-value {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .metric-value h2 {
+    font-size: 1.6rem;
+  }
+  
+  .activity-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+  
+  .club-metrics {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .geographic-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .region-stats {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .region-stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .region-stat .stat-value {
+    display: inline;
+  }
+}
+
+@media (max-width: 480px) {
+  .hour-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .bar-container {
+    width: 100%;
+  }
+  
+  .club-rank {
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
+  }
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+  .metric-card {
+    --background: var(--ion-color-dark);
+  }
+  
+  .metric-value h2 {
+    color: var(--ion-color-light);
+  }
+  
+  .activity-item {
+    background: var(--ion-color-dark);
+  }
+  
+  .activity-value {
+    color: var(--ion-color-light);
+  }
+  
+  .bar-value {
+    color: var(--ion-color-light);
+  }
+  
+  .region-card {
+    background: var(--ion-color-dark);
+  }
+  
+  .region-header h4 {
+    color: var(--ion-color-light);
+  }
+  
+  .region-stat .stat-value {
+    color: var(--ion-color-light);
+  }
+  
+  .club-metrics span {
+    background: var(--ion-color-dark);
+  }
+}

@@ -18,7 +18,7 @@ export default defineConfig({
     proxy: {
       '/marcador': {
         target: 'https://backend-1-uvqp.onrender.com',
-        // target: 'http://localhost:5000',
+        //target: 'http://localhost:5000',
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path,

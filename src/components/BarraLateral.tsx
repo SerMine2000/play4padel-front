@@ -4,7 +4,7 @@ import { IonItem, IonIcon, IonLabel, IonList, IonButton } from '@ionic/react';
 import {
   logOutOutline, homeOutline, calendarOutline, tennisballOutline,
   peopleOutline, stopwatchOutline, statsChartOutline, trophyOutline,
-  settingsOutline, menuOutline, closeOutline
+  settingsOutline, menuOutline, closeOutline, businessOutline
 } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -101,11 +101,12 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
   switch (userRole) {
     case 'ADMIN':
       roleSpecificOptions = [
-        { label: 'Inicio', path: '/home', icon: homeOutline },
-        { label: 'Gestionar Pistas', path: '/manage-courts', icon: tennisballOutline },
-        { label: 'Administrar Usuarios', path: '/manage-users', icon: peopleOutline },
+        { label: 'Dashboard', path: '/admin/dashboard', icon: homeOutline },
+        { label: 'Gestionar Clubes', path: '/admin/manage-clubs', icon: businessOutline },
+        { label: 'Gestionar Usuarios', path: '/admin/manage-all-users', icon: peopleOutline },
+        { label: 'Reportes del Sistema', path: '/admin/system-reports', icon: statsChartOutline },
+        { label: 'Configuración Sistema', path: '/admin/system-config', icon: settingsOutline },
         { label: 'Calendario', path: '/calendar', icon: calendarOutline },
-        { label: 'Estadísticas', path: '/estadisticas', icon: statsChartOutline },
         { label: 'Torneos', path: '/torneos', icon: trophyOutline },
         { label: 'Ligas', path: '/ligas', icon: trophyOutline }
       ];
@@ -176,7 +177,7 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
           <div
             className="sidebar-logo"
             onClick={() => {
-              navigate('/home');
+              navigate(userRole === 'ADMIN' ? '/admin/dashboard' : '/home');
               if (isMobile) onToggle?.();
             }}
           >

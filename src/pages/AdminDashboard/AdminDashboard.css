@@ -1,0 +1,136 @@
+.admin-dashboard-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.dashboard-header h1 {
+  color: var(--ion-color-primary);
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.dashboard-header p {
+  color: var(--ion-color-medium);
+  font-size: 1.1rem;
+}
+
+.stats-card {
+  margin-bottom: 16px;
+  --background: var(--ion-color-light);
+  --border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.stats-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.stats-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.stats-icon {
+  font-size: 2.5rem;
+  opacity: 0.8;
+}
+
+.stats-info h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+  color: var(--ion-color-dark);
+}
+
+.stats-info p {
+  font-size: 0.9rem;
+  color: var(--ion-color-medium);
+  margin: 4px 0 8px 0;
+}
+
+.system-status {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--ion-color-light);
+  border-radius: 8px;
+}
+
+.status-item ion-icon {
+  font-size: 1.2rem;
+}
+
+.status-item span {
+  font-size: 0.9rem;
+  color: var(--ion-color-dark);
+}
+
+.quick-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.quick-actions ion-button {
+  --border-radius: 8px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  height: 44px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .admin-dashboard-container {
+    padding: 16px;
+  }
+  
+  .dashboard-header h1 {
+    font-size: 2rem;
+  }
+  
+  .stats-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+  
+  .stats-info h2 {
+    font-size: 1.6rem;
+  }
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+  .stats-card {
+    --background: var(--ion-color-dark);
+  }
+  
+  .stats-info h2 {
+    color: var(--ion-color-light);
+  }
+  
+  .status-item {
+    background: var(--ion-color-dark);
+  }
+  
+  .status-item span {
+    color: var(--ion-color-light);
+  }
+}

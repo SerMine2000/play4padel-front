@@ -14,6 +14,13 @@ import MarcadorPantalla from './pages/Marcador/MarcadorPantalla';
 import Configuracion from './pages/Configuracion/Configuracion';
 import Pay from './pages/Pago/Pay';
 
+// Páginas del Administrador Supremo
+import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
+import AdminManageClubs from './pages/AdminManageClubs/AdminManageClubs';
+import AdminManageAllUsers from './pages/AdminManageAllUsers/AdminManageAllUsers';
+import AdminSystemReports from './pages/AdminSystemReports/AdminSystemReports';
+import AdminSystemConfig from './pages/AdminSystemConfig/AdminSystemConfig';
+
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Estructura from './components/Estructura';
 import { ThemeProvider } from './context/ThemeContext';
@@ -63,8 +70,16 @@ const RoleRoute = ({
 
   if (isLoading) return <div>Cargando...</div>;
   if (!isAuthenticated) return <Navigate to="/login" />;
-  if (user && roles.includes(user.id_rol)) return element;
-  return <Navigate to="/home" />;
+  
+  // Verificar por role (string) en lugar de id_rol
+  if (user && roles.includes(user.role.toUpperCase())) return element;
+  
+  // Si es admin y trata de acceder a /home, redirigir al dashboard de admin
+  if (user && user.role.toUpperCase() === 'ADMIN' && window.location.pathname === '/home') {
+    return <Navigate to="/admin/dashboard" />;
+  }
+  
+  return <Navigate to={user?.role.toUpperCase() === 'ADMIN' ? '/admin/dashboard' : '/home'} />;
 };
 
 // Componente para manejar el foco al cambiar de ruta
@@ -111,7 +126,14 @@ const styles = `
 document.head.appendChild(document.createElement('style')).textContent = styles;
 
 const AppContent: React.FC = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+
+  // Función para determinar la ruta por defecto según el rol
+  const getDefaultRoute = () => {
+    if (!isAuthenticated) return '/login';
+    if (user?.role.toUpperCase() === 'ADMIN') return '/admin/dashboard';
+    return '/home';
+  };
 
   return (
     <IonApp>
@@ -120,10 +142,38 @@ const AppContent: React.FC = () => {
         <IonRouterOutlet>
           <Routes>
             {/* Rutas públicas */}
-            <Route path="/login" element={isAuthenticated ? <Navigate to="/home" /> : <Login />} />
-            <Route path="/register" element={isAuthenticated ? <Navigate to="/home" /> : <Register />} />
+            <Route 
+              path="/login" 
+              element={isAuthenticated ? <Navigate to={getDefaultRoute()} /> : <Login />} 
+            />
+            <Route 
+              path="/register" 
+              element={isAuthenticated ? <Navigate to={getDefaultRoute()} /> : <Register />} 
+            />
 
-            {/* Rutas privadas */}
+            {/* Rutas del Administrador Supremo */}
+            <Route 
+              path="/admin/dashboard" 
+              element={<RoleRoute roles={['ADMIN']} element={<MainLayout><AdminDashboard /></MainLayout>} />} 
+            />
+            <Route 
+              path="/admin/manage-clubs" 
+              element={<RoleRoute roles={['ADMIN']} element={<MainLayout><AdminManageClubs /></MainLayout>} />} 
+            />
+            <Route 
+              path="/admin/manage-all-users" 
+              element={<RoleRoute roles={['ADMIN']} element={<MainLayout><AdminManageAllUsers /></MainLayout>} />} 
+            />
+            <Route 
+              path="/admin/system-reports" 
+              element={<RoleRoute roles={['ADMIN']} element={<MainLayout><AdminSystemReports /></MainLayout>} />} 
+            />
+            <Route 
+              path="/admin/system-config" 
+              element={<RoleRoute roles={['ADMIN']} element={<MainLayout><AdminSystemConfig /></MainLayout>} />} 
+            />
+
+            {/* Rutas privadas generales */}
             <Route path="/home" element={<PrivateRoute element={<MainLayout><Home /></MainLayout>} />} />
             <Route path="/calendar" element={<PrivateRoute element={<MainLayout><CalendarView /></MainLayout>} />} />
             <Route path="/profile" element={<PrivateRoute element={<MainLayout><Profile /></MainLayout>} />} />
@@ -139,7 +189,7 @@ const AppContent: React.FC = () => {
             <Route path="/pay" element={ <Elements stripe={stripePromise}> <Pay /></Elements>}/>
 
             {/* Redirección por defecto */}
-            <Route path="/" element={<Navigate to={isAuthenticated ? "/home" : "/login"} />} />
+            <Route path="/" element={<Navigate to={getDefaultRoute()} />} />
           </Routes>
         </IonRouterOutlet>
       </BrowserRouter>
