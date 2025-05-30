@@ -51,9 +51,9 @@ import {
   checkmarkCircleOutline,
   filterOutline
 } from 'ionicons/icons';
-import { useAuth } from '../../context/AuthContext';
-import usersService, { User } from '../../services/users.service';
-import clubsService from '../../services/clubs.service';
+import { useAuth } from '../../../context/AuthContext';
+import usersService, { User } from '../../../services/admin/user.service';
+import clubsService from '../../../services/admin/club.service';
 import './AdminManageAllUsers.css';
 
 const AdminManageAllUsers: React.FC = () => {

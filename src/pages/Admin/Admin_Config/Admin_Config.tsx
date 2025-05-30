@@ -42,8 +42,8 @@ import {
   lockClosedOutline,
   globeOutline
 } from 'ionicons/icons';
-import { useAuth } from '../../context/AuthContext';
-import apiService from '../../services/api.service';
+import { useAuth } from '../../../context/AuthContext';
+import apiService from '../../../services/api.service';
 import './AdminSystemConfig.css';
 
 interface SystemConfig {

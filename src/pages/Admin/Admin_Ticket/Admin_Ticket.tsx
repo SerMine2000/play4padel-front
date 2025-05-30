@@ -39,8 +39,8 @@ import {
   locationOutline,
   barChartOutline
 } from 'ionicons/icons';
-import { useAuth } from '../../context/AuthContext';
-import apiService from '../../services/api.service';
+import { useAuth } from '../../../context/AuthContext';
+import apiService from '../../../services/api.service';
 import './AdminSystemReports.css';
 
 interface SystemMetrics {

@@ -32,8 +32,8 @@ import {
   warningOutline,
   checkmarkCircleOutline
 } from 'ionicons/icons';
-import { useAuth } from '../../context/AuthContext';
-import adminStatsService, { AdminDashboardStats } from '../../services/admin-stats.service';
+import { useAuth } from '../../../context/AuthContext';
+import adminStatsService, { AdminDashboardStats } from '../../services/admin/admin-stats.service';
 import './AdminDashboard.css';
 
 // Usamos la interface del servicio

@@ -15,11 +15,11 @@ import Configuracion from './pages/Configuracion/Configuracion';
 import Pay from './pages/Pago/Pay';
 
 // Páginas del Administrador Supremo
-import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
-import AdminManageClubs from './pages/AdminManageClubs/AdminManageClubs';
-import AdminManageAllUsers from './pages/AdminManageAllUsers/AdminManageAllUsers';
-import AdminSystemReports from './pages/AdminSystemReports/AdminSystemReports';
-import AdminSystemConfig from './pages/AdminSystemConfig/AdminSystemConfig';
+import AdminDashboard from './pages/Admin/AdminDashboard/AdminDashboard';
+import AdminManageClubs from './pages/Admin/Admin_Clubes/Admin_Clubes';
+import AdminManageAllUsers from './pages/Admin/Admin_Usuarios/Admin_Usuarios';
+import AdminSystemReports from './pages/Admin/Admin_Ticket/Admin_Ticket';
+import AdminSystemConfig from './pages/Admin/Admin_Config/Admin_Config';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Estructura from './components/Estructura';

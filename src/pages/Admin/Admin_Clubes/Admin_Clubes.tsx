@@ -47,9 +47,9 @@ import {
   timeOutline,
   toggleOutline
 } from 'ionicons/icons';
-import { useAuth } from '../../context/AuthContext';
-import clubsService, { Club, ClubFormData } from '../../services/clubs.service';
-import usersService, { User } from '../../services/users.service';
+import { useAuth } from '../../../context/AuthContext';
+import clubsService, { Club, ClubFormData } from '../../../services/admin/club.service';
+import usersService, { User } from '../../../services/admin/user.service';
 import './AdminManageClubs.css';
 
 const AdminManageClubs: React.FC = () => {
