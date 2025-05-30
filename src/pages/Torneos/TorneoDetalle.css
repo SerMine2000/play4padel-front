@@ -1,0 +1,374 @@
+.torneo-detalle-container {
+  padding: 1rem;
+  min-height: 100vh;
+}
+
+/* Header */
+.torneo-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--ion-color-light);
+}
+
+.header-content {
+  flex: 1;
+}
+
+.header-content h1 {
+  margin: 0 0 0.5rem 0;
+  color: var(--ion-color-primary);
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.header-info {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Tabs */
+ion-segment {
+  margin-bottom: 1rem;
+}
+
+/* Tab Content */
+.tab-content {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Info Tab */
+.info-tab .info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--ion-color-light);
+  border-radius: 8px;
+}
+
+.info-item ion-icon {
+  font-size: 2rem;
+  color: var(--ion-color-primary);
+}
+
+.info-item h3 {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ion-color-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-item p {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--ion-color-dark);
+}
+
+.descripcion-section {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ion-color-light);
+}
+
+.descripcion-section h3 {
+  margin: 0 0 1rem 0;
+  color: var(--ion-color-primary);
+}
+
+.descripcion-section p {
+  margin: 0;
+  line-height: 1.6;
+  color: var(--ion-color-medium);
+}
+
+.admin-actions {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Parejas Tab */
+.pareja-card {
+  transition: transform 0.2s ease;
+}
+
+.pareja-card:hover {
+  transform: translateY(-2px);
+}
+
+.pareja-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.jugadores {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.jugador {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  background: var(--ion-color-light);
+  border-radius: 8px;
+}
+
+.jugador ion-avatar {
+  width: 32px;
+  height: 32px;
+}
+
+.jugador ion-icon {
+  font-size: 1.2rem;
+  color: var(--ion-color-medium);
+}
+
+.jugador span {
+  font-weight: 500;
+}
+
+.fecha-inscripcion {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ion-color-light);
+  text-align: center;
+}
+
+.fecha-inscripcion small {
+  color: var(--ion-color-medium);
+  font-size: 0.8rem;
+}
+
+/* Fixture Tab */
+.partido-card {
+  margin-bottom: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.partido-card:hover {
+  transform: translateY(-1px);
+}
+
+.partido-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.partido-header h3 {
+  margin: 0;
+  color: var(--ion-color-primary);
+}
+
+.partido-equipos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.equipo {
+  flex: 1;
+  text-align: center;
+  padding: 1rem;
+  background: var(--ion-color-light);
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.vs {
+  font-weight: bold;
+  color: var(--ion-color-primary);
+  font-size: 1.2rem;
+}
+
+.partido-info {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.resultado {
+  text-align: center;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--ion-color-success);
+  color: white;
+  border-radius: 8px;
+}
+
+/* Empty States */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.empty-state ion-icon {
+  font-size: 4rem;
+  color: var(--ion-color-medium);
+  margin-bottom: 1rem;
+}
+
+.empty-state h2 {
+  color: var(--ion-color-medium);
+  margin: 1rem 0 0.5rem 0;
+}
+
+.empty-state p {
+  color: var(--ion-color-medium);
+  margin: 0;
+}
+
+/* Torneo not found */
+.torneo-not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  text-align: center;
+  gap: 1rem;
+}
+
+.torneo-not-found ion-icon {
+  font-size: 4rem;
+  color: var(--ion-color-danger);
+}
+
+.torneo-not-found h2 {
+  color: var(--ion-color-medium);
+  margin: 0;
+}
+
+/* Modal */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid var(--ion-color-light);
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: var(--ion-color-primary);
+}
+
+.modal-content {
+  padding: 1rem;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.modal-content ion-item {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  margin-bottom: 1rem;
+}
+
+.modal-footer {
+  padding: 1rem;
+  border-top: 1px solid var(--ion-color-light);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .torneo-detalle-container {
+    padding: 0.5rem;
+  }
+  
+  .torneo-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .header-content h1 {
+    font-size: 1.5rem;
+  }
+  
+  .info-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .info-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+  
+  .partido-equipos {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .vs {
+    transform: rotate(90deg);
+  }
+  
+  .admin-actions {
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    z-index: 1000;
+  }
+}
+
+/* Tema oscuro */
+.torneo-detalle-container.dark {
+  background-color: var(--ion-color-dark);
+}
+
+.dark .torneo-header {
+  border-color: var(--ion-color-dark-tint);
+}
+
+.dark .info-item,
+.dark .jugador,
+.dark .equipo {
+  background: var(--ion-color-dark-tint);
+}
+
+.dark .info-item p,
+.dark .jugador span {
+  color: var(--ion-color-light);
+}
+
+.dark .descripcion-section {
+  border-color: var(--ion-color-dark-tint);
+}
+
+.dark .fecha-inscripcion {
+  border-color: var(--ion-color-dark-tint);
+}
+
+.dark .modal-header,
+.dark .modal-footer {
+  border-color: var(--ion-color-dark-tint);
+}

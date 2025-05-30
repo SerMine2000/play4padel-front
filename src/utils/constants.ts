@@ -12,7 +12,29 @@ export const API_ENDPOINTS = {
   CLUBS: '/clubs',
   RESERVAS: '/reservas',
   CREAR_RESERVA: '/crear-reserva',
-  DISPONIBILIDAD_PISTA: '/pistas'
+  DISPONIBILIDAD_PISTA: '/pistas',
+  
+  // Torneos
+  TORNEOS: '/torneos',
+  CREAR_TORNEO: '/torneos/crear',
+  TORNEO_DETALLE: (id: number) => `/torneos/${id}`,
+  INSCRIBIR_PAREJA_TORNEO: (id: number) => `/torneos/${id}/inscribir_pareja_torneo`,
+  GENERAR_FIXTURE: (id: number) => `/torneos/${id}/generar_fixture`,
+  AVANZAR_RONDA: (id: number, ronda: string) => `/torneos/${id}/rondas/${ronda}/avanzar`,
+  CREAR_CONSOLACION: (id: number, ronda: string) => `/torneos/${id}/rondas/${ronda}/consolacion`,
+  
+  // Ligas
+  LIGAS: '/ligas',
+  LIGA_DETALLE: (id: number) => `/ligas/${id}`,
+  INSCRIBIR_PAREJA_LIGA: (id: number) => `/ligas/${id}/inscribir_pareja`,
+  PAREJAS_LIGA: (id: number) => `/ligas/${id}/parejas`,
+  GENERAR_PARTIDOS_LIGA: (id: number) => `/ligas/${id}/generar_partidos`,
+  PARTIDOS_LIGA: (id: number) => `/ligas/${id}/partidos`,
+  CLASIFICACION_LIGA: (id: number) => `/ligas/${id}/clasificacion`,
+  REGISTRAR_RESULTADO: (partidoId: number) => `/partidos/${partidoId}/resultado`,
+  
+  // Parejas
+  PAREJA_DETALLE: (id: number) => `/parejas_liga/${id}`
 };
 
 export const STORAGE_KEYS = {

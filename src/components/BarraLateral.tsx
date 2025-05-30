@@ -144,7 +144,9 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
     case 'SOCIO':
       roleSpecificOptions = [
         { label: 'Inicio', path: '/home', icon: homeOutline },
-        { label: 'Reservar', path: '/reservas', icon: calendarOutline }
+        { label: 'Reservar', path: '/reservas', icon: calendarOutline },
+        { label: 'Torneos', path: '/torneos', icon: trophyOutline },
+        { label: 'Ligas', path: '/ligas', icon: trophyOutline }
       ];
       break;
       
@@ -153,7 +155,9 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
       // Opciones por defecto para usuarios
       roleSpecificOptions = [
         { label: 'Inicio', path: '/home', icon: homeOutline },
-        { label: 'Reservar', path: '/reservas', icon: calendarOutline }
+        { label: 'Reservar', path: '/reservas', icon: calendarOutline },
+        { label: 'Torneos', path: '/torneos', icon: trophyOutline },
+        { label: 'Ligas', path: '/ligas', icon: trophyOutline }
       ];
   }
 

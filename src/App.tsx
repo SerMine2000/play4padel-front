@@ -21,6 +21,12 @@ import AdminManageAllUsers from './pages/Admin/Admin_Usuarios/Admin_Usuarios';
 import AdminSystemReports from './pages/Admin/Admin_Ticket/Admin_Ticket';
 import AdminSystemConfig from './pages/Admin/Admin_Config/Admin_Config';
 
+// Páginas de Torneos y Ligas
+import Torneos from './pages/Torneos/Torneos';
+import TorneoDetalle from './pages/Torneos/TorneoDetalle';
+import Ligas from './pages/Ligas/Ligas';
+import LigaDetalle from './pages/Ligas/LigaDetalle';
+
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Estructura from './components/Estructura';
 import { ThemeProvider } from './context/ThemeContext';
@@ -184,6 +190,14 @@ const AppContent: React.FC = () => {
             <Route path="/marcador-control" element={<PrivateRoute element={<MarcadorControl />} />} />
             <Route path="/marcador-pantalla" element={<PrivateRoute element={<MarcadorPantalla />} />} />
             <Route path="/marcador" element={<PrivateRoute element={<Estructura><MarcadorControl /></Estructura>} />} />
+
+            {/* Rutas de Torneos */}
+            <Route path="/torneos" element={<PrivateRoute element={<MainLayout><Torneos /></MainLayout>} />} />
+            <Route path="/torneos/:id" element={<PrivateRoute element={<MainLayout><TorneoDetalle /></MainLayout>} />} />
+
+            {/* Rutas de Ligas */}
+            <Route path="/ligas" element={<PrivateRoute element={<MainLayout><Ligas /></MainLayout>} />} />
+            <Route path="/ligas/:id" element={<PrivateRoute element={<MainLayout><LigaDetalle /></MainLayout>} />} />
 
             {/* Ruta pública de pago */}
             <Route path="/pay" element={ <Elements stripe={stripePromise}> <Pay /></Elements>}/>

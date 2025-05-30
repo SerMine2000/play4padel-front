@@ -115,3 +115,89 @@ export interface CardsResumenProps {
   victorias: string | number;
   torneos: string | number;
 }
+
+// Interfaces para Torneos
+export interface Torneo {
+  id: number;
+  nombre: string;
+  id_club: number;
+  fecha_inicio: string;
+  fecha_fin: string;
+  tipo: string;
+  estado?: string;
+  descripcion?: string;
+  precio_inscripcion?: number;
+  max_parejas?: number;
+  imagen_url?: string;
+}
+
+export interface ParejaTorneo {
+  id: number;
+  id_torneo: number;
+  jugador1_id: number;
+  jugador2_id: number;
+  categoria: string;
+  fecha_creacion: string;
+  jugador1?: User;
+  jugador2?: User;
+}
+
+export interface InscripcionTorneo {
+  id: number;
+  id_torneo: number;
+  id_usuario: number;
+  id_pareja: number;
+  categoria: string;
+  fecha_inscripcion: string;
+}
+
+// Interfaces para Ligas
+export interface Liga {
+  id: number;
+  nombre: string;
+  id_club: number;
+  fecha_inicio: string;
+  fecha_fin: string;
+  categoria: string;
+  nivel: string;
+  precio_inscripcion: number;
+  estado: string;
+  max_parejas: number;
+  descripcion?: string;
+  reglas?: string;
+  premio?: string;
+  imagen_url?: string;
+  puntos_victoria?: number;
+  puntos_empate?: number;
+  puntos_derrota?: number;
+  permite_empate?: boolean;
+}
+
+export interface ParejasLiga {
+  id: number;
+  id_liga: number;
+  id_jugador1: number;
+  id_jugador2: number;
+  nombre_equipo: string;
+  puntos: number;
+  partidos_jugados: number;
+  partidos_ganados: number;
+  partidos_perdidos: number;
+  jugador1?: User;
+  jugador2?: User;
+}
+
+export interface Partido {
+  id: number;
+  id_torneo?: number;
+  id_liga?: number;
+  id_equipo1: number;
+  id_equipo2: number;
+  ronda?: string;
+  estado: string;
+  resultado?: string;
+  fecha_partido?: string;
+  pista_id?: number;
+  equipo1?: ParejaTorneo | ParejasLiga;
+  equipo2?: ParejaTorneo | ParejasLiga;
+}

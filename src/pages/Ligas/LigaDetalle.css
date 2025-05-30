@@ -1,0 +1,640 @@
+.liga-detalle-container {
+  padding: 1rem;
+  min-height: 100vh;
+}
+
+/* Header */
+.liga-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--ion-color-light);
+}
+
+.header-content {
+  flex: 1;
+}
+
+.header-content h1 {
+  margin: 0 0 0.5rem 0;
+  color: var(--ion-color-primary);
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.header-info {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Tabs */
+ion-segment {
+  margin-bottom: 1rem;
+}
+
+/* Tab Content */
+.tab-content {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Info Tab */
+.info-tab .info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--ion-color-light);
+  border-radius: 8px;
+}
+
+.info-item ion-icon {
+  font-size: 2rem;
+  color: var(--ion-color-primary);
+}
+
+.info-item h3 {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ion-color-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-item p {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--ion-color-dark);
+}
+
+.descripcion-section,
+.reglas-section {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ion-color-light);
+}
+
+.descripcion-section h3,
+.reglas-section h3 {
+  margin: 0 0 1rem 0;
+  color: var(--ion-color-primary);
+}
+
+.descripcion-section p,
+.reglas-section p {
+  margin: 0;
+  line-height: 1.6;
+  color: var(--ion-color-medium);
+}
+
+.scoring-section {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: var(--ion-color-light);
+  border-radius: 8px;
+}
+
+.scoring-section h3 {
+  margin: 0 0 1rem 0;
+  color: var(--ion-color-primary);
+}
+
+.scoring-info {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.scoring-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.scoring-item .label {
+  font-size: 0.8rem;
+  color: var(--ion-color-medium);
+  margin-bottom: 0.25rem;
+}
+
+.scoring-item .value {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--ion-color-primary);
+}
+
+.admin-actions {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Clasificación Tab */
+.clasificacion-card {
+  margin-bottom: 1rem;
+}
+
+.clasificacion-card ion-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.clasificacion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.clasificacion-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--ion-color-light);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.clasificacion-item.posicion-1 {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #1a1a1a;
+}
+
+.clasificacion-item.posicion-2 {
+  background: linear-gradient(135deg, #c0c0c0, #e5e5e5);
+  color: #1a1a1a;
+}
+
+.clasificacion-item.posicion-3 {
+  background: linear-gradient(135deg, #cd7f32, #daa55c);
+  color: #1a1a1a;
+}
+
+.clasificacion-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.posicion {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 60px;
+}
+
+.posicion ion-icon {
+  font-size: 1.5rem;
+}
+
+.posicion .numero {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.equipo-info {
+  flex: 1;
+}
+
+.equipo-info h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.stats {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.puntos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.puntos-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--ion-color-primary);
+}
+
+.puntos-label {
+  font-size: 0.7rem;
+  color: var(--ion-color-medium);
+}
+
+/* Partidos Tab */
+.partido-card {
+  margin-bottom: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.partido-card:hover {
+  transform: translateY(-1px);
+}
+
+.partido-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.partido-header h3 {
+  margin: 0;
+  color: var(--ion-color-primary);
+}
+
+.partido-equipos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.equipo {
+  flex: 1;
+  text-align: center;
+  padding: 1rem;
+  background: var(--ion-color-light);
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.vs {
+  font-weight: bold;
+  color: var(--ion-color-primary);
+  font-size: 1.2rem;
+}
+
+.resultado {
+  text-align: center;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--ion-color-success);
+  color: white;
+  border-radius: 8px;
+}
+
+.partido-actions {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+/* Parejas Tab */
+.pareja-card {
+  transition: transform 0.2s ease;
+}
+
+.pareja-card:hover {
+  transform: translateY(-2px);
+}
+
+.pareja-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.pareja-header h3 {
+  margin: 0;
+  color: var(--ion-color-primary);
+}
+
+.jugadores {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.jugador {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  background: var(--ion-color-light);
+  border-radius: 8px;
+}
+
+.jugador ion-avatar {
+  width: 32px;
+  height: 32px;
+}
+
+.jugador ion-icon {
+  font-size: 1.2rem;
+  color: var(--ion-color-medium);
+}
+
+.jugador span {
+  font-weight: 500;
+}
+
+.estadisticas {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ion-color-light);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.stat .label {
+  font-size: 0.7rem;
+  color: var(--ion-color-medium);
+  margin-bottom: 0.25rem;
+}
+
+.stat .value {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: var(--ion-color-primary);
+}
+
+/* Empty States */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.empty-state ion-icon {
+  font-size: 4rem;
+  color: var(--ion-color-medium);
+  margin-bottom: 1rem;
+}
+
+.empty-state h2 {
+  color: var(--ion-color-medium);
+  margin: 1rem 0 0.5rem 0;
+}
+
+.empty-state p {
+  color: var(--ion-color-medium);
+  margin: 0;
+}
+
+/* Liga not found */
+.liga-not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  text-align: center;
+  gap: 1rem;
+}
+
+.liga-not-found ion-icon {
+  font-size: 4rem;
+  color: var(--ion-color-danger);
+}
+
+.liga-not-found h2 {
+  color: var(--ion-color-medium);
+  margin: 0;
+}
+
+/* Modal */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid var(--ion-color-light);
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: var(--ion-color-primary);
+}
+
+.modal-content {
+  padding: 1rem;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.modal-content ion-item {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  margin-bottom: 1rem;
+}
+
+.modal-footer {
+  padding: 1rem;
+  border-top: 1px solid var(--ion-color-light);
+}
+
+.partido-info {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: var(--ion-color-light);
+  border-radius: 8px;
+}
+
+.partido-info h3 {
+  margin: 0 0 0.5rem 0;
+  color: var(--ion-color-primary);
+}
+
+.partido-info p {
+  margin: 0;
+  color: var(--ion-color-medium);
+}
+
+.bonus-section {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ion-color-light);
+}
+
+.bonus-section h4 {
+  margin: 0 0 1rem 0;
+  color: var(--ion-color-primary);
+  font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .liga-detalle-container {
+    padding: 0.5rem;
+  }
+  
+  .liga-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .header-content h1 {
+    font-size: 1.5rem;
+  }
+  
+  .info-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .info-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+  
+  .scoring-info {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .stats {
+    justify-content: center;
+  }
+  
+  .estadisticas {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .partido-equipos {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .vs {
+    transform: rotate(90deg);
+  }
+  
+  .admin-actions {
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    z-index: 1000;
+  }
+  
+  .clasificacion-item {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .posicion {
+    min-width: auto;
+  }
+  
+  .equipo-info {
+    order: 1;
+    width: 100%;
+  }
+  
+  .puntos {
+    order: 2;
+  }
+}
+
+/* Tema oscuro */
+.liga-detalle-container.dark {
+  background-color: var(--ion-color-dark);
+}
+
+.dark .liga-header {
+  border-color: var(--ion-color-dark-tint);
+}
+
+.dark .info-item,
+.dark .jugador,
+.dark .equipo,
+.dark .clasificacion-item:not(.posicion-1):not(.posicion-2):not(.posicion-3),
+.dark .scoring-section,
+.dark .partido-info {
+  background: var(--ion-color-dark-tint);
+}
+
+.dark .info-item p,
+.dark .jugador span,
+.dark .equipo-info h3 {
+  color: var(--ion-color-light);
+}
+
+.dark .descripcion-section,
+.dark .reglas-section {
+  border-color: var(--ion-color-dark-tint);
+}
+
+.dark .estadisticas {
+  border-color: var(--ion-color-dark-tint);
+}
+
+.dark .modal-header,
+.dark .modal-footer,
+.dark .bonus-section {
+  border-color: var(--ion-color-dark-tint);
+}
+
+/* Animaciones mejoradas */
+.clasificacion-item {
+  animation: slideInRight 0.3s ease-out;
+}
+
+.clasificacion-item:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.clasificacion-item:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.pareja-card {
+  animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
