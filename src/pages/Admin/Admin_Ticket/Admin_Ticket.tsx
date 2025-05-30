@@ -41,7 +41,7 @@ import {
 } from 'ionicons/icons';
 import { useAuth } from '../../../context/AuthContext';
 import apiService from '../../../services/api.service';
-import './AdminSystemReports.css';
+import './Admin_Ticket.css';
 
 interface SystemMetrics {
   userGrowth: {

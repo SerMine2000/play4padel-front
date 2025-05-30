@@ -44,7 +44,7 @@ import {
 } from 'ionicons/icons';
 import { useAuth } from '../../../context/AuthContext';
 import apiService from '../../../services/api.service';
-import './AdminSystemConfig.css';
+import './Admin_Config.css';
 
 interface SystemConfig {
   general: {
