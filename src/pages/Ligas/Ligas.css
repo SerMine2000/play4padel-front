@@ -1,175 +1,364 @@
-.ligas-container {
-  padding: 1rem;
-  min-height: 100vh;
+/* Variables CSS modernas */
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.15);
+  --shadow-strong: 0 20px 60px rgba(0, 0, 0, 0.25);
+  --gradient-primary: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-secondary));
+  --gradient-success: linear-gradient(135deg, var(--ion-color-success), #00d4aa);
+  --gradient-warning: linear-gradient(135deg, var(--ion-color-warning), #ffb347);
+  --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  --border-radius: 16px;
+  --border-radius-lg: 24px;
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
+.ligas-container {
+  padding: 1.5rem;
+  min-height: 100vh;
+  background: linear-gradient(135deg, 
+    var(--ion-color-light) 0%, 
+    rgba(var(--ion-color-primary-rgb), 0.05) 100%);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Elementos de fondo decorativos */
+.ligas-container::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(var(--ion-color-primary-rgb), 0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ligas-container::after {
+  content: '';
+  position: fixed;
+  bottom: -50%;
+  left: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(var(--ion-color-secondary-rgb), 0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Header mejorado */
 .page-header {
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
   text-align: center;
+  position: relative;
+  z-index: 1;
+  padding: 2rem 0;
 }
 
 .page-header h1 {
-  color: var(--ion-color-primary);
-  margin: 0 0 0.5rem 0;
-  font-size: 2rem;
-  font-weight: bold;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 1rem 0;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  position: relative;
+}
+
+.page-header h1::after {
+  content: '';
+  position: absolute;
+  bottom: -0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: var(--gradient-primary);
+  border-radius: 2px;
 }
 
 .page-header p {
   color: var(--ion-color-medium);
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
+  font-weight: 400;
+  opacity: 0.8;
 }
 
-/* Tarjetas de liga */
+/* Tarjetas de liga mejoradas */
 .liga-card {
   height: 100%;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border-radius: 12px;
+  transition: var(--transition-smooth);
+  border-radius: var(--border-radius-lg);
   overflow: hidden;
+  position: relative;
+  backdrop-filter: blur(10px);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-soft);
 }
 
 .liga-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-strong);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.liga-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-primary);
+  opacity: 0;
+  transition: var(--transition-smooth);
+}
+
+.liga-card:hover::before {
+  opacity: 1;
 }
 
 .liga-image {
-  height: 180px;
+  height: 200px;
   overflow: hidden;
   position: relative;
+}
+
+.liga-image::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
 }
 
 .liga-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: var(--transition-smooth);
 }
 
+.liga-card:hover .liga-image img {
+  transform: scale(1.1);
+}
+
+/* Header del card mejorado */
 .card-header-content {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 1rem;
+  margin-bottom: 1rem;
 }
 
 .card-header-content ion-card-title {
   flex: 1;
-  font-size: 1.2rem;
-  font-weight: 600;
+  font-size: 1.3rem;
+  font-weight: 700;
   line-height: 1.3;
+  color: var(--ion-color-primary);
+  transition: var(--transition-smooth);
 }
 
+.liga-card:hover .card-header-content ion-card-title {
+  color: var(--ion-color-secondary);
+}
+
+/* Info mejorada */
 .liga-info {
-  margin: 1rem 0;
+  margin: 1.5rem 0;
 }
 
 .info-row {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
   color: var(--ion-color-medium);
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: var(--transition-smooth);
+}
+
+.info-row:hover {
+  background: rgba(var(--ion-color-primary-rgb), 0.1);
+  color: var(--ion-color-primary);
 }
 
 .info-row ion-icon {
-  font-size: 1rem;
+  font-size: 1.2rem;
   color: var(--ion-color-primary);
+  transition: var(--transition-smooth);
+}
+
+.info-row:hover ion-icon {
+  transform: scale(1.2);
 }
 
 .info-row ion-chip {
   margin: 0;
+  font-weight: 600;
+  backdrop-filter: blur(4px);
+}
+
+/* Chips mejorados */
+ion-chip {
+  --background: var(--glass-bg);
+  --color: var(--ion-color-primary);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(8px);
+  transition: var(--transition-smooth);
+}
+
+ion-chip:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-soft);
 }
 
 .precio {
-  font-weight: bold;
-  color: var(--ion-color-success);
-  font-size: 1rem;
+  font-weight: 800;
+  font-size: 1.2rem;
+  background: var(--gradient-success);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .premio {
-  font-weight: 500;
+  font-weight: 600;
   color: var(--ion-color-tertiary);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
 }
 
 .descripcion {
-  margin: 1rem 0 0 0;
-  font-size: 0.9rem;
+  margin: 1.5rem 0 0 0;
+  font-size: 0.95rem;
   color: var(--ion-color-medium);
-  line-height: 1.4;
+  line-height: 1.6;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  padding: 1rem;
+  background: rgba(var(--ion-color-light-rgb), 0.5);
+  border-radius: 12px;
+  border-left: 3px solid var(--ion-color-primary);
 }
 
+/* Scoring section mejorada */
 .liga-scoring {
-  margin: 1rem 0 0 0;
-  padding-top: 0.5rem;
-  border-top: 1px solid var(--ion-color-light);
+  margin: 1.5rem 0 0 0;
+  padding: 1rem;
+  background: var(--gradient-glass);
+  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(8px);
 }
 
 .liga-scoring small {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: var(--ion-color-medium);
-  line-height: 1.3;
+  line-height: 1.4;
+  font-weight: 500;
 }
 
+/* Acciones del card mejoradas */
 .card-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
   flex-wrap: wrap;
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--ion-color-light);
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(var(--ion-color-primary-rgb), 0.2);
 }
 
 .card-actions ion-button {
-  --padding-start: 0.5rem;
-  --padding-end: 0.5rem;
-  font-size: 0.85rem;
+  --padding-start: 1rem;
+  --padding-end: 1rem;
+  --border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: var(--transition-bounce);
+  backdrop-filter: blur(8px);
 }
 
-/* Estado vacío */
+.card-actions ion-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+
+/* Estado vacío mejorado */
 .empty-state {
   text-align: center;
-  padding: 3rem 1rem;
+  padding: 4rem 2rem;
+  background: var(--glass-bg);
+  border-radius: var(--border-radius-lg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  margin: 2rem 0;
 }
 
 .empty-icon {
-  font-size: 4rem;
+  font-size: 5rem;
   color: var(--ion-color-medium);
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
+  opacity: 0.6;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
 }
 
 .empty-state h2 {
   color: var(--ion-color-medium);
-  margin: 1rem 0 0.5rem 0;
+  margin: 1.5rem 0 1rem 0;
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 .empty-state p {
   color: var(--ion-color-medium);
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+  opacity: 0.8;
 }
 
-/* Modal */
+/* Modal mejorado */
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
-  border-bottom: 1px solid var(--ion-color-light);
+  padding: 1.5rem;
+  background: var(--gradient-glass);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
 }
 
 .modal-header h2 {
   margin: 0;
-  color: var(--ion-color-primary);
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
 }
 
 .modal-content {
-  padding: 1rem;
+  padding: 1.5rem;
   max-height: 70vh;
   overflow-y: auto;
 }
@@ -177,71 +366,117 @@
 .modal-content ion-item {
   --padding-start: 0;
   --inner-padding-end: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  --background: var(--glass-bg);
+  --border-radius: 12px;
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
 }
 
 .modal-footer {
-  padding: 1rem;
-  border-top: 1px solid var(--ion-color-light);
+  padding: 1.5rem;
+  background: var(--gradient-glass);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--glass-border);
 }
 
-/* Sección de puntuación */
+/* Sección de puntuación mejorada */
 .scoring-section {
   margin-top: 2rem;
-  padding-top: 1rem;
-  border-top: 2px solid var(--ion-color-primary);
+  padding: 1.5rem;
+  background: var(--gradient-glass);
+  border-radius: var(--border-radius);
+  border: 2px solid var(--ion-color-primary);
+  backdrop-filter: blur(10px);
+  position: relative;
+}
+
+.scoring-section::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: var(--gradient-primary);
+  border-radius: var(--border-radius);
+  z-index: -1;
+  opacity: 0.1;
 }
 
 .scoring-section h3 {
-  margin: 0 0 1rem 0;
-  color: var(--ion-color-primary);
-  font-size: 1.1rem;
-  font-weight: 600;
+  margin: 0 0 1.5rem 0;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 1.2rem;
+  font-weight: 700;
 }
 
 .scoring-section ion-item {
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
+  --background: rgba(255, 255, 255, 0.05);
+  --border-radius: 8px;
+  backdrop-filter: blur(4px);
 }
 
-/* FAB */
+/* FAB mejorado */
 ion-fab-button {
-  --background: var(--ion-color-primary);
+  --background: var(--gradient-primary);
+  --color: white;
+  --box-shadow: var(--shadow-medium);
+  --border-radius: 16px;
+  transition: var(--transition-bounce);
+}
+
+ion-fab-button:hover {
+  transform: scale(1.1);
+  --box-shadow: var(--shadow-strong);
+}
+
+/* Chips de colores mejorados */
+ion-chip[color="success"] {
+  --background: var(--gradient-success);
   --color: white;
 }
 
-/* Colores de nivel */
-ion-chip[color="success"] {
-  --color: var(--ion-color-success-contrast);
-  --background: var(--ion-color-success);
-}
-
 ion-chip[color="warning"] {
-  --color: var(--ion-color-warning-contrast);
-  --background: var(--ion-color-warning);
+  --background: var(--gradient-warning);
+  --color: white;
 }
 
 ion-chip[color="danger"] {
-  --color: var(--ion-color-danger-contrast);
-  --background: var(--ion-color-danger);
+  --background: linear-gradient(135deg, var(--ion-color-danger), #ff6b6b);
+  --color: white;
 }
 
 ion-chip[color="dark"] {
-  --color: var(--ion-color-dark-contrast);
-  --background: var(--ion-color-dark);
+  --background: linear-gradient(135deg, var(--ion-color-dark), #444);
+  --color: white;
 }
 
-/* Responsive */
+/* Responsive mejorado */
 @media (max-width: 768px) {
   .ligas-container {
-    padding: 0.5rem;
+    padding: 1rem;
+  }
+  
+  .page-header {
+    padding: 1rem 0;
+    margin-bottom: 2rem;
   }
   
   .page-header h1 {
-    font-size: 1.5rem;
+    font-size: 2rem;
   }
   
   .page-header p {
     font-size: 1rem;
+  }
+  
+  .liga-image {
+    height: 160px;
   }
   
   .card-actions {
@@ -250,11 +485,12 @@ ion-chip[color="dark"] {
   
   .card-actions ion-button {
     width: 100%;
-    justify-content: flex-start;
+    justify-content: center;
   }
   
   .modal-content {
     max-height: 60vh;
+    padding: 1rem;
   }
   
   .info-row {
@@ -262,34 +498,80 @@ ion-chip[color="dark"] {
   }
   
   .liga-scoring small {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
+  }
+  
+  .empty-state {
+    padding: 2rem 1rem;
+  }
+  
+  .empty-icon {
+    font-size: 4rem;
   }
 }
 
-/* Tema oscuro */
+@media (max-width: 480px) {
+  .page-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .liga-card:hover {
+    transform: translateY(-4px) scale(1.01);
+  }
+  
+  .card-header-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+}
+
+/* Tema oscuro mejorado */
 .ligas-container.dark {
-  background-color: var(--ion-color-dark);
+  background: linear-gradient(135deg, 
+    var(--ion-color-dark) 0%, 
+    rgba(var(--ion-color-primary-rgb), 0.1) 100%);
 }
 
 .dark .liga-card {
-  --background: var(--ion-color-dark-shade);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .liga-card:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .dark .modal-header,
 .dark .modal-footer {
-  border-color: var(--ion-color-dark-tint);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .dark .card-actions,
-.dark .liga-scoring {
-  border-color: var(--ion-color-dark-tint);
+.dark .liga-scoring,
+.dark .scoring-section {
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .dark .scoring-section {
-  border-color: var(--ion-color-primary);
+  background: rgba(255, 255, 255, 0.05);
 }
 
-/* Animaciones */
+.dark .info-row:hover {
+  background: rgba(var(--ion-color-primary-rgb), 0.2);
+}
+
+.dark .descripcion {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dark .empty-state {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Animaciones avanzadas */
 @keyframes slideInUp {
   from {
     transform: translateY(30px);
@@ -301,29 +583,60 @@ ion-chip[color="dark"] {
   }
 }
 
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
 .liga-card {
-  animation: slideInUp 0.3s ease-out;
+  animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.liga-card:nth-child(2) {
-  animation-delay: 0.1s;
-}
-
-.liga-card:nth-child(3) {
-  animation-delay: 0.2s;
-}
-
-.liga-card:nth-child(4) {
-  animation-delay: 0.3s;
-}
+.liga-card:nth-child(1) { animation-delay: 0s; }
+.liga-card:nth-child(2) { animation-delay: 0.1s; }
+.liga-card:nth-child(3) { animation-delay: 0.2s; }
+.liga-card:nth-child(4) { animation-delay: 0.3s; }
+.liga-card:nth-child(5) { animation-delay: 0.4s; }
+.liga-card:nth-child(6) { animation-delay: 0.5s; }
 
 /* Estados mejorados */
 .info-row:hover {
   color: var(--ion-color-primary);
-  transition: color 0.2s ease;
+  transition: var(--transition-smooth);
 }
 
 .liga-card:hover .card-header-content ion-card-title {
-  color: var(--ion-color-primary);
-  transition: color 0.2s ease;
+  transform: translateX(5px);
+  transition: var(--transition-smooth);
+}
+
+/* Efectos de glassmorphism */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(var(--ion-color-light-rgb), 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gradient-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ion-color-primary);
 }

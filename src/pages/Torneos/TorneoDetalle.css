@@ -1,248 +1,888 @@
-.torneo-detalle-container {
-  padding: 1rem;
-  min-height: 100vh;
+/* Variables específicas para detalle de torneo */
+:root {
+  --tournament-detail-gradient: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-tertiary), var(--ion-color-secondary));
+  --championship-gold: linear-gradient(135deg, #ffd700, #ffed4e, #ffd700);
+  --championship-glow: 0 0 30px rgba(255, 215, 0, 0.5);
+  --fixture-card: rgba(255, 255, 255, 0.06);
+  --fixture-card-hover: rgba(255, 255, 255, 0.1);
+  --bracket-line: rgba(var(--ion-color-primary-rgb), 0.3);
 }
 
-/* Header */
+.torneo-detalle-container {
+  padding: 1.5rem;
+  min-height: 100vh;
+  background: linear-gradient(135deg, 
+    var(--ion-color-light) 0%, 
+    rgba(var(--ion-color-primary-rgb), 0.08) 30%,
+    rgba(var(--ion-color-tertiary-rgb), 0.06) 70%,
+    rgba(var(--ion-color-secondary-rgb), 0.04) 100%);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Elementos decorativos de fondo para torneo */
+.torneo-detalle-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 15% 25%, rgba(var(--ion-color-primary-rgb), 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 85% 75%, rgba(var(--ion-color-tertiary-rgb), 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(var(--ion-color-secondary-rgb), 0.08) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.torneo-detalle-container::after {
+  content: '🏆';
+  position: fixed;
+  top: 10%;
+  right: 5%;
+  font-size: 8rem;
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 0;
+  animation: float 15s ease-in-out infinite;
+}
+
+/* Header del torneo mejorado */
 .torneo-header {
   display: flex;
   align-items: flex-start;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--ion-color-light);
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+  padding: 2.5rem;
+  background: var(--fixture-card);
+  backdrop-filter: blur(20px);
+  border-radius: var(--border-radius-lg);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.torneo-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  background: var(--tournament-detail-gradient);
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  -webkit-mask-composite: xor;
+}
+
+.torneo-header::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(var(--ion-color-primary-rgb), 0.1) 120deg,
+    transparent 240deg
+  );
+  animation: rotate 20s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.torneo-header:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-strong), var(--championship-glow);
+}
+
+.torneo-header ion-button {
+  --background: var(--fixture-card);
+  --color: var(--ion-color-primary);
+  --border-radius: 16px;
+  backdrop-filter: blur(8px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: var(--transition-bounce);
+  position: relative;
+  z-index: 2;
+}
+
+.torneo-header ion-button:hover {
+  transform: scale(1.15) rotate(-5deg);
+  --box-shadow: var(--championship-glow);
+  border-color: var(--ion-color-primary);
 }
 
 .header-content {
   flex: 1;
+  position: relative;
+  z-index: 2;
 }
 
 .header-content h1 {
-  margin: 0 0 0.5rem 0;
-  color: var(--ion-color-primary);
-  font-size: 1.8rem;
-  font-weight: bold;
+  margin: 0 0 1.5rem 0;
+  background: var(--tournament-detail-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  text-shadow: 0 0 40px rgba(var(--ion-color-primary-rgb), 0.3);
+  position: relative;
+}
+
+.header-content h1::after {
+  content: '👑';
+  position: absolute;
+  top: -1rem;
+  right: -1.5rem;
+  font-size: 2rem;
+  animation: bounce 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8));
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0) rotate(0deg); }
+  40% { transform: translateY(-15px) rotate(10deg); }
+  60% { transform: translateY(-8px) rotate(-5deg); }
 }
 
 .header-info {
   display: flex;
-  gap: 0.5rem;
+  gap: 1rem;
   flex-wrap: wrap;
 }
 
-/* Tabs */
+.header-info ion-chip {
+  --background: var(--fixture-card);
+  --color: var(--ion-color-primary);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  font-weight: 700;
+  transition: var(--transition-bounce);
+  position: relative;
+  overflow: hidden;
+}
+
+.header-info ion-chip::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.header-info ion-chip:hover {
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: var(--shadow-soft), var(--championship-glow);
+}
+
+.header-info ion-chip:hover::before {
+  left: 100%;
+}
+
+/* Tabs del torneo mejorados */
 ion-segment {
-  margin-bottom: 1rem;
+  margin-bottom: 2.5rem;
+  --background: var(--fixture-card);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  padding: 6px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--shadow-soft);
+  position: relative;
+  overflow: hidden;
+}
+
+ion-segment::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--tournament-detail-gradient);
+  opacity: 0.05;
+  border-radius: inherit;
+}
+
+ion-segment-button {
+  --background: transparent;
+  --background-checked: var(--tournament-detail-gradient);
+  --color: var(--ion-color-medium);
+  --color-checked: white;
+  --border-radius: 16px;
+  font-weight: 700;
+  transition: var(--transition-smooth);
+  position: relative;
+  z-index: 1;
+}
+
+ion-segment-button:hover {
+  --background: rgba(var(--ion-color-primary-rgb), 0.1);
+  transform: scale(1.05);
+}
+
+ion-segment-button[aria-selected="true"] {
+  box-shadow: var(--championship-glow);
 }
 
 /* Tab Content */
 .tab-content {
-  animation: fadeIn 0.3s ease-in;
+  animation: fadeInSlide 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 1;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes fadeInSlide {
+  from { 
+    opacity: 0; 
+    transform: translateY(30px) scale(0.95);
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0) scale(1);
+  }
 }
 
-/* Info Tab */
-.info-tab .info-grid {
+/* Info Tab del torneo */
+.info-tab ion-card {
+  background: var(--fixture-card);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-soft);
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+.info-tab ion-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: var(--tournament-detail-gradient);
+  opacity: 0;
+  transition: var(--transition-smooth);
+}
+
+.info-tab ion-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-strong), var(--championship-glow);
+}
+
+.info-tab ion-card:hover::before {
+  opacity: 1;
+}
+
+.info-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
 }
 
 .info-item {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  background: var(--ion-color-light);
-  border-radius: 8px;
+  gap: 2rem;
+  padding: 2rem;
+  background: var(--fixture-card);
+  backdrop-filter: blur(15px);
+  border-radius: var(--border-radius);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+.info-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 100%;
+  background: var(--tournament-detail-gradient);
+  transform: scaleY(0);
+  transition: var(--transition-smooth);
+}
+
+.info-item::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  background: var(--tournament-detail-gradient);
+  transform: translateY(-50%);
+  transition: left 0.6s ease;
+}
+
+.info-item:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: var(--shadow-medium), var(--championship-glow);
+  background: var(--fixture-card-hover);
+}
+
+.info-item:hover::before {
+  transform: scaleY(1);
+}
+
+.info-item:hover::after {
+  left: 100%;
 }
 
 .info-item ion-icon {
-  font-size: 2rem;
-  color: var(--ion-color-primary);
+  font-size: 3rem;
+  background: var(--tournament-detail-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 15px rgba(var(--ion-color-primary-rgb), 0.4));
+  transition: var(--transition-bounce);
+}
+
+.info-item:hover ion-icon {
+  transform: scale(1.2) rotate(10deg);
+  filter: drop-shadow(0 0 25px rgba(var(--ion-color-primary-rgb), 0.6));
 }
 
 .info-item h3 {
-  margin: 0 0 0.25rem 0;
+  margin: 0 0 0.75rem 0;
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 800;
   color: var(--ion-color-medium);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1.5px;
 }
 
 .info-item p {
   margin: 0;
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: var(--ion-color-dark);
+  font-size: 1.4rem;
+  font-weight: 800;
+  background: var(--tournament-detail-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
+/* Descripción del torneo */
 .descripcion-section {
-  margin-top: 2rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--ion-color-light);
+  margin-top: 3rem;
+  padding: 2.5rem;
+  background: var(--fixture-card);
+  backdrop-filter: blur(15px);
+  border-radius: var(--border-radius);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.descripcion-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--tournament-detail-gradient);
+  border-radius: 4px 4px 0 0;
+}
+
+.descripcion-section::after {
+  content: '"';
+  position: absolute;
+  top: 1rem;
+  left: 1.5rem;
+  font-size: 4rem;
+  background: var(--tournament-detail-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  opacity: 0.3;
+  font-family: serif;
 }
 
 .descripcion-section h3 {
-  margin: 0 0 1rem 0;
-  color: var(--ion-color-primary);
+  margin: 0 0 2rem 0;
+  background: var(--tournament-detail-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-align: center;
 }
 
 .descripcion-section p {
   margin: 0;
-  line-height: 1.6;
+  line-height: 2;
   color: var(--ion-color-medium);
+  font-size: 1.1rem;
+  text-align: center;
+  padding: 0 2rem;
 }
 
+/* Admin actions del torneo */
 .admin-actions {
-  margin-top: 2rem;
+  margin-top: 3rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1.5rem;
+  padding: 2rem;
+  background: var(--fixture-card);
+  backdrop-filter: blur(15px);
+  border-radius: var(--border-radius);
+  border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Parejas Tab */
+.admin-actions ion-button {
+  --border-radius: 20px;
+  --padding-top: 1.5rem;
+  --padding-bottom: 1.5rem;
+  font-weight: 700;
+  font-size: 1.1rem;
+  backdrop-filter: blur(8px);
+  transition: var(--transition-bounce);
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-actions ion-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.6s ease;
+}
+
+.admin-actions ion-button:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--shadow-medium), var(--championship-glow);
+}
+
+.admin-actions ion-button:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Parejas del torneo mejoradas */
 .pareja-card {
-  transition: transform 0.2s ease;
+  background: var(--fixture-card);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--border-radius-lg);
+  transition: var(--transition-smooth);
+  overflow: hidden;
+  position: relative;
+}
+
+.pareja-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: var(--tournament-detail-gradient);
+  transform: scaleX(0);
+  transition: var(--transition-smooth);
 }
 
 .pareja-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: var(--shadow-strong), var(--championship-glow);
+  background: var(--fixture-card-hover);
+}
+
+.pareja-card:hover::before {
+  transform: scaleX(1);
 }
 
 .pareja-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
+  padding: 2rem 2rem 0;
+}
+
+.pareja-header h3 {
+  margin: 0;
+  background: var(--tournament-detail-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+  font-size: 1.4rem;
+}
+
+.pareja-header ion-badge {
+  --background: var(--tournament-detail-gradient);
+  --color: white;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  box-shadow: var(--championship-glow);
 }
 
 .jugadores {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding: 0 2rem;
 }
 
 .jugador {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem;
-  background: var(--ion-color-light);
-  border-radius: 8px;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: var(--fixture-card);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: var(--transition-smooth);
+  position: relative;
+}
+
+.jugador::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--tournament-detail-gradient);
+  border-radius: 0 4px 4px 0;
+  transform: scaleY(0);
+  transition: var(--transition-smooth);
+}
+
+.jugador:hover {
+  transform: translateX(10px);
+  box-shadow: var(--shadow-soft);
+  background: var(--fixture-card-hover);
+}
+
+.jugador:hover::before {
+  transform: scaleY(1);
 }
 
 .jugador ion-avatar {
-  width: 32px;
-  height: 32px;
+  width: 50px;
+  height: 50px;
+  border: 3px solid transparent;
+  background: var(--tournament-detail-gradient);
+  background-clip: border-box;
+  border-radius: 50%;
 }
 
 .jugador ion-icon {
-  font-size: 1.2rem;
-  color: var(--ion-color-medium);
+  font-size: 2rem;
+  background: var(--tournament-detail-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .jugador span {
-  font-weight: 500;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--ion-color-dark);
 }
 
 .fecha-inscripcion {
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--ion-color-light);
+  margin: 0;
+  padding: 2rem;
+  border-top: 2px solid rgba(255, 255, 255, 0.2);
+  background: rgba(var(--ion-color-primary-rgb), 0.05);
   text-align: center;
 }
 
 .fecha-inscripcion small {
   color: var(--ion-color-medium);
-  font-size: 0.8rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-/* Fixture Tab */
+/* Fixture Tab mejorado */
 .partido-card {
-  margin-bottom: 1rem;
-  transition: transform 0.2s ease;
+  margin-bottom: 2rem;
+  background: var(--fixture-card);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--border-radius-lg);
+  transition: var(--transition-smooth);
+  overflow: hidden;
+  position: relative;
+}
+
+.partido-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: var(--tournament-detail-gradient);
+  opacity: 0;
+  transition: var(--transition-smooth);
 }
 
 .partido-card:hover {
-  transform: translateY(-1px);
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-medium), var(--championship-glow);
+  background: var(--fixture-card-hover);
+}
+
+.partido-card:hover::before {
+  opacity: 1;
 }
 
 .partido-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
+  padding: 2rem 2rem 0;
 }
 
 .partido-header h3 {
   margin: 0;
-  color: var(--ion-color-primary);
+  background: var(--tournament-detail-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+  font-size: 1.3rem;
+}
+
+.partido-header ion-chip {
+  --background: var(--fixture-card);
+  backdrop-filter: blur(8px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  font-weight: 700;
 }
 
 .partido-equipos {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  margin: 1rem 0;
+  gap: 3rem;
+  margin: 2rem 0;
+  padding: 0 2rem;
 }
 
 .equipo {
   flex: 1;
   text-align: center;
-  padding: 1rem;
-  background: var(--ion-color-light);
-  border-radius: 8px;
-  font-weight: 500;
+  padding: 2rem;
+  background: var(--fixture-card);
+  backdrop-filter: blur(10px);
+  border-radius: var(--border-radius);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  font-weight: 700;
+  font-size: 1.2rem;
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+.equipo::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--tournament-detail-gradient);
+  transform: scaleX(0);
+  transition: var(--transition-smooth);
+}
+
+.equipo::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--tournament-detail-gradient);
+  transform: scaleX(0);
+  transition: var(--transition-smooth) 0.1s;
+}
+
+.equipo:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: var(--shadow-soft);
+  background: var(--fixture-card-hover);
+}
+
+.equipo:hover::before,
+.equipo:hover::after {
+  transform: scaleX(1);
 }
 
 .vs {
-  font-weight: bold;
-  color: var(--ion-color-primary);
-  font-size: 1.2rem;
+  font-weight: 900;
+  font-size: 2rem;
+  background: var(--tournament-detail-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  padding: 1.5rem;
+  border-radius: 50%;
+  background-color: var(--fixture-card);
+  backdrop-filter: blur(8px);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  animation: pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { 
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(var(--ion-color-primary-rgb), 0.3);
+  }
+  50% { 
+    transform: scale(1.1);
+    box-shadow: 0 0 30px rgba(var(--ion-color-primary-rgb), 0.5);
+  }
 }
 
 .partido-info {
   text-align: center;
-  margin: 1rem 0;
+  margin: 2rem;
+  padding: 1.5rem;
+  background: rgba(var(--ion-color-primary-rgb), 0.05);
+  border-radius: var(--border-radius);
+  border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .resultado {
   text-align: center;
-  margin-top: 1rem;
-  padding: 1rem;
-  background: var(--ion-color-success);
-  color: white;
-  border-radius: 8px;
+  margin: 2rem;
+  padding: 2rem;
+  background: var(--championship-gold);
+  color: #1a1a1a;
+  border-radius: var(--border-radius);
+  font-weight: 800;
+  font-size: 1.4rem;
+  box-shadow: var(--championship-glow);
+  border: 3px solid #ffd700;
+  position: relative;
 }
 
-/* Empty States */
+.resultado::before {
+  content: '🏆';
+  position: absolute;
+  top: -1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2rem;
+  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8));
+}
+
+/* Empty States del torneo */
 .empty-state {
   text-align: center;
-  padding: 3rem 1rem;
+  padding: 5rem 3rem;
+  background: var(--fixture-card);
+  backdrop-filter: blur(20px);
+  border-radius: var(--border-radius-lg);
+  border: 3px dashed rgba(var(--ion-color-primary-rgb), 0.4);
+  margin: 3rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.empty-state::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(var(--ion-color-primary-rgb), 0.1) 90deg,
+    transparent 180deg,
+    rgba(var(--ion-color-tertiary-rgb), 0.1) 270deg,
+    transparent 360deg
+  );
+  animation: rotate 25s linear infinite;
+  pointer-events: none;
 }
 
 .empty-state ion-icon {
-  font-size: 4rem;
-  color: var(--ion-color-medium);
-  margin-bottom: 1rem;
+  font-size: 7rem;
+  background: var(--tournament-detail-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 2rem;
+  animation: float 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(var(--ion-color-primary-rgb), 0.3));
+  position: relative;
+  z-index: 1;
 }
 
 .empty-state h2 {
-  color: var(--ion-color-medium);
-  margin: 1rem 0 0.5rem 0;
+  background: var(--tournament-detail-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 2rem 0 1rem 0;
+  font-size: 2rem;
+  font-weight: 800;
+  position: relative;
+  z-index: 1;
 }
 
 .empty-state p {
   color: var(--ion-color-medium);
   margin: 0;
+  font-size: 1.3rem;
+  opacity: 0.9;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.7;
+  position: relative;
+  z-index: 1;
 }
 
 /* Torneo not found */
@@ -251,84 +891,200 @@ ion-segment {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 50vh;
+  height: 70vh;
   text-align: center;
-  gap: 1rem;
+  gap: 3rem;
+  background: var(--fixture-card);
+  backdrop-filter: blur(20px);
+  border-radius: var(--border-radius-lg);
+  border: 3px solid rgba(var(--ion-color-danger-rgb), 0.3);
+  margin: 3rem;
+  padding: 4rem;
+  position: relative;
+}
+
+.torneo-not-found::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(var(--ion-color-danger-rgb), 0.1) 0%, transparent 70%);
+  border-radius: inherit;
 }
 
 .torneo-not-found ion-icon {
-  font-size: 4rem;
+  font-size: 8rem;
   color: var(--ion-color-danger);
+  filter: drop-shadow(0 0 30px rgba(var(--ion-color-danger-rgb), 0.4));
+  animation: pulse 2s ease-in-out infinite;
+  position: relative;
+  z-index: 1;
 }
 
 .torneo-not-found h2 {
   color: var(--ion-color-medium);
   margin: 0;
+  font-size: 2.2rem;
+  font-weight: 700;
+  position: relative;
+  z-index: 1;
 }
 
-/* Modal */
+/* Modal del torneo mejorado */
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
-  border-bottom: 1px solid var(--ion-color-light);
+  padding: 2.5rem;
+  background: var(--tournament-detail-gradient);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 70% 70%, rgba(255, 255, 255, 0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.modal-header::after {
+  content: '🏆';
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 3rem;
+  opacity: 0.2;
+  animation: float 8s ease-in-out infinite;
 }
 
 .modal-header h2 {
   margin: 0;
-  color: var(--ion-color-primary);
+  font-weight: 900;
+  font-size: 1.6rem;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.modal-header ion-button {
+  --color: white;
+  --background: rgba(255, 255, 255, 0.2);
+  --border-radius: 16px;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  z-index: 1;
+  transition: var(--transition-bounce);
+}
+
+.modal-header ion-button:hover {
+  transform: scale(1.15);
+  --background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
 }
 
 .modal-content {
-  padding: 1rem;
+  padding: 2.5rem;
   max-height: 60vh;
   overflow-y: auto;
+  background: var(--fixture-card);
+  backdrop-filter: blur(20px);
 }
 
 .modal-content ion-item {
   --padding-start: 0;
   --inner-padding-end: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
+  --background: rgba(255, 255, 255, 0.05);
+  --border-radius: 16px;
+  backdrop-filter: blur(8px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: var(--transition-smooth);
+}
+
+.modal-content ion-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-soft);
+  --background: rgba(255, 255, 255, 0.08);
 }
 
 .modal-footer {
-  padding: 1rem;
-  border-top: 1px solid var(--ion-color-light);
+  padding: 2.5rem;
+  background: var(--fixture-card);
+  backdrop-filter: blur(20px);
+  border-top: 3px solid rgba(var(--ion-color-primary-rgb), 0.3);
 }
 
-/* Responsive */
+.modal-footer ion-button {
+  --border-radius: 20px;
+  --padding-top: 1.25rem;
+  --padding-bottom: 1.25rem;
+  font-weight: 800;
+  font-size: 1.1rem;
+  transition: var(--transition-bounce);
+}
+
+.modal-footer ion-button:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: var(--shadow-medium), var(--championship-glow);
+}
+
+/* Responsive del torneo */
 @media (max-width: 768px) {
   .torneo-detalle-container {
-    padding: 0.5rem;
+    padding: 1rem;
   }
   
   .torneo-header {
     flex-direction: column;
     align-items: stretch;
+    padding: 2rem;
+    gap: 1.5rem;
   }
   
   .header-content h1 {
-    font-size: 1.5rem;
+    font-size: 2rem;
+    text-align: center;
+  }
+  
+  .header-content h1::after {
+    position: static;
+    margin-left: 1rem;
   }
   
   .info-grid {
     grid-template-columns: 1fr !important;
+    gap: 1.5rem;
   }
   
   .info-item {
     flex-direction: column;
     text-align: center;
-    gap: 0.5rem;
+    gap: 1.5rem;
+    padding: 2rem 1.5rem;
   }
   
   .partido-equipos {
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 1.5rem;
   }
   
   .vs {
     transform: rotate(90deg);
+    margin: 1.5rem 0;
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
   }
   
   .admin-actions {
@@ -337,38 +1093,156 @@ ion-segment {
     left: 1rem;
     right: 1rem;
     z-index: 1000;
+    background: var(--fixture-card);
+    backdrop-filter: blur(15px);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: var(--shadow-strong);
+  }
+  
+  .modal-content {
+    padding: 2rem;
+  }
+  
+  .modal-header,
+  .modal-footer {
+    padding: 2rem;
+  }
+  
+  .empty-state,
+  .torneo-not-found {
+    padding: 3rem 1.5rem;
+  }
+  
+  .empty-state ion-icon,
+  .torneo-not-found ion-icon {
+    font-size: 5rem;
   }
 }
 
-/* Tema oscuro */
+@media (max-width: 480px) {
+  .header-content h1 {
+    font-size: 1.5rem;
+  }
+  
+  .info-item ion-icon {
+    font-size: 2.5rem;
+  }
+  
+  .vs {
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+  
+  .jugador {
+    padding: 1rem;
+    gap: 1rem;
+  }
+  
+  .jugador ion-avatar {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .partido-card:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* Tema oscuro del torneo */
 .torneo-detalle-container.dark {
-  background-color: var(--ion-color-dark);
+  background: linear-gradient(135deg, 
+    var(--ion-color-dark) 0%, 
+    rgba(var(--ion-color-primary-rgb), 0.1) 30%,
+    rgba(var(--ion-color-tertiary-rgb), 0.08) 70%,
+    rgba(var(--ion-color-secondary-rgb), 0.05) 100%);
 }
 
-.dark .torneo-header {
-  border-color: var(--ion-color-dark-tint);
-}
-
+.dark .torneo-header,
 .dark .info-item,
 .dark .jugador,
-.dark .equipo {
-  background: var(--ion-color-dark-tint);
+.dark .equipo,
+.dark .partido-info,
+.dark .pareja-card,
+.dark .partido-card,
+.dark .empty-state,
+.dark .torneo-not-found,
+.dark .admin-actions {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
-.dark .info-item p,
 .dark .jugador span {
   color: var(--ion-color-light);
 }
 
 .dark .descripcion-section {
-  border-color: var(--ion-color-dark-tint);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .dark .fecha-inscripcion {
-  border-color: var(--ion-color-dark-tint);
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
-.dark .modal-header,
+.dark .modal-content,
 .dark .modal-footer {
-  border-color: var(--ion-color-dark-tint);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Animaciones del torneo */
+.pareja-card {
+  animation: slideInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pareja-card:nth-child(1) { animation-delay: 0s; }
+.pareja-card:nth-child(2) { animation-delay: 0.1s; }
+.pareja-card:nth-child(3) { animation-delay: 0.2s; }
+.pareja-card:nth-child(4) { animation-delay: 0.3s; }
+.pareja-card:nth-child(5) { animation-delay: 0.4s; }
+
+.partido-card {
+  animation: slideInLeft 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.partido-card:nth-child(1) { animation-delay: 0s; }
+.partido-card:nth-child(2) { animation-delay: 0.15s; }
+.partido-card:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Scrollbar personalizada del torneo */
+.modal-content::-webkit-scrollbar,
+.tab-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.modal-content::-webkit-scrollbar-track,
+.tab-content::-webkit-scrollbar-track {
+  background: rgba(var(--ion-color-light-rgb), 0.1);
+  border-radius: 5px;
+}
+
+.modal-content::-webkit-scrollbar-thumb,
+.tab-content::-webkit-scrollbar-thumb {
+  background: var(--tournament-detail-gradient);
+  border-radius: 5px;
+  box-shadow: var(--championship-glow);
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover,
+.tab-content::-webkit-scrollbar-thumb:hover {
+  background: var(--ion-color-primary);
 }
