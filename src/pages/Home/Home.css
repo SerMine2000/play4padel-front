@@ -5,7 +5,7 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  background: #1a1a2e !important;
+  background: var(--color-fondo, #1a1a2e) !important;
   min-height: 100vh;
 }
 
@@ -38,7 +38,7 @@
 }
 
 .card-resumen {
-  background: linear-gradient(145deg, #2D0A31, #3a1341);
+  background: var(--color-secundario, linear-gradient(145deg, #2D0A31, #3a1341));
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   padding: 20px;
@@ -46,7 +46,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--ion-border-color, rgba(255, 255, 255, 0.05));
 }
 
 .card-titulo {
@@ -73,14 +73,14 @@
 }
 
 .proximas-reservas, .estado-pistas {
-  background: linear-gradient(145deg, #2D0A31, #3a1341);
+  background: var(--color-secundario, linear-gradient(145deg, #2D0A31, #3a1341));
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   padding: 22px;
   height: 100%;
   display: flex;
   flex-direction: column;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--ion-border-color, rgba(255, 255, 255, 0.05));
 }
 
 .proximas-reservas h2, .estado-pistas h2 {

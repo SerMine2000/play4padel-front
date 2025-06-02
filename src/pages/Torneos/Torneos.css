@@ -1,157 +1,89 @@
-/* Variables CSS modernas para torneos */
-:root {
-  --tournament-gradient: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-tertiary));
-  --tournament-gold: linear-gradient(135deg, #ffd700, #ffb347);
-  --tournament-glow: 0 0 25px rgba(var(--ion-color-primary-rgb), 0.4);
-  --tournament-card: rgba(255, 255, 255, 0.08);
-  --tournament-card-hover: rgba(255, 255, 255, 0.12);
+/* Torneos.css - Diseño elegante y profesional */
+
+/* Asegurar que no hay fondos conflictivos */
+body, ion-app, ion-router-outlet, ion-content {
+  background: transparent !important;
+}
+
+/* Eliminar scrolls innecesarios */
+html, body {
+  overflow-x: hidden;
+}
+
+ion-content {
+  --overflow-x: hidden;
+  --overflow-y: auto;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-start: 0;
+  --padding-end: 0;
 }
 
 .torneos-container {
   padding: 1.5rem;
-  min-height: 100vh;
-  background: linear-gradient(135deg, 
-    var(--ion-color-light) 0%, 
-    rgba(var(--ion-color-primary-rgb), 0.06) 50%,
-    rgba(var(--ion-color-tertiary-rgb), 0.04) 100%);
-  position: relative;
-  overflow-x: hidden;
+  background: var(--ion-background-color, #ffffff);
+  margin: 0;
+  box-sizing: border-box;
 }
 
-/* Elementos decorativos de fondo */
-.torneos-container::before {
-  content: '';
-  position: fixed;
-  top: -30%;
-  right: -30%;
-  width: 80%;
-  height: 80%;
-  background: radial-gradient(circle, rgba(var(--ion-color-tertiary-rgb), 0.1) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-  animation: float 20s ease-in-out infinite;
-}
-
-.torneos-container::after {
-  content: '';
-  position: fixed;
-  bottom: -30%;
-  left: -30%;
-  width: 80%;
-  height: 80%;
-  background: radial-gradient(circle, rgba(var(--ion-color-primary-rgb), 0.08) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-  animation: float 25s ease-in-out infinite reverse;
-}
-
-@keyframes float {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  33% { transform: translate(30px, -30px) rotate(120deg); }
-  66% { transform: translate(-20px, 20px) rotate(240deg); }
-}
-
-/* Header mejorado */
+/* Header elegante */
 .page-header {
   margin-bottom: 3rem;
   text-align: center;
-  position: relative;
-  z-index: 1;
-  padding: 2.5rem 0;
+  padding: 2rem 0;
 }
 
 .page-header h1 {
-  background: var(--tournament-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
   margin: 0 0 1rem 0;
-  font-size: clamp(2rem, 5vw, 3.2rem);
-  font-weight: 900;
-  letter-spacing: -0.03em;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--ion-color-primary);
+  text-shadow: 0 2px 10px rgba(104, 144, 252, 0.2);
   position: relative;
-  text-shadow: 0 0 30px rgba(var(--ion-color-primary-rgb), 0.3);
 }
 
 .page-header h1::after {
-  content: '🏆';
-  position: absolute;
-  top: -1rem;
-  right: -2rem;
-  font-size: 2rem;
-  animation: bounce 2s ease-in-out infinite;
-}
-
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-10px); }
-  60% { transform: translateY(-5px); }
-}
-
-.page-header h1::before {
   content: '';
   position: absolute;
-  bottom: -0.75rem;
+  bottom: -0.5rem;
   left: 50%;
   transform: translateX(-50%);
-  width: 80px;
+  width: 60px;
   height: 4px;
-  background: var(--tournament-gradient);
+  background: linear-gradient(90deg, var(--ion-color-primary), #2db7ff);
   border-radius: 2px;
-  box-shadow: var(--tournament-glow);
 }
 
 .page-header p {
   color: var(--ion-color-medium);
   margin: 0;
-  font-size: 1.3rem;
-  font-weight: 500;
-  opacity: 0.9;
-  max-width: 600px;
-  margin: 0 auto;
-  line-height: 1.5;
+  font-size: 1.1rem;
+  font-weight: 400;
 }
 
-/* Tarjetas de torneo mejoradas */
+/* Cards de torneos mejoradas */
 .torneo-card {
   height: 100%;
-  transition: var(--transition-smooth);
-  border-radius: var(--border-radius-lg);
+  border-radius: 16px;
   overflow: hidden;
-  position: relative;
-  backdrop-filter: blur(15px);
-  background: var(--tournament-card);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: var(--shadow-soft);
-}
-
-.torneo-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 5px;
-  background: var(--tournament-gradient);
-  opacity: 0;
-  transition: var(--transition-smooth);
+  box-shadow: var(--card-shadow);
+  border: 1px solid rgba(104, 144, 252, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: white;
 }
 
 .torneo-card:hover {
-  transform: translateY(-10px) scale(1.02);
-  box-shadow: var(--shadow-strong), var(--tournament-glow);
-  background: var(--tournament-card-hover);
-}
-
-.torneo-card:hover::before {
-  opacity: 1;
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(104, 144, 252, 0.15);
+  border-color: rgba(104, 144, 252, 0.3);
 }
 
 /* Imagen del torneo */
 .torneo-image {
-  height: 220px;
+  height: 200px;
   overflow: hidden;
   position: relative;
+  background: linear-gradient(45deg, var(--ion-color-primary), #2db7ff);
 }
 
 .torneo-image::after {
@@ -160,37 +92,19 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 60%;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
-}
-
-.torneo-image::before {
-  content: '🏆';
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  font-size: 2rem;
-  z-index: 2;
-  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8));
-  animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.1); opacity: 1; }
+  height: 50%;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.3));
 }
 
 .torneo-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: var(--transition-smooth);
-  filter: saturate(1.1) contrast(1.05);
+  transition: transform 0.3s ease;
 }
 
 .torneo-card:hover .torneo-image img {
-  transform: scale(1.15);
-  filter: saturate(1.3) contrast(1.1);
+  transform: scale(1.05);
 }
 
 /* Header del card */
@@ -204,19 +118,10 @@
 
 .card-header-content ion-card-title {
   flex: 1;
-  font-size: 1.4rem;
-  font-weight: 800;
+  font-size: 1.3rem;
+  font-weight: 600;
   line-height: 1.3;
-  background: var(--tournament-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  transition: var(--transition-smooth);
-}
-
-.torneo-card:hover .card-header-content ion-card-title {
-  transform: translateX(5px);
-  filter: drop-shadow(0 0 10px rgba(var(--ion-color-primary-rgb), 0.3));
+  color: var(--ion-text-color);
 }
 
 /* Info del torneo */
@@ -229,217 +134,109 @@
   align-items: center;
   gap: 1rem;
   margin-bottom: 1rem;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: var(--ion-color-medium);
   padding: 0.75rem;
-  border-radius: 12px;
-  transition: var(--transition-smooth);
-  position: relative;
-}
-
-.info-row::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: var(--tournament-gradient);
-  border-radius: 0 4px 4px 0;
-  transform: scaleY(0);
-  transition: var(--transition-smooth);
+  border-radius: 8px;
+  transition: all 0.2s ease;
 }
 
 .info-row:hover {
-  background: rgba(var(--ion-color-primary-rgb), 0.1);
+  background: rgba(104, 144, 252, 0.05);
   color: var(--ion-color-primary);
-  transform: translateX(8px);
-}
-
-.info-row:hover::before {
-  transform: scaleY(1);
 }
 
 .info-row ion-icon {
-  font-size: 1.4rem;
   color: var(--ion-color-primary);
-  transition: var(--transition-bounce);
-  filter: drop-shadow(0 0 8px rgba(var(--ion-color-primary-rgb), 0.3));
+  font-size: 1.2rem;
+  transition: transform 0.2s ease;
 }
 
 .info-row:hover ion-icon {
-  transform: scale(1.3) rotate(15deg);
-  filter: drop-shadow(0 0 15px rgba(var(--ion-color-primary-rgb), 0.5));
+  transform: scale(1.1);
 }
 
 /* Precio destacado */
 .precio {
-  font-weight: 900;
-  font-size: 1.4rem;
-  background: var(--tournament-gold);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
-  position: relative;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--color-icono-estadisticas);
+  background: rgba(40, 199, 111, 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  border: 1px solid rgba(40, 199, 111, 0.2);
 }
 
-.precio::after {
-  content: '💰';
-  margin-left: 0.5rem;
-  font-size: 1.2rem;
-}
-
-/* Descripción mejorada */
+/* Descripción */
 .descripcion {
-  margin: 1.5rem 0 0 0;
-  font-size: 1rem;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
   color: var(--ion-color-medium);
-  line-height: 1.7;
+  line-height: 1.6;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  padding: 1.5rem;
-  background: linear-gradient(135deg, 
-    rgba(var(--ion-color-primary-rgb), 0.05), 
-    rgba(var(--ion-color-tertiary-rgb), 0.03));
-  border-radius: 16px;
-  border-left: 4px solid var(--ion-color-primary);
-  backdrop-filter: blur(5px);
-  position: relative;
-}
-
-.descripcion::before {
-  content: '"';
-  position: absolute;
-  top: -0.5rem;
-  left: 1rem;
-  font-size: 3rem;
-  color: var(--ion-color-primary);
-  opacity: 0.3;
-  font-family: serif;
+  padding: 1rem;
+  background: var(--color-panel, #ffffff);
+  border-radius: 8px;
+  border-left: 3px solid var(--ion-border-color, rgba(0, 0, 0, 0.1));
 }
 
 /* Acciones del card */
 .card-actions {
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
   flex-wrap: wrap;
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   padding-top: 1.5rem;
-  border-top: 2px solid rgba(var(--ion-color-primary-rgb), 0.2);
-  background: linear-gradient(135deg, 
-    rgba(255, 255, 255, 0.05), 
-    rgba(var(--ion-color-primary-rgb), 0.03));
-  border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .card-actions ion-button {
-  --padding-start: 1.5rem;
-  --padding-end: 1.5rem;
-  --padding-top: 0.75rem;
-  --padding-bottom: 0.75rem;
-  --border-radius: 16px;
-  font-size: 0.95rem;
-  font-weight: 700;
-  transition: var(--transition-bounce);
-  backdrop-filter: blur(8px);
-  position: relative;
-  overflow: hidden;
-}
-
-.card-actions ion-button::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: all 0.6s ease;
+  --border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
 .card-actions ion-button:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: var(--shadow-medium), var(--tournament-glow);
+  transform: translateY(-1px);
 }
 
-.card-actions ion-button:hover::before {
-  width: 300px;
-  height: 300px;
-}
-
-/* Estado vacío mejorado */
+/* Estado vacío */
 .empty-state {
   text-align: center;
-  padding: 5rem 2rem;
-  background: var(--tournament-card);
-  backdrop-filter: blur(20px);
-  border-radius: var(--border-radius-lg);
-  border: 2px dashed rgba(var(--ion-color-primary-rgb), 0.3);
-  margin: 3rem 0;
-  position: relative;
-  overflow: hidden;
-}
-
-.empty-state::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    rgba(var(--ion-color-primary-rgb), 0.1) 90deg,
-    transparent 180deg,
-    rgba(var(--ion-color-tertiary-rgb), 0.1) 270deg,
-    transparent 360deg
-  );
-  animation: rotate 20s linear infinite;
-  pointer-events: none;
-}
-
-@keyframes rotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
+  border: 2px dashed rgba(104, 144, 252, 0.2);
+  margin: 2rem 0;
 }
 
 .empty-icon {
-  font-size: 6rem;
+  font-size: 5rem;
   color: var(--ion-color-medium);
   margin-bottom: 2rem;
-  opacity: 0.7;
-  animation: float 4s ease-in-out infinite;
-  filter: drop-shadow(0 0 20px rgba(var(--ion-color-primary-rgb), 0.2));
-  position: relative;
-  z-index: 1;
+  opacity: 0.6;
 }
 
 .empty-state h2 {
   color: var(--ion-color-medium);
-  margin: 2rem 0 1rem 0;
-  font-size: 1.8rem;
-  font-weight: 700;
-  position: relative;
-  z-index: 1;
+  margin: 1.5rem 0 1rem 0;
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 .empty-state p {
   color: var(--ion-color-medium);
-  margin-bottom: 2.5rem;
-  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  font-size: 1rem;
   opacity: 0.8;
-  max-width: 500px;
+  max-width: 400px;
   margin-left: auto;
   margin-right: auto;
-  line-height: 1.6;
-  position: relative;
-  z-index: 1;
+  line-height: 1.5;
 }
 
 /* Modal mejorado */
@@ -448,377 +245,209 @@
   justify-content: space-between;
   align-items: center;
   padding: 2rem;
-  background: var(--tournament-gradient);
+  background: linear-gradient(135deg, var(--ion-color-primary), #2db7ff);
   color: white;
-  position: relative;
-  overflow: hidden;
-}
-
-.modal-header::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
-  pointer-events: none;
 }
 
 .modal-header h2 {
   margin: 0;
-  font-weight: 800;
-  font-size: 1.5rem;
-  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-  position: relative;
-  z-index: 1;
+  font-weight: 600;
+  font-size: 1.4rem;
 }
 
 .modal-header ion-button {
   --color: white;
   --background: rgba(255, 255, 255, 0.2);
-  --border-radius: 12px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  position: relative;
-  z-index: 1;
-  transition: var(--transition-bounce);
-}
-
-.modal-header ion-button:hover {
-  transform: scale(1.1);
-  --background: rgba(255, 255, 255, 0.3);
+  --border-radius: 8px;
 }
 
 .modal-content {
   padding: 2rem;
-  max-height: 60vh;
+  max-height: 70vh;
   overflow-y: auto;
-  background: var(--tournament-card);
-  backdrop-filter: blur(20px);
+  background: #fafbff;
 }
 
 .modal-content ion-item {
-  --padding-start: 0;
-  --inner-padding-end: 0;
-  margin-bottom: 1.5rem;
-  --background: rgba(255, 255, 255, 0.05);
-  --border-radius: 16px;
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: var(--transition-smooth);
-}
-
-.modal-content ion-item:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-soft);
-  --background: rgba(255, 255, 255, 0.08);
+  --background: white;
+  --border-radius: 8px;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .modal-footer {
   padding: 2rem;
-  background: var(--tournament-card);
-  backdrop-filter: blur(20px);
-  border-top: 2px solid rgba(var(--ion-color-primary-rgb), 0.3);
+  background: #fafbff;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-.modal-footer ion-button {
-  --border-radius: 16px;
-  --padding-top: 1rem;
-  --padding-bottom: 1rem;
-  font-weight: 700;
-  transition: var(--transition-bounce);
-}
-
-.modal-footer ion-button:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: var(--shadow-medium);
-}
-
-/* FAB mejorado */
+/* FAB */
 ion-fab-button {
-  --background: var(--tournament-gradient);
+  --background: linear-gradient(135deg, var(--ion-color-primary), #2db7ff);
   --color: white;
-  --box-shadow: var(--shadow-medium), var(--tournament-glow);
-  --border-radius: 20px;
-  transition: var(--transition-bounce);
-  position: relative;
-  overflow: hidden;
-}
-
-ion-fab-button::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: all 0.6s ease;
+  --box-shadow: 0 8px 25px rgba(104, 144, 252, 0.4);
+  --border-radius: 16px;
+  transition: all 0.3s ease;
 }
 
 ion-fab-button:hover {
-  transform: scale(1.15) rotate(10deg);
-  --box-shadow: var(--shadow-strong), var(--tournament-glow);
-}
-
-ion-fab-button:hover::before {
-  width: 200px;
-  height: 200px;
+  transform: scale(1.1);
+  --box-shadow: 0 12px 30px rgba(104, 144, 252, 0.5);
 }
 
 /* Chips mejorados */
 ion-chip {
-  --background: var(--tournament-card);
+  --background: rgba(104, 144, 252, 0.1);
   --color: var(--ion-color-primary);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(8px);
-  transition: var(--transition-bounce);
-  font-weight: 600;
-  position: relative;
-  overflow: hidden;
-}
-
-ion-chip::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.6s ease;
+  border: 1px solid rgba(104, 144, 252, 0.2);
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
 ion-chip:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: var(--shadow-soft);
+  --background: rgba(104, 144, 252, 0.15);
+  transform: translateY(-1px);
 }
 
-ion-chip:hover::before {
-  left: 100%;
+/* Estados de chips */
+ion-chip[color="success"] {
+  --background: rgba(40, 199, 111, 0.1);
+  --color: var(--color-icono-estadisticas);
+  border-color: rgba(40, 199, 111, 0.2);
 }
 
-/* Responsive mejorado */
+ion-chip[color="warning"] {
+  --background: rgba(255, 198, 47, 0.1);
+  --color: var(--color-icono-marcador);
+  border-color: rgba(255, 198, 47, 0.2);
+}
+
+ion-chip[color="danger"] {
+  --background: rgba(244, 67, 54, 0.1);
+  --color: var(--ion-color-danger);
+  border-color: rgba(244, 67, 54, 0.2);
+}
+
+ion-chip[color="medium"] {
+  --background: rgba(146, 158, 171, 0.1);
+  --color: var(--ion-color-medium);
+  border-color: rgba(146, 158, 171, 0.2);
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .torneos-container {
     padding: 1rem;
+    background: var(--ion-background-color, #ffffff);
+  }
+  
+  .ion-palette-dark .torneos-container {
+    background: var(--color-fondo, #121212);
   }
   
   .page-header {
-    padding: 1.5rem 0;
+    padding: 1rem 0;
     margin-bottom: 2rem;
   }
   
   .page-header h1 {
-    font-size: 2.2rem;
-  }
-  
-  .page-header h1::after {
-    top: -0.5rem;
-    right: -1rem;
-    font-size: 1.5rem;
-  }
-  
-  .page-header p {
-    font-size: 1.1rem;
-    padding: 0 1rem;
+    font-size: 2rem;
   }
   
   .torneo-image {
-    height: 180px;
-  }
-  
-  .torneo-image::before {
-    font-size: 1.5rem;
-    top: 0.5rem;
-    right: 0.5rem;
+    height: 160px;
   }
   
   .card-actions {
     flex-direction: column;
-    gap: 0.75rem;
   }
   
   .card-actions ion-button {
     width: 100%;
-    justify-content: center;
+    margin: 0;
   }
   
-  .modal-content {
-    max-height: 50vh;
-    padding: 1.5rem;
-  }
-  
-  .modal-header,
+  .modal-content,
   .modal-footer {
     padding: 1.5rem;
   }
   
-  .info-row {
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-  
   .empty-state {
-    padding: 3rem 1rem;
+    padding: 2rem 1rem;
   }
   
   .empty-icon {
-    font-size: 4rem;
-  }
-  
-  .empty-state h2 {
-    font-size: 1.5rem;
-  }
-  
-  .empty-state p {
-    font-size: 1rem;
+    font-size: 3.5rem;
   }
 }
 
-@media (max-width: 480px) {
-  .page-header h1 {
-    font-size: 1.8rem;
-  }
-  
-  .page-header h1::after {
-    display: none;
-  }
-  
-  .torneo-card:hover {
-    transform: translateY(-5px) scale(1.01);
-  }
-  
-  .card-header-content {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.75rem;
-  }
-  
-  .info-row {
-    padding: 0.5rem;
-  }
-  
-  .descripcion {
-    padding: 1rem;
-    -webkit-line-clamp: 2;
-  }
-  
-  .precio {
-    font-size: 1.2rem;
-  }
+/* Tema oscuro */
+.ion-palette-dark body,
+.ion-palette-dark ion-app, 
+.ion-palette-dark ion-router-outlet, 
+.ion-palette-dark ion-content {
+  background: transparent !important;
 }
 
-/* Tema oscuro mejorado */
-.torneos-container.dark {
-  background: linear-gradient(135deg, 
-    var(--ion-color-dark) 0%, 
-    rgba(var(--ion-color-primary-rgb), 0.1) 50%,
-    rgba(var(--ion-color-tertiary-rgb), 0.05) 100%);
+.ion-palette-dark .torneos-container {
+  background: var(--color-fondo, #121212);
 }
 
-.dark .torneo-card,
-.dark .empty-state {
-  background: rgba(255, 255, 255, 0.05);
+.ion-palette-dark .torneo-card {
+  background: var(--color-panel);
   border-color: rgba(255, 255, 255, 0.1);
 }
 
-.dark .torneo-card:hover,
-.dark .empty-state:hover {
-  background: rgba(255, 255, 255, 0.08);
+.ion-palette-dark .torneo-card:hover {
+  border-color: rgba(104, 144, 252, 0.4);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
-.dark .modal-content,
-.dark .modal-footer {
-  background: rgba(255, 255, 255, 0.05);
+.ion-palette-dark .info-row:hover {
+  background: rgba(104, 144, 252, 0.1);
 }
 
-.dark .card-actions {
-  background: rgba(255, 255, 255, 0.03);
+.ion-palette-dark .descripcion {
+  background: var(--color-secundario, #1e1e1e);
+  border-left: 3px solid var(--ion-border-color, rgba(255, 255, 255, 0.1));
+}
+
+.ion-palette-dark .empty-state {
+  background: var(--color-panel);
   border-color: rgba(255, 255, 255, 0.1);
 }
 
-.dark .descripcion {
-  background: rgba(255, 255, 255, 0.05);
+.ion-palette-dark .modal-content,
+.ion-palette-dark .modal-footer {
+  background: var(--color-secundario);
 }
 
-.dark .info-row:hover {
-  background: rgba(var(--ion-color-primary-rgb), 0.2);
+.ion-palette-dark .modal-content ion-item {
+  --background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Animaciones especiales para torneos */
-@keyframes tournamentPulse {
-  0%, 100% {
-    box-shadow: var(--shadow-soft);
+/* Animaciones sutiles */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  50% {
-    box-shadow: var(--shadow-medium), var(--tournament-glow);
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-.torneo-card:nth-child(3n+1) {
-  animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+.torneo-card {
+  animation: fadeInUp 0.5s ease-out;
 }
 
-.torneo-card:nth-child(3n+2) {
-  animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both;
-}
+.torneo-card:nth-child(1) { animation-delay: 0.1s; }
+.torneo-card:nth-child(2) { animation-delay: 0.2s; }
+.torneo-card:nth-child(3) { animation-delay: 0.3s; }
+.torneo-card:nth-child(4) { animation-delay: 0.4s; }
+.torneo-card:nth-child(5) { animation-delay: 0.5s; }
+.torneo-card:nth-child(6) { animation-delay: 0.6s; }
 
-.torneo-card:nth-child(3n+3) {
-  animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
-}
-
-/* Efectos especiales al hacer hover */
-.torneo-card:hover {
-  animation: tournamentPulse 2s ease-in-out infinite;
-}
-
-/* Scrollbar personalizada */
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(var(--ion-color-light-rgb), 0.1);
-  border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--tournament-gradient);
-  border-radius: 5px;
-  box-shadow: var(--tournament-glow);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--ion-color-primary);
-}
-
-/* Estados de chips especiales */
-ion-chip[color="success"] {
-  --background: var(--gradient-success);
-  --color: white;
-  border: none;
-}
-
-ion-chip[color="warning"] {
-  --background: var(--tournament-gold);
-  --color: white;
-  border: none;
-}
-
-ion-chip[color="danger"] {
-  --background: linear-gradient(135deg, var(--ion-color-danger), #ff6b6b);
-  --color: white;
-  border: none;
-}
-
-ion-chip[color="dark"] {
-  --background: linear-gradient(135deg, var(--ion-color-dark), #444);
-  --color: white;
-  border: none;
-}
+/* Fix para evitar espacios en blanco - ya configurado arriba */
