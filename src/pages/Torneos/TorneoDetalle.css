@@ -14,9 +14,26 @@ ion-content {
   --padding-end: 0;
 }
 
+/* Forzar fondos transparentes en ion-item para eliminar grises */
+ion-item {
+  --background: transparent !important;
+  background-color: transparent !important;
+}
+
+ion-item::part(native) {
+  background-color: transparent !important;
+}
+
+ion-list {
+  --background: transparent !important;
+  background-color: transparent !important;
+}
+
 .torneo-detalle-container {
   padding: 1.5rem;
-  background: var(--ion-background-color, #ffffff);
+  background: #ffffff;
+  min-height: 100vh;
+  min-height: calc(100vh - 64px);
 }
 
 /* Header del torneo */

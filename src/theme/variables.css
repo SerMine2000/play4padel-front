@@ -57,6 +57,8 @@ body, ion-app {
   background-color: #f2f5ff;
   color: var(--ion-text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+  height: 100%;
 
   background-image: var(--home-background-image);
   background-size: cover;
@@ -64,18 +66,46 @@ body, ion-app {
   background-repeat: no-repeat;
 }
 
+/* Asegurar que no hay espacios en blanco en la aplicación */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+ion-app, ion-router-outlet, ion-content {
+  height: 100%;
+  min-height: 100vh;
+}
+
 ion-card,
 ion-toolbar,
 ion-title,
 ion-label,
 ion-text,
-ion-item,
 ion-input,
 ion-textarea,
 ion-button {
   background-color: #f2f5ff;
   color: var(--ion-text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Ion-item e ion-list con fondo transparente para evitar fondo grisáceo en listas */
+ion-item {
+  --background: transparent !important;
+  background-color: transparent !important;
+  --color: var(--ion-text-color);
+}
+
+ion-list {
+  --background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Forzar transparencia en todas las partes de ion-item */
+ion-item::part(native) {
+  background-color: transparent !important;
 }
 
 ion-card {
@@ -145,11 +175,21 @@ body.ion-palette-dark,
   border: 1px solid var(--color-primario);
 }
 
-/* ===== CORRECCIONES PARA ION-ITEM Y COMPONENTES DENTRO DE CARDS ===== */
+/* ===== CORRECCIONES PARA ION-ITEM, ION-LIST Y COMPONENTES DENTRO DE CARDS ===== */
 .ion-palette-dark ion-item {
-  --background: var(--color-secundario);
+  --background: transparent !important;
+  background-color: transparent !important;
   --color: var(--color-texto);
   --border-color: rgba(255, 255, 255, 0.1);
+}
+
+.ion-palette-dark ion-list {
+  --background: transparent !important;
+  background-color: transparent !important;
+}
+
+.ion-palette-dark ion-item::part(native) {
+  background-color: transparent !important;
 }
 
 .ion-palette-dark ion-label {
@@ -158,10 +198,6 @@ body.ion-palette-dark,
 
 .ion-palette-dark ion-icon {
   color: var(--color-texto);
-}
-
-.ion-palette-dark ion-item::part(native) {
-  background-color: var(--color-secundario);
 }
 
 .ion-palette-dark ion-card ion-item {
