@@ -289,8 +289,9 @@ const Ligas: React.FC = () => {
         <p>Participa en ligas regulares de pádel</p>
       </div>
 
+      {/* FAB flotante fijo */}
       {canManage && (
-        <IonFab vertical="bottom" horizontal="end" slot="fixed">
+        <IonFab vertical="bottom" horizontal="end" slot="fixed" className="ligas-fab">
           <IonFabButton onClick={() => setIsCreateModalOpen(true)}>
             <IonIcon icon={addOutline} />
           </IonFabButton>
@@ -317,7 +318,7 @@ const Ligas: React.FC = () => {
             </IonCol>
           ) : (
             ligas.map((liga) => (
-              <IonCol size="12" sizeMd="6" sizeLg="4" key={liga.id}>
+              <IonCol size="12" sizeMd="6" sizeLg="6" key={liga.id}>
                 <IonCard className="liga-card">
                   {liga.imagen_url && (
                     <div className="liga-image">

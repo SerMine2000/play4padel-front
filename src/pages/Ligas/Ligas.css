@@ -21,7 +21,7 @@ ion-content {
 
 .ligas-container {
   padding: 1.5rem;
-  /* background: var(--ion-background-color, #ffffff); */
+  background: #ffffff;
   margin: 0;
   box-sizing: border-box;
 }
@@ -354,16 +354,25 @@ ion-content {
   border: 1px solid rgba(161, 96, 251, 0.1);
 }
 
-/* FAB */
-ion-fab-button {
+/* FAB - posición fija */
+.ligas-fab {
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  z-index: 1000 !important;
+}
+
+.ligas-fab ion-fab-button {
   --background: linear-gradient(135deg, var(--color-icono-usuarios), var(--ion-color-primary));
   --color: white;
   --box-shadow: 0 8px 25px rgba(161, 96, 251, 0.4);
   --border-radius: 16px;
+  width: 56px;
+  height: 56px;
   transition: all 0.3s ease;
 }
 
-ion-fab-button:hover {
+.ligas-fab ion-fab-button:hover {
   transform: scale(1.1);
   --box-shadow: 0 12px 30px rgba(161, 96, 251, 0.5);
 }
