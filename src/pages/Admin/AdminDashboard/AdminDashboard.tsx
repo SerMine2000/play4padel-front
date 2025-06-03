@@ -264,7 +264,7 @@ const AdminDashboard: React.FC = () => {
                     <IonCardTitle>Usuarios Recientes</IonCardTitle>
                   </IonCardHeader>
                   <IonCardContent>
-                    <IonList>
+                    <IonList className="recent-users-list">
                       {stats.recentUsers.map(user => (
                         <IonItem key={user.id}>
                           <IonAvatar slot="start" style={{ 
@@ -295,7 +295,7 @@ const AdminDashboard: React.FC = () => {
                     <IonCardTitle>Clubes Recientes</IonCardTitle>
                   </IonCardHeader>
                   <IonCardContent>
-                    <IonList>
+                    <IonList className="recent-clubs-list">
                       {stats.recentClubs.map(club => (
                         <IonItem key={club.id}>
                           <IonIcon icon={businessOutline} slot="start" color="primary" />

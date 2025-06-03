@@ -1,7 +1,10 @@
+/* AdminDashboard.css - Versión corregida con mejor visibilidad y scroll */
+
 .admin-dashboard-container {
-  padding: 20px;
+  padding: 20px 20px 80px 20px; /* Añadido padding-bottom para evitar corte */
   max-width: 1200px;
   margin: 0 auto;
+  min-height: calc(100vh - 64px); /* Asegurar altura mínima */
 }
 
 .dashboard-header {
@@ -14,19 +17,23 @@
   font-size: 2.5rem;
   font-weight: bold;
   margin-bottom: 10px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .dashboard-header p {
-  color: var(--ion-color-medium);
+  color: var(--ion-text-color); /* Cambiar de --ion-color-medium a --ion-text-color */
   font-size: 1.1rem;
+  opacity: 0.8;
 }
 
+/* Cards de estadísticas mejorados */
 .stats-card {
   margin-bottom: 16px;
-  --background: var(--ion-color-light);
+  --background: var(--color-panel, #ffffff);
   --border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease-in-out;
+  box-shadow: var(--card-shadow, 0 4px 8px rgba(0, 0, 0, 0.1));
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  border: 1px solid var(--ion-border-color, rgba(0, 0, 0, 0.1));
 }
 
 .stats-card:hover {
@@ -45,19 +52,25 @@
   opacity: 0.8;
 }
 
+/* Números más visibles */
 .stats-info h2 {
   font-size: 2rem;
   font-weight: bold;
   margin: 0;
-  color: var(--ion-color-dark);
+  color: var(--ion-text-color); /* Usar --ion-text-color en lugar de --ion-color-dark */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
+/* Títulos más visibles */
 .stats-info p {
   font-size: 0.9rem;
-  color: var(--ion-color-medium);
+  color: var(--ion-text-color); /* Usar --ion-text-color para mejor visibilidad */
   margin: 4px 0 8px 0;
+  opacity: 0.7;
+  font-weight: 500;
 }
 
+/* Sistema de estado mejorado */
 .system-status {
   display: flex;
   flex-direction: column;
@@ -69,8 +82,9 @@
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
-  background: var(--ion-color-light);
+  background: var(--color-panel, rgba(0, 0, 0, 0.05));
   border-radius: 8px;
+  border: 1px solid var(--ion-border-color, rgba(0, 0, 0, 0.1));
 }
 
 .status-item ion-icon {
@@ -79,9 +93,11 @@
 
 .status-item span {
   font-size: 0.9rem;
-  color: var(--ion-color-dark);
+  color: var(--ion-text-color);
+  font-weight: 500;
 }
 
+/* Acciones rápidas */
 .quick-actions {
   display: flex;
   flex-direction: column;
@@ -93,12 +109,87 @@
   --padding-start: 16px;
   --padding-end: 16px;
   height: 44px;
+  font-weight: 500;
 }
 
-/* Responsive design */
+/* ===== TÍTULOS DE CARDS MEJORADOS ===== */
+ion-card-title {
+  color: var(--ion-text-color) !important;
+  font-weight: 600 !important;
+  font-size: 1.1rem !important;
+  opacity: 1 !important;
+}
+
+/* ===== SCROLL INTERNO PARA LISTAS RECIENTES ===== */
+.recent-users-list,
+.recent-clubs-list {
+  max-height: 300px; /* Altura máxima para mostrar aproximadamente 5 elementos */
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+}
+
+/* Estilizar las listas dentro de los cards */
+ion-card ion-list {
+  background: transparent !important;
+  --background: transparent !important;
+  margin: 0;
+  padding: 0;
+}
+
+ion-card ion-item {
+  --background: transparent !important;
+  --color: var(--ion-text-color) !important;
+  --border-color: var(--ion-border-color, rgba(0, 0, 0, 0.1)) !important;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+ion-card ion-item:hover {
+  --background: var(--color-panel, rgba(0, 0, 0, 0.03)) !important;
+}
+
+/* Mejorar visibilidad de texto en items */
+ion-card ion-item ion-label h3 {
+  color: var(--ion-text-color) !important;
+  font-weight: 600 !important;
+  font-size: 0.95rem !important;
+}
+
+ion-card ion-item ion-label p {
+  color: var(--ion-text-color) !important;
+  opacity: 0.7 !important;
+  font-size: 0.85rem !important;
+}
+
+/* Personalizar scrollbar */
+.recent-users-list::-webkit-scrollbar,
+.recent-clubs-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.recent-users-list::-webkit-scrollbar-track,
+.recent-clubs-list::-webkit-scrollbar-track {
+  background: var(--ion-border-color, rgba(0, 0, 0, 0.1));
+  border-radius: 10px;
+}
+
+.recent-users-list::-webkit-scrollbar-thumb,
+.recent-clubs-list::-webkit-scrollbar-thumb {
+  background: var(--ion-color-medium);
+  border-radius: 10px;
+}
+
+.recent-users-list::-webkit-scrollbar-thumb:hover,
+.recent-clubs-list::-webkit-scrollbar-thumb:hover {
+  background: var(--ion-color-primary);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
   .admin-dashboard-container {
-    padding: 16px;
+    padding: 16px 16px 60px 16px;
   }
   
   .dashboard-header h1 {
@@ -114,23 +205,78 @@
   .stats-info h2 {
     font-size: 1.6rem;
   }
+  
+  .recent-users-list,
+  .recent-clubs-list {
+    max-height: 250px; /* Reducir altura en móvil */
+  }
 }
 
-/* Dark theme support */
-@media (prefers-color-scheme: dark) {
-  .stats-card {
-    --background: var(--ion-color-dark);
+/* ===== SOPORTE PARA TEMA OSCURO ===== */
+.ion-palette-dark .stats-card {
+  --background: var(--color-panel, #1e1e1e);
+  border-color: var(--ion-border-color, rgba(255, 255, 255, 0.1));
+}
+
+.ion-palette-dark .stats-info h2 {
+  color: var(--ion-text-color, #ffffff);
+}
+
+.ion-palette-dark .stats-info p {
+  color: var(--ion-text-color, #ffffff);
+}
+
+.ion-palette-dark .status-item {
+  background: var(--color-secundario, rgba(255, 255, 255, 0.05));
+  border-color: var(--ion-border-color, rgba(255, 255, 255, 0.1));
+}
+
+.ion-palette-dark .status-item span {
+  color: var(--ion-text-color, #ffffff);
+}
+
+.ion-palette-dark ion-card-title {
+  color: var(--ion-text-color, #ffffff) !important;
+}
+
+.ion-palette-dark ion-card ion-item:hover {
+  --background: var(--color-secundario, rgba(255, 255, 255, 0.05)) !important;
+}
+
+/* ===== ANIMACIONES SUTILES ===== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  
-  .stats-info h2 {
-    color: var(--ion-color-light);
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .status-item {
-    background: var(--ion-color-dark);
-  }
-  
-  .status-item span {
-    color: var(--ion-color-light);
-  }
+}
+
+.stats-card {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.stats-card:nth-child(1) { animation-delay: 0.1s; }
+.stats-card:nth-child(2) { animation-delay: 0.2s; }
+.stats-card:nth-child(3) { animation-delay: 0.3s; }
+.stats-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* ===== MEJORAS PARA CHIPS ===== */
+ion-chip {
+  font-weight: 500 !important;
+  font-size: 0.8rem !important;
+}
+
+/* ===== ASEGURAR VISIBILIDAD EN TODOS LOS TEMAS ===== */
+.dashboard-header h1,
+.stats-info h2,
+.stats-info p,
+ion-card-title,
+ion-item ion-label h3,
+ion-item ion-label p,
+.status-item span {
+  color: var(--ion-text-color) !important;
 }
