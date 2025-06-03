@@ -345,7 +345,7 @@ const Torneos: React.FC = () => {
             <IonLabel position="stacked">Club *</IonLabel>
             <IonSelect
               value={formData.id_club}
-              onSelectionChange={(e) => setFormData({ ...formData, id_club: e.detail.value })}
+              onIonChange={(e) => setFormData({ ...formData, id_club: e.detail.value })}
               placeholder="Selecciona un club"
             >
               {clubes.map((club) => (
@@ -378,7 +378,7 @@ const Torneos: React.FC = () => {
             <IonLabel position="stacked">Tipo de Torneo *</IonLabel>
             <IonSelect
               value={formData.tipo}
-              onSelectionChange={(e) => setFormData({ ...formData, tipo: e.detail.value })}
+              onIonChange={(e) => setFormData({ ...formData, tipo: e.detail.value })}
               placeholder="Selecciona el tipo"
             >
               <IonSelectOption value="eliminacion_directa">Eliminación Directa</IonSelectOption>

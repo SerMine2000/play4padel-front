@@ -4,6 +4,8 @@
 /* ===== MODO CLARO (por defecto) ===== */
 :root {
   --ion-color-primary: #00FF66;
+  --ion-background-color: #f2f5ff;
+  --ion-text-color: #000000;
 
   --ion-color-primary-rgb: 0, 255, 102;
   --ion-color-primary-contrast: #ffffff;
@@ -52,7 +54,7 @@
 
 /* ===== ESTILOS BASE ===== */
 body, ion-app {
-  background-color: var(--ion-background-color);
+  background-color: #f2f5ff;
   color: var(--ion-text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
 
@@ -71,13 +73,13 @@ ion-item,
 ion-input,
 ion-textarea,
 ion-button {
-  background-color: var(--ion-background-color);
+  background-color: #f2f5ff;
   color: var(--ion-text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 ion-card {
-  background-color: var(--ion-background-color);
+  background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(0, 0, 0, 0.05);
