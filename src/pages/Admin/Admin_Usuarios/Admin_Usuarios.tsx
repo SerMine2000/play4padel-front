@@ -307,7 +307,7 @@ const AdminManageAllUsers: React.FC = () => {
                         <IonSelect
                           placeholder="Filtrar por rol"
                           value={selectedRole}
-                          onSelectionChange={e => setSelectedRole(e.detail.value)}
+                          onIonChange={e => setSelectedRole(e.detail.value)}
                         >
                           <IonSelectOption value="all">Todos los roles</IonSelectOption>
                           {roles.map(role => (
@@ -320,7 +320,7 @@ const AdminManageAllUsers: React.FC = () => {
                         <IonSelect
                           placeholder="Filtrar por estado"
                           value={selectedStatus}
-                          onSelectionChange={e => setSelectedStatus(e.detail.value)}
+                          onIonChange={e => setSelectedStatus(e.detail.value)}
                         >
                           <IonSelectOption value="all">Todos</IonSelectOption>
                           <IonSelectOption value="active">Activos</IonSelectOption>
@@ -443,7 +443,7 @@ const AdminManageAllUsers: React.FC = () => {
                     label="Nuevo rol"
                     labelPlacement="stacked"
                     value={newRole}
-                    onSelectionChange={e => setNewRole(e.detail.value)}
+                    onIonChange={e => setNewRole(e.detail.value)}
                   >
                     {roles.map(role => (
                       <IonSelectOption key={role.id} value={role.id}>

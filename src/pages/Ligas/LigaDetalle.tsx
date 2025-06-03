@@ -856,7 +856,7 @@ const LigaDetalle: React.FC = () => {
                   <IonLabel position="stacked">Ganador</IonLabel>
                   <IonSelect
                     value={resultData.ganador}
-                    onSelectionChange={(e) => setResultData({ ...resultData, ganador: e.detail.value })}
+                    onIonChange={(e) => setResultData({ ...resultData, ganador: e.detail.value })}
                     placeholder="Selecciona el ganador"
                   >
                     <IonSelectOption value={selectedPartido.id_equipo1}>

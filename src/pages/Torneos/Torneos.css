@@ -21,7 +21,7 @@ ion-content {
 
 .torneos-container {
   padding: 1.5rem;
-  background: #ffffff;
+  background: var(--ion-background-color);
   margin: 0;
   box-sizing: border-box;
 }
@@ -69,7 +69,7 @@ ion-content {
   box-shadow: var(--card-shadow);
   border: 1px solid rgba(0, 255, 102, 0.1);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: white;
+  background: var(--color-panel, #ffffff);
 }
 
 .torneo-card:hover {
@@ -207,7 +207,7 @@ ion-content {
 .empty-state {
   text-align: center;
   padding: 4rem 2rem;
-  background: white;
+  background: var(--color-panel, #ffffff);
   border-radius: 16px;
   box-shadow: var(--card-shadow);
   border: 2px dashed rgba(0, 255, 102, 0.2);
@@ -347,7 +347,7 @@ ion-chip[color="medium"] {
 @media (max-width: 768px) {
   .torneos-container {
     padding: 1rem;
-    background: #ffffff;
+    background: var(--ion-background-color);
   }
   
   .ion-palette-dark .torneos-container {

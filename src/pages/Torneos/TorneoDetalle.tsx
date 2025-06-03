@@ -488,7 +488,7 @@ const TorneoDetalle: React.FC = () => {
             <IonLabel position="stacked">Jugador 1 *</IonLabel>
             <IonSelect
               value={inscriptionData.jugador1_id}
-              onSelectionChange={(e) => setInscriptionData({ ...inscriptionData, jugador1_id: e.detail.value })}
+              onIonChange={(e) => setInscriptionData({ ...inscriptionData, jugador1_id: e.detail.value })}
               placeholder="Selecciona el primer jugador"
             >
               {usuarios.map((usuario) => (
@@ -503,7 +503,7 @@ const TorneoDetalle: React.FC = () => {
             <IonLabel position="stacked">Jugador 2 *</IonLabel>
             <IonSelect
               value={inscriptionData.jugador2_id}
-              onSelectionChange={(e) => setInscriptionData({ ...inscriptionData, jugador2_id: e.detail.value })}
+              onIonChange={(e) => setInscriptionData({ ...inscriptionData, jugador2_id: e.detail.value })}
               placeholder="Selecciona el segundo jugador"
             >
               {usuarios.filter(u => u.id.toString() !== inscriptionData.jugador1_id).map((usuario) => (
@@ -518,7 +518,7 @@ const TorneoDetalle: React.FC = () => {
             <IonLabel position="stacked">Categoría *</IonLabel>
             <IonSelect
               value={inscriptionData.categoria}
-              onSelectionChange={(e) => setInscriptionData({ ...inscriptionData, categoria: e.detail.value })}
+              onIonChange={(e) => setInscriptionData({ ...inscriptionData, categoria: e.detail.value })}
               placeholder="Selecciona la categoría"
             >
               <IonSelectOption value="masculina">Masculina</IonSelectOption>

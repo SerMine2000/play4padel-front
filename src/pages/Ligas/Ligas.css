@@ -21,7 +21,7 @@ ion-content {
 
 .ligas-container {
   padding: 1.5rem;
-  background: #ffffff;
+  background: var(--ion-background-color);
   margin: 0;
   box-sizing: border-box;
 }
@@ -69,7 +69,7 @@ ion-content {
   box-shadow: var(--card-shadow);
   border: 1px solid rgba(161, 96, 251, 0.1);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: white;
+  background: var(--color-panel, #ffffff);
 }
 
 .liga-card:hover {
@@ -245,7 +245,7 @@ ion-content {
 .empty-state {
   text-align: center;
   padding: 4rem 2rem;
-  background: white;
+  background: var(--color-panel, #ffffff);
   border-radius: 16px;
   box-shadow: var(--card-shadow);
   border: 2px dashed rgba(161, 96, 251, 0.2);
@@ -307,7 +307,7 @@ ion-content {
 }
 
 .modal-content ion-item {
-  --background: white;
+  --background: var(--color-panel, #ffffff);
   --border-radius: 8px;
   margin-bottom: 1rem;
   border: 1px solid rgba(0, 0, 0, 0.06);

@@ -335,7 +335,7 @@ const AdminSystemConfig: React.FC = () => {
                           label="Idioma por Defecto"
                           labelPlacement="stacked"
                           value={config.general.defaultLanguage}
-                          onSelectionChange={e => updateConfig('general', 'defaultLanguage', e.detail.value)}
+                          onIonChange={e => updateConfig('general', 'defaultLanguage', e.detail.value)}
                         >
                           <IonSelectOption value="es">Español</IonSelectOption>
                           <IonSelectOption value="en">English</IonSelectOption>
@@ -348,7 +348,7 @@ const AdminSystemConfig: React.FC = () => {
                           label="Zona Horaria"
                           labelPlacement="stacked"
                           value={config.general.timezone}
-                          onSelectionChange={e => updateConfig('general', 'timezone', e.detail.value)}
+                          onIonChange={e => updateConfig('general', 'timezone', e.detail.value)}
                         >
                           <IonSelectOption value="Europe/Madrid">Europa/Madrid</IonSelectOption>
                           <IonSelectOption value="Europe/London">Europa/Londres</IonSelectOption>
@@ -509,7 +509,7 @@ const AdminSystemConfig: React.FC = () => {
                           label="Moneda"
                           labelPlacement="stacked"
                           value={config.business.currency}
-                          onSelectionChange={e => updateConfig('business', 'currency', e.detail.value)}
+                          onIonChange={e => updateConfig('business', 'currency', e.detail.value)}
                         >
                           <IonSelectOption value="EUR">Euro (€)</IonSelectOption>
                           <IonSelectOption value="USD">Dólar ($)</IonSelectOption>

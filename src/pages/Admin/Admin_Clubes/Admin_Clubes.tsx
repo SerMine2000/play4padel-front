@@ -524,7 +524,7 @@ const AdminManageClubs: React.FC = () => {
                   label="Administrador *"
                   labelPlacement="stacked"
                   value={formData.id_administrador}
-                  onSelectionChange={e => setFormData({...formData, id_administrador: e.detail.value})}
+                  onIonChange={e => setFormData({...formData, id_administrador: e.detail.value})}
                   disabled={modalMode === 'view'}
                 >
                   {administrators.map(admin => (
