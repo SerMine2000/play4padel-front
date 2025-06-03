@@ -216,13 +216,7 @@ const Torneos: React.FC = () => {
         <p>Gestiona y participa en torneos de pádel</p>
       </div>
 
-      {canManage && (
-        <IonFab vertical="bottom" horizontal="end" slot="fixed">
-          <IonFabButton onClick={() => setIsCreateModalOpen(true)}>
-            <IonIcon icon={addOutline} />
-          </IonFabButton>
-        </IonFab>
-      )}
+      {/* FAB se incluirá al final del contenido para que se mueva con el scroll */}
 
       <IonGrid>
         <IonRow>
@@ -244,7 +238,7 @@ const Torneos: React.FC = () => {
             </IonCol>
           ) : (
             torneos.map((torneo) => (
-              <IonCol size="12" sizeMd="6" sizeLg="4" key={torneo.id}>
+              <IonCol size="12" sizeMd="6" sizeLg="6" key={torneo.id}>
                 <IonCard className="torneo-card">
                   {torneo.imagen_url && (
                     <div className="torneo-image">
@@ -318,6 +312,15 @@ const Torneos: React.FC = () => {
           )}
         </IonRow>
       </IonGrid>
+
+      {/* FAB flotante fijo */}
+      {canManage && (
+        <IonFab vertical="bottom" horizontal="end" slot="fixed" className="torneos-fab">
+          <IonFabButton onClick={() => setIsCreateModalOpen(true)}>
+            <IonIcon icon={addOutline} />
+          </IonFabButton>
+        </IonFab>
+      )}
 
       {/* Modal para crear torneo */}
       <IonModal isOpen={isCreateModalOpen} onDidDismiss={() => setIsCreateModalOpen(false)}>
