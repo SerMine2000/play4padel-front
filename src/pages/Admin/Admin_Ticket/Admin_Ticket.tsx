@@ -262,7 +262,7 @@ const AdminSystemReports: React.FC = () => {
                     </div>
                     <div className="metric-value">
                       <h2>{metrics.userGrowth.thisMonth}</h2>
-                      <IonChip color={getPercentageColor(metrics.userGrowth.percentage)} size="small">
+                      <IonChip color={getPercentageColor(metrics.userGrowth.percentage)}>
                         <IonIcon icon={metrics.userGrowth.percentage >= 0 ? trendingUpOutline : trendingDownOutline} />
                         {formatPercentage(metrics.userGrowth.percentage)}
                       </IonChip>
@@ -283,7 +283,7 @@ const AdminSystemReports: React.FC = () => {
                     </div>
                     <div className="metric-value">
                       <h2>{metrics.reservationTrends.thisMonth}</h2>
-                      <IonChip color={getPercentageColor(metrics.reservationTrends.percentage)} size="small">
+                      <IonChip color={getPercentageColor(metrics.reservationTrends.percentage)}>
                         <IonIcon icon={metrics.reservationTrends.percentage >= 0 ? trendingUpOutline : trendingDownOutline} />
                         {formatPercentage(metrics.reservationTrends.percentage)}
                       </IonChip>
@@ -304,7 +304,7 @@ const AdminSystemReports: React.FC = () => {
                     </div>
                     <div className="metric-value">
                       <h2>{formatCurrency(metrics.revenue.thisMonth)}</h2>
-                      <IonChip color={getPercentageColor(metrics.revenue.percentage)} size="small">
+                      <IonChip color={getPercentageColor(metrics.revenue.percentage)}>
                         <IonIcon icon={metrics.revenue.percentage >= 0 ? trendingUpOutline : trendingDownOutline} />
                         {formatPercentage(metrics.revenue.percentage)}
                       </IonChip>
@@ -405,7 +405,7 @@ const AdminSystemReports: React.FC = () => {
                     </IonLabel>
                     <IonChip 
                       color={getPercentageColor(club.growth)} 
-                      size="small" 
+ 
                       slot="end"
                     >
                       <IonIcon icon={club.growth >= 0 ? trendingUpOutline : trendingDownOutline} />

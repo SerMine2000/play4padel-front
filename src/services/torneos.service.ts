@@ -45,7 +45,7 @@ export class TorneosService {
 
   // Generar fixture
   static async generarFixture(torneoId: number) {
-    return await ApiService.post(API_ENDPOINTS.GENERAR_FIXTURE(torneoId));
+    return await ApiService.post(API_ENDPOINTS.GENERAR_FIXTURE(torneoId), {});
   }
 
   // Obtener partidos de un torneo
@@ -56,12 +56,12 @@ export class TorneosService {
 
   // Avanzar ronda
   static async avanzarRonda(torneoId: number, rondaActual: string) {
-    return await ApiService.post(API_ENDPOINTS.AVANZAR_RONDA(torneoId, rondaActual));
+    return await ApiService.post(API_ENDPOINTS.AVANZAR_RONDA(torneoId, rondaActual), {});
   }
 
   // Crear cuadro de consolación
   static async crearConsolacion(torneoId: number, rondaOrigen: string) {
-    return await ApiService.post(API_ENDPOINTS.CREAR_CONSOLACION(torneoId, rondaOrigen));
+    return await ApiService.post(API_ENDPOINTS.CREAR_CONSOLACION(torneoId, rondaOrigen), {});
   }
 }
 

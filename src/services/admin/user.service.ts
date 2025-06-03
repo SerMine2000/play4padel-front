@@ -30,6 +30,7 @@ export interface UserFormData {
   avatar_url?: string;
   bio?: string;
   password?: string;
+  activo?: boolean;
 }
 
 export interface Role {

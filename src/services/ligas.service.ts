@@ -50,7 +50,7 @@ export class LigasService {
 
   // Generar partidos (round robin)
   static async generarPartidos(ligaId: number) {
-    return await ApiService.post(API_ENDPOINTS.GENERAR_PARTIDOS_LIGA(ligaId));
+    return await ApiService.post(API_ENDPOINTS.GENERAR_PARTIDOS_LIGA(ligaId), {});
   }
 
   // Obtener partidos de una liga

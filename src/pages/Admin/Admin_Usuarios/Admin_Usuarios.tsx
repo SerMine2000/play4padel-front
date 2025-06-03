@@ -385,10 +385,10 @@ const AdminManageAllUsers: React.FC = () => {
                               </IonLabel>
 
                               <div className="user-badges" slot="end">
-                                <IonChip color={getRoleColor(userItem.id_rol)} size="small">
+                                <IonChip color={getRoleColor(userItem.id_rol)}>
                                   {userItem.rol?.nombre || getRoleName(userItem.id_rol)}
                                 </IonChip>
-                                <IonChip color={userItem.activo ? 'success' : 'danger'} size="small">
+                                <IonChip color={userItem.activo ? 'success' : 'danger'}>
                                   {userItem.activo ? 'Activo' : 'Inactivo'}
                                 </IonChip>
                               </div>

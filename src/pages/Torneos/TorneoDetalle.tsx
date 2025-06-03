@@ -161,7 +161,7 @@ const TorneoDetalle: React.FC = () => {
 
   const handleGenerateFixture = async () => {
     try {
-      const response = await ApiService.post(`/torneos/${id}/generar_fixture`);
+      const response = await ApiService.post(`/torneos/${id}/generar_fixture`, {});
       if (response) {
         setToastMessage('Fixture generado exitosamente');
         setShowToast(true);

@@ -349,7 +349,7 @@ const Ligas: React.FC = () => {
 
                       <div className="info-row">
                         <IonIcon icon={statsChartOutline} />
-                        <IonChip color={getNivelColor(liga.nivel)} size="small">
+                        <IonChip color={getNivelColor(liga.nivel)}>
                           {liga.nivel}
                         </IonChip>
                       </div>

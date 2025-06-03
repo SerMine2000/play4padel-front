@@ -340,7 +340,7 @@ const AdminManageClubs: React.FC = () => {
                                 <div className="club-info">
                                   <h3>{club.nombre}</h3>
                                   <p className="club-description">{club.descripcion}</p>
-                                  <IonChip color={club.activo ? 'success' : 'danger'} size="small">
+                                  <IonChip color={club.activo ? 'success' : 'danger'}>
                                     {club.activo ? 'Activo' : 'Inactivo'}
                                   </IonChip>
                                 </div>

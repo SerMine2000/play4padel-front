@@ -208,7 +208,7 @@ const LigaDetalle: React.FC = () => {
 
   const handleGeneratePartidos = async () => {
     try {
-      const response = await ApiService.post(`/ligas/${id}/generar_partidos`);
+      const response = await ApiService.post(`/ligas/${id}/generar_partidos`, {});
       if (response) {
         setToastMessage('Partidos generados exitosamente');
         setShowToast(true);
@@ -643,11 +643,11 @@ const LigaDetalle: React.FC = () => {
                       
                       <div className="partido-equipos">
                         <div className="equipo">
-                          <span>{partido.nombre_equipo1 || `Equipo ${partido.id_equipo1}`}</span>
+                          <span>Equipo {partido.id_equipo1}</span>
                         </div>
                         <span className="vs">VS</span>
                         <div className="equipo">
-                          <span>{partido.nombre_equipo2 || `Equipo ${partido.id_equipo2}`}</span>
+                          <span>Equipo {partido.id_equipo2}</span>
                         </div>
                       </div>
                       
@@ -827,7 +827,7 @@ const LigaDetalle: React.FC = () => {
             <>
               <div className="partido-info">
                 <h3>Partido #{selectedPartido.id}</h3>
-                <p>{selectedPartido.nombre_equipo1 || `Equipo ${selectedPartido.id_equipo1}`} vs {selectedPartido.nombre_equipo2 || `Equipo ${selectedPartido.id_equipo2}`}</p>
+                <p>Equipo {selectedPartido.id_equipo1} vs Equipo {selectedPartido.id_equipo2}</p>
               </div>
 
               <IonItem>
@@ -860,10 +860,10 @@ const LigaDetalle: React.FC = () => {
                     placeholder="Selecciona el ganador"
                   >
                     <IonSelectOption value={selectedPartido.id_equipo1}>
-                      {selectedPartido.nombre_equipo1 || `Equipo ${selectedPartido.id_equipo1}`}
+                      Equipo {selectedPartido.id_equipo1}
                     </IonSelectOption>
                     <IonSelectOption value={selectedPartido.id_equipo2}>
-                      {selectedPartido.nombre_equipo2 || `Equipo ${selectedPartido.id_equipo2}`}
+                      Equipo {selectedPartido.id_equipo2}
                     </IonSelectOption>
                   </IonSelect>
                 </IonItem>
@@ -873,7 +873,7 @@ const LigaDetalle: React.FC = () => {
                 <h4>Puntos Bonus (Opcional)</h4>
                 
                 <IonItem>
-                  <IonLabel>{selectedPartido.nombre_equipo1 || `Equipo ${selectedPartido.id_equipo1}`}</IonLabel>
+                  <IonLabel>Equipo {selectedPartido.id_equipo1}</IonLabel>
                   <IonRange
                     min={0}
                     max={5}
@@ -884,7 +884,7 @@ const LigaDetalle: React.FC = () => {
                 </IonItem>
 
                 <IonItem>
-                  <IonLabel>{selectedPartido.nombre_equipo2 || `Equipo ${selectedPartido.id_equipo2}`}</IonLabel>
+                  <IonLabel>Equipo {selectedPartido.id_equipo2}</IonLabel>
                   <IonRange
                     min={0}
                     max={5}

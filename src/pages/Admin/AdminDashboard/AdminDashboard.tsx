@@ -134,7 +134,7 @@ const AdminDashboard: React.FC = () => {
                       <div className="stats-info">
                         <h2>{stats.totalUsers}</h2>
                         <p>Total Usuarios</p>
-                        <IonChip color="success" size="small">
+                        <IonChip color="success">
                           +{stats.monthlyGrowth.users}% este mes
                         </IonChip>
                       </div>
@@ -153,7 +153,7 @@ const AdminDashboard: React.FC = () => {
                       <div className="stats-info">
                         <h2>{stats.totalClubs}</h2>
                         <p>Clubes Registrados</p>
-                        <IonChip color="primary" size="small">
+                        <IonChip color="primary">
                           {stats.recentClubs.length} nuevos
                         </IonChip>
                       </div>
@@ -172,7 +172,7 @@ const AdminDashboard: React.FC = () => {
                       <div className="stats-info">
                         <h2>{stats.totalReservations}</h2>
                         <p>Total Reservas</p>
-                        <IonChip color="success" size="small">
+                        <IonChip color="success">
                           +{stats.monthlyGrowth.reservations}% este mes
                         </IonChip>
                       </div>
@@ -191,7 +191,7 @@ const AdminDashboard: React.FC = () => {
                       <div className="stats-info">
                         <h2>{formatCurrency(stats.totalRevenue)}</h2>
                         <p>Ingresos Totales</p>
-                        <IonChip color="success" size="small">
+                        <IonChip color="success">
                           +{stats.monthlyGrowth.revenue}% este mes
                         </IonChip>
                       </div>
@@ -302,7 +302,7 @@ const AdminDashboard: React.FC = () => {
                           <IonLabel>
                             <h3>{club.nombre}</h3>
                             <p>Registrado: {club.fecha_registro ? new Date(club.fecha_registro).toLocaleDateString('es-ES') : 'N/A'}</p>
-                            <IonChip color={club.activo ? 'success' : 'danger'} size="small">
+                            <IonChip color={club.activo ? 'success' : 'danger'}>
                               {club.activo ? 'Activo' : 'Inactivo'}
                             </IonChip>
                           </IonLabel>
