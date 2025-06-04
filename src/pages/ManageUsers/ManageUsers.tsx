@@ -38,8 +38,16 @@ import Avatar from '../../components/Avatar';
 import "../../theme/variables.css";
 import "./ManageUsers.css";
 
+// Importar el componente de admin para administradores supremos
+import AdminManageAllUsers from '../Admin/Admin_Usuarios/Admin_Usuarios';
+
 const ManageUsers: React.FC = () => {
   const { user } = useAuth();
+
+  // Si es administrador supremo, mostrar Admin_Usuarios
+  if (user && user.role.toUpperCase() === 'ADMIN') {
+    return <AdminManageAllUsers />;
+  }
 
   const [clubId, setClubId] = useState<number | null>(null);
   const [clubData, setClubData] = useState<any>(null);

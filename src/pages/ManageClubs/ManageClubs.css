@@ -1,0 +1,18 @@
+/* ManageClubs.css */
+.manage-clubs-container {
+  padding: 20px;
+}
+
+.manage-clubs-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.manage-clubs-header h2 {
+  color: var(--ion-color-primary);
+  margin-bottom: 10px;
+}
+
+.manage-clubs-header p {
+  color: var(--ion-color-medium);
+}

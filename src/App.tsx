@@ -8,16 +8,14 @@ import Profile from './pages/Perfil/Profile';
 import Reservas from './pages/Reservas/Reservas';
 import ManageCourts from './pages/ManageCourts/ManageCourts';
 import ManageUsers from './pages/ManageUsers/ManageUsers';
+import ManageClubs from './pages/ManageClubs/ManageClubs';
 import CalendarView from './pages/Calendario/CalendarView';
 import MarcadorControl from './pages/Marcador/MarcadorControl';
 import MarcadorPantalla from './pages/Marcador/MarcadorPantalla';
 import Configuracion from './pages/Configuracion/Configuracion';
 import Pay from './pages/Pago/Pay';
 
-// Páginas del Administrador Supremo
-import AdminDashboard from './pages/Admin/AdminDashboard/AdminDashboard';
-import AdminManageClubs from './pages/Admin/Admin_Clubes/Admin_Clubes';
-import AdminManageAllUsers from './pages/Admin/Admin_Usuarios/Admin_Usuarios';
+// Páginas del Administrador Supremo (solo para rutas que mantienen el prefijo /admin/)
 import AdminSystemReports from './pages/Admin/Admin_Ticket/Admin_Ticket';
 import AdminSystemConfig from './pages/Admin/Admin_Config/Admin_Config';
 
@@ -80,12 +78,7 @@ const RoleRoute = ({
   // Verificar por role (string) en lugar de id_rol
   if (user && roles.includes(user.role.toUpperCase())) return element;
   
-  // Si es admin y trata de acceder a /home, redirigir al dashboard de admin
-  if (user && user.role.toUpperCase() === 'ADMIN' && window.location.pathname === '/home') {
-    return <Navigate to="/admin/dashboard" />;
-  }
-  
-  return <Navigate to={user?.role.toUpperCase() === 'ADMIN' ? '/admin/dashboard' : '/home'} />;
+  return <Navigate to="/home" />;
 };
 
 // Componente para manejar el foco al cambiar de ruta
@@ -137,8 +130,7 @@ const AppContent: React.FC = () => {
   // Función para determinar la ruta por defecto según el rol
   const getDefaultRoute = () => {
     if (!isAuthenticated) return '/login';
-    if (user?.role.toUpperCase() === 'ADMIN') return '/admin/dashboard';
-    return '/home';
+    return '/home'; // Ahora todos van a /home, que internamente decide qué mostrar
   };
 
   return (
@@ -157,19 +149,20 @@ const AppContent: React.FC = () => {
               element={isAuthenticated ? <Navigate to={getDefaultRoute()} /> : <Register />} 
             />
 
-            {/* Rutas del Administrador Supremo */}
-            <Route 
-              path="/admin/dashboard" 
-              element={<RoleRoute roles={['ADMIN']} element={<MainLayout><AdminDashboard /></MainLayout>} />} 
-            />
-            <Route 
-              path="/admin/manage-clubs" 
-              element={<RoleRoute roles={['ADMIN']} element={<MainLayout><AdminManageClubs /></MainLayout>} />} 
-            />
-            <Route 
-              path="/admin/manage-all-users" 
-              element={<RoleRoute roles={['ADMIN']} element={<MainLayout><AdminManageAllUsers /></MainLayout>} />} 
-            />
+            {/* Rutas privadas generales - ahora todas usan lógica condicional interna */}
+            <Route path="/home" element={<PrivateRoute element={<MainLayout><Home /></MainLayout>} />} />
+            <Route path="/manage-users" element={<PrivateRoute element={<MainLayout><ManageUsers /></MainLayout>} />} />
+            <Route path="/manage-clubs" element={<PrivateRoute element={<MainLayout><ManageClubs /></MainLayout>} />} />
+            <Route path="/calendar" element={<PrivateRoute element={<MainLayout><CalendarView /></MainLayout>} />} />
+            <Route path="/profile" element={<PrivateRoute element={<MainLayout><Profile /></MainLayout>} />} />
+            <Route path="/configuracion" element={<PrivateRoute element={<MainLayout><Configuracion /></MainLayout>} />} />
+            <Route path="/reservas" element={<PrivateRoute element={<MainLayout><Reservas /></MainLayout>} />} />
+            <Route path="/manage-courts" element={<PrivateRoute element={<MainLayout><ManageCourts /></MainLayout>} />} />
+            <Route path="/marcador-control" element={<PrivateRoute element={<MarcadorControl />} />} />
+            <Route path="/marcador-pantalla" element={<PrivateRoute element={<MarcadorPantalla />} />} />
+            <Route path="/marcador" element={<PrivateRoute element={<Estructura><MarcadorControl /></Estructura>} />} />
+
+            {/* Rutas específicas del Administrador Supremo que mantienen el prefijo /admin/ */}
             <Route 
               path="/admin/system-reports" 
               element={<RoleRoute roles={['ADMIN']} element={<MainLayout><AdminSystemReports /></MainLayout>} />} 
@@ -178,18 +171,6 @@ const AppContent: React.FC = () => {
               path="/admin/system-config" 
               element={<RoleRoute roles={['ADMIN']} element={<MainLayout><AdminSystemConfig /></MainLayout>} />} 
             />
-
-            {/* Rutas privadas generales */}
-            <Route path="/home" element={<PrivateRoute element={<MainLayout><Home /></MainLayout>} />} />
-            <Route path="/calendar" element={<PrivateRoute element={<MainLayout><CalendarView /></MainLayout>} />} />
-            <Route path="/profile" element={<PrivateRoute element={<MainLayout><Profile /></MainLayout>} />} />
-            <Route path="/configuracion" element={<PrivateRoute element={<MainLayout><Configuracion /></MainLayout>} />} />
-            <Route path="/reservas" element={<PrivateRoute element={<MainLayout><Reservas /></MainLayout>} />} />
-            <Route path="/manage-courts" element={<PrivateRoute element={<MainLayout><ManageCourts /></MainLayout>} />} />
-            <Route path="/manage-users" element={<PrivateRoute element={<MainLayout><ManageUsers /></MainLayout>} />} />
-            <Route path="/marcador-control" element={<PrivateRoute element={<MarcadorControl />} />} />
-            <Route path="/marcador-pantalla" element={<PrivateRoute element={<MarcadorPantalla />} />} />
-            <Route path="/marcador" element={<PrivateRoute element={<Estructura><MarcadorControl /></Estructura>} />} />
 
             {/* Rutas de Torneos */}
             <Route path="/torneos" element={<PrivateRoute element={<MainLayout><Torneos /></MainLayout>} />} />
@@ -204,6 +185,11 @@ const AppContent: React.FC = () => {
 
             {/* Redirección por defecto */}
             <Route path="/" element={<Navigate to={getDefaultRoute()} />} />
+
+            {/* Redirecciones para compatibilidad hacia atrás */}
+            <Route path="/admin/dashboard" element={<Navigate to="/home" />} />
+            <Route path="/admin/manage-clubs" element={<Navigate to="/manage-clubs" />} />
+            <Route path="/admin/manage-all-users" element={<Navigate to="/manage-users" />} />
           </Routes>
         </IonRouterOutlet>
       </BrowserRouter>

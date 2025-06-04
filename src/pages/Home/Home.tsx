@@ -7,8 +7,17 @@ import { useAuth } from '../../context/AuthContext';
 import BienvenidaDashboard from './BienvenidaDashboard';
 import { useTheme } from '../../context/ThemeContext';
 
+// Importar el AdminDashboard para administradores supremos
+import AdminDashboard from '../Admin/AdminDashboard/AdminDashboard';
+
 const Home: React.FC = () => {
   const { user } = useAuth();
+  
+  // Si es administrador supremo, mostrar AdminDashboard
+  if (user && user.role.toUpperCase() === 'ADMIN') {
+    return <AdminDashboard />;
+  }
+
   const { theme } = useTheme();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 

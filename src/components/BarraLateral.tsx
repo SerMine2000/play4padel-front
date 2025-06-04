@@ -101,9 +101,9 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
   switch (userRole) {
     case 'ADMIN':
       roleSpecificOptions = [
-        { label: 'Dashboard', path: '/admin/dashboard', icon: homeOutline },
-        { label: 'Gestionar Clubes', path: '/admin/manage-clubs', icon: businessOutline },
-        { label: 'Gestionar Usuarios', path: '/admin/manage-all-users', icon: peopleOutline },
+        { label: 'Dashboard', path: '/home', icon: homeOutline },
+        { label: 'Gestionar Clubes', path: '/manage-clubs', icon: businessOutline },
+        { label: 'Gestionar Usuarios', path: '/manage-users', icon: peopleOutline },
         { label: 'Reportes del Sistema', path: '/admin/system-reports', icon: statsChartOutline },
         { label: 'Configuración Sistema', path: '/admin/system-config', icon: settingsOutline },
         { label: 'Calendario', path: '/calendar', icon: calendarOutline },
@@ -181,7 +181,7 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
           <div
             className="sidebar-logo"
             onClick={() => {
-              navigate(userRole === 'ADMIN' ? '/admin/dashboard' : '/home');
+              navigate('/home'); // Todos van a /home ahora
               if (isMobile) onToggle?.();
             }}
           >

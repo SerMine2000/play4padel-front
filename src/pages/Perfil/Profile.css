@@ -4,14 +4,16 @@
 .profile-page-content {
   --background: var(--ion-background-color);
   --color: var(--ion-text-color);
-  --padding-bottom: 2rem;
+  --padding-bottom: 0;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 .profile-container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 2rem 1.5rem 8rem 1.5rem;
-  min-height: calc(100vh - 64px);
+  padding: 2rem 1.5rem 2rem 1.5rem;
+  min-height: 100vh;
 }
 
 /* ===== HEADER DEL PERFIL ===== */
@@ -229,17 +231,16 @@
 }
 
 .info-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
   border-radius: 8px;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
   background: var(--ion-background-color, #f8f9fa);
   border: 1px solid var(--ion-border-color, rgba(0, 0, 0, 0.05));
   transition: all 0.2s ease;
-  min-height: 35px;
+  min-height: 45px;
 }
 
 .info-row:hover {
@@ -253,7 +254,7 @@
   gap: 0.75rem;
   font-weight: 600;
   color: var(--ion-text-color);
-  justify-self: start;
+  flex-shrink: 0;
 }
 
 .info-label ion-icon {
@@ -266,12 +267,12 @@
   font-weight: 500;
   color: var(--ion-text-color);
   opacity: 0.8;
-  justify-self: end;
   text-align: right;
   word-break: break-word;
-  padding-left: 1rem;
+  margin-left: 2rem;
   min-width: 0;
   overflow-wrap: break-word;
+  flex: 1;
 }
 
 /* ===== MODO EDICIÓN - LAYOUT VERTICAL MEJORADO ===== */
@@ -302,7 +303,7 @@
 .edit-fields {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 .edit-field-group {
@@ -347,8 +348,8 @@
 
 /* ===== BOTONES DE ACCIÓN ===== */
 .action-buttons {
-  margin: 2rem 0 2rem 0;
-  padding-bottom: 2rem;
+  margin: 1.5rem 0 1rem 0;
+  padding-bottom: 1rem;
 }
 
 .primary-button {
@@ -677,7 +678,7 @@
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
   .profile-container {
-    padding: 1rem 1rem 6rem 1rem;
+    padding: 1rem 1rem 1.5rem 1rem;
   }
 
   .profile-header {
@@ -701,28 +702,28 @@
   }
 
   .info-row {
-    grid-template-columns: 1fr;
-    gap: 0.25rem;
-    padding: 0.5rem 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0.75rem 1rem;
     text-align: left;
-    min-height: 30px;
+    min-height: auto;
+    gap: 0.5rem;
   }
 
   .info-label {
-    justify-self: start;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
   }
 
   .info-value {
-    justify-self: start;
     text-align: left;
-    padding-left: 2rem;
+    margin-left: 2rem;
     opacity: 0.9;
     font-weight: 500;
+    flex: none;
   }
 
   .edit-fields {
-    gap: 1.5rem;
+    gap: 1rem;
   }
 
   .edit-section-title {
@@ -731,8 +732,8 @@
   }
 
   .action-buttons {
-    margin: 1.5rem 0 3rem 0;
-    padding-bottom: 3rem;
+    margin: 1rem 0 1rem 0;
+    padding-bottom: 1rem;
   }
 
   .action-buttons ion-col {
@@ -763,7 +764,7 @@
 
 @media (max-width: 480px) {
   .profile-container {
-    padding: 0.75rem 0.75rem 5rem 0.75rem;
+    padding: 0.75rem 0.75rem 1rem 0.75rem;
   }
 
   .profile-header {
@@ -820,8 +821,8 @@
   }
 
   .action-buttons {
-    margin: 1rem 0 2rem 0;
-    padding-bottom: 4rem;
+    margin: 1rem 0 0.5rem 0;
+    padding-bottom: 0.5rem;
   }
 
   /* Vista previa responsive móvil */
