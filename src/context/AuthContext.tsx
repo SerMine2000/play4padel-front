@@ -1,6 +1,7 @@
 // src/context/AuthContext.tsx
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import api from '../services/api.service';
+import authService from '../services/auth.service';
 import { RegisterRequest, User } from '../interfaces';
 import { API_URL } from '../utils/constants';
 
@@ -13,7 +14,7 @@ interface AuthContextType {
   isLoading: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
   refreshAccessToken: () => Promise<void>;
   register: (data: RegisterRequest) => Promise<void>;
@@ -29,7 +30,7 @@ const AuthContext = createContext<AuthContextType>({
   isLoading: true,
   error: null,
   login: async () => {},
-  logout: () => {},
+  logout: async () => {},
   refreshUser: async () => {},
   refreshAccessToken: async () => {},
   register: async () => {},
@@ -90,7 +91,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } catch (error) {
       console.error('❌ Error al refrescar access token:', error);
       // Si falla el refresh, hacer logout completo
-      logout();
+      logout(); // Llamada sin await para evitar bloqueo en caso de error
       throw error;
     } finally {
       setIsRefreshingToken(false);
@@ -161,13 +162,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('refresh_token');
-    setUser(null);
-    setToken(null);
-    setRefreshToken(null);
-    setIsAuthenticated(false);
+  const logout = async () => {
+    try {
+      // Si hay un usuario, notificar al backend
+      if (user?.id) {
+        await authService.logout(user.id);
+      }
+    } catch (error) {
+      console.error('⚠️ Error al notificar logout al backend:', error);
+      // Continuar con el logout local incluso si hay error en el backend
+    } finally {
+      // Limpiar sesión local siempre
+      localStorage.removeItem('token');
+      localStorage.removeItem('refresh_token');
+      setUser(null);
+      setToken(null);
+      setRefreshToken(null);
+      setIsAuthenticated(false);
+    }
   };
 
   const refreshUser = async () => {
@@ -248,7 +260,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       setIsLoading(true);
       await api.delete('/delete-account');
-      logout();
+      await logout();
       setError(null);
     } catch (err) {
       console.error("Error al eliminar la cuenta:", err);
