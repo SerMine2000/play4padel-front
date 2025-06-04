@@ -1,28 +1,33 @@
 import React from 'react';
 import { useAuth } from '../../context/AuthContext';
 import './ManageClubs.css';
-
-// Importar el componente de admin para administradores supremos
-import AdminManageClubs from '../Admin/Admin_Clubes/Admin_Clubes';
+import GestionClubesAdministrador from './GestionClubesAdministrador';
 
 const ManageClubs: React.FC = () => {
   const { user } = useAuth();
-
-  // Si es administrador supremo, mostrar Admin_Clubes
-  if (user && user.role.toUpperCase() === 'ADMIN') {
-    return <AdminManageClubs />;
+  
+  if (!user) {
+    return <div>Cargando...</div>;
   }
 
-  // Para otros roles (Club, etc.), por ahora mostrar un mensaje
-  // En el futuro se pueden agregar funcionalidades específicas para otros roles
-  return (
-    <div className="manage-clubs-container">
-      <div className="manage-clubs-header">
-        <h2>Gestión de Clubes</h2>
-        <p>Esta funcionalidad está disponible solo para administradores del sistema.</p>
-      </div>
-    </div>
-  );
+  switch(user.role.toUpperCase()) {
+    case 'ADMIN':
+      return <GestionClubesAdministrador />;
+    case 'CLUB':
+    case 'PROFESOR':
+    case 'EMPLEADO':
+    case 'USUARIO':
+    case 'SOCIO':
+    default:
+      return (
+        <div className="manage-clubs-container">
+          <div className="manage-clubs-header">
+            <h2>Gestión de Clubes</h2>
+            <p>Esta funcionalidad está disponible solo para administradores del sistema.</p>
+          </div>
+        </div>
+      );
+  }
 };
 
 export default ManageClubs;
