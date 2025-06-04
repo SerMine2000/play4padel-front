@@ -63,3 +63,86 @@ export const TIPOS_CUENTA = {
   USUARIO: 'USUARIO',
   CLUB: 'CLUB'
 };
+
+// ===== UTILIDADES PARA AVATARES =====
+export interface DatosAvatar {
+  colorFondo: string;
+  colorTexto: string;
+  inicial: string;
+}
+
+// Colores para avatares de usuarios - paleta profesional
+const COLORES_AVATAR = [
+  '#1abc9c', // Verde agua
+  '#3498db', // Azul
+  '#9b59b6', // Púrpura
+  '#f39c12', // Naranja
+  '#e67e22', // Naranja oscuro
+  '#e74c3c', // Rojo
+  '#2ecc71', // Verde
+  '#7f8c8d', // Gris
+  '#34495e', // Azul oscuro
+  '#f1c40f', // Amarillo
+  '#d35400', // Naranja fuerte
+  '#8e44ad', // Púrpura oscuro
+];
+
+/**
+ * Genera un color de avatar basado en el ID del usuario
+ * @param idUsuario - ID del usuario
+ * @returns Color hexadecimal
+ */
+export const obtenerColorAvatar = (idUsuario: number): string => {
+  return COLORES_AVATAR[idUsuario % COLORES_AVATAR.length];
+};
+
+/**
+ * Obtiene la inicial del nombre del usuario
+ * @param nombre - Nombre del usuario
+ * @returns Primera letra en mayúscula o 'U' si no hay nombre
+ */
+export const obtenerInicialUsuario = (nombre?: string): string => {
+  if (!nombre || nombre.trim() === '') return 'U';
+  return nombre.charAt(0).toUpperCase();
+};
+
+/**
+ * Genera los datos completos para un avatar (color de fondo, color de texto e inicial)
+ * @param idUsuario - ID del usuario
+ * @param nombre - Nombre del usuario
+ * @returns Objeto con colorFondo, colorTexto e inicial
+ */
+export const generarDatosAvatar = (idUsuario: number, nombre?: string): DatosAvatar => {
+  const colorFondo = obtenerColorAvatar(idUsuario);
+  const inicial = obtenerInicialUsuario(nombre);
+  
+  return {
+    colorFondo,
+    colorTexto: '#ffffff',
+    inicial
+  };
+};
+
+/**
+ * Estilos CSS para un avatar generado
+ * @param idUsuario - ID del usuario
+ * @param nombre - Nombre del usuario
+ * @param tamaño - Tamaño del avatar en píxeles
+ * @returns Objeto de estilos CSS
+ */
+export const obtenerEstilosAvatar = (idUsuario: number, nombre?: string, tamaño: number = 42) => {
+  const datosAvatar = generarDatosAvatar(idUsuario, nombre);
+  
+  return {
+    backgroundColor: datosAvatar.colorFondo,
+    color: datosAvatar.colorTexto,
+    width: `${tamaño}px`,
+    height: `${tamaño}px`,
+    borderRadius: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontWeight: 'bold',
+    fontSize: `${tamaño * 0.4}px`
+  };
+};

@@ -1,0 +1,30 @@
+/* Estilos para el componente Avatar */
+.avatar-generado {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  user-select: none;
+  text-align: center;
+  line-height: 1;
+}
+
+.avatar-generado:hover {
+  filter: brightness(1.1);
+}
+
+.avatar-generado[style*="cursor: pointer"] {
+  cursor: pointer !important;
+}
+
+/* Estilos específicos para el header */
+.avatar-header {
+  border-radius: 50%;
+}
+
+/* Estilos para el preview del avatar */
+.avatar-preview {
+  border-radius: 50%;
+}

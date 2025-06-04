@@ -34,6 +34,7 @@ import {
 import { personAddOutline, personRemoveOutline } from 'ionicons/icons';
 import { useAuth } from '../../context/AuthContext';
 import apiService from '../../services/api.service';
+import Avatar from '../../components/Avatar';
 import "../../theme/variables.css";
 import "./ManageUsers.css";
 
@@ -186,20 +187,18 @@ const ManageUsers: React.FC = () => {
       );
     }
 
-    const getColorParaAvatar = (id: number) => {
-      const colors = ['#1abc9c', '#3498db', '#9b59b6', '#f39c12', '#e67e22', '#e74c3c', '#2ecc71', '#7f8c8d'];
-      return colors[id % colors.length];
-    };
-  
     return (
       <IonList>
         {list.map(user => (
           <IonItem key={user.id}>
-            <IonAvatar slot="start" style={{ backgroundColor: getColorParaAvatar(user.id), display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: 'white' }}>
-              {user.avatar_url
-                ? <img src={user.avatar_url} alt={user.nombre} />
-                : <span>{user.nombre?.charAt(0).toUpperCase() || '?'}</span>}
-            </IonAvatar>
+            <div slot="start">
+              <Avatar
+                idUsuario={user.id}
+                nombre={user.nombre}
+                urlAvatar={user.avatar_url}
+                tamaño={40}
+              />
+            </div>
             <IonLabel>
               <h2>{user.nombre} {user.apellidos}</h2>
               <p>{user.email}</p>

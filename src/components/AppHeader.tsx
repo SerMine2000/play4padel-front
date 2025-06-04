@@ -2,71 +2,36 @@ import React, { useState } from 'react';
 import { IonHeader, IonToolbar, IonButtons, IonButton } from '@ionic/react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import Avatar from './Avatar';
 import './AppHeader.css';
 
-// Colores del logo Play4Padel
-const primaryPurple = '#2D0A31'; // Púrpura oscuro del fondo del logo
+// Colores del logo Play4Padel para el borde del avatar
 const brightGreen = '#00FF66'; // Verde brillante de la "P" en el logo
-const pureWhite = '#FFFFFF'; // Blanco del "4" en el logo
 
 const AppHeader: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [imageError, setImageError] = useState(false);
-
-  const getInitial = () => {
-    if (!user || !user.nombre) return 'U';
-    return user.nombre.charAt(0).toUpperCase();
-  };
-
   const handleProfileClick = () => {
     navigate('/profile');
   };
 
-  const handleImageError = () => {
-    setImageError(true);
-  };
-
   return (
     <IonHeader className="ion-no-border app-header">
-      <IonToolbar style={{backgroundColor: primaryPurple}}>
+      <IonToolbar style={{backgroundColor: '#2D0A31'}}>
         <IonButtons slot="end">
           <IonButton
-            onClick={handleProfileClick}
             fill="clear"
             aria-label="Perfil"
             className="profile-button"
           >
-            {user?.avatar_url && !imageError ? (
-              <img
-                src={user.avatar_url}
-                alt={user.nombre || 'Usuario'}
-                onError={handleImageError}
-                className="profile-avatar-img"
-                style={{
-                  width: '42px',
-                  height: '42px',
-                  objectFit: 'cover',
-                  borderRadius: '50%',
-                  border: `2px solid ${brightGreen}`
-                }}
-              />
-            ) : (
-              <div className="profile-avatar-initial" style={{
-                backgroundColor: brightGreen,
-                color: primaryPurple,
-                width: '42px',
-                height: '42px',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: 'bold',
-                fontSize: '18px'
-              }}>
-                {getInitial()}
-              </div>
-            )}
+            <Avatar
+              idUsuario={user?.id || 0}
+              nombre={user?.nombre}
+              urlAvatar={user?.avatar_url}
+              tamaño={42}
+              className="avatar-header"
+              onClick={handleProfileClick}
+            />
           </IonButton>
         </IonButtons>
       </IonToolbar>

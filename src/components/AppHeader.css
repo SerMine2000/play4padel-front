@@ -58,7 +58,6 @@ ion-toolbar {
   object-fit: cover;
   border-radius: 50%;
   display: block;
-  border: 2px solid #00FF66; /* Borde verde brillante */
 }
 
 .profile-avatar-initial {

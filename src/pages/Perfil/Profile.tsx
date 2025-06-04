@@ -1,15 +1,20 @@
-// src/pages/Profile.tsx - Rediseño profesional
+// src/pages/Profile.tsx - Versión con compresión de imágenes y cruz mejorada
 import React, { useState, useEffect, useRef } from 'react';
-import { IonContent, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonItem, IonLabel, IonInput,
-  IonButton, IonLoading, IonToast, IonIcon, IonAvatar, IonText, IonGrid, IonRow, IonCol, IonAlert, IonModal,
-  IonPage, IonTextarea, IonToggle, IonHeader, IonToolbar, IonTitle, IonButtons } from '@ionic/react';
-import { personCircleOutline, saveOutline, createOutline, keyOutline, closeOutline, cameraOutline,
+import { 
+  IonContent, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonItem, IonLabel, IonInput,
+  IonButton, IonLoading, IonToast, IonIcon, IonText, IonGrid, IonRow, IonCol, 
+  IonPage, IonTextarea, IonActionSheet, IonAlert, IonBackdrop
+} from '@ionic/react';
+import { 
+  personCircleOutline, saveOutline, createOutline, keyOutline, closeOutline, cameraOutline,
   personOutline, mailOutline, callOutline, informationCircleOutline, checkmarkCircleOutline,
-  closeCircleOutline, cloudUploadOutline, linkOutline, imagesOutline } from 'ionicons/icons';
+  closeCircleOutline, cloudUploadOutline, linkOutline, imagesOutline, trashOutline, eyeOutline
+} from 'ionicons/icons';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import apiService from '../../services/api.service';
 import { API_ENDPOINTS } from '../../utils/constants';
+import Avatar from '../../components/Avatar';
 import '../../theme/variables.css';
 import './Profile.css';
 
@@ -31,12 +36,13 @@ const Profile: React.FC = () => {
   });
 
   const [tempAvatarUrl, setTempAvatarUrl] = useState('');
-  const [showAvatarAlert, setShowAvatarAlert] = useState(false);
-  const [showAvatarModal, setShowAvatarModal] = useState(false);
-  const [showAvatarUploadModal, setShowAvatarUploadModal] = useState(false);
-  const [avatarUploadMode, setAvatarUploadMode] = useState('url'); // 'url' or 'file'
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState('');
+  
+  // Estados para los nuevos componentes
+  const [showAvatarActionSheet, setShowAvatarActionSheet] = useState(false);
+  const [showAvatarPreview, setShowAvatarPreview] = useState(false);
+  const [showUrlAlert, setShowUrlAlert] = useState(false);
+  const [urlInput, setUrlInput] = useState('');
+  
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
@@ -95,44 +101,108 @@ const Profile: React.FC = () => {
     setErrorMessage('');
   };
 
-  const handleAvatarUpdate = () => {
-    setPreviewUrl(tempAvatarUrl);
-    setShowAvatarUploadModal(true);
+  // Manejador mejorado para click en avatar
+  const manejarClickAvatar = () => {
+    if (isEditing) {
+      setShowAvatarActionSheet(true);
+    } else {
+      setShowAvatarPreview(true);
+    }
   };
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+  // Función para comprimir y redimensionar imágenes
+  const compressImage = (file: File, maxWidth: number = 400, quality: number = 0.8): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+
+      img.onload = () => {
+        // Calcular nuevas dimensiones manteniendo la proporción
+        let { width, height } = img;
+        
+        if (width > height) {
+          if (width > maxWidth) {
+            height = (height * maxWidth) / width;
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxWidth) {
+            width = (width * maxWidth) / height;
+            height = maxWidth;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        // Dibujar la imagen redimensionada
+        ctx?.drawImage(img, 0, 0, width, height);
+
+        // Convertir a base64 con compresión
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+        resolve(compressedDataUrl);
+      };
+
+      img.onerror = () => reject(new Error('Error al cargar la imagen'));
+      img.src = URL.createObjectURL(file);
+    });
+  };
+
+  // Funciones simplificadas para el cambio de avatar
+  const handleTakePhoto = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.setAttribute('capture', 'camera');
+      fileInputRef.current.accept = 'image/*';
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleSelectFromGallery = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.removeAttribute('capture');
+      fileInputRef.current.accept = 'image/*';
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleEnterUrl = () => {
+    setUrlInput(tempAvatarUrl || '');
+    setShowUrlAlert(true);
+  };
+
+  const handleRemoveAvatar = () => {
+    setTempAvatarUrl('');
+    setFormData(prev => ({ ...prev, avatar_url: '' }));
+    setSuccessMessage('Avatar eliminado');
+  };
+
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       if (file.type.startsWith('image/')) {
-        setSelectedFile(file);
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const result = e.target?.result as string;
-          setPreviewUrl(result);
-        };
-        reader.readAsDataURL(file);
+        try {
+          setIsLoading(true);
+          
+          // Comprimir la imagen antes de guardarla
+          const compressedBase64 = await compressImage(file, 400, 0.8);
+          
+          setTempAvatarUrl(compressedBase64);
+          setFormData(prev => ({ ...prev, avatar_url: compressedBase64 }));
+          setSuccessMessage('Imagen procesada correctamente');
+        } catch (error) {
+          console.error('Error al comprimir imagen:', error);
+          setErrorMessage('Error al procesar la imagen');
+        } finally {
+          setIsLoading(false);
+        }
       } else {
         setErrorMessage('Por favor selecciona una imagen válida');
       }
     }
-  };
-
-  const handleCameraCapture = async () => {
-    try {
-      // Para web, usar input file con capture
-      if (fileInputRef.current) {
-        fileInputRef.current.setAttribute('capture', 'camera');
-        fileInputRef.current.click();
-      }
-    } catch (error) {
-      setErrorMessage('Error al acceder a la cámara');
-    }
-  };
-
-  const handleGallerySelect = () => {
+    // Limpiar el input
     if (fileInputRef.current) {
-      fileInputRef.current.removeAttribute('capture');
-      fileInputRef.current.click();
+      fileInputRef.current.value = '';
     }
   };
 
@@ -145,46 +215,15 @@ const Profile: React.FC = () => {
     });
   };
 
-  const handleUrlChange = (e: CustomEvent) => {
-    const url = e.detail.value;
-    setPreviewUrl(url);
-  };
-
-  const handleAvatarSave = async () => {
-    try {
-      let finalUrl = '';
-      
-      if (avatarUploadMode === 'file' && selectedFile) {
-        // Convertir archivo a base64 para almacenar
-        finalUrl = await convertFileToBase64(selectedFile);
-      } else if (avatarUploadMode === 'url' && previewUrl) {
-        if (!validateImageUrl(previewUrl)) {
-          setErrorMessage('URL no válida (debe empezar por http:// o https://)');
-          return;
-        }
-        finalUrl = previewUrl;
-      } else {
-        setErrorMessage('Por favor selecciona una imagen o introduce una URL');
-        return;
-      }
-
-      setTempAvatarUrl(finalUrl);
-      setFormData(prev => ({ ...prev, avatar_url: finalUrl }));
-      setShowAvatarUploadModal(false);
-      setSelectedFile(null);
-      setPreviewUrl('');
-      
-    } catch (error) {
-      setErrorMessage('Error al procesar la imagen');
-    }
-  };
-
-  const handleAvatarCancel = () => {
-    setShowAvatarUploadModal(false);
-    setSelectedFile(null);
-    setPreviewUrl('');
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+  const handleUrlSave = () => {
+    if (urlInput && validateImageUrl(urlInput)) {
+      setTempAvatarUrl(urlInput);
+      setFormData(prev => ({ ...prev, avatar_url: urlInput }));
+      setSuccessMessage('URL cargada correctamente.');
+      setShowUrlAlert(false);
+      setUrlInput('');
+    } else {
+      setErrorMessage('URL no válida (debe empezar por http:// o https://)');
     }
   };
 
@@ -195,16 +234,52 @@ const Profile: React.FC = () => {
       setIsLoading(true);
       setErrorMessage('');
   
+      // Preparar el payload con validación especial para avatar
+      let avatarToSend = tempAvatarUrl || '';
+      
+      // Si es una URL externa, enviarla tal como está
+      // Si es base64, asegurarse de que no sea demasiado largo
+      if (avatarToSend.startsWith('data:image/')) {
+        console.log('Enviando imagen base64 comprimida, tamaño:', Math.round(avatarToSend.length / 1024), 'KB');
+        
+        // Si la imagen sigue siendo muy grande, comprimirla más
+        if (avatarToSend.length > 500000) { // 500KB
+          try {
+            // Crear una imagen temporal para volver a comprimir
+            const img = new Image();
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            await new Promise((resolve, reject) => {
+              img.onload = () => {
+                canvas.width = 300; // Reducir más el tamaño
+                canvas.height = 300;
+                ctx?.drawImage(img, 0, 0, 300, 300);
+                avatarToSend = canvas.toDataURL('image/jpeg', 0.6); // Más compresión
+                console.log('Imagen recomprimida, nuevo tamaño:', Math.round(avatarToSend.length / 1024), 'KB');
+                resolve(true);
+              };
+              img.onerror = reject;
+              img.src = avatarToSend;
+            });
+          } catch (error) {
+            console.error('Error al recomprimir:', error);
+            setErrorMessage('La imagen es demasiado grande. Prueba con una imagen más pequeña.');
+            return;
+          }
+        }
+      }
+
       const payload = {
         nombre: formData.nombre || user.nombre,
         apellidos: formData.apellidos || user.apellidos,
         email: formData.email || user.email,
         telefono: formData.telefono !== 'No especificado' ? formData.telefono : user.telefono,
         bio: formData.bio !== 'No especificado' ? formData.bio : user.bio,
-        avatar_url: cleanImageUrl((formData.avatar_url || user.avatar_url) ?? '')
+        avatar_url: cleanImageUrl(avatarToSend)
       };
   
-      console.log("Payload preparado para enviar:", payload);
+      console.log("Payload preparado para enviar, tamaño total:", JSON.stringify(payload).length, "caracteres");
   
       const res = await apiService.put(`${API_ENDPOINTS.USER}/${user.id}`, payload);
   
@@ -212,6 +287,12 @@ const Profile: React.FC = () => {
         ...user,
         ...payload,
       });
+
+      // Sincronizar formData con los datos guardados
+      setFormData(prev => ({
+        ...prev,
+        avatar_url: avatarToSend
+      }));
   
       setSuccessMessage('Perfil actualizado correctamente');
       setIsEditing(false);
@@ -219,7 +300,15 @@ const Profile: React.FC = () => {
   
     } catch (error: any) {
       console.error('Error al actualizar perfil:', error);
-      setErrorMessage(error.message || 'Error al actualizar el perfil');
+      
+      // Mensajes de error más específicos
+      if (error.message.includes('500')) {
+        setErrorMessage('Error del servidor. La imagen podría ser demasiado grande. Prueba con una imagen más pequeña.');
+      } else if (error.message.includes('413') || error.message.includes('Payload')) {
+        setErrorMessage('La imagen es demasiado grande. Prueba con una imagen más pequeña.');
+      } else {
+        setErrorMessage(error.message || 'Error al actualizar el perfil');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -276,6 +365,44 @@ const Profile: React.FC = () => {
     { key: 'bio', label: 'Biografía', icon: informationCircleOutline, value: user?.bio },
   ];
 
+  // Opciones del ActionSheet para cambiar avatar
+  const avatarActionSheetButtons = [
+    {
+      text: 'Tomar Foto',
+      icon: cameraOutline,
+      handler: () => {
+        handleTakePhoto();
+      }
+    },
+    {
+      text: 'Seleccionar de Galería',
+      icon: imagesOutline,
+      handler: () => {
+        handleSelectFromGallery();
+      }
+    },
+    {
+      text: 'Introducir URL',
+      icon: linkOutline,
+      handler: () => {
+        handleEnterUrl();
+      }
+    },
+    {
+      text: 'Eliminar Avatar',
+      icon: trashOutline,
+      role: 'destructive',
+      handler: () => {
+        handleRemoveAvatar();
+      }
+    },
+    {
+      text: 'Cancelar',
+      icon: closeOutline,
+      role: 'cancel'
+    }
+  ];
+
   return (
     <IonPage>
       <IonContent className="profile-page-content">
@@ -284,21 +411,21 @@ const Profile: React.FC = () => {
           <div className="profile-header">
             <div className="profile-avatar-section">
               <div className="avatar-container">
-                <IonAvatar 
-                  className="profile-avatar"
-                  onClick={isEditing ? handleAvatarUpdate : () => tempAvatarUrl && setShowAvatarModal(true)}
-                >
-                  {tempAvatarUrl ? (
-                    <img src={tempAvatarUrl} alt="Avatar" />
-                  ) : (
-                    <IonIcon icon={personCircleOutline} />
-                  )}
+                <div className="avatar-wrapper">
+                  <Avatar
+                    idUsuario={user?.id || 0}
+                    nombre={user?.nombre}
+                    urlAvatar={tempAvatarUrl}
+                    tamaño={120}
+                    className="profile-avatar"
+                    onClick={manejarClickAvatar}
+                  />
                   {isEditing && (
-                    <div className="avatar-overlay">
+                    <div className="avatar-overlay" onClick={manejarClickAvatar}>
                       <IonIcon icon={cameraOutline} />
                     </div>
                   )}
-                </IonAvatar>
+                </div>
                 {isEditing && (
                   <p className="avatar-edit-hint">Haz clic para cambiar avatar</p>
                 )}
@@ -445,7 +572,6 @@ const Profile: React.FC = () => {
                   <IonCol size="12" sizeMd="6">
                     <IonButton 
                       expand="block" 
-                      fill="outline"
                       className="secondary-button"
                       onClick={handleChangePassword}
                     >
@@ -473,7 +599,6 @@ const Profile: React.FC = () => {
                   <IonCol size="12" sizeMd="6">
                     <IonButton 
                       expand="block" 
-                      fill="outline"
                       className="cancel-button"
                       onClick={handleCancel}
                     >
@@ -501,7 +626,6 @@ const Profile: React.FC = () => {
                   <IonCol size="12" sizeMd="6">
                     <IonButton 
                       expand="block" 
-                      fill="outline"
                       className="cancel-button"
                       onClick={handleCancel}
                     >
@@ -515,7 +639,7 @@ const Profile: React.FC = () => {
           </div>
         </div>
 
-        {/* Modales y alertas */}
+        {/* Input de archivo oculto */}
         <input
           type="file"
           ref={fileInputRef}
@@ -524,151 +648,94 @@ const Profile: React.FC = () => {
           onChange={handleFileSelect}
         />
 
-        {/* Modal profesional de cambio de avatar */}
-        <IonModal isOpen={showAvatarUploadModal} onDidDismiss={handleAvatarCancel}>
-          <IonHeader>
-            <IonToolbar>
-              <IonTitle>Cambiar Avatar</IonTitle>
-              <IonButtons slot="end">
-                <IonButton onClick={handleAvatarCancel} fill="clear">
-                  <IonIcon icon={closeOutline} />
-                </IonButton>
-              </IonButtons>
-            </IonToolbar>
-          </IonHeader>
-          <IonContent className="avatar-upload-modal">
-            <div className="avatar-upload-container">
-              {/* Preview del avatar */}
-              <div className="avatar-preview-section">
-                <div className="avatar-preview">
-                  {previewUrl ? (
-                    <img src={previewUrl} alt="Vista previa" />
-                  ) : (
-                    <IonIcon icon={personCircleOutline} />
-                  )}
-                </div>
-                <p className="preview-text">Vista previa</p>
-              </div>
+        {/* ActionSheet para cambiar avatar */}
+        <IonActionSheet
+          isOpen={showAvatarActionSheet}
+          onDidDismiss={() => setShowAvatarActionSheet(false)}
+          cssClass="avatar-action-sheet"
+          buttons={avatarActionSheetButtons}
+          header="Cambiar Avatar"
+        />
 
-              {/* Toggle para cambiar modo */}
-              <div className="upload-mode-toggle">
-                <div className="toggle-container">
-                  <div className="toggle-option">
-                    <IonIcon icon={linkOutline} />
-                    <span>URL</span>
-                  </div>
-                  <IonToggle
-                    checked={avatarUploadMode === 'file'}
-                    onIonChange={(e) => {
-                      setAvatarUploadMode(e.detail.checked ? 'file' : 'url');
-                      setPreviewUrl('');
-                      setSelectedFile(null);
-                    }}
+        {/* Vista previa mejorada con overlay y backdrop */}
+        {showAvatarPreview && (
+          <div className="avatar-preview-overlay" onClick={() => setShowAvatarPreview(false)}>
+            <IonBackdrop 
+              visible={showAvatarPreview} 
+              tappable={true}
+              onIonBackdropTap={() => setShowAvatarPreview(false)}
+            />
+            <div className="avatar-preview-modal" onClick={(e) => e.stopPropagation()}>
+              {/* Botón de cierre mejorado sin fondo feo */}
+              <div className="preview-close-button" onClick={() => setShowAvatarPreview(false)}>
+                <IonIcon icon={closeOutline} />
+              </div>
+              
+              <div className="avatar-preview-content">
+                {tempAvatarUrl ? (
+                  <img
+                    src={tempAvatarUrl}
+                    alt="Avatar ampliado"
+                    className="preview-image-large"
                   />
-                  <div className="toggle-option">
-                    <IonIcon icon={imagesOutline} />
-                    <span>Archivo</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Contenido según el modo */}
-              {avatarUploadMode === 'url' ? (
-                <div className="url-input-section">
-                  <IonItem className="url-input-item">
-                    <IonLabel position="stacked">
-                      <IonIcon icon={linkOutline} />
-                      URL de la imagen
-                    </IonLabel>
-                    <IonInput
-                      value={previewUrl}
-                      onIonInput={handleUrlChange}
-                      placeholder="https://ejemplo.com/imagen.jpg"
-                      type="url"
+                ) : (
+                  <div className="preview-avatar-large">
+                    <Avatar
+                      idUsuario={user?.id || 0}
+                      nombre={user?.nombre}
+                      urlAvatar=""
+                      tamaño={250}
+                      className="generated-preview-large"
                     />
-                  </IonItem>
-                </div>
-              ) : (
-                <div className="file-upload-section">
-                  <div className="upload-options">
-                    <IonButton
-                      expand="block"
-                      fill="outline"
-                      onClick={handleCameraCapture}
-                      className="upload-option-btn"
-                    >
-                      <IonIcon icon={cameraOutline} slot="start" />
-                      Tomar Foto
-                    </IonButton>
-                    
-                    <IonButton
-                      expand="block"
-                      fill="outline"
-                      onClick={handleGallerySelect}
-                      className="upload-option-btn"
-                    >
-                      <IonIcon icon={imagesOutline} slot="start" />
-                      Seleccionar de Galería
-                    </IonButton>
                   </div>
-                  
-                  {selectedFile && (
-                    <div className="file-info">
-                      <p className="file-name">
-                        <IonIcon icon={checkmarkCircleOutline} color="success" />
-                        {selectedFile.name}
-                      </p>
-                      <p className="file-size">
-                        {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
-                      </p>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Botones de acción */}
-              <div className="modal-actions">
-                <IonButton
-                  expand="block"
-                  onClick={handleAvatarSave}
-                  className="save-avatar-btn"
-                  disabled={!previewUrl && !selectedFile}
-                >
-                  <IonIcon icon={saveOutline} slot="start" />
-                  Guardar Avatar
-                </IonButton>
-                
-                <IonButton
-                  expand="block"
-                  fill="outline"
-                  onClick={handleAvatarCancel}
-                  className="cancel-avatar-btn"
-                >
-                  <IonIcon icon={closeCircleOutline} slot="start" />
-                  Cancelar
-                </IonButton>
+                )}
               </div>
             </div>
-          </IonContent>
-        </IonModal>
+          </div>
+        )}
 
-        <IonModal isOpen={showAvatarModal} onDidDismiss={() => setShowAvatarModal(false)}>
-          <IonContent className="avatar-modal-content">
-            <div className="modal-close-button">
-              <IonButton fill="clear" onClick={() => setShowAvatarModal(false)}>
-                <IonIcon icon={closeOutline} size="large" />
-              </IonButton>
-            </div>
-            <div className="avatar-modal-image">
-              <img
-                src={tempAvatarUrl}
-                alt="Avatar ampliado"
-              />
-            </div>
-          </IonContent>
-        </IonModal>
+        {/* Alert para introducir URL */}
+        <IonAlert
+          isOpen={showUrlAlert}
+          onDidDismiss={() => setShowUrlAlert(false)}
+          cssClass="url-input-alert"
+          header="Introducir URL de imagen"
+          message="Pega aquí la URL de tu imagen"
+          inputs={[
+            {
+              name: 'imageUrl',
+              type: 'url',
+              placeholder: 'https://ejemplo.com/imagen.jpg',
+              value: urlInput
+            }
+          ]}
+          buttons={[
+            {
+              text: 'Cancelar',
+              role: 'cancel',
+              handler: () => {
+                setUrlInput('');
+              }
+            },
+            {
+              text: 'Guardar',
+              handler: (data) => {
+                setUrlInput(data.imageUrl || '');
+                if (data.imageUrl && validateImageUrl(data.imageUrl)) {
+                  setTempAvatarUrl(data.imageUrl);
+                  setFormData(prev => ({ ...prev, avatar_url: data.imageUrl }));
+                  setSuccessMessage('URL cargada correctamente');
+                  return true;
+                } else {
+                  setErrorMessage('URL no válida (debe empezar por http:// o https://)');
+                  return false;
+                }
+              }
+            }
+          ]}
+        />
 
-        <IonLoading isOpen={isLoading} message="Actualizando..." />
+        <IonLoading isOpen={isLoading} message="Procesando..." />
         
         <IonToast
           isOpen={!!successMessage}
