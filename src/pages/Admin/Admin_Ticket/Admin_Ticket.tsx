@@ -40,171 +40,180 @@ import {
   barChartOutline
 } from 'ionicons/icons';
 import { useAuth } from '../../../context/AuthContext';
-import apiService from '../../../services/api.service';
+import adminStatsService, { AdminDashboardStats } from '../../../services/admin/admin.service';
 import './Admin_Ticket.css';
 
-interface SystemMetrics {
-  userGrowth: {
-    thisMonth: number;
-    lastMonth: number;
-    percentage: number;
+interface MetricasSistema {
+  crecimientoUsuarios: {
+    esteMes: number;
+    mesAnterior: number;
+    porcentaje: number;
   };
-  reservationTrends: {
-    thisMonth: number;
-    lastMonth: number;
-    percentage: number;
+  tendenciasReservas: {
+    esteMes: number;
+    mesAnterior: number;
+    porcentaje: number;
   };
-  revenue: {
-    thisMonth: number;
-    lastMonth: number;
-    percentage: number;
+  ingresos: {
+    esteMes: number;
+    mesAnterior: number;
+    porcentaje: number;
     total: number;
   };
-  clubPerformance: {
-    topClubs: Array<{
+  rendimientoClubes: {
+    topClubes: Array<{
       id: number;
-      name: string;
-      reservations: number;
-      revenue: number;
-      growth: number;
+      nombre: string;
+      reservas: number;
+      ingresos: number;
+      crecimiento: number;
     }>;
   };
-  userActivity: {
-    activeUsers: number;
-    newUsers: number;
-    retention: number;
+  actividadUsuarios: {
+    usuariosActivos: number;
+    usuariosNuevos: number;
+    retencion: number;
   };
-  geographicData: Array<{
+  datosGeograficos: Array<{
     region: string;
-    users: number;
-    clubs: number;
-    revenue: number;
+    usuarios: number;
+    clubes: number;
+    ingresos: number;
   }>;
-  hourlyActivity: Array<{
-    hour: string;
-    reservations: number;
+  actividadPorHorario: Array<{
+    hora: string;
+    reservas: number;
   }>;
 }
 
-const AdminSystemReports: React.FC = () => {
+const ReportesSistemaAdministrador: React.FC = () => {
   const { user } = useAuth();
-  const [metrics, setMetrics] = useState<SystemMetrics | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | 'quarter' | 'year'>('month');
-  const [selectedMetric, setSelectedMetric] = useState<'users' | 'reservations' | 'revenue'>('users');
-  const [toastMessage, setToastMessage] = useState('');
-  const [showToast, setShowToast] = useState(false);
+  const [metricas, setMetricas] = useState<MetricasSistema | null>(null);
+  const [cargando, setCargando] = useState(false);
+  const [periodoSeleccionado, setPeriodoSeleccionado] = useState<'week' | 'month' | 'quarter' | 'year'>('month');
+  const [metricaSeleccionada, setMetricaSeleccionada] = useState<'users' | 'reservations' | 'revenue'>('users');
+  const [mensajeToast, setMensajeToast] = useState('');
+  const [mostrarToast, setMostrarToast] = useState(false);
 
   useEffect(() => {
-    loadSystemMetrics();
-  }, [selectedPeriod]);
+    cargarMetricasSistema();
+  }, [periodoSeleccionado]);
 
-  const showToastMessage = (message: string) => {
-    setToastMessage(message);
-    setShowToast(true);
+  const mostrarMensajeToast = (mensaje: string) => {
+    setMensajeToast(mensaje);
+    setMostrarToast(true);
   };
 
-  const loadSystemMetrics = async () => {
+  const cargarMetricasSistema = async () => {
     try {
-      setLoading(true);
+      setCargando(true);
       
-      // Simulamos datos para demo - en producción vendría del backend
-      const mockMetrics: SystemMetrics = {
-        userGrowth: {
-          thisMonth: 1250,
-          lastMonth: 1087,
-          percentage: 15.0
-        },
-        reservationTrends: {
-          thisMonth: 2843,
-          lastMonth: 2301,
-          percentage: 23.5
-        },
-        revenue: {
-          thisMonth: 48750,
-          lastMonth: 41200,
-          percentage: 18.3,
-          total: 562800
-        },
-        clubPerformance: {
-          topClubs: [
-            { id: 1, name: 'Club Elite Padel', reservations: 892, revenue: 15670, growth: 25.3 },
-            { id: 2, name: 'Sports Center Pro', reservations: 756, revenue: 13240, growth: 18.7 },
-            { id: 3, name: 'Padel Champions', reservations: 634, revenue: 11150, growth: 12.4 },
-            { id: 4, name: 'Urban Padel Club', reservations: 578, revenue: 10890, growth: 8.9 },
-            { id: 5, name: 'Royal Padel Center', reservations: 423, revenue: 8950, growth: -2.1 }
+      // Obtener datos REALES del endpoint existente
+      const estadisticasReales = await adminStatsService.getDashboardStats();
+      
+      if (estadisticasReales) {
+        // Convertir datos reales a la estructura esperada
+        const metricasReales: MetricasSistema = {
+          // ✅ DATOS REALES desde endpoint /admin/stats/dashboard
+          crecimientoUsuarios: {
+            esteMes: estadisticasReales.currentMonth.users,
+            mesAnterior: estadisticasReales.previousMonth.users,
+            porcentaje: estadisticasReales.monthlyGrowth.users
+          },
+          tendenciasReservas: {
+            esteMes: estadisticasReales.currentMonth.reservations,
+            mesAnterior: estadisticasReales.previousMonth.reservations,
+            porcentaje: estadisticasReales.monthlyGrowth.reservations
+          },
+          ingresos: {
+            esteMes: estadisticasReales.currentMonth.revenue,
+            mesAnterior: estadisticasReales.previousMonth.revenue,
+            porcentaje: estadisticasReales.monthlyGrowth.revenue,
+            total: estadisticasReales.totalRevenue
+          },
+          actividadUsuarios: {
+            usuariosActivos: estadisticasReales.activeUsers,
+            usuariosNuevos: estadisticasReales.currentMonth.users,
+            retencion: 78.5 // ❌ SIMULADO - no hay implementación para retención
+          },
+          // ❌ DATOS SIMULADOS - no hay implementación para estos
+          rendimientoClubes: {
+            topClubes: [
+              { id: 1, nombre: 'Club Elite Pádel', reservas: 892, ingresos: 15670, crecimiento: 25.3 },
+              { id: 2, nombre: 'Centro Deportivo Pro', reservas: 756, ingresos: 13240, crecimiento: 18.7 },
+              { id: 3, nombre: 'Pádel Champions', reservas: 634, ingresos: 11150, crecimiento: 12.4 },
+              { id: 4, nombre: 'Club Urbano Pádel', reservas: 578, ingresos: 10890, crecimiento: 8.9 },
+              { id: 5, nombre: 'Centro Real Pádel', reservas: 423, ingresos: 8950, crecimiento: -2.1 }
+            ]
+          },
+          datosGeograficos: [
+            { region: 'Madrid', usuarios: 423, clubes: 12, ingresos: 125400 },
+            { region: 'Barcelona', usuarios: 389, clubes: 10, ingresos: 115600 },
+            { region: 'Valencia', usuarios: 267, clubes: 8, ingresos: 87300 },
+            { region: 'Sevilla', usuarios: 198, clubes: 6, ingresos: 65200 },
+            { region: 'Bilbao', usuarios: 156, clubes: 5, ingresos: 52400 },
+            { region: 'Otras', usuarios: 317, clubes: 14, ingresos: 116900 }
+          ],
+          actividadPorHorario: [
+            { hora: '08:00', reservas: 45 },
+            { hora: '09:00', reservas: 78 },
+            { hora: '10:00', reservas: 112 },
+            { hora: '11:00', reservas: 134 },
+            { hora: '12:00', reservas: 89 },
+            { hora: '16:00', reservas: 156 },
+            { hora: '17:00', reservas: 189 },
+            { hora: '18:00', reservas: 234 },
+            { hora: '19:00', reservas: 267 },
+            { hora: '20:00', reservas: 198 },
+            { hora: '21:00', reservas: 145 }
           ]
-        },
-        userActivity: {
-          activeUsers: 892,
-          newUsers: 163,
-          retention: 78.5
-        },
-        geographicData: [
-          { region: 'Madrid', users: 423, clubs: 12, revenue: 125400 },
-          { region: 'Barcelona', users: 389, clubs: 10, revenue: 115600 },
-          { region: 'Valencia', users: 267, clubs: 8, revenue: 87300 },
-          { region: 'Sevilla', users: 198, clubs: 6, revenue: 65200 },
-          { region: 'Bilbao', users: 156, clubs: 5, revenue: 52400 },
-          { region: 'Otras', users: 317, clubs: 14, revenue: 116900 }
-        ],
-        hourlyActivity: [
-          { hour: '08:00', reservations: 45 },
-          { hour: '09:00', reservations: 78 },
-          { hour: '10:00', reservations: 112 },
-          { hour: '11:00', reservations: 134 },
-          { hour: '12:00', reservations: 89 },
-          { hour: '16:00', reservations: 156 },
-          { hour: '17:00', reservations: 189 },
-          { hour: '18:00', reservations: 234 },
-          { hour: '19:00', reservations: 267 },
-          { hour: '20:00', reservations: 198 },
-          { hour: '21:00', reservations: 145 }
-        ]
-      };
+        };
 
-      setMetrics(mockMetrics);
+        setMetricas(metricasReales);
+      } else {
+        mostrarMensajeToast('No se pudieron cargar las métricas del sistema');
+      }
     } catch (error) {
       console.error(error);
-      showToastMessage('Error al cargar las métricas del sistema');
+      mostrarMensajeToast('Error al cargar las métricas del sistema');
     } finally {
-      setLoading(false);
+      setCargando(false);
     }
   };
 
-  const handleRefresh = async (event: CustomEvent) => {
+  const manejarActualizacion = async (event: CustomEvent) => {
     try {
-      await loadSystemMetrics();
+      await cargarMetricasSistema();
     } finally {
       event.detail.complete();
     }
   };
 
-  const formatCurrency = (amount: number) => {
+  const formatearMoneda = (cantidad: number) => {
     return new Intl.NumberFormat('es-ES', {
       style: 'currency',
       currency: 'EUR'
-    }).format(amount);
+    }).format(cantidad);
   };
 
-  const formatPercentage = (value: number) => {
-    const sign = value >= 0 ? '+' : '';
-    return `${sign}${value.toFixed(1)}%`;
+  const formatearPorcentaje = (valor: number) => {
+    const signo = valor >= 0 ? '+' : '';
+    return `${signo}${valor.toFixed(1)}%`;
   };
 
-  const getPercentageColor = (value: number) => {
-    return value >= 0 ? 'success' : 'danger';
+  const obtenerColorPorcentaje = (valor: number) => {
+    return valor >= 0 ? 'success' : 'danger';
   };
 
-  const exportReport = () => {
-    showToastMessage('Reporte exportado exitosamente');
+  const exportarReporte = () => {
+    mostrarMensajeToast('Reporte exportado exitosamente');
   };
 
-  if (!metrics) {
+  if (!metricas) {
     return (
       <IonPage>
         <IonContent>
-          <IonLoading isOpen={loading} message="Cargando reportes..." />
+          <IonLoading isOpen={cargando} message="Cargando reportes..." />
         </IonContent>
       </IonPage>
     );
@@ -213,7 +222,7 @@ const AdminSystemReports: React.FC = () => {
   return (
     <IonPage>
       <IonContent>
-        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+        <IonRefresher slot="fixed" onIonRefresh={manejarActualizacion}>
           <IonRefresherContent />
         </IonRefresher>
 
@@ -227,7 +236,7 @@ const AdminSystemReports: React.FC = () => {
           <IonCard>
             <IonCardContent>
               <div className="period-controls">
-                <IonSegment value={selectedPeriod} onIonChange={e => setSelectedPeriod(e.detail.value as any)}>
+                <IonSegment value={periodoSeleccionado} onIonChange={e => setPeriodoSeleccionado(e.detail.value as any)}>
                   <IonSegmentButton value="week">
                     <IonLabel>Semana</IonLabel>
                   </IonSegmentButton>
@@ -242,7 +251,7 @@ const AdminSystemReports: React.FC = () => {
                   </IonSegmentButton>
                 </IonSegment>
                 
-                <IonButton fill="outline" onClick={exportReport}>
+                <IonButton fill="outline" onClick={exportarReporte}>
                   <IonIcon icon={downloadOutline} slot="start" />
                   Exportar
                 </IonButton>
@@ -250,7 +259,7 @@ const AdminSystemReports: React.FC = () => {
             </IonCardContent>
           </IonCard>
 
-          {/* Métricas principales */}
+          {/* Métricas principales - ✅ DATOS REALES */}
           <IonGrid>
             <IonRow>
               <IonCol size="12" sizeMd="6" sizeLg="4">
@@ -261,14 +270,14 @@ const AdminSystemReports: React.FC = () => {
                       <span className="metric-title">Crecimiento de Usuarios</span>
                     </div>
                     <div className="metric-value">
-                      <h2>{metrics.userGrowth.thisMonth}</h2>
-                      <IonChip color={getPercentageColor(metrics.userGrowth.percentage)}>
-                        <IonIcon icon={metrics.userGrowth.percentage >= 0 ? trendingUpOutline : trendingDownOutline} />
-                        {formatPercentage(metrics.userGrowth.percentage)}
+                      <h2>{metricas.crecimientoUsuarios.esteMes}</h2>
+                      <IonChip color={obtenerColorPorcentaje(metricas.crecimientoUsuarios.porcentaje)}>
+                        <IonIcon icon={metricas.crecimientoUsuarios.porcentaje >= 0 ? trendingUpOutline : trendingDownOutline} />
+                        {formatearPorcentaje(metricas.crecimientoUsuarios.porcentaje)}
                       </IonChip>
                     </div>
                     <p className="metric-comparison">
-                      vs {metrics.userGrowth.lastMonth} el mes anterior
+                      vs {metricas.crecimientoUsuarios.mesAnterior} el mes anterior
                     </p>
                   </IonCardContent>
                 </IonCard>
@@ -282,14 +291,14 @@ const AdminSystemReports: React.FC = () => {
                       <span className="metric-title">Reservas Totales</span>
                     </div>
                     <div className="metric-value">
-                      <h2>{metrics.reservationTrends.thisMonth}</h2>
-                      <IonChip color={getPercentageColor(metrics.reservationTrends.percentage)}>
-                        <IonIcon icon={metrics.reservationTrends.percentage >= 0 ? trendingUpOutline : trendingDownOutline} />
-                        {formatPercentage(metrics.reservationTrends.percentage)}
+                      <h2>{metricas.tendenciasReservas.esteMes}</h2>
+                      <IonChip color={obtenerColorPorcentaje(metricas.tendenciasReservas.porcentaje)}>
+                        <IonIcon icon={metricas.tendenciasReservas.porcentaje >= 0 ? trendingUpOutline : trendingDownOutline} />
+                        {formatearPorcentaje(metricas.tendenciasReservas.porcentaje)}
                       </IonChip>
                     </div>
                     <p className="metric-comparison">
-                      vs {metrics.reservationTrends.lastMonth} el mes anterior
+                      vs {metricas.tendenciasReservas.mesAnterior} el mes anterior
                     </p>
                   </IonCardContent>
                 </IonCard>
@@ -303,14 +312,14 @@ const AdminSystemReports: React.FC = () => {
                       <span className="metric-title">Ingresos</span>
                     </div>
                     <div className="metric-value">
-                      <h2>{formatCurrency(metrics.revenue.thisMonth)}</h2>
-                      <IonChip color={getPercentageColor(metrics.revenue.percentage)}>
-                        <IonIcon icon={metrics.revenue.percentage >= 0 ? trendingUpOutline : trendingDownOutline} />
-                        {formatPercentage(metrics.revenue.percentage)}
+                      <h2>{formatearMoneda(metricas.ingresos.esteMes)}</h2>
+                      <IonChip color={obtenerColorPorcentaje(metricas.ingresos.porcentaje)}>
+                        <IonIcon icon={metricas.ingresos.porcentaje >= 0 ? trendingUpOutline : trendingDownOutline} />
+                        {formatearPorcentaje(metricas.ingresos.porcentaje)}
                       </IonChip>
                     </div>
                     <p className="metric-comparison">
-                      vs {formatCurrency(metrics.revenue.lastMonth)} el mes anterior
+                      vs {formatearMoneda(metricas.ingresos.mesAnterior)} el mes anterior
                     </p>
                   </IonCardContent>
                 </IonCard>
@@ -318,7 +327,7 @@ const AdminSystemReports: React.FC = () => {
             </IonRow>
           </IonGrid>
 
-          {/* Actividad de usuarios */}
+          {/* Actividad de usuarios - ✅ PARCIALMENTE REAL */}
           <IonGrid>
             <IonRow>
               <IonCol size="12" sizeMd="6">
@@ -333,7 +342,7 @@ const AdminSystemReports: React.FC = () => {
                           <IonIcon icon={peopleOutline} />
                           <span>Usuarios Activos</span>
                         </div>
-                        <div className="activity-value">{metrics.userActivity.activeUsers}</div>
+                        <div className="activity-value">{metricas.actividadUsuarios.usuariosActivos}</div>
                       </div>
                       
                       <div className="activity-item">
@@ -341,7 +350,7 @@ const AdminSystemReports: React.FC = () => {
                           <IonIcon icon={trendingUpOutline} />
                           <span>Usuarios Nuevos</span>
                         </div>
-                        <div className="activity-value">{metrics.userActivity.newUsers}</div>
+                        <div className="activity-value">{metricas.actividadUsuarios.usuariosNuevos}</div>
                       </div>
                       
                       <div className="activity-item">
@@ -349,7 +358,7 @@ const AdminSystemReports: React.FC = () => {
                           <IonIcon icon={statsChartOutline} />
                           <span>Retención</span>
                         </div>
-                        <div className="activity-value">{metrics.userActivity.retention}%</div>
+                        <div className="activity-value">{metricas.actividadUsuarios.retencion}%</div>
                       </div>
                     </div>
                   </IonCardContent>
@@ -363,16 +372,16 @@ const AdminSystemReports: React.FC = () => {
                   </IonCardHeader>
                   <IonCardContent>
                     <div className="hourly-chart">
-                      {metrics.hourlyActivity.map((data, index) => {
-                        const maxReservations = Math.max(...metrics.hourlyActivity.map(h => h.reservations));
-                        const percentage = (data.reservations / maxReservations) * 100;
+                      {metricas.actividadPorHorario.map((datos, indice) => {
+                        const maxReservas = Math.max(...metricas.actividadPorHorario.map(h => h.reservas));
+                        const porcentaje = (datos.reservas / maxReservas) * 100;
                         
                         return (
-                          <div key={index} className="hour-bar">
-                            <span className="hour-label">{data.hour}</span>
+                          <div key={indice} className="hour-bar">
+                            <span className="hour-label">{datos.hora}</span>
                             <div className="bar-container">
-                              <IonProgressBar value={percentage / 100} color="primary" />
-                              <span className="bar-value">{data.reservations}</span>
+                              <IonProgressBar value={porcentaje / 100} color="primary" />
+                              <span className="bar-value">{datos.reservas}</span>
                             </div>
                           </div>
                         );
@@ -384,32 +393,31 @@ const AdminSystemReports: React.FC = () => {
             </IonRow>
           </IonGrid>
 
-          {/* Rendimiento de clubes */}
+          {/* Rendimiento de clubes - ❌ DATOS SIMULADOS */}
           <IonCard>
             <IonCardHeader>
               <IonCardTitle>Top Clubes por Rendimiento</IonCardTitle>
             </IonCardHeader>
             <IonCardContent>
               <IonList>
-                {metrics.clubPerformance.topClubs.map((club, index) => (
+                {metricas.rendimientoClubes.topClubes.map((club, indice) => (
                   <IonItem key={club.id}>
                     <div className="club-rank" slot="start">
-                      #{index + 1}
+                      #{indice + 1}
                     </div>
                     <IonLabel>
-                      <h3>{club.name}</h3>
+                      <h3>{club.nombre}</h3>
                       <div className="club-metrics">
-                        <span>{club.reservations} reservas</span>
-                        <span>{formatCurrency(club.revenue)} ingresos</span>
+                        <span>{club.reservas} reservas</span>
+                        <span>{formatearMoneda(club.ingresos)} ingresos</span>
                       </div>
                     </IonLabel>
                     <IonChip 
-                      color={getPercentageColor(club.growth)} 
- 
+                      color={obtenerColorPorcentaje(club.crecimiento)} 
                       slot="end"
                     >
-                      <IonIcon icon={club.growth >= 0 ? trendingUpOutline : trendingDownOutline} />
-                      {formatPercentage(club.growth)}
+                      <IonIcon icon={club.crecimiento >= 0 ? trendingUpOutline : trendingDownOutline} />
+                      {formatearPorcentaje(club.crecimiento)}
                     </IonChip>
                   </IonItem>
                 ))}
@@ -417,30 +425,30 @@ const AdminSystemReports: React.FC = () => {
             </IonCardContent>
           </IonCard>
 
-          {/* Datos geográficos */}
+          {/* Datos geográficos - ❌ DATOS SIMULADOS */}
           <IonCard>
             <IonCardHeader>
               <IonCardTitle>Distribución Geográfica</IonCardTitle>
             </IonCardHeader>
             <IonCardContent>
               <div className="geographic-grid">
-                {metrics.geographicData.map((region, index) => (
-                  <div key={index} className="region-card">
+                {metricas.datosGeograficos.map((region, indice) => (
+                  <div key={indice} className="region-card">
                     <div className="region-header">
                       <IonIcon icon={locationOutline} />
                       <h4>{region.region}</h4>
                     </div>
                     <div className="region-stats">
                       <div className="region-stat">
-                        <span className="stat-value">{region.users}</span>
+                        <span className="stat-value">{region.usuarios}</span>
                         <span className="stat-label">Usuarios</span>
                       </div>
                       <div className="region-stat">
-                        <span className="stat-value">{region.clubs}</span>
+                        <span className="stat-value">{region.clubes}</span>
                         <span className="stat-label">Clubes</span>
                       </div>
                       <div className="region-stat">
-                        <span className="stat-value">{formatCurrency(region.revenue)}</span>
+                        <span className="stat-value">{formatearMoneda(region.ingresos)}</span>
                         <span className="stat-label">Ingresos</span>
                       </div>
                     </div>
@@ -451,12 +459,12 @@ const AdminSystemReports: React.FC = () => {
           </IonCard>
         </div>
 
-        <IonLoading isOpen={loading} message="Cargando datos..." />
+        <IonLoading isOpen={cargando} message="Cargando datos..." />
         
         <IonToast
-          isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
-          message={toastMessage}
+          isOpen={mostrarToast}
+          onDidDismiss={() => setMostrarToast(false)}
+          message={mensajeToast}
           duration={2000}
           position="bottom"
           color="success"
@@ -466,4 +474,4 @@ const AdminSystemReports: React.FC = () => {
   );
 };
 
-export default AdminSystemReports;
+export default ReportesSistemaAdministrador;

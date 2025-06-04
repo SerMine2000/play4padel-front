@@ -6,7 +6,6 @@ export interface AdminDashboardStats {
   totalReservations: number;
   totalRevenue: number;
   activeUsers: number;
-  pendingReservations: number;
   recentUsers: any[];
   recentClubs: any[];
   monthlyGrowth: {

@@ -211,8 +211,8 @@ const DashboardAdministrador: React.FC = () => {
                         <span>Usuarios Activos: {estadisticas.activeUsers}</span>
                       </div>
                       <div className="status-item">
-                        <IonIcon icon={warningOutline} color="warning" />
-                        <span>Reservas Pendientes: {estadisticas.pendingReservations}</span>
+                        <IonIcon icon={calendarOutline} color="primary" />
+                        <span>Reservas de Pistas: {estadisticas.totalReservations}</span>
                       </div>
                       <div className="status-item">
                         <IonIcon icon={trendingUpOutline} color="primary" />
@@ -257,7 +257,7 @@ const DashboardAdministrador: React.FC = () => {
                     <IonCardTitle>Usuarios Recientes</IonCardTitle>
                   </IonCardHeader>
                   <IonCardContent>
-                    <IonList>
+                    <IonList style={{ maxHeight: '300px', overflowY: 'auto' }}>
                       {estadisticas.recentUsers.map(usuario => (
                         <IonItem key={usuario.id}>
                           <IonAvatar slot="start" style={{ 
