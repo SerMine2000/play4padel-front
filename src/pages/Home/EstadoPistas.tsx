@@ -103,7 +103,13 @@ const EstadoPistas: React.FC = () => {
           await fetchPistasDelClub(clubData.id);
         } else {
           // Si es usuario/socio, mostrar todos los clubes disponibles
-          clubs = await apiService.get('/clubs');
+          const clubsResponse = await apiService.get<Club[]>('/clubs');
+          clubs = clubsResponse || [];
+          
+          if (clubs.length === 0) {
+            console.warn('No se encontraron clubes disponibles');
+            return;
+          }
           
           // Determinar club por defecto basado en última reserva
           const clubUltimaReserva = await obtenerClubUltimaReserva();

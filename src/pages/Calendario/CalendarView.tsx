@@ -826,7 +826,7 @@ if (!idClub) {
                       <IonIcon icon={personOutline} />
                       <span className="usuario-nombre">{reserva.nombre_usuario}</span>
                     </div>
-                    <IonChip size="small" color={getColorEstadoReserva(reserva.estado)} className="estado-mini">
+                    <IonChip color={getColorEstadoReserva(reserva.estado)} className="estado-mini">
                       {reserva.estado}
                     </IonChip>
                   </div>
