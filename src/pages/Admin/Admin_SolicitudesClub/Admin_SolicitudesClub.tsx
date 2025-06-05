@@ -122,7 +122,7 @@ const Admin_SolicitudesClub: React.FC = () => {
     } catch (error: any) {
       showToastMessage('Error al cargar solicitudes', 'danger');
       console.error('Error:', error);
-      setSolicitudes([]); // Asegurar que siempre sea un array
+      setSolicitudes([]);
     } finally {
       setLoading(false);
     }
@@ -273,7 +273,7 @@ const Admin_SolicitudesClub: React.FC = () => {
 
           <IonCard>
             <IonCardContent>
-              <IonSegment value={selectedSegment} onIonSelectionChange={e => setSelectedSegment(e.detail.value as string)}>
+              <IonSegment value={selectedSegment} onIonChange={e => setSelectedSegment(e.detail.value as string)}>
                 <IonSegmentButton value="PENDIENTE">
                   <IonLabel>Pendientes</IonLabel>
                   <IonBadge color="warning">{(solicitudes || []).filter(s => s.estado === 'PENDIENTE').length}</IonBadge>

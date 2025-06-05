@@ -74,7 +74,7 @@ class AdminService {
     try {
       const url = estado ? `/admin/solicitudes-club?estado=${estado}` : '/admin/solicitudes-club';
       const response = await apiService.get(url);
-      return response;
+      return { data: response };
     } catch (error) {
       console.error('Error al obtener solicitudes de club:', error);
       throw error;
