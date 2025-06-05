@@ -1,4 +1,4 @@
-/* Profile.css - Versión con guardado funcional y vista mejorada */
+/* Profile.css - Versión con validaciones mejoradas */
 
 /* ===== CONTENEDOR PRINCIPAL ===== */
 .profile-page-content {
@@ -61,16 +61,6 @@
   display: inline-block;
 }
 
-.avatar-wrapper .generated-avatar {
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.avatar-wrapper .generated-avatar:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-}
-
 .profile-avatar {
   width: 120px;
   height: 120px;
@@ -85,18 +75,6 @@
 .profile-avatar:hover {
   transform: translateY(-2px);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-}
-
-.profile-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  cursor: pointer;
-}
-
-.profile-avatar ion-icon {
-  font-size: 4rem;
-  color: var(--ion-color-medium);
 }
 
 /* Overlay para edición */
@@ -129,15 +107,9 @@
 }
 
 @keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
 }
 
 .avatar-edit-hint {
@@ -152,12 +124,8 @@
 }
 
 @keyframes glow {
-  0% {
-    opacity: 0.7;
-  }
-  100% {
-    opacity: 1;
-  }
+  0% { opacity: 0.7; }
+  100% { opacity: 1; }
 }
 
 /* ===== INFORMACIÓN DEL PERFIL ===== */
@@ -225,7 +193,7 @@
   font-size: 1.4rem;
 }
 
-/* ===== MODO VISTA - LAYOUT HORIZONTAL MEJORADO ===== */
+/* ===== MODO VISTA ===== */
 .info-display-mode {
   padding: 1rem 0;
 }
@@ -275,29 +243,10 @@
   flex: 1;
 }
 
-/* ===== MODO EDICIÓN - LAYOUT VERTICAL MEJORADO ===== */
+/* ===== MODO EDICIÓN ===== */
 .edit-mode,
 .password-mode {
   padding: 0.5rem 0;
-}
-
-.edit-section-title {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--ion-text-color);
-  margin: 0 0 2rem 0;
-  padding: 1rem 0;
-  border-bottom: 2px solid var(--ion-border-color, rgba(0, 0, 0, 0.1));
-  background: var(--ion-background-color, #f8f9fa);
-  border-radius: 8px 8px 0 0;
-}
-
-.edit-section-title ion-icon {
-  color: var(--ion-color-primary);
-  font-size: 1.3rem;
 }
 
 .edit-fields {
@@ -344,6 +293,50 @@
 .field-input:focus-within {
   border-color: var(--ion-color-primary);
   box-shadow: 0 0 0 3px rgba(var(--ion-color-primary-rgb), 0.1);
+}
+
+/* ===== VALIDACIONES Y ERRORES ===== */
+.field-input.error {
+  border-color: #dc3545 !important;
+  --background: rgba(220, 53, 69, 0.05) !important;
+}
+
+.field-input.error:focus-within {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1) !important;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #dc3545;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(220, 53, 69, 0.05);
+  border: 1px solid rgba(220, 53, 69, 0.2);
+  border-radius: 8px;
+  animation: slideDown 0.3s ease-out;
+}
+
+.error-message::before {
+  content: '⚠️';
+  font-size: 0.9rem;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 50px;
+  }
 }
 
 /* ===== BOTONES DE ACCIÓN ===== */
@@ -441,44 +434,7 @@
   box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
 }
 
-/* ===== ACTIONSHEET PERSONALIZADO ===== */
-.avatar-action-sheet {
-  --background: var(--ion-background-color);
-  --color: var(--ion-text-color);
-}
-
-.avatar-action-sheet .action-sheet-group {
-  border-radius: 16px;
-  margin: 1rem;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
-
-.avatar-action-sheet .action-sheet-button {
-  --background: var(--color-panel, #ffffff);
-  --color: var(--ion-text-color);
-  --border-color: var(--ion-border-color, rgba(0, 0, 0, 0.1));
-  min-height: 60px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-.avatar-action-sheet .action-sheet-button:hover {
-  --background: var(--ion-background-color, #f8f9fa);
-  transform: scale(1.02);
-}
-
-.avatar-action-sheet .action-sheet-destructive {
-  --color: #dc3545;
-}
-
-.avatar-action-sheet .action-sheet-cancel {
-  --background: var(--ion-color-primary);
-  --color: white;
-  font-weight: 600;
-}
-
-/* ===== VISTA PREVIA MEJORADA CON OVERLAY ===== */
+/* ===== VISTA PREVIA DE AVATAR ===== */
 .avatar-preview-overlay {
   position: fixed;
   top: 0;
@@ -498,12 +454,8 @@
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .avatar-preview-modal {
@@ -598,83 +550,6 @@
   box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6);
 }
 
-/* ===== ALERT PERSONALIZADO PARA URL ===== */
-.url-input-alert {
-  --background: var(--color-panel, #ffffff);
-  --color: var(--ion-text-color);
-}
-
-.url-input-alert .alert-wrapper {
-  border-radius: 16px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-  border: 1px solid var(--ion-border-color, rgba(0, 0, 0, 0.1));
-}
-
-.url-input-alert .alert-head {
-  background: linear-gradient(135deg, var(--ion-color-primary), var(--color-icono-usuarios));
-  color: white;
-  border-radius: 16px 16px 0 0;
-  padding: 1rem 1.5rem;
-}
-
-.url-input-alert .alert-title {
-  font-weight: 600;
-  font-size: 1.1rem;
-}
-
-.url-input-alert .alert-message {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
-}
-
-.url-input-alert .alert-input-wrapper {
-  padding: 1.5rem;
-}
-
-.url-input-alert .alert-input {
-  border: 2px solid var(--ion-border-color, rgba(0, 0, 0, 0.1));
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-}
-
-.url-input-alert .alert-input:focus {
-  border-color: var(--ion-color-primary);
-  box-shadow: 0 0 0 3px rgba(var(--ion-color-primary-rgb), 0.1);
-  outline: none;
-}
-
-.url-input-alert .alert-button-group {
-  padding: 1rem 1.5rem;
-  border-top: 1px solid var(--ion-border-color, rgba(0, 0, 0, 0.1));
-}
-
-.url-input-alert .alert-button {
-  border-radius: 8px;
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  transition: all 0.3s ease;
-}
-
-.url-input-alert .alert-button.alert-button-role-cancel {
-  background: transparent;
-  color: var(--ion-color-medium);
-  border: 2px solid var(--ion-border-color, rgba(0, 0, 0, 0.1));
-}
-
-.url-input-alert .alert-button:not(.alert-button-role-cancel) {
-  background: var(--ion-color-primary);
-  color: white;
-  border: 2px solid var(--ion-color-primary);
-}
-
-.url-input-alert .alert-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
   .profile-container {
@@ -726,11 +601,6 @@
     gap: 1rem;
   }
 
-  .edit-section-title {
-    font-size: 1.1rem;
-    padding: 0.75rem;
-  }
-
   .action-buttons {
     margin: 1rem 0 1rem 0;
     padding-bottom: 1rem;
@@ -740,7 +610,6 @@
     margin-bottom: 1rem;
   }
 
-  /* Vista previa responsive */
   .avatar-preview-overlay {
     padding: 1rem;
   }
@@ -810,11 +679,6 @@
     --padding-bottom: 0.875rem;
   }
 
-  .edit-section-title {
-    font-size: 1rem;
-    padding: 0.5rem;
-  }
-
   .user-role-badge {
     font-size: 0.75rem;
     padding: 0.3rem 0.8rem;
@@ -825,7 +689,6 @@
     padding-bottom: 0.5rem;
   }
 
-  /* Vista previa responsive móvil */
   .avatar-preview-overlay {
     padding: 0.5rem;
   }
@@ -845,12 +708,6 @@
 
   .preview-close-button ion-icon {
     font-size: 1.125rem;
-  }
-
-  /* ActionSheet responsive */
-  .avatar-action-sheet .action-sheet-button {
-    min-height: 55px;
-    font-size: 0.9rem;
   }
 }
 
@@ -885,17 +742,6 @@
   background: var(--color-secundario, rgba(255, 255, 255, 0.05));
 }
 
-/* Tema oscuro para ActionSheet */
-.ion-palette-dark .avatar-action-sheet .action-sheet-button {
-  --background: var(--color-panel, #1e1e1e);
-  --border-color: var(--ion-border-color, rgba(255, 255, 255, 0.1));
-}
-
-.ion-palette-dark .avatar-action-sheet .action-sheet-button:hover {
-  --background: var(--color-secundario, rgba(255, 255, 255, 0.05));
-}
-
-/* Tema oscuro para vista previa */
 .ion-palette-dark .avatar-preview-overlay {
   background: rgba(0, 0, 0, 0.9);
 }
@@ -911,84 +757,13 @@
   box-shadow: 0 25px 70px rgba(0, 0, 0, 0.9);
 }
 
-/* ===== ANIMACIONES ===== */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.profile-header,
-.profile-info-card {
-  animation: fadeInUp 0.6s ease-out;
-}
-
-.profile-header {
-  animation-delay: 0.1s;
-}
-
-.profile-info-card {
-  animation-delay: 0.2s;
-}
-
-.action-buttons {
-  animation: fadeInUp 0.6s ease-out;
-  animation-delay: 0.3s;
-}
-
-/* ===== ACCESIBILIDAD ===== */
-@media (prefers-reduced-motion: reduce) {
-  .profile-avatar,
-  .info-row,
-  .field-input,
-  .primary-button,
-  .secondary-button,
-  .success-button,
-  .cancel-button {
-    transition: none;
-  }
-
-  .profile-header,
-  .profile-info-card,
-  .action-buttons {
-    animation: none;
-  }
-  
-  .avatar-overlay ion-icon,
-  .avatar-edit-hint {
-    animation: none;
-  }
-  
-  .preview-image-large,
-  .generated-preview-large {
-    transition: none;
-  }
-
-  .avatar-preview-overlay,
-  .avatar-preview-modal {
-    animation: none;
-  }
-}
-
-/* ===== FOCUS STATES Y ELIMINACIÓN DE BORDES ===== */
-.profile-avatar:focus {
-  outline: 2px solid var(--ion-color-primary);
-  outline-offset: 2px;
-}
-
-/* Eliminación completa de bordes y outlines en botones */
+/* ===== ELIMINACIÓN DE BORDES EN BOTONES ===== */
 .primary-button,
 .secondary-button,
 .success-button,
 .cancel-button {
   outline: none !important;
   border: none !important;
-  box-shadow: none !important;
 }
 
 .primary-button:focus,
@@ -997,7 +772,6 @@
 .cancel-button:focus {
   outline: none !important;
   border: none !important;
-  box-shadow: 0 4px 15px rgba(var(--ion-color-primary-rgb), 0.3) !important;
 }
 
 .primary-button:active,
@@ -1009,7 +783,6 @@
   transform: translateY(1px);
 }
 
-/* Eliminar el efecto ripple de Ionic */
 ion-button {
   --ripple-color: transparent;
   --border-style: none;

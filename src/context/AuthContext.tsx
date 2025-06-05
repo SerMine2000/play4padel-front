@@ -121,6 +121,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       // Verificar la estructura de respuesta
       const { access_token, refresh_token, user_id, role, user_data } = response;
 
+      console.log("🔍 DATOS RECIBIDOS DEL LOGIN:");
+      console.log("📦 Response completo:", response);
+      console.log("👤 user_data:", user_data);
+      console.log("📞 user_data.telefono:", user_data.telefono);
+      console.log("📝 user_data.bio:", user_data.bio);
+
       if (!access_token || !user_id || !role) {
         throw new Error('Respuesta del servidor incompleta');
       }
@@ -141,9 +147,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         id: user_id,
         role: role.toLowerCase(),
         id_rol: role.toUpperCase(),
-        telefono: user_data.telefono ?? "No especificado",
-        bio: user_data.bio ?? "No especificado"
+        telefono: user_data.telefono || "",
+        bio: user_data.bio || ""
       };
+
+      console.log("🔍 USUARIO FINAL CONSTRUIDO EN LOGIN:");
+      console.log("👤 usuario:", usuario);
+      console.log("📞 usuario.telefono:", usuario.telefono);
+      console.log("📝 usuario.bio:", usuario.bio);
 
       setUser(usuario);
       setError(null);
@@ -208,6 +219,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       // Ahora obtener los datos completos del usuario
       const userResponse = await api.get(`/user/${user_id}`, storedToken);
       
+      console.log("🔍 DATOS RECIBIDOS DEL REFRESH USER:");
+      console.log("📦 userResponse completo:", userResponse);
+      console.log("📞 userResponse.telefono:", userResponse.telefono);
+      console.log("📝 userResponse.bio:", userResponse.bio);
+      
       if (!userResponse) {
         throw new Error('No se pudieron obtener los datos del usuario');
       }
@@ -217,9 +233,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         id: user_id,
         role: role.toLowerCase(),
         id_rol: role.toUpperCase(),
-        telefono: userResponse.telefono ?? "No especificado",
-        bio: userResponse.bio ?? "No especificado"
+        telefono: userResponse.telefono || "",
+        bio: userResponse.bio || ""
       };
+
+      console.log("🔍 USUARIO FINAL CONSTRUIDO:");
+      console.log("👤 usuario:", usuario);
+      console.log("📞 usuario.telefono:", usuario.telefono);
+      console.log("📝 usuario.bio:", usuario.bio);
 
       setUser(usuario);
       setToken(storedToken);

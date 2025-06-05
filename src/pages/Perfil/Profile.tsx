@@ -37,6 +37,14 @@ const Profile: React.FC = () => {
 
   const [tempAvatarUrl, setTempAvatarUrl] = useState('');
   
+  // Estados para validaciones
+  const [formErrors, setFormErrors] = useState({
+    email: '',
+    telefono: '',
+    nombre: '',
+    apellidos: ''
+  });
+  
   // Estados para los nuevos componentes
   const [showAvatarActionSheet, setShowAvatarActionSheet] = useState(false);
   const [showAvatarPreview, setShowAvatarPreview] = useState(false);
@@ -51,6 +59,11 @@ const Profile: React.FC = () => {
 
   useEffect(() => {
     if (user) {
+      console.log("🔍 DATOS RECIBIDOS EN PROFILE COMPONENT:");
+      console.log("👤 user completo:", user);
+      console.log("📞 user.telefono:", user.telefono);
+      console.log("📝 user.bio:", user.bio);
+      
       setFormData({
         nombre: user.nombre || '',
         apellidos: user.apellidos || '',
@@ -63,17 +76,63 @@ const Profile: React.FC = () => {
         confirmPassword: '',
       });
       setTempAvatarUrl(user.avatar_url || '');
+      
+      console.log("🔍 FORM DATA ESTABLECIDO:");
+      console.log("📞 formData.telefono:", user.telefono || '');
+      console.log("📝 formData.bio:", user.bio || '');
     }
   }, [user]);
 
+  // Función de validación de email
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  // Función de validación de teléfono (solo números)
+  const validatePhone = (phone: string): boolean => {
+    const phoneRegex = /^[0-9+\-\s()]*$/;
+    return phoneRegex.test(phone);
+  };
+
+  // Función para limpiar el teléfono (solo números)
+  const cleanPhoneNumber = (phone: string): string => {
+    return phone.replace(/[^0-9+]/g, '');
+  };
+
   const handleInputChange = (e: CustomEvent, field: string) => {
     const value = e.detail.value;
+    
+    // Limpiar errores previos
+    setFormErrors(prev => ({ ...prev, [field]: '' }));
+    
+    // Validaciones en tiempo real
+    if (field === 'email' && value) {
+      if (!validateEmail(value)) {
+        setFormErrors(prev => ({ ...prev, email: 'El email debe contener un @ válido' }));
+      }
+    }
+    
+    if (field === 'telefono' && value) {
+      if (!validatePhone(value)) {
+        setFormErrors(prev => ({ ...prev, telefono: 'El teléfono solo puede contener números, +, -, espacios y paréntesis' }));
+        return; // No actualizar el valor si no es válido
+      }
+    }
+    
+    if ((field === 'nombre' || field === 'apellidos') && value) {
+      if (value.trim().length < 2) {
+        setFormErrors(prev => ({ ...prev, [field]: `El ${field} debe tener al menos 2 caracteres` }));
+      }
+    }
+    
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
   const handleEditProfile = () => {
     setIsEditing(true);
     setIsChangingPassword(false);
+    setFormErrors({ email: '', telefono: '', nombre: '', apellidos: '' });
   };
 
   const handleChangePassword = () => {
@@ -99,6 +158,7 @@ const Profile: React.FC = () => {
     setIsEditing(false);
     setIsChangingPassword(false);
     setErrorMessage('');
+    setFormErrors({ email: '', telefono: '', nombre: '', apellidos: '' });
   };
 
   // Manejador mejorado para click en avatar
@@ -227,8 +287,56 @@ const Profile: React.FC = () => {
     }
   };
 
+  // Función de validación antes de guardar
+  const validateForm = (): boolean => {
+    const errors = { email: '', telefono: '', nombre: '', apellidos: '' };
+    let isValid = true;
+
+    // Validar nombre
+    if (!formData.nombre.trim()) {
+      errors.nombre = 'El nombre es obligatorio';
+      isValid = false;
+    } else if (formData.nombre.trim().length < 2) {
+      errors.nombre = 'El nombre debe tener al menos 2 caracteres';
+      isValid = false;
+    }
+
+    // Validar apellidos
+    if (!formData.apellidos.trim()) {
+      errors.apellidos = 'Los apellidos son obligatorios';
+      isValid = false;
+    } else if (formData.apellidos.trim().length < 2) {
+      errors.apellidos = 'Los apellidos deben tener al menos 2 caracteres';
+      isValid = false;
+    }
+
+    // Validar email
+    if (!formData.email.trim()) {
+      errors.email = 'El email es obligatorio';
+      isValid = false;
+    } else if (!validateEmail(formData.email)) {
+      errors.email = 'El email debe tener un formato válido con @';
+      isValid = false;
+    }
+
+    // Validar teléfono (opcional pero si se llena debe ser válido)
+    if (formData.telefono && !validatePhone(formData.telefono)) {
+      errors.telefono = 'El teléfono solo puede contener números, +, -, espacios y paréntesis';
+      isValid = false;
+    }
+
+    setFormErrors(errors);
+    return isValid;
+  };
+
   const handleUpdateProfile = async () => {
     if (!user) return;
+
+    // Validar formulario antes de enviar
+    if (!validateForm()) {
+      setErrorMessage('Por favor, corrige los errores en el formulario');
+      return;
+    }
   
     try {
       setIsLoading(true);
@@ -270,32 +378,47 @@ const Profile: React.FC = () => {
         }
       }
 
+      // CORECCIÓN PRINCIPAL: Lógica simplificada y correcta para el payload
       const payload = {
-        nombre: formData.nombre || user.nombre,
-        apellidos: formData.apellidos || user.apellidos,
-        email: formData.email || user.email,
-        telefono: formData.telefono !== 'No especificado' ? formData.telefono : user.telefono,
-        bio: formData.bio !== 'No especificado' ? formData.bio : user.bio,
+        nombre: formData.nombre.trim(),
+        apellidos: formData.apellidos.trim(),
+        email: formData.email.trim(),
+        telefono: formData.telefono ? cleanPhoneNumber(formData.telefono) : '', // Limpiar teléfono de caracteres especiales pero enviar valor limpio
+        bio: formData.bio.trim(), // Enviar siempre el valor del formulario, aunque esté vacío
         avatar_url: cleanImageUrl(avatarToSend)
       };
   
-      console.log("Payload preparado para enviar, tamaño total:", JSON.stringify(payload).length, "caracteres");
+      console.log("🔍 PAYLOAD ENVIADO AL BACKEND:");
+      console.log("📦 payload completo:", payload);
+      console.log("📞 payload.telefono:", payload.telefono);
+      console.log("📝 payload.bio:", payload.bio);
   
       const res = await apiService.put(`${API_ENDPOINTS.USER}/${user.id}`, payload);
+      
+      console.log("🔍 RESPUESTA DEL BACKEND:");
+      console.log("📦 response:", res);
   
-      setUser({
+      // Actualizar el contexto del usuario con los datos guardados
+      const updatedUser = {
         ...user,
         ...payload,
-      });
+      };
+      
+      setUser(updatedUser);
 
       // Sincronizar formData con los datos guardados
       setFormData(prev => ({
         ...prev,
+        ...payload,
         avatar_url: avatarToSend
       }));
   
       setSuccessMessage('Perfil actualizado correctamente');
       setIsEditing(false);
+      
+      // Refrescar los datos del usuario desde el backend para asegurar sincronización
+      await refreshUser();
+      
       setTimeout(() => setSuccessMessage(''), 3000);
   
     } catch (error: any) {
@@ -319,6 +442,11 @@ const Profile: React.FC = () => {
 
     if (formData.newPassword !== formData.confirmPassword) {
       setErrorMessage('Las contraseñas no coinciden');
+      return;
+    }
+
+    if (formData.newPassword.length < 6) {
+      setErrorMessage('La nueva contraseña debe tener al menos 6 caracteres');
       return;
     }
 
@@ -356,13 +484,21 @@ const Profile: React.FC = () => {
     return match ? decodeURIComponent(match[1]) : url;
   };
 
+  // Función auxiliar para mostrar valores en modo vista
+  const getDisplayValue = (value: string | undefined, fieldName: string) => {
+    if (!value || value.trim() === '') {
+      return 'No especificado';
+    }
+    return value;
+  };
+
   // Datos para mostrar en modo vista
   const profileFields = [
-    { key: 'nombre', label: 'Nombre', icon: personOutline, value: user?.nombre },
-    { key: 'apellidos', label: 'Apellidos', icon: personOutline, value: user?.apellidos },
-    { key: 'email', label: 'Email', icon: mailOutline, value: user?.email },
-    { key: 'telefono', label: 'Teléfono', icon: callOutline, value: user?.telefono },
-    { key: 'bio', label: 'Biografía', icon: informationCircleOutline, value: user?.bio },
+    { key: 'nombre', label: 'Nombre', icon: personOutline, value: getDisplayValue(user?.nombre, 'nombre') },
+    { key: 'apellidos', label: 'Apellidos', icon: personOutline, value: getDisplayValue(user?.apellidos, 'apellidos') },
+    { key: 'email', label: 'Email', icon: mailOutline, value: getDisplayValue(user?.email, 'email') },
+    { key: 'telefono', label: 'Teléfono', icon: callOutline, value: getDisplayValue(user?.telefono, 'teléfono') },
+    { key: 'bio', label: 'Biografía', icon: informationCircleOutline, value: getDisplayValue(user?.bio, 'biografía') },
   ];
 
   // Opciones del ActionSheet para cambiar avatar
@@ -465,7 +601,7 @@ const Profile: React.FC = () => {
                         <span>{field.label}</span>
                       </div>
                       <div className="info-value">
-                        {field.value || 'No especificado'}
+                        {field.value}
                       </div>
                     </div>
                   ))}
@@ -479,24 +615,35 @@ const Profile: React.FC = () => {
                       <div key={field.key} className="edit-field-group">
                         <label className="field-label">
                           <IonIcon icon={field.icon} />
-                          {field.label}
+                          {field.label} {field.key === 'nombre' || field.key === 'apellidos' || field.key === 'email' ? '*' : ''}
                         </label>
                         {field.key === 'bio' ? (
                           <IonTextarea
-                            className="field-input"
+                            className={`field-input ${formErrors[field.key as keyof typeof formErrors] ? 'error' : ''}`}
                             value={formData[field.key as keyof typeof formData]}
                             onIonInput={(e) => handleInputChange(e, field.key)}
-                            placeholder={`Introduce tu ${field.label.toLowerCase()}`}
+                            placeholder={`Escribe algo sobre ti...`}
                             rows={4}
                           />
                         ) : (
                           <IonInput
-                            className="field-input"
+                            className={`field-input ${formErrors[field.key as keyof typeof formErrors] ? 'error' : ''}`}
                             value={formData[field.key as keyof typeof formData]}
                             onIonInput={(e) => handleInputChange(e, field.key)}
-                            placeholder={`Introduce tu ${field.label.toLowerCase()}`}
+                            placeholder={
+                              field.key === 'telefono' 
+                                ? '123 456 789' 
+                                : field.key === 'email'
+                                ? 'tu@email.com'
+                                : `Introduce tu ${field.label.toLowerCase()}`
+                            }
                             type={field.key === 'email' ? 'email' : field.key === 'telefono' ? 'tel' : 'text'}
                           />
+                        )}
+                        {formErrors[field.key as keyof typeof formErrors] && (
+                          <div className="error-message">
+                            {formErrors[field.key as keyof typeof formErrors]}
+                          </div>
                         )}
                       </div>
                     ))}
@@ -510,7 +657,7 @@ const Profile: React.FC = () => {
                     <div className="edit-field-group">
                       <label className="field-label">
                         <IonIcon icon={keyOutline} />
-                        Contraseña actual
+                        Contraseña actual *
                       </label>
                       <IonInput
                         className="field-input"
@@ -524,21 +671,21 @@ const Profile: React.FC = () => {
                     <div className="edit-field-group">
                       <label className="field-label">
                         <IonIcon icon={keyOutline} />
-                        Nueva contraseña
+                        Nueva contraseña *
                       </label>
                       <IonInput
                         className="field-input"
                         type="password"
                         value={formData.newPassword}
                         onIonInput={(e) => handleInputChange(e, 'newPassword')}
-                        placeholder="Introduce nueva contraseña"
+                        placeholder="Introduce nueva contraseña (mín. 6 caracteres)"
                       />
                     </div>
                     
                     <div className="edit-field-group">
                       <label className="field-label">
                         <IonIcon icon={checkmarkCircleOutline} />
-                        Confirmar contraseña
+                        Confirmar contraseña *
                       </label>
                       <IonInput
                         className="field-input"

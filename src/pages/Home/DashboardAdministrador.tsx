@@ -129,7 +129,7 @@ const DashboardAdministrador: React.FC = () => {
                       <div className="stats-info">
                         <h2>{estadisticas.totalUsers}</h2>
                         <p>Total Usuarios</p>
-                        <IonChip color="success" size="small">
+                        <IonChip color="success" style={{ fontSize: '0.7rem', height: '20px' }}>
                           +{estadisticas.monthlyGrowth.users}% este mes
                         </IonChip>
                       </div>
@@ -148,7 +148,7 @@ const DashboardAdministrador: React.FC = () => {
                       <div className="stats-info">
                         <h2>{estadisticas.totalClubs}</h2>
                         <p>Clubes Registrados</p>
-                        <IonChip color="primary" size="small">
+                        <IonChip color="primary" style={{ fontSize: '0.7rem', height: '20px' }}>
                           {estadisticas.recentClubs.length} nuevos
                         </IonChip>
                       </div>
@@ -167,7 +167,7 @@ const DashboardAdministrador: React.FC = () => {
                       <div className="stats-info">
                         <h2>{estadisticas.totalReservations}</h2>
                         <p>Total Reservas</p>
-                        <IonChip color="success" size="small">
+                        <IonChip color="success" style={{ fontSize: '0.7rem', height: '20px' }}>
                           +{estadisticas.monthlyGrowth.reservations}% este mes
                         </IonChip>
                       </div>
@@ -186,7 +186,7 @@ const DashboardAdministrador: React.FC = () => {
                       <div className="stats-info">
                         <h2>{formatearMoneda(estadisticas.totalRevenue)}</h2>
                         <p>Ingresos Totales</p>
-                        <IonChip color="success" size="small">
+                        <IonChip color="success" style={{ fontSize: '0.7rem', height: '20px' }}>
                           +{estadisticas.monthlyGrowth.revenue}% este mes
                         </IonChip>
                       </div>
@@ -295,7 +295,7 @@ const DashboardAdministrador: React.FC = () => {
                           <IonLabel>
                             <h3>{club.nombre}</h3>
                             <p>Registrado: {club.fecha_registro ? new Date(club.fecha_registro).toLocaleDateString('es-ES') : 'N/A'}</p>
-                            <IonChip color={club.activo ? 'success' : 'danger'} size="small">
+                            <IonChip color={club.activo ? 'success' : 'danger'} style={{ fontSize: '0.7rem', height: '20px' }}>
                               {club.activo ? 'Activo' : 'Inactivo'}
                             </IonChip>
                           </IonLabel>
