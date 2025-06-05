@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAuth } from '../../context/AuthContext';
 import GestionUsuariosClub from './GestionUsuariosClub';
+import AdminManageAllUsers from '../Admin/Admin_Usuarios/Admin_Usuarios';
 
 const ManageUsers: React.FC = () => {
   const { user } = useAuth();
@@ -11,12 +12,7 @@ const ManageUsers: React.FC = () => {
 
   switch(user.role.toUpperCase()) {
     case 'ADMIN':
-      return (
-        <div style={{ padding: '20px', textAlign: 'center' }}>
-          <h2>Gestión de Usuarios - Administrador</h2>
-          <p>Panel de administración de usuarios disponible próximamente.</p>
-        </div>
-      );
+      return <AdminManageAllUsers />;
     case 'CLUB':
     case 'PROFESOR':
     case 'EMPLEADO':

@@ -36,7 +36,9 @@ import {
   IonBadge,
   IonItemSliding,
   IonItemOptions,
-  IonItemOption
+  IonItemOption,
+  IonInput,
+  IonTextarea
 } from '@ionic/react';
 import {
   personOutline,
@@ -49,10 +51,13 @@ import {
   shieldCheckmarkOutline,
   banOutline,
   checkmarkCircleOutline,
-  filterOutline
+  filterOutline,
+  addOutline,
+  saveOutline,
+  lockClosedOutline
 } from 'ionicons/icons';
 import { useAuth } from '../../../context/AuthContext';
-import usersService, { User } from '../../../services/admin/user.service';
+import usersService, { User, UserFormData } from '../../../services/admin/user.service';
 import clubsService from '../../../services/admin/club.service';
 import './Admin_Usuarios.css';
 
@@ -73,6 +78,19 @@ const AdminManageAllUsers: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [newRole, setNewRole] = useState<number>(5);
+  
+  // Estados para crear/editar usuarios
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [userForm, setUserForm] = useState<UserFormData>({
+    nombre: '',
+    apellidos: '',
+    email: '',
+    telefono: '',
+    id_rol: 5,
+    password: '',
+    activo: true
+  });
 
   const roles = [
     { id: 1, name: 'ADMIN', color: 'danger' },
@@ -227,6 +245,87 @@ const AdminManageAllUsers: React.FC = () => {
     }
   };
 
+  const resetUserForm = () => {
+    setUserForm({
+      nombre: '',
+      apellidos: '',
+      email: '',
+      telefono: '',
+      id_rol: 5,
+      password: '',
+      activo: true
+    });
+  };
+
+  const handleCreateUser = () => {
+    resetUserForm();
+    setShowCreateModal(true);
+  };
+
+  const handleEditUser = (userToEdit: User) => {
+    setSelectedUser(userToEdit);
+    setUserForm({
+      nombre: userToEdit.nombre,
+      apellidos: userToEdit.apellidos,
+      email: userToEdit.email,
+      telefono: userToEdit.telefono || '',
+      id_rol: userToEdit.id_rol,
+      activo: userToEdit.activo,
+      avatar_url: userToEdit.avatar_url || '',
+      bio: userToEdit.bio || ''
+    });
+    setShowEditModal(true);
+  };
+
+  const handleSaveUser = async () => {
+    if (!userForm.nombre.trim() || !userForm.apellidos.trim() || !userForm.email.trim()) {
+      showToastMessage('Por favor complete los campos obligatorios', 'warning');
+      return;
+    }
+
+    if (showCreateModal && !userForm.password?.trim()) {
+      showToastMessage('La contraseña es obligatoria para nuevos usuarios', 'warning');
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      if (showCreateModal) {
+        await usersService.createUser(userForm);
+        showToastMessage('Usuario creado exitosamente', 'success');
+        setShowCreateModal(false);
+      } else if (showEditModal && selectedUser) {
+        const updateData = { ...userForm };
+        if (!updateData.password?.trim()) {
+          delete updateData.password; // No actualizar contraseña si está vacía
+        }
+        await usersService.updateUser(selectedUser.id, updateData);
+        showToastMessage('Usuario actualizado exitosamente', 'success');
+        setShowEditModal(false);
+        setSelectedUser(null);
+      }
+
+      await loadUsers();
+      resetUserForm();
+    } catch (error: any) {
+      console.error(error);
+      showToastMessage(
+        error?.message || 'Error al guardar usuario', 
+        'danger'
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCloseModals = () => {
+    setShowCreateModal(false);
+    setShowEditModal(false);
+    setSelectedUser(null);
+    resetUserForm();
+  };
+
   const filteredUsers = users.filter(user => {
     const matchesSearch = 
       user.nombre.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -283,14 +382,25 @@ const AdminManageAllUsers: React.FC = () => {
                   <IonCardHeader>
                     <div className="card-header-with-stats">
                       <IonCardTitle>Usuarios del Sistema</IonCardTitle>
-                      <div className="users-stats">
-                        <IonBadge color="primary">{filteredUsers.length} usuarios</IonBadge>
-                        <IonBadge color="success">
-                          {filteredUsers.filter(u => u.activo).length} activos
-                        </IonBadge>
-                        <IonBadge color="danger">
-                          {filteredUsers.filter(u => !u.activo).length} inactivos
-                        </IonBadge>
+                      <div className="header-actions">
+                        <div className="users-stats">
+                          <IonBadge color="primary">{filteredUsers.length} usuarios</IonBadge>
+                          <IonBadge color="success">
+                            {filteredUsers.filter(u => u.activo).length} activos
+                          </IonBadge>
+                          <IonBadge color="danger">
+                            {filteredUsers.filter(u => !u.activo).length} inactivos
+                          </IonBadge>
+                        </div>
+                        <IonButton 
+                          fill="solid" 
+                          color="primary" 
+                          onClick={handleCreateUser}
+                          size="small"
+                        >
+                          <IonIcon icon={addOutline} slot="start" />
+                          Crear Usuario
+                        </IonButton>
                       </div>
                     </div>
                   </IonCardHeader>
@@ -395,6 +505,10 @@ const AdminManageAllUsers: React.FC = () => {
                             </IonItem>
 
                             <IonItemOptions side="end">
+                              <IonItemOption color="secondary" onClick={() => handleEditUser(userItem)}>
+                                <IonIcon icon={createOutline} />
+                                Editar
+                              </IonItemOption>
                               <IonItemOption color="primary" onClick={() => handleChangeRole(userItem)}>
                                 <IonIcon icon={shieldCheckmarkOutline} />
                                 Rol
@@ -421,6 +535,244 @@ const AdminManageAllUsers: React.FC = () => {
             </IonRow>
           </IonGrid>
         </div>
+
+        {/* Modal para crear usuario */}
+        <IonModal isOpen={showCreateModal} onDidDismiss={handleCloseModals}>
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>Crear Nuevo Usuario</IonTitle>
+              <IonButtons slot="end">
+                <IonButton onClick={handleCloseModals}>Cerrar</IonButton>
+              </IonButtons>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent className="ion-padding">
+            <IonItem>
+              <IonInput
+                label="Nombre *"
+                labelPlacement="stacked"
+                value={userForm.nombre}
+                onIonInput={e => setUserForm({...userForm, nombre: e.detail.value!})}
+                placeholder="Ingrese el nombre"
+                required
+              />
+            </IonItem>
+            
+            <IonItem>
+              <IonInput
+                label="Apellidos *"
+                labelPlacement="stacked"
+                value={userForm.apellidos}
+                onIonInput={e => setUserForm({...userForm, apellidos: e.detail.value!})}
+                placeholder="Ingrese los apellidos"
+                required
+              />
+            </IonItem>
+            
+            <IonItem>
+              <IonInput
+                label="Email *"
+                labelPlacement="stacked"
+                type="email"
+                value={userForm.email}
+                onIonInput={e => setUserForm({...userForm, email: e.detail.value!})}
+                placeholder="Ingrese el email"
+                required
+              />
+            </IonItem>
+            
+            <IonItem>
+              <IonInput
+                label="Teléfono"
+                labelPlacement="stacked"
+                value={userForm.telefono}
+                onIonInput={e => setUserForm({...userForm, telefono: e.detail.value!})}
+                placeholder="Ingrese el teléfono"
+              />
+            </IonItem>
+            
+            <IonItem>
+              <IonInput
+                label="Contraseña *"
+                labelPlacement="stacked"
+                type="password"
+                value={userForm.password}
+                onIonInput={e => setUserForm({...userForm, password: e.detail.value!})}
+                placeholder="Ingrese la contraseña"
+                required
+              />
+            </IonItem>
+            
+            <IonItem>
+              <IonSelect
+                label="Rol"
+                labelPlacement="stacked"
+                value={userForm.id_rol}
+                onIonChange={e => setUserForm({...userForm, id_rol: e.detail.value})}
+              >
+                {roles.map(role => (
+                  <IonSelectOption key={role.id} value={role.id}>
+                    {role.name}
+                  </IonSelectOption>
+                ))}
+              </IonSelect>
+            </IonItem>
+            
+            <IonItem>
+              <IonInput
+                label="URL del Avatar"
+                labelPlacement="stacked"
+                value={userForm.avatar_url}
+                onIonInput={e => setUserForm({...userForm, avatar_url: e.detail.value!})}
+                placeholder="URL de la imagen de perfil"
+              />
+            </IonItem>
+            
+            <IonItem>
+              <IonTextarea
+                label="Biografía"
+                labelPlacement="stacked"
+                value={userForm.bio}
+                onIonInput={e => setUserForm({...userForm, bio: e.detail.value!})}
+                placeholder="Información adicional del usuario"
+                rows={3}
+              />
+            </IonItem>
+            
+            <div className="modal-actions" style={{ marginTop: '1rem' }}>
+              <IonButton expand="block" color="primary" onClick={handleSaveUser}>
+                <IonIcon icon={saveOutline} slot="start" />
+                Crear Usuario
+              </IonButton>
+              <IonButton expand="block" fill="clear" onClick={handleCloseModals}>
+                Cancelar
+              </IonButton>
+            </div>
+          </IonContent>
+        </IonModal>
+
+        {/* Modal para editar usuario */}
+        <IonModal isOpen={showEditModal} onDidDismiss={handleCloseModals}>
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>Editar Usuario</IonTitle>
+              <IonButtons slot="end">
+                <IonButton onClick={handleCloseModals}>Cerrar</IonButton>
+              </IonButtons>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent className="ion-padding">
+            <IonItem>
+              <IonInput
+                label="Nombre *"
+                labelPlacement="stacked"
+                value={userForm.nombre}
+                onIonInput={e => setUserForm({...userForm, nombre: e.detail.value!})}
+                placeholder="Ingrese el nombre"
+                required
+              />
+            </IonItem>
+            
+            <IonItem>
+              <IonInput
+                label="Apellidos *"
+                labelPlacement="stacked"
+                value={userForm.apellidos}
+                onIonInput={e => setUserForm({...userForm, apellidos: e.detail.value!})}
+                placeholder="Ingrese los apellidos"
+                required
+              />
+            </IonItem>
+            
+            <IonItem>
+              <IonInput
+                label="Email *"
+                labelPlacement="stacked"
+                type="email"
+                value={userForm.email}
+                onIonInput={e => setUserForm({...userForm, email: e.detail.value!})}
+                placeholder="Ingrese el email"
+                required
+              />
+            </IonItem>
+            
+            <IonItem>
+              <IonInput
+                label="Teléfono"
+                labelPlacement="stacked"
+                value={userForm.telefono}
+                onIonInput={e => setUserForm({...userForm, telefono: e.detail.value!})}
+                placeholder="Ingrese el teléfono"
+              />
+            </IonItem>
+            
+            <IonItem>
+              <IonInput
+                label="Nueva Contraseña"
+                labelPlacement="stacked"
+                type="password"
+                value={userForm.password}
+                onIonInput={e => setUserForm({...userForm, password: e.detail.value!})}
+                placeholder="Dejar vacío para mantener la actual"
+              />
+            </IonItem>
+            
+            <IonItem>
+              <IonSelect
+                label="Rol"
+                labelPlacement="stacked"
+                value={userForm.id_rol}
+                onIonChange={e => setUserForm({...userForm, id_rol: e.detail.value})}
+              >
+                {roles.map(role => (
+                  <IonSelectOption key={role.id} value={role.id}>
+                    {role.name}
+                  </IonSelectOption>
+                ))}
+              </IonSelect>
+            </IonItem>
+            
+            <IonItem>
+              <IonInput
+                label="URL del Avatar"
+                labelPlacement="stacked"
+                value={userForm.avatar_url}
+                onIonInput={e => setUserForm({...userForm, avatar_url: e.detail.value!})}
+                placeholder="URL de la imagen de perfil"
+              />
+            </IonItem>
+            
+            <IonItem>
+              <IonTextarea
+                label="Biografía"
+                labelPlacement="stacked"
+                value={userForm.bio}
+                onIonInput={e => setUserForm({...userForm, bio: e.detail.value!})}
+                placeholder="Información adicional del usuario"
+                rows={3}
+              />
+            </IonItem>
+            
+            <IonItem>
+              <IonToggle 
+                checked={userForm.activo} 
+                onIonChange={e => setUserForm({...userForm, activo: e.detail.checked})}
+              >
+                Usuario activo
+              </IonToggle>
+            </IonItem>
+            
+            <div className="modal-actions" style={{ marginTop: '1rem' }}>
+              <IonButton expand="block" color="primary" onClick={handleSaveUser}>
+                <IonIcon icon={saveOutline} slot="start" />
+                Actualizar Usuario
+              </IonButton>
+              <IonButton expand="block" fill="clear" onClick={handleCloseModals}>
+                Cancelar
+              </IonButton>
+            </div>
+          </IonContent>
+        </IonModal>
 
         {/* Modal para cambiar rol */}
         <IonModal isOpen={showRoleModal} onDidDismiss={() => setShowRoleModal(false)}>
