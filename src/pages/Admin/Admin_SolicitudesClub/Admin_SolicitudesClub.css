@@ -1,0 +1,199 @@
+.admin-solicitudes-container {
+  padding: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.admin-solicitudes-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.admin-solicitudes-header h1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--ion-color-primary);
+  margin-bottom: 0.5rem;
+}
+
+.admin-solicitudes-header p {
+  color: var(--ion-color-medium);
+  font-size: 1rem;
+}
+
+.solicitud-card {
+  height: 100%;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.solicitud-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.solicitud-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.solicitud-actions ion-button {
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .solicitud-actions {
+    flex-direction: row;
+  }
+  
+  .solicitud-actions ion-button {
+    flex: 1;
+  }
+}
+
+.estado-chip {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+.details-section {
+  margin-bottom: 1rem;
+}
+
+.details-section h3 {
+  color: var(--ion-color-primary);
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 1rem;
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  color: var(--ion-color-medium);
+  font-size: 0.9rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--ion-color-medium);
+}
+
+.empty-state ion-icon {
+  font-size: 4rem;
+  opacity: 0.5;
+  margin-bottom: 1rem;
+}
+
+.filter-segment {
+  margin-bottom: 1rem;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  background: var(--ion-color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: bold;
+}
+
+.status-timeline {
+  padding: 1rem 0;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-left: 2px solid var(--ion-color-light);
+  padding-left: 1rem;
+  margin-left: 1rem;
+  position: relative;
+}
+
+.timeline-item:before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 1rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ion-color-medium);
+}
+
+.timeline-item.active:before {
+  background: var(--ion-color-primary);
+}
+
+.timeline-content h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.timeline-content p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--ion-color-medium);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .admin-solicitudes-container {
+    padding: 0.5rem;
+  }
+  
+  .solicitud-card {
+    margin-bottom: 1rem;
+  }
+  
+  .admin-solicitudes-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .solicitud-actions {
+    flex-direction: column;
+  }
+}
+
+/* Dark theme adjustments */
+@media (prefers-color-scheme: dark) {
+  .solicitud-card:hover {
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
+  }
+  
+  .timeline-item {
+    border-left-color: var(--ion-color-dark);
+  }
+}
