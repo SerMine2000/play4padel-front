@@ -1,4 +1,4 @@
-/* BienvenidaDashboard.css - Rediseño 2025 */
+/* BienvenidaDashboard.css - Rediseño 2025 con variables de tema */
 
 .bienvenida-container {
   width: 100%;
@@ -10,7 +10,7 @@
   font-size: 2rem;
   font-weight: 700;
   margin: 0 0 10px 0;
-  color: #FFFFFF;
+  color: var(--ion-text-color);
   letter-spacing: 0.5px;
   position: relative;
 }
@@ -22,14 +22,15 @@
   bottom: -10px;
   width: 50px;
   height: 3px;
-  background: #00FF66;
+  background: var(--ion-color-primary);
   border-radius: 3px;
 }
 
 .descripcion-dashboard {
   font-size: 1rem;
   margin: 20px 0 0 0;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--ion-text-color);
+  opacity: 0.7;
 }
 
 @media (max-width: 768px) {
