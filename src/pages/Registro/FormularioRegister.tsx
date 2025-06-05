@@ -110,7 +110,7 @@ const FormularioRegister: React.FC = () => {
         apellidos,
         email,
         password,
-        id_rol: 4 // Usuario estándar
+        id_rol: 5 // Usuario estándar (USUARIO)
       };
       
       await register(registerData);

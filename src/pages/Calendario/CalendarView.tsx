@@ -46,7 +46,6 @@ const CalendarView: React.FC = () => {
   const [reservasDelDia, setReservasDelDia] = useState<ReservaDetalle[]>([]);
   const [reservasDelMes, setReservasDelMes] = useState<ReservasPorDia[]>([]);
   const [cargando, setCargando] = useState<boolean>(false);
-  const [cargandoLista, setCargandoLista] = useState<boolean>(false);
   const [mostrarToast, setMostrarToast] = useState<boolean>(false);
   const [mensajeToast, setMensajeToast] = useState<string>('');
   const [colorToast, setColorToast] = useState<string>('success');
@@ -174,12 +173,7 @@ if (!idClub) {
 }
 
     try {
-      // Si estamos en la vista de lista, mostrar el spinner específico
-      if (vistaActual === 'lista') {
-        setCargandoLista(true);
-      } else {
-        setCargando(true);
-      }
+      setCargando(true);
 
       setMensajeError('');
 
@@ -335,7 +329,6 @@ if (!idClub) {
       setMensajeError('Error de conexión al cargar reservas');
     } finally {
       setCargando(false);
-      setCargandoLista(false);
     }
   };
 
@@ -705,57 +698,84 @@ if (!idClub) {
   const renderListaReservas = () => {
     if (!diaSeleccionado) {
       return (
-        <div className="panel-reservas">
-          <IonText color="medium">
-            <p>Selecciona un día para ver sus reservas</p>
-          </IonText>
+        <div className="sin-dia-seleccionado">
+          <IonIcon icon={calendarOutline} size="large" color="medium" />
+          <p>Selecciona un día para ver sus reservas</p>
         </div>
       );
     }
 
     if (reservasDelDia.length === 0) {
       return (
-        <div>
+        <div className="sin-reservas">
+          <IonIcon icon={tennisballOutline} size="large" color="medium" />
+          <p>No hay reservas para este día</p>
           <IonText color="medium">
-            <p>No hay reservas para el {formatearFechaMostrar(diaSeleccionado)}</p>
+            <small>{formatearFechaMostrar(diaSeleccionado)}</small>
           </IonText>
         </div>
       );
     }
 
     return (
-      <IonList>
-        {reservasDelDia.map((reserva) => (
-          <IonItem key={reserva.id} button detail onClick={() => handleClickReserva(reserva)}>
-            <IonIcon slot="start" icon={tennisballOutline} />
-            <IonLabel>
-              <h2>{reserva.nombre_usuario}</h2>
-              <p>
-                <IonIcon icon={timeOutline} /> {formatearHora(reserva.hora_inicio)} - {formatearHora(reserva.hora_fin)}
-              </p>
-              <p>
-                <IonIcon icon={cashOutline} /> {reserva.precio_total.toFixed(2)}€
-              </p>
-            </IonLabel>
-            <IonChip slot="end" color={getColorEstadoReserva(reserva.estado)}>
-              {reserva.estado}
-            </IonChip>
-          </IonItem>
-        ))}
-      </IonList>
+      <div className="reservas-container">
+        <div className="reservas-header">
+          <h4>
+            <IonIcon icon={tennisballOutline} />
+            {reservasDelDia.length} {reservasDelDia.length === 1 ? 'Reserva' : 'Reservas'}
+          </h4>
+          <IonText color="medium">
+            <small>{formatearFechaMostrar(diaSeleccionado)}</small>
+          </IonText>
+        </div>
+        
+        <div className="reservas-grid">
+          {reservasDelDia.map((reserva) => (
+            <div key={reserva.id} className="reserva-card" onClick={() => handleClickReserva(reserva)}>
+              <div className="reserva-card-header">
+                <div className="reserva-info-principal">
+                  <h3>{reserva.nombre_usuario}</h3>
+                  <IonChip className={`estado-chip estado-${reserva.estado.toLowerCase()}`} color={getColorEstadoReserva(reserva.estado)}>
+                    {reserva.estado.toUpperCase()}
+                  </IonChip>
+                </div>
+              </div>
+              
+              <div className="reserva-card-body">
+                <div className="reserva-detail">
+                  <IonIcon icon={timeOutline} />
+                  <span>{formatearHora(reserva.hora_inicio)} - {formatearHora(reserva.hora_fin)}</span>
+                </div>
+                
+                {reserva.pista_numero && (
+                  <div className="reserva-detail">
+                    <IonIcon icon={tennisballOutline} />
+                    <span>Pista {reserva.pista_numero}</span>
+                    {reserva.pista_tipo && <small>({reserva.pista_tipo})</small>}
+                  </div>
+                )}
+                
+                <div className="reserva-detail precio">
+                  <IonIcon icon={cashOutline} />
+                  <span className="precio-amount">{reserva.precio_total.toFixed(2)}€</span>
+                </div>
+              </div>
+              
+              <div className="reserva-card-footer">
+                <IonButton fill="clear" size="small" color="primary">
+                  Ver detalles
+                  <IonIcon slot="end" icon={chevronForwardOutline} />
+                </IonButton>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     );
   };
 
   // Renderizar lista de todas las reservas del mes
   const renderListaReservasMes = () => {
-    if (cargandoLista) {
-      return (
-        <div>
-          <IonSpinner name="circles" color="light" />
-          <p>Cargando reservas...</p>
-        </div>
-      );
-    }
 
     if (mensajeError) {
       return (
@@ -786,36 +806,59 @@ if (!idClub) {
     }
 
     return (
-      <IonList>
+      <div className="lista-mes-container">
         {reservasDelMes.map((dia) => (
-          <React.Fragment key={dia.fecha}>
-            <IonItemDivider color="primary" sticky>
-              <IonLabel>
-                {dia.fechaFormateada}
-              </IonLabel>
-              <IonChip slot="end" color="light">{dia.reservas.length} reservas</IonChip>
-            </IonItemDivider>
-
-            {dia.reservas.map((reserva) => (
-              <IonItem key={reserva.id} button detail onClick={() => handleClickReserva(reserva)}>
-                <IonIcon slot="start" icon={tennisballOutline} />
-                <IonLabel>
-                  <h2>{reserva.nombre_usuario}</h2>
-                  <p>
-                    <IonIcon icon={timeOutline} /> {formatearHora(reserva.hora_inicio)} - {formatearHora(reserva.hora_fin)}
-                  </p>
-                  <p>
-                    <IonIcon icon={cashOutline} /> {reserva.precio_total.toFixed(2)}€
-                  </p>
-                </IonLabel>
-                <IonChip slot="end" color={getColorEstadoReserva(reserva.estado)}>
-                  {reserva.estado}
+          <div key={dia.fecha} className="dia-reservas-section">
+            <div className="dia-header">
+              <div className="fecha-info">
+                <h3>{dia.fechaFormateada}</h3>
+                <IonChip color="primary" className="contador-reservas">
+                  {dia.reservas.length} {dia.reservas.length === 1 ? 'reserva' : 'reservas'}
                 </IonChip>
-              </IonItem>
-            ))}
-          </React.Fragment>
+              </div>
+            </div>
+
+            <div className="reservas-dia-grid">
+              {dia.reservas.map((reserva) => (
+                <div key={reserva.id} className="reserva-card-mini" onClick={() => handleClickReserva(reserva)}>
+                  <div className="reserva-mini-header">
+                    <div className="usuario-info">
+                      <IonIcon icon={personOutline} />
+                      <span className="usuario-nombre">{reserva.nombre_usuario}</span>
+                    </div>
+                    <IonChip size="small" color={getColorEstadoReserva(reserva.estado)} className="estado-mini">
+                      {reserva.estado}
+                    </IonChip>
+                  </div>
+                  
+                  <div className="reserva-mini-details">
+                    <div className="detail-row">
+                      <IonIcon icon={timeOutline} />
+                      <span>{formatearHora(reserva.hora_inicio)} - {formatearHora(reserva.hora_fin)}</span>
+                    </div>
+                    
+                    {reserva.pista_numero && (
+                      <div className="detail-row">
+                        <IonIcon icon={tennisballOutline} />
+                        <span>Pista {reserva.pista_numero}</span>
+                      </div>
+                    )}
+                    
+                    <div className="detail-row precio-row">
+                      <IonIcon icon={cashOutline} />
+                      <span className="precio-destacado">{reserva.precio_total.toFixed(2)}€</span>
+                    </div>
+                  </div>
+                  
+                  <div className="reserva-mini-action">
+                    <IonIcon icon={chevronForwardOutline} color="medium" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         ))}
-      </IonList>
+      </div>
     );
   };
 
@@ -834,7 +877,7 @@ if (!idClub) {
         </IonSegment>
 
         {vistaActual === 'calendario' && (
-          <div>
+          <div className="contenido-calendario">
             {/* Navegación del calendario */}
             
             <div className="navegacion-calendario">
@@ -860,22 +903,26 @@ if (!idClub) {
             </IonGrid>
 
             {/* Panel de reservas del día seleccionado */}
-            <div>
+            <div className="panel-reservas">
               {diaSeleccionado && (
-                <h3>
+                <h3 className="fecha-seleccionada">
                   {formatearFechaMostrar(diaSeleccionado)}
                 </h3>
               )}
 
-              {renderListaReservas()}
+              <div className="lista-reservas-scroll">
+                {renderListaReservas()}
+              </div>
             </div>
           </div>
         )}
 
         {/* Vista de lista completa del mes */}
         {vistaActual === 'lista' && (
-          <div>
-            {renderListaReservasMes()}
+          <div className="vista-lista-completa">
+            <div className="vista-lista-mes">
+              {renderListaReservasMes()}
+            </div>
           </div>
         )}
 
@@ -990,7 +1037,10 @@ if (!idClub) {
         </IonModal>
 
         {/* Loading y Toast */}
-        <IonLoading isOpen={cargando} message="Cargando reservas..." />
+        <IonLoading 
+          isOpen={cargando} 
+          message={vistaActual === 'lista' ? 'Cargando lista de reservas...' : 'Cargando reservas...'} 
+        />
 
         <IonToast
           isOpen={mostrarToast}

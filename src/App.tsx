@@ -1,5 +1,5 @@
 // src/App.tsx
-import { IonApp, IonRouterOutlet, useIonRouter } from '@ionic/react';
+import { IonApp, IonRouterOutlet, IonLoading, useIonRouter } from '@ionic/react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Login from './pages/Login/Login';
@@ -60,7 +60,7 @@ const stripePromise = loadStripe('pk_test_51RBDLF2MsbKNiz9B2Wol9ZvHjbvYvhMjVwkQP
 const PrivateRoute = ({ element }: { element: JSX.Element }) => {
   const { isAuthenticated, isLoading } = useAuth();
 
-  if (isLoading) return <div>Cargando...</div>;
+  if (isLoading) return <IonLoading isOpen={true} message="Autenticando..." />;
   return isAuthenticated ? element : <Navigate to="/login" />;
 };
 
@@ -74,7 +74,7 @@ const RoleRoute = ({
 }) => {
   const { user, isAuthenticated, isLoading } = useAuth();
 
-  if (isLoading) return <div>Cargando...</div>;
+  if (isLoading) return <IonLoading isOpen={true} message="Verificando permisos..." />;
   if (!isAuthenticated) return <Navigate to="/login" />;
   
   // Verificar por role (string) en lugar de id_rol

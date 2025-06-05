@@ -118,6 +118,7 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
         { label: 'Gestionar Pistas', path: '/manage-courts', icon: tennisballOutline },
         { label: 'Administrar Usuarios', path: '/manage-users', icon: peopleOutline },
         { label: 'Calendario', path: '/calendar', icon: calendarOutline },
+        { label: 'Marcador', path: '/marcador', icon: stopwatchOutline },
         { label: 'Estadísticas', path: '/estadisticas', icon: statsChartOutline },
         { label: 'Torneos', path: '/torneos', icon: trophyOutline },
         { label: 'Ligas', path: '/ligas', icon: trophyOutline }
@@ -136,7 +137,8 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
       roleSpecificOptions = [
         { label: 'Inicio', path: '/home', icon: homeOutline },
         { label: 'Gestionar Pistas', path: '/manage-courts', icon: tennisballOutline },
-        { label: 'Calendario', path: '/calendar', icon: calendarOutline }
+        { label: 'Calendario', path: '/calendar', icon: calendarOutline },
+        { label: 'Marcador', path: '/marcador', icon: stopwatchOutline }
       ];
       break;
       

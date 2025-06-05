@@ -160,8 +160,8 @@ const MarcadorPantalla: React.FC = () => {
     : { A: 0, B: 0 };
 
   return (
-    <div style={{ paddingLeft: 260, boxSizing: 'border-box' }}>
-      <div className="scoreboard" style={{ maxWidth: 900, margin: '0 auto' }}>
+    <div className="marcador-pantalla-container">
+      <div className="scoreboard"  >
         <div className="header">{config.tituloPista}</div>
       
         <div className="score-table">

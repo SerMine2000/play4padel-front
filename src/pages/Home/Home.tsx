@@ -1,4 +1,5 @@
 import React from 'react';
+import { IonLoading } from '@ionic/react';
 import { useAuth } from '../../context/AuthContext';
 import DashboardUsuario from './DashboardUsuario';
 import DashboardClub from './DashboardClub';
@@ -8,7 +9,7 @@ const Home: React.FC = () => {
   const { user } = useAuth();
   
   if (!user) {
-    return <div>Cargando...</div>;
+    return <IonLoading isOpen={true} message="Cargando dashboard..." />;
   }
 
   switch(user.role.toUpperCase()) {

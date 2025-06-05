@@ -1,6 +1,7 @@
 // src/components/RutaPrivada.tsx
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
+import { IonLoading } from '@ionic/react';
 import { useAuth } from '../context/AuthContext';
 
 // Mapa de rutas protegidas con roles permitidos
@@ -30,7 +31,7 @@ const RutaPrivada: React.FC<RutaPrivadaProps> = ({ children }) => {
   const autorizado = user && rolesPermitidos.includes(user.id_rol);
 
   if (isLoading || !user) {
-    return <div>Cargando...</div>;
+    return <IonLoading isOpen={true} message="Verificando acceso..." />;
   }
 
   if (!isAuthenticated) {

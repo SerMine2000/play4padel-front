@@ -2,29 +2,38 @@
 .calendar-view {
   background: var(--ion-background-color);
   color: var(--ion-text-color);
+  padding: 16px;
+  padding-bottom: 80px;
+  min-height: 100vh;
 }
 
 /* Segmento de vista */
 ion-segment {
-  margin: 12px auto;
-  padding: 4px;
-  --background: transparent; /* para dejarlo limpio */
-  border-radius: 10px;
-  max-width: 90%;
+  margin: 20px auto;
+  padding: 6px;
+  --background: var(--ion-color-light);
+  border-radius: 12px;
+  max-width: 320px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--ion-color-light-shade);
 }
 
 ion-segment-button {
   --indicator-color: var(--ion-color-primary);
-  --color-checked: var(--ion-color-primary);
-  --color: var(--ion-text-color);
+  --color-checked: white;
+  --color: var(--ion-color-medium);
   font-weight: 500;
   border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
 }
 
 ion-segment-button.ion-activated {
-  background-color: rgba(var(--ion-color-primary-rgb), 0.15);
-  color: var(--ion-color-primary);
+  background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-primary-shade));
+  color: white;
   font-weight: 600;
+  box-shadow: 0 2px 6px rgba(var(--ion-color-primary-rgb), 0.4);
+  transform: translateY(-1px);
 }
 
 /* Navegación del calendario */
@@ -33,32 +42,65 @@ ion-segment-button.ion-activated {
   justify-content: space-between;
   align-items: center;
   max-width: 600px;
-  margin: 0 auto 15px auto;
-  padding: 0 15px;
+  margin: 0 auto 24px auto;
+  padding: 16px 20px;
+  background: var(--ion-color-light);
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--ion-color-light-shade);
 }
 
 .titulo-mes {
-  color: var(--ion-text-color);
+  color: var(--ion-color-dark);
   text-transform: capitalize;
-  font-size: 1.3rem;
-  font-weight: 600;
+  font-size: 1.4rem;
+  font-weight: 700;
   text-align: center;
   flex-grow: 1;
+  margin: 0;
+  letter-spacing: 0.5px;
 }
 
 .navegacion-calendario ion-button {
   flex-shrink: 0;
-  min-width: 40px;
+  min-width: 44px;
+  height: 44px;
+  --border-radius: 12px;
+  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --background: white;
+  --color: var(--ion-color-primary);
+  transition: all 0.2s ease;
+}
+
+.navegacion-calendario ion-button:hover {
+  --background: var(--ion-color-primary);
+  --color: white;
+  transform: translateY(-2px);
+  --box-shadow: 0 4px 12px rgba(var(--ion-color-primary-rgb), 0.3);
 }
 
 .boton-hoy {
   margin-left: 20px;
+  --border-radius: 20px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --background: var(--ion-color-primary);
+  --color: white;
+  font-weight: 600;
+  --box-shadow: 0 2px 8px rgba(var(--ion-color-primary-rgb), 0.3);
+  transition: all 0.2s ease;
+}
+
+.boton-hoy:hover {
+  --background: var(--ion-color-primary-shade);
+  transform: translateY(-2px);
+  --box-shadow: 0 4px 12px rgba(var(--ion-color-primary-rgb), 0.4);
 }
 
 /* Grid del calendario */
 .grid-calendario {
   padding: 0;
-  margin-bottom: 20px;
+  margin-bottom: 32px;
   width: 95%;
   margin-left: auto;
   margin-right: auto;
@@ -67,121 +109,153 @@ ion-segment-button.ion-activated {
 ion-grid.grid-calendario {
   width: 90% !important;
   max-width: 1200px !important;
-  border: 1px solid var(--ion-border-color);
-  border-radius: 12px;
+  border: 1px solid var(--ion-color-light-shade);
+  border-radius: 16px;
   overflow: hidden;
-  background-color: var(--ion-background-color);
+  background-color: white;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 /* Cabecera de días */
 .dias-semana {
-  background-color: var(--ion-background-color);
-  color: var(--ion-text-color);
+  background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-primary-shade));
+  color: white;
   text-align: center;
-  font-weight: 600;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--ion-border-color);
-  border-top: 1px solid var(--ion-border-color);
+  font-weight: 700;
+  padding: 16px 0;
+  border-bottom: none;
+  border-top: none;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
 }
 
 /* Fila de semana */
 .semana {
-  border-bottom: 1px solid var(--ion-border-color);
+  border-bottom: 1px solid var(--ion-color-light-shade);
+}
+
+.semana:last-child {
+  border-bottom: none;
 }
 
 /* Celdas de días */
 .dia {
   width: 100%;
-  height: 90px;
+  height: 80px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-top: 0;
-  border-radius: 12px;
-  transition: background-color 0.2s ease;
+  padding: 8px;
+  margin: 2px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
   cursor: pointer;
   position: relative;
   box-sizing: border-box;
-  border-left: 1px solid var(--ion-border-color);
-  border-right: 1px solid var(--ion-border-color);
+  border: 1px solid transparent;
+  background: white;
 }
-
-
-.dia.primera-columna {
-  border-left: none;
-}
-
-.dia.ultima-columna {
-  border-right: none;
-}
-
-
 
 .dia:hover {
-  background-color: rgba(var(--ion-color-primary-rgb), 0.1);
+  background: linear-gradient(135deg, rgba(var(--ion-color-primary-rgb), 0.1), rgba(var(--ion-color-primary-rgb), 0.05));
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: var(--ion-color-primary-tint);
 }
+
+
+
+
+
 
 /* Estilo del día actual */
 .dia.hoy {
-  background-color: var(--ion-color-primary);
-  color: var(--ion-color-primary-contrast);
-  font-weight: bold;
+  background: linear-gradient(135deg, var(--ion-color-secondary), var(--ion-color-secondary-shade));
+  color: white;
+  font-weight: 700;
   border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(var(--ion-color-secondary-rgb), 0.4);
+  border-color: var(--ion-color-secondary);
+}
+
+.dia.hoy:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(var(--ion-color-secondary-rgb), 0.5);
 }
 
 /* Día seleccionado */
 .dia.seleccionado {
-  background-color: var(--ion-color-primary);
-  color: var(--ion-color-primary-contrast);
-  font-weight: bold;
+  background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-primary-shade));
+  color: white;
+  font-weight: 700;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(var(--ion-color-primary-rgb), 0.4);
+  border-color: var(--ion-color-primary);
+}
+
+.dia.seleccionado:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(var(--ion-color-primary-rgb), 0.5);
 }
 
 /* Días con reservas */
 .dia.tiene-reservas:not(.seleccionado):not(.hoy) {
-  background-color: rgba(var(--ion-color-primary-rgb), 0.1);
-  color: var(--ion-text-color);
+  background: linear-gradient(135deg, rgba(var(--ion-color-primary-rgb), 0.08), rgba(var(--ion-color-primary-rgb), 0.03));
+  color: var(--ion-color-dark);
+  border-color: rgba(var(--ion-color-primary-rgb), 0.2);
+  font-weight: 600;
 }
 
-/* Línea izquierda solo si no es la primera celda */
-.dia:not(:nth-child(7n + 1)) {
-  border-left: 1px solid var(--ion-border-color);
-}
 
 /* Días de otro mes */
 .dia.otro-mes {
-  opacity: 0.4;
+  opacity: 0.3;
+  background: var(--ion-color-light-tint);
+  color: var(--ion-color-medium);
+}
+
+.dia.otro-mes:hover {
+  opacity: 0.5;
+  background: var(--ion-color-light);
 }
 
 .numero-dia {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
   margin-bottom: 4px;
+  letter-spacing: 0.5px;
 }
 
 /* Indicador de reservas */
 .indicador-reservas {
   position: absolute;
-  bottom: 6px;
-  right: 6px;
-  background-color: var(--ion-color-primary);
-  color: var(--ion-color-primary-contrast);
-  font-size: 0.7rem;
-  font-weight: bold;
+  bottom: 4px;
+  right: 4px;
+  background: linear-gradient(135deg, var(--ion-color-danger), var(--ion-color-danger-shade));
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
   border-radius: 50%;
-  padding: 3px 6px;
-  line-height: 1;
-  min-width: 20px;
+  padding: 2px 6px;
+  line-height: 1.2;
+  min-width: 18px;
   text-align: center;
   pointer-events: none;
+  box-shadow: 0 2px 6px rgba(var(--ion-color-danger-rgb), 0.4);
+  border: 1px solid white;
 }
 
 /* Panel de reservas */
 .panel-reservas {
-  background-color: var(--color-panel);
-  border-radius: 10px 10px 0 0;
-  padding: 15px 10px;
-  margin-top: 10px;
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  margin-top: 20px;
+  margin-bottom: 32px;
   min-height: 300px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--ion-color-light-shade);
 }
 
 .panel-reservas.pantalla-completa {
@@ -193,21 +267,42 @@ ion-grid.grid-calendario {
 
 .fecha-seleccionada {
   text-align: center;
-  margin-top: 5px;
-  margin-bottom: 15px;
-  font-size: 1.2rem;
-  font-weight: 600;
+  margin: 0 0 20px 0;
+  font-size: 1.3rem;
+  font-weight: 700;
   text-transform: capitalize;
+  color: var(--ion-color-dark);
+  padding: 16px;
+  background: linear-gradient(135deg, var(--ion-color-light), var(--ion-color-light-tint));
+  border-radius: 12px;
+  border: 1px solid var(--ion-color-light-shade);
 }
 
 /* Lista de reservas */
 .lista-reservas {
-  background-color: var(--color-panel);
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 32px;
+  overflow: visible;
 }
 
 .reserva-item {
-  --background: var(--color-panel);
-  --border-color: var(--ion-border-color);
+  --background: white;
+  --border-color: var(--ion-color-light-shade);
+  border-radius: 12px;
+  margin: 12px 16px;
+  padding: 4px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 1px solid var(--ion-color-light-shade);
+}
+
+.reserva-item:hover {
+  --background: var(--ion-color-light-tint);
+  transform: translateX(6px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  border-color: var(--ion-color-primary-tint);
 }
 
 ion-label {
@@ -221,81 +316,628 @@ ion-label {
 
 /* Divisores de la lista */
 ion-item-divider {
-  --background: var(--ion-background-color);
-  --color: var(--ion-text-color);
-  font-weight: bold;
+  --background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-primary-shade));
+  --color: white;
+  font-weight: 700;
   text-transform: capitalize;
-  margin-top: 10px;
+  margin: 24px 16px 12px 16px;
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 4px 12px rgba(var(--ion-color-primary-rgb), 0.3);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 /* Sin reservas */
 .sin-dia-seleccionado,
 .sin-reservas {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 200px;
   text-align: center;
-  padding: 20px;
-  color: var(--ion-text-color);
+  padding: 32px;
+  margin: 16px;
+  color: var(--ion-color-medium);
+  background: var(--ion-color-light-tint);
+  border-radius: 16px;
+  border: 2px dashed var(--ion-color-light-shade);
+  margin-bottom: 32px;
+}
+
+.sin-dia-seleccionado p,
+.sin-reservas p {
+  margin: 8px 0;
+  font-weight: 500;
+  font-size: 1.1rem;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .dia {
-    height: 70px;
+    height: 65px;
+    margin: 1px;
   }
 
   .numero-dia {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 
   .indicador-reservas {
     font-size: 0.6rem;
-    padding: 2px 5px;
+    padding: 1px 4px;
+    min-width: 16px;
+    bottom: 2px;
+    right: 2px;
+  }
+
+  .navegacion-calendario {
+    padding: 12px 16px;
+    margin-bottom: 16px;
+  }
+
+  .titulo-mes {
+    font-size: 1.2rem;
+  }
+
+  ion-segment {
+    margin: 16px auto;
+    max-width: 280px;
+  }
+
+  .panel-reservas {
+    margin-bottom: 40px;
+    padding: 20px;
+  }
+
+  .reserva-item {
+    margin: 8px 12px;
+  }
+
+  ion-item-divider {
+    margin: 20px 12px 8px 12px;
+    padding: 12px 16px;
   }
 }
 
 @media (min-width: 768px) {
   .dia {
-    height: 100px;
+    height: 90px;
+    margin: 3px;
   }
 
   .numero-dia {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
   }
 
   .indicador-reservas {
-    width: 22px;
-    height: 22px;
-    font-size: 0.8rem;
+    width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
   }
 
   .panel-reservas {
     min-height: 400px;
+    margin-bottom: 40px;
+  }
+
+  .navegacion-calendario {
+    padding: 20px 24px;
+  }
+
+  .titulo-mes {
+    font-size: 1.5rem;
+  }
+
+  .reserva-item {
+    margin: 12px 20px;
+  }
+
+  ion-item-divider {
+    margin: 28px 20px 16px 20px;
+    padding: 18px 24px;
   }
 }
 
 /* Botón de actualización */
 ion-button.refresh-button {
-  --padding-start: 12px;
-  --padding-end: 12px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --border-radius: 12px;
+  --background: var(--ion-color-primary);
+  --color: white;
+  font-weight: 600;
+  --box-shadow: 0 2px 8px rgba(var(--ion-color-primary-rgb), 0.3);
+  transition: all 0.2s ease;
+}
+
+ion-button.refresh-button:hover {
+  --background: var(--ion-color-primary-shade);
+  transform: translateY(-2px);
+  --box-shadow: 0 4px 12px rgba(var(--ion-color-primary-rgb), 0.4);
+}
+
+/* Mejoras específicas para la lista de reservas */
+ion-list {
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+/* Contenedor de vista de lista completa */
+.vista-lista-completa {
+  padding: 16px;
+  padding-bottom: 80px;
+  background: var(--ion-background-color);
+}
+
+/* Estilos para items de reserva en la lista */
+.reserva-item ion-label h2 {
+  font-weight: 600;
+  color: var(--ion-color-dark);
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+
+.reserva-item ion-label p {
+  font-size: 0.9rem;
+  color: var(--ion-color-medium);
+  margin: 2px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.reserva-item ion-icon {
+  font-size: 1rem;
+  color: var(--ion-color-primary);
+}
+
+/* Chips de estado mejorados */
+ion-chip {
+  --background: var(--ion-color-light);
+  --color: var(--ion-color-dark);
+  font-weight: 600;
+  font-size: 0.8rem;
+  border-radius: 16px;
+  padding: 4px 12px;
+}
+
+/* Scroll suave para la lista */
+.lista-reservas-scroll {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.lista-reservas-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.lista-reservas-scroll::-webkit-scrollbar-track {
+  background: var(--ion-color-light);
+  border-radius: 10px;
+}
+
+.lista-reservas-scroll::-webkit-scrollbar-thumb {
+  background: var(--ion-color-primary);
+  border-radius: 10px;
+}
+
+.lista-reservas-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--ion-color-primary-shade);
+}
+
+/* Espaciado adicional para evitar que se corte el contenido */
+.contenido-calendario {
+  padding-bottom: 32px;
+}
+
+/* Vista de lista mensual mejorada */
+.vista-lista-mes {
+  background: white;
+  border-radius: 16px;
+  margin: 16px;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--ion-color-light-shade);
+  overflow: hidden;
+}
+
+/* Diseño profesional de reservas */
+.reservas-container {
+  padding: 16px;
+}
+
+.reservas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--ion-color-light-shade);
+}
+
+.reservas-header h4 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--ion-color-dark);
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.reservas-header ion-icon {
+  color: var(--ion-color-primary);
+}
+
+.reservas-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+/* Cards de reserva profesionales */
+.reserva-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid var(--ion-color-light-shade);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.reserva-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border-color: var(--ion-color-primary-tint);
+}
+
+.reserva-card-header {
+  margin-bottom: 16px;
+}
+
+.reserva-info-principal {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.reserva-info-principal h3 {
+  margin: 0;
+  color: var(--ion-color-dark);
+  font-weight: 600;
+  font-size: 1.1rem;
+  flex: 1;
+}
+
+.estado-chip {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 4px 8px;
+  border-radius: 20px;
+  --background: var(--ion-color-light);
+  --color: var(--ion-color-dark);
+}
+
+.estado-chip.estado-confirmada {
+  --background: var(--ion-color-success);
+  --color: white;
+}
+
+.estado-chip.estado-pendiente {
+  --background: var(--ion-color-warning);
+  --color: white;
+}
+
+.estado-chip.estado-cancelada {
+  --background: var(--ion-color-danger);
+  --color: white;
+}
+
+.reserva-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.reserva-detail {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: var(--ion-color-medium);
+}
+
+.reserva-detail ion-icon {
+  color: var(--ion-color-primary);
+  font-size: 1rem;
+  min-width: 20px;
+}
+
+.reserva-detail span {
+  color: var(--ion-color-dark);
+  font-weight: 500;
+}
+
+.reserva-detail.precio {
+  background: linear-gradient(135deg, var(--ion-color-success-tint), rgba(var(--ion-color-success-rgb), 0.1));
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.precio-amount {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ion-color-success-shade) !important;
+}
+
+.reserva-card-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid var(--ion-color-light-shade);
+}
+
+/* Lista mensual */
+.lista-mes-container {
+  padding: 0;
+}
+
+.dia-reservas-section {
+  margin-bottom: 32px;
+}
+
+.dia-header {
+  background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-primary-shade));
+  color: white;
+  padding: 16px 20px;
+  border-radius: 12px 12px 0 0;
+  margin: 0 16px;
+}
+
+.fecha-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fecha-info h3 {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-transform: capitalize;
+}
+
+.contador-reservas {
+  --background: rgba(255, 255, 255, 0.2);
+  --color: white;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.reservas-dia-grid {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  background: white;
+  border-radius: 0 0 12px 12px;
+  margin: 0 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--ion-color-light-shade);
+  border-top: none;
+}
+
+/* Cards mini para vista mensual */
+.reserva-card-mini {
+  background: var(--ion-color-light-tint);
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid var(--ion-color-light-shade);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reserva-card-mini:hover {
+  background: white;
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: var(--ion-color-primary-tint);
+}
+
+.reserva-mini-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.usuario-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.usuario-info ion-icon {
+  color: var(--ion-color-primary);
+  font-size: 1rem;
+}
+
+.usuario-nombre {
+  font-weight: 600;
+  color: var(--ion-color-dark);
+  font-size: 0.95rem;
+}
+
+.estado-mini {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+}
+
+.reserva-mini-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detail-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+
+.detail-row ion-icon {
+  color: var(--ion-color-primary);
+  font-size: 0.9rem;
+  min-width: 16px;
+}
+
+.detail-row span {
+  color: var(--ion-color-medium);
+  font-weight: 500;
+}
+
+.precio-row {
+  background: rgba(var(--ion-color-success-rgb), 0.1);
+  padding: 6px 8px;
+  border-radius: 6px;
+  border-left: 3px solid var(--ion-color-success);
+}
+
+.precio-destacado {
+  font-weight: 700;
+  color: var(--ion-color-success-shade) !important;
+  font-size: 0.9rem;
+}
+
+.reserva-mini-action {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 4px;
+}
+
+/* Estados sin reservas mejorados */
+.sin-dia-seleccionado,
+.sin-reservas {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--ion-color-medium);
+  background: linear-gradient(135deg, var(--ion-color-light-tint), rgba(var(--ion-color-light-rgb), 0.3));
+  border-radius: 16px;
+  border: 2px dashed var(--ion-color-light-shade);
+  margin: 16px;
+}
+
+.sin-dia-seleccionado ion-icon,
+.sin-reservas ion-icon {
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+
+.sin-dia-seleccionado p,
+.sin-reservas p {
+  margin: 8px 0;
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: var(--ion-color-medium);
+}
+
+/* Responsive para cards de reserva */
+@media (max-width: 768px) {
+  .reservas-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .reserva-card {
+    padding: 16px;
+  }
+  
+  .reservas-dia-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .dia-header {
+    margin: 0 8px;
+  }
+  
+  .reservas-dia-grid {
+    margin: 0 8px;
+    padding: 12px;
+  }
+  
+  .reserva-card-mini {
+    padding: 12px;
+  }
+}
+
+@media (min-width: 768px) {
+  .reservas-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+  
+  .reservas-dia-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
 }
 
 /* Mobile nav */
 @media (max-width: 480px) {
   .navegacion-calendario {
-    padding: 0 10px;
+    padding: 8px 12px;
   }
 
   .titulo-mes {
     font-size: 1rem;
-    width: 60%;
   }
 
   .boton-hoy {
-    font-size: 0.8rem;
-    --padding-start: 8px;
-    --padding-end: 8px;
+    font-size: 0.75rem;
+    --padding-start: 12px;
+    --padding-end: 12px;
+    margin-left: 12px;
+  }
+
+  .navegacion-calendario ion-button {
+    min-width: 36px;
+    height: 36px;
+  }
+
+  .calendar-view {
+    padding: 8px;
+    padding-bottom: 100px;
+  }
+
+  .panel-reservas {
+    margin-bottom: 50px;
+    padding: 16px;
+  }
+
+  .reserva-item {
+    margin: 6px 8px;
+  }
+
+  ion-item-divider {
+    margin: 16px 8px 6px 8px;
+    padding: 10px 12px;
   }
 }
