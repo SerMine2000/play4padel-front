@@ -317,24 +317,18 @@ const Pay: React.FC = () => {
                   <div className="card-details-grid">
                     <div className="form-group">
                       <label className="form-label">Número de tarjeta</label>
-                      <div className="stripe-field">
-                        <CardNumberElement options={cardElementOptions} />
-                      </div>
+                      <CardNumberElement options={cardElementOptions} />
                     </div>
 
                     <div className="card-row">
                       <div className="form-group">
                         <label className="form-label">Fecha de vencimiento</label>
-                        <div className="stripe-field">
-                          <CardExpiryElement options={cardElementOptions} />
-                        </div>
+                        <CardExpiryElement options={cardElementOptions} />
                       </div>
 
                       <div className="form-group">
                         <label className="form-label">Código de seguridad</label>
-                        <div className="stripe-field">
-                          <CardCvcElement options={cardElementOptions} />
-                        </div>
+                        <CardCvcElement options={cardElementOptions} />
                       </div>
                     </div>
                   </div>

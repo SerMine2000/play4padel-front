@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { IonPage, IonContent, IonButton, IonSelect, IonSelectOption, IonTextarea, IonDatetime, IonLoading, IonToast, IonIcon, IonPopover, IonHeader, IonToolbar, IonTitle, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonGrid, IonRow, IonCol, IonText } from '@ionic/react';
-import { tennisballOutline, calendarOutline, timeOutline, businessOutline} from 'ionicons/icons';
+import React, { useState, useEffect } from 'react';
+import { IonPage, IonContent, IonButton, IonTextarea, IonDatetime, IonLoading, IonToast, IonIcon } from '@ionic/react';
+import { tennisballOutline } from 'ionicons/icons';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import apiService from '../../services/api.service';
@@ -21,7 +21,6 @@ interface RangoHorario {
 const Reservas: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const fechaSelectorRef = useRef<HTMLDivElement>(null);
   
   // Estados para los datos de la reserva
   const [clubes, setClubes] = useState<any[]>([]);
@@ -37,7 +36,6 @@ const Reservas: React.FC = () => {
   const [precioTotal, setPrecioTotal] = useState<number>(0);
   const [tarifaTotal, setTarifaTotal] = useState<number>(0);
   const [notas, setNotas] = useState<string>('');
-  const [isDateTimeOpen, setIsDateTimeOpen] = useState<boolean>(false);
   
   // Estados para UI
   const [cargando, setCargando] = useState<boolean>(false);
@@ -85,8 +83,9 @@ const Reservas: React.FC = () => {
     try {
       setCargando(true);
       const response = await apiService.get(`/clubs/${clubSeleccionado}/pistas`);
-      // console.log("Pistas cargadas:", response);
-      setPistas(response);
+      // Ordenar pistas por número
+      const pistasOrdenadas = response.sort((a: any, b: any) => a.numero - b.numero);
+      setPistas(pistasOrdenadas);
     } catch (error) {
       console.error('Error al cargar pistas:', error);
       mostrarMensaje('Error al cargar las pistas', 'danger');
@@ -99,7 +98,6 @@ const Reservas: React.FC = () => {
   useEffect(() => {
     if (pistaSeleccionada) {
       const pistaInfo = pistas.find(p => p.id === pistaSeleccionada);
-      // console.log("Pista seleccionada:", pistaInfo);
       setPistaDatos(pistaInfo);
     } else {
       setPistaDatos(null);
@@ -128,7 +126,7 @@ const Reservas: React.FC = () => {
     }
   }, [franjasSeleccionadas]);
   
-  // Función para calcular el precio total basado en el número de franjas horarias
+  // ✅ Función para calcular el precio total (SOLO UNA HORA)
   const calcularPrecioTotal = () => {
     if (!pistaDatos || franjasSeleccionadas.length === 0) {
       setPrecioTotal(0);
@@ -136,17 +134,13 @@ const Reservas: React.FC = () => {
       return;
     }
     
-    // Obtener el precio base de la pista
+    // Obtener el precio base de la pista (siempre será solo 1 franja)
     const precioPista = pistaDatos.precio_hora;
     
-    // Multiplicar por el número de franjas seleccionadas
-    const numFranjas = franjasSeleccionadas.length;
-    const precio = precioPista * numFranjas;
+    console.log(`Calculando precio: ${precioPista}€ × 1 franja = ${precioPista}€`);
     
-    console.log(`Calculando precio: ${precioPista}€ × ${numFranjas} franjas = ${precio}€`);
-    
-    setPrecioTotal(precio);
-    setTarifaTotal(precio); // También actualizar la tarifa total
+    setPrecioTotal(precioPista);
+    setTarifaTotal(precioPista);
   };
   
   // Función para consolidar franjas horarias en rangos continuos
@@ -194,12 +188,10 @@ const Reservas: React.FC = () => {
       
       // Obtener todas las reservas existentes para esta pista y fecha
       const reservasResponse = await apiService.get(`/reservas?id_pista=${pistaSeleccionada}&fecha=${fechaFormateada}`);
-      //console.log("Reservas existentes:", reservasResponse);
       const reservasExistentes = Array.isArray(reservasResponse) ? reservasResponse : [];
       
       // Obtener horario del club
       const disponibilidadResponse = await apiService.get(`/pistas/${pistaSeleccionada}/disponibilidad?fecha=${fechaFormateada}`);
-      //console.log("Disponibilidad:", disponibilidadResponse);
       
       if (disponibilidadResponse.disponible) {
         // Generar todas las franjas horarias fijas de 90 minutos
@@ -210,8 +202,6 @@ const Reservas: React.FC = () => {
         
         // Filtrar franjas ocupadas
         const franjasDisponibles = filtrarFranjasOcupadas(todasLasFranjas, reservasExistentes);
-        
-        console.log("Franjas disponibles:", franjasDisponibles);
         
         if (franjasDisponibles.length > 0) {
           setHorasDisponibles(franjasDisponibles);
@@ -293,24 +283,33 @@ const Reservas: React.FC = () => {
     });
   };
   
-  // Función para seleccionar/deseleccionar franjas horarias
+  // ✅ Función para seleccionar/deseleccionar franjas horarias (SOLO UNA A LA VEZ)
   const toggleFranjaHoraria = (franja: FranjaHoraria) => {
-    // Copiar el array de franjas disponibles
-    const nuevasHorasDisponibles = horasDisponibles.map(f => {
-      if (f.inicio === franja.inicio && f.fin === franja.fin) {
-        return { ...f, seleccionada: !f.seleccionada };
-      }
-      return f;
-    });
+    // Primero desseleccionar todas las franjas
+    const nuevasHorasDisponibles = horasDisponibles.map(f => ({
+      ...f,
+      seleccionada: false
+    }));
+    
+    // Luego seleccionar solo la franja clickeada (si no estaba ya seleccionada)
+    const franjaActual = nuevasHorasDisponibles.find(f => 
+      f.inicio === franja.inicio && f.fin === franja.fin
+    );
+    
+    if (franjaActual) {
+      // Si la franja ya estaba seleccionada, la deseleccionamos
+      // Si no estaba seleccionada, la seleccionamos
+      franjaActual.seleccionada = !franja.seleccionada;
+    }
     
     setHorasDisponibles(nuevasHorasDisponibles);
     
-    // Actualizar franjas seleccionadas
+    // Actualizar franjas seleccionadas (solo una o ninguna)
     const nuevasFranjasSeleccionadas = nuevasHorasDisponibles.filter(f => f.seleccionada);
     setFranjasSeleccionadas(nuevasFranjasSeleccionadas);
   };
   
-  // Función para realizar la reserva
+  // ✅ Función para realizar la reserva (SIMPLIFICADA PARA UNA SOLA FRANJA)
   const realizarReserva = async () => {
     if (!user) {
       mostrarMensaje('Debes iniciar sesión para reservar', 'warning');
@@ -324,77 +323,52 @@ const Reservas: React.FC = () => {
   
     try {
       setCargando(true);
-      let ultimaReservaId: number | null = null;
-  
-      for (const franja of franjasSeleccionadas) {
-        const reservaData = {
-          id_usuario: user.id,
+      
+      // Solo una franja seleccionada
+      const franja = franjasSeleccionadas[0];
+      
+      const reservaData = {
+        id_usuario: user.id,
+        id_pista: pistaSeleccionada,
+        fecha: formatearFecha(fechaSeleccionada),
+        hora_inicio: formatearHoraAPI(franja.inicio),
+        hora_fin: formatearHoraAPI(franja.fin),
+        precio_total: pistaDatos.precio_hora,
+        estado: 'pendiente',
+        notas: notas || ''
+      };
+
+      const respuesta = await apiService.post('/crear-reserva', reservaData);
+      console.log("Respuesta crear-reserva:", respuesta);
+
+      const idReserva = respuesta?.reserva_id || respuesta?.data?.reserva_id;
+      if (!idReserva) {
+        mostrarMensaje('No se pudo obtener el ID de la reserva creada', 'danger');
+        return;
+      }
+
+      let precioFinal = pistaDatos.precio_hora;
+      
+      try {
+        const reservaCompleta = await apiService.get(`/reservas/${idReserva}`);
+        if (reservaCompleta && reservaCompleta.precio_total) {
+          precioFinal = reservaCompleta.precio_total;
+        }
+      } catch (error) {
+        console.warn("Error al obtener datos de la reserva, usando precio de pista como fallback:", error);
+      }
+      
+      navigate('/pay', {
+        state: {
+          reserva_id: idReserva,
           id_pista: pistaSeleccionada,
           fecha: formatearFecha(fechaSeleccionada),
           hora_inicio: formatearHoraAPI(franja.inicio),
           hora_fin: formatearHoraAPI(franja.fin),
-          precio_total: pistaDatos.precio_hora,
-          estado: 'pendiente',
-          notas: notas || ''
-        };
-  
-        const respuesta = await apiService.post('/crear-reserva', reservaData);
-        console.log("Respuesta crear-reserva:", respuesta);
-  
-        const idReserva = respuesta?.reserva_id || respuesta?.data?.reserva_id;
-        if (!idReserva) {
-          mostrarMensaje('No se pudo obtener el ID de la reserva creada', 'danger');
-          return;
+          precio: precioFinal
         }
-  
-        ultimaReservaId = idReserva;
-      }
-  
-      if (ultimaReservaId) {
-        // ✅ NUEVA: Obtener los datos completos de la reserva creada para asegurar el precio correcto
-        let precioFinal = pistaDatos.precio_hora; // Fallback al precio de la pista
-        
-        try {
-          console.log("Obteniendo datos completos de la reserva:", ultimaReservaId);
-          const reservaCompleta = await apiService.get(`/reservas/${ultimaReservaId}`);
-          console.log("Reserva completa obtenida:", reservaCompleta);
-          
-          // Usar el precio de la reserva si está disponible
-          if (reservaCompleta && reservaCompleta.precio_total) {
-            precioFinal = reservaCompleta.precio_total;
-            console.log("✅ Usando precio de la reserva:", precioFinal);
-          } else {
-            console.log("⚠️ No se pudo obtener precio de la reserva, usando precio de pista:", precioFinal);
-          }
-        } catch (error) {
-          console.warn("⚠️ Error al obtener datos de la reserva, usando precio de pista como fallback:", error);
-          console.log("Precio fallback:", precioFinal);
-        }
-        
-        const primeraFranja = franjasSeleccionadas[0]; // usamos la primera franja para pasar los datos
-        
-        // Datos para debugging
-        console.log('Datos enviados al pago:', {
-          reserva_id: ultimaReservaId,
-          precio_enviado: precioFinal,
-          precio_pista_original: pistaDatos.precio_hora,
-          precio_total_calculado: precioTotal,
-          franjas_seleccionadas: franjasSeleccionadas.length
-        });
-  
-        navigate('/pay', {
-          state: {
-            reserva_id: ultimaReservaId,
-            id_pista: pistaSeleccionada,
-            fecha: formatearFecha(fechaSeleccionada),
-            hora_inicio: formatearHoraAPI(primeraFranja.inicio),
-            hora_fin: formatearHoraAPI(primeraFranja.fin),
-            precio: precioFinal  // ✅ Usar el precio final (reserva o fallback)
-          }
-        });
-      } else {
-        mostrarMensaje('No se pudo crear ninguna reserva', 'danger');
-      }
+      });
+      
     } catch (error) {
       console.error('Error al realizar la reserva:', error);
       mostrarMensaje('No se ha podido realizar la reserva.', 'danger');
@@ -402,8 +376,6 @@ const Reservas: React.FC = () => {
       setCargando(false);
     }
   };
-  
-    
   
   // Función para mostrar mensajes
   const mostrarMensaje = (mensaje: string, color: string = 'success') => {
@@ -445,7 +417,6 @@ const Reservas: React.FC = () => {
   const handleFechaChange = (e: CustomEvent) => {
     if (e.detail.value) {
       setFechaSeleccionada(e.detail.value as string);
-      setIsDateTimeOpen(false);
     }
   };
 
@@ -458,184 +429,212 @@ const Reservas: React.FC = () => {
     ).join(', ');
   };
 
-  // Generar resumen de la reserva
-  const generarResumenReserva = () => {
-    if (!clubDatos || !pistaDatos || !fechaSeleccionada || franjasSeleccionadas.length === 0) {
-      return null;
-    }
-
-    const horariosStr = obtenerHorariosConsolidados();
-
-    return (
-      <IonCard>
-        <IonCardHeader>
-          <IonCardTitle>Resumen de la Reserva</IonCardTitle>
-        </IonCardHeader>
-        <IonCardContent>
-          <IonGrid>
-            <IonRow>
-              <IonCol size="1">
-                <IonIcon icon={businessOutline} color="primary" />
-              </IonCol>
-              <IonCol size="11">
-                <strong>Club:</strong> {clubDatos.nombre}
-              </IonCol>
-            </IonRow>
-            <IonRow>
-              <IonCol size="1">
-                <IonIcon icon={tennisballOutline} color="primary" />
-              </IonCol>
-              <IonCol size="11">
-                <strong>Pista:</strong> Pista {pistaDatos.numero} - {pistaDatos.tipo}
-              </IonCol>
-            </IonRow>
-            <IonRow>
-              <IonCol size="1">
-                <IonIcon icon={calendarOutline} color="primary" />
-              </IonCol>
-              <IonCol size="11">
-                <strong>Fecha:</strong> {formatearFechaMostrar(fechaSeleccionada)}
-              </IonCol>
-            </IonRow>
-            <IonRow>
-              <IonCol size="1">
-                <IonIcon icon={timeOutline} color="primary" />
-              </IonCol>
-              <IonCol size="11">
-                <strong>Horario:</strong> {horariosStr}
-              </IonCol>
-            </IonRow>
-          </IonGrid>
-        </IonCardContent>
-      </IonCard>
-    );
-  };
-
   return (
     <IonPage>
       <IonContent>
-        <div className="pagina-reservas">
-          <form>
-            <h2>Reserva tu Pista de Pádel</h2>
+        <div className="contenedor-reservas-profesional">
+          
+          {/* ✅ Encabezado alineado a la izquierda con línea morada */}
+          <div className="encabezado-pagina">
+            <h1 className="titulo-pagina">Reservar Pista</h1>
+            <div className="linea-titulo-principal"></div>
+            <p className="descripcion-pagina">Encuentra y reserva tu pista ideal en unos simples pasos</p>
+          </div>
+
+          <div className="layout-reservas-dos-columnas">
             
-            {/* Selección de Club */}
-            <div>
-              <label>Selecciona un Club *</label>
-              <IonSelect 
-                value={clubSeleccionado} 
-                placeholder="Selecciona un club" 
-                interface="action-sheet"
-                onIonChange={e => {
-                  setClubSeleccionado(e.detail.value);
-                  setPistaSeleccionada(null);
-                  setPistaDatos(null);
-                  setHorasDisponibles([]);
-                  setFranjasSeleccionadas([]);
-                  setRangosHorarios([]);
-                }}
-              >
-                {clubes.map(club => (
-                  <IonSelectOption key={club.id} value={club.id}>{club.nombre}</IonSelectOption>
-                ))}
-              </IonSelect>
-            </div>
-            
-            {/* Selección de Pista (solo visible si hay club seleccionado) */}
-            {clubSeleccionado && (
-              <div>
-                <label>Selecciona una Pista *</label>
-                <IonSelect 
-                  value={pistaSeleccionada} 
-                  placeholder="Selecciona una pista" 
-                  interface="action-sheet"
-                  onIonChange={e => {
-                    setPistaSeleccionada(e.detail.value);
-                    setHorasDisponibles([]);
-                    setFranjasSeleccionadas([]);
-                    setRangosHorarios([]);
-                  }}
-                >
-                  {pistas.map(pista => (
-                    <IonSelectOption key={pista.id} value={pista.id}>
-                      Pista {pista.numero} - {pista.tipo} ({pista.precio_hora}€/h)
-                    </IonSelectOption>
-                  ))}
-                </IonSelect>
-              </div>
-            )}
-            
-            {/* Selección de Fecha y Horario en layout horizontal */}
-            {pistaSeleccionada && (
-              <div className="fecha-horario-container">
-                {/* Columna de Fecha */}
-                <div className="fecha-container">
-                  <label>Selecciona una Fecha *</label>
-                  <IonDatetime
-                    presentation="date"
-                    min={new Date().toISOString()}
-                    max={new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()} // 30 días en el futuro
-                    value={fechaSeleccionada}
-                    onIonChange={handleFechaChange}
-                    locale="es-ES"
-                    firstDayOfWeek={1}
-                  />
+            {/* Columna Izquierda: Card Único con todo el flujo */}
+            <div className="columna-seleccion-unificada">
+              <div className="tarjeta-seleccion-completa">
+                
+                {/* Encabezado con línea morada */}
+                <div className="encabezado-tarjeta-unificado">
+                  <h2 className="titulo-tarjeta-unificado">Buscar Disponibilidad</h2>
+                  <div className="linea-morada"></div>
                 </div>
                 
-                {/* Columna de Horario (solo visible si hay fecha seleccionada) */}
-                {fechaSeleccionada && horasDisponibles.length > 0 && (
-                  <div className="horario-container">
-                    <label>Selecciona Horario *</label>
-                    <div className="horario-grid">
-                      {horasDisponibles.map((franja, index) => (
-                        <IonButton
-                          key={index}
-                          expand="block"
-                          color={franja.seleccionada ? "primary" : "light"}
-                          onClick={() => toggleFranjaHoraria(franja)}
+                <div className="contenido-seleccion-completa">
+                  
+                  {/* Sección 1: Lista de Clubes */}
+                  <div className="seccion-selector">
+                    <h3 className="subtitulo-seccion">Club</h3>
+                    <div className="lista-clubes-scrolleable">
+                      {clubes.map(club => (
+                        <div 
+                          key={club.id}
+                          className={`item-club ${clubSeleccionado === club.id ? 'club-seleccionado' : 'club-disponible'}`}
+                          onClick={() => {
+                            setClubSeleccionado(club.id);
+                            setPistaSeleccionada(null);
+                            setPistaDatos(null);
+                            setHorasDisponibles([]);
+                            setFranjasSeleccionadas([]);
+                            setRangosHorarios([]);
+                          }}
                         >
-                          {franja.inicio} - {franja.fin}
-                        </IonButton>
+                          {club.nombre}
+                        </div>
                       ))}
                     </div>
                   </div>
-                )}
-              </div>
-            )}
-            
-            {/* Notas adicionales */}
-            <div>
-              <label>Notas adicionales</label>
-              <IonTextarea 
-                value={notas} 
-                placeholder="Escribe aquí cualquier información adicional"
-                onIonChange={e => setNotas(e.detail.value || '')} 
-                rows={3}
-              ></IonTextarea>
-            </div>
-            
-            {/* Resumen de la reserva */}
-            {franjasSeleccionadas.length > 0 && (
-              <>
-                {generarResumenReserva()}
-                
-                {/* Precio Total */}
-                <div className="precio-total">
-                  <label>Precio Total:</label>
-                  <div>{precioTotal.toFixed(2)}€</div>
+
+                  {/* Sección 2: Selector de Pista */}
+                  {clubSeleccionado && (
+                    <div className="seccion-selector">
+                      <h3 className="subtitulo-seccion">Pista</h3>
+                      <div className="grid-pistas-compacto">
+                        {pistas.map(pista => (
+                          <div 
+                            key={pista.id}
+                            className={`tarjeta-pista-compacta ${pistaSeleccionada === pista.id ? 'pista-seleccionada' : 'pista-disponible'}`}
+                            onClick={() => {
+                              setPistaSeleccionada(pista.id);
+                              setHorasDisponibles([]);
+                              setFranjasSeleccionadas([]);
+                              setRangosHorarios([]);
+                            }}
+                          >
+                            <div className="info-pista-compacta">
+                              <div className="numero-pista">Pista {pista.numero}</div>
+                              <div className="tipo-precio">
+                                <span className="tipo-pista">{pista.tipo}</span>
+                                <span className="precio-pista">{pista.precio_hora}€/h</span>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Sección 3: Calendario y Horarios */}
+                  {pistaSeleccionada && (
+                    <div className="seccion-calendario-horarios">
+                      
+                      <div className="contenedor-calendario-horarios">
+                        {/* Calendario */}
+                        <div className="contenedor-calendario">
+                          <h4 className="titulo-calendario">Fecha</h4>
+                          <IonDatetime
+                            presentation="date"
+                            min={new Date().toISOString()}
+                            max={new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()}
+                            value={fechaSeleccionada}
+                            onIonChange={handleFechaChange}
+                            locale="es-ES"
+                            firstDayOfWeek={1}
+                            className="calendario-compacto"
+                          />
+                        </div>
+                        
+                        {/* Horarios disponibles (aparecen al lado cuando se selecciona fecha) */}
+                        {fechaSeleccionada && (
+                          <div className="contenedor-horarios-lateral">
+                            <h4 className="titulo-horarios">Horarios</h4>
+                            {horasDisponibles.length === 0 ? (
+                              <p className="mensaje-sin-horarios">No hay horarios disponibles para esta fecha</p>
+                            ) : (
+                              <div className="grid-horarios-lateral">
+                                {horasDisponibles.map((franja, index) => (
+                                  <button
+                                    key={index}
+                                    className={`boton-horario-lateral ${franja.seleccionada ? 'horario-seleccionado' : 'horario-disponible'}`}
+                                    onClick={() => toggleFranjaHoraria(franja)}
+                                  >
+                                    {franja.inicio} - {franja.fin}
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
                 </div>
-              </>
-            )}
-            
-            {/* Botón de reserva */}
-            <IonButton 
-              expand="block" 
-              onClick={realizarReserva}
-              disabled={!clubSeleccionado || !pistaSeleccionada || !fechaSeleccionada || franjasSeleccionadas.length === 0}
-            >
-              <IonIcon slot="start" icon={tennisballOutline} />
-              RESERVAR PISTA
-            </IonButton>
-          </form>
+              </div>
+            </div>
+
+            {/* Columna Derecha: Resumen de Reserva (mantiene el tamaño actual) */}
+            <div className="columna-resumen">
+              <div className="tarjeta-resumen">
+                <div className="encabezado-tarjeta-unificado">
+                  <h2 className="titulo-tarjeta-unificado">Datos de la reserva</h2>
+                  <div className="linea-morada"></div>
+                </div>
+                
+                <div className="contenido-resumen-pro">
+                  
+                  {franjasSeleccionadas.length === 0 ? (
+                    <div className="estado-vacio">
+                      <p className="texto-vacio">Completa la selección para ver los datos de la reserva</p>
+                    </div>
+                  ) : (
+                    <>
+                      {/* Detalles de la reserva */}
+                      <div className="detalles-reserva-pro">
+                        <div className="item-detalle">
+                          <span className="etiqueta-detalle">Club</span>
+                          <span className="valor-detalle">{clubDatos?.nombre}</span>
+                        </div>
+                        <div className="item-detalle">
+                          <span className="etiqueta-detalle">Pista</span>
+                          <span className="valor-detalle">Pista {pistaDatos?.numero} - {pistaDatos?.tipo}</span>
+                        </div>
+                        <div className="item-detalle">
+                          <span className="etiqueta-detalle">Fecha</span>
+                          <span className="valor-detalle">{formatearFechaMostrar(fechaSeleccionada)}</span>
+                        </div>
+                        <div className="item-detalle">
+                          <span className="etiqueta-detalle">Horario</span>
+                          <span className="valor-detalle">{obtenerHorariosConsolidados()}</span>
+                        </div>
+                      </div>
+
+                      {/* Notas */}
+                      <div className="seccion-notas">
+                        <label className="etiqueta-filtro">Notas adicionales</label>
+                        <IonTextarea 
+                          value={notas} 
+                          placeholder="Añade cualquier información relevante..."
+                          onIonChange={e => setNotas(e.detail.value || '')} 
+                          rows={3}
+                          className="area-notas-pro"
+                        />
+                      </div>
+
+                      {/* Precio */}
+                      <div className="seccion-precio">
+                        <div className="linea-precio">
+                          <span className="concepto-precio">Subtotal (1 hora)</span>
+                          <span className="cantidad-precio">{precioTotal.toFixed(2)}€</span>
+                        </div>
+                        <div className="linea-total">
+                          <span className="etiqueta-total">Total</span>
+                          <span className="valor-total">{precioTotal.toFixed(2)}€</span>
+                        </div>
+                      </div>
+
+                      {/* Botón de confirmación */}
+                      <IonButton 
+                        expand="block" 
+                        onClick={realizarReserva}
+                        disabled={!clubSeleccionado || !pistaSeleccionada || !fechaSeleccionada || franjasSeleccionadas.length === 0}
+                        className="boton-confirmar-pro"
+                        fill="solid"
+                        color="primary"
+                      >
+                        <IonIcon slot="start" icon={tennisballOutline} />
+                        Reservar
+                      </IonButton>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
         
         {/* Loading y Toast */}
