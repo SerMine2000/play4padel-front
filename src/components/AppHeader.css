@@ -1,10 +1,11 @@
-/* AppHeader.css */
+/* AppHeader.css - Con modo oscuro completo */
 
 .app-header {
   --background: #2D0A31;
   --border-style: none;
   --padding-top: 0;
   --padding-bottom: 0;
+  transition: all 0.3s ease;
 }
 
 ion-toolbar {
@@ -15,6 +16,7 @@ ion-toolbar {
   --padding-start: 16px;
   --padding-end: 16px;
   --min-height: 56px;
+  transition: all 0.3s ease;
 }
 
 .profile-button {
@@ -76,6 +78,20 @@ ion-toolbar {
 /* Asegurar que el contenido no se oculte detrás del header */
 ion-content {
   --padding-top: 0;
+}
+
+/* ===== MODO OSCURO ===== */
+.ion-palette-dark .app-header {
+  --background: #1a0b1d; /* Más oscuro en modo oscuro */
+}
+
+.ion-palette-dark ion-toolbar {
+  --background: #1a0b1d; /* Más oscuro en modo oscuro */
+}
+
+.ion-palette-dark .profile-avatar-initial {
+  background-color: #00FF66; /* Mantener verde brillante */
+  color: #1a0b1d; /* Color más oscuro para contraste */
 }
 
 /* Estilos para móvil */

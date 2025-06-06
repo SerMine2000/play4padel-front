@@ -16,7 +16,7 @@ import {
   IonSelectOption,
   IonDatetime,
   IonToast,
-  IonSpinner,
+  IonLoading,
   IonGrid,
   IonRow,
   IonCol,
@@ -201,22 +201,14 @@ const Torneos: React.FC = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <IonSpinner />
-      </div>
-    );
-  }
-
   return (
     <div className={`torneos-container ${theme}`}>
+      <IonLoading isOpen={loading} message="Cargando torneos..." />
+      
       <div className="page-header">
         <h1>Torneos</h1>
         <p>Gestiona y participa en torneos de pádel</p>
       </div>
-
-      {/* FAB se incluirá al final del contenido para que se mueva con el scroll */}
 
       <IonGrid>
         <IonRow>

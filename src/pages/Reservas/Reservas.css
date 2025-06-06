@@ -1,13 +1,14 @@
 /* ========================================
    CSS PROFESIONAL PARA RESERVAS - PLAY4PADEL
    Nueva estructura: Card único izquierda + Resumen derecha
+   ACTUALIZADO CON MÁRGENES CONSISTENTES
    ======================================== */
 
 /* Reset y contenedor principal */
 .contenedor-reservas-profesional {
   min-height: 100vh;
   background-color: var(--ion-background-color);
-  padding: 32px 24px;
+  padding: var(--margenPaginaDesktop, 32px 40px); /* CORREGIDO: usar variable de márgenes */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -16,33 +17,38 @@
 
 /* ✅ Encabezado de la página - ALINEADO A LA IZQUIERDA con línea morada */
 .encabezado-pagina {
-  text-align: left; /* ✅ Cambiado de center a left */
+  text-align: left;
   margin-bottom: 40px;
   max-width: 1200px;
   width: 100%;
 }
 
 .titulo-pagina {
-  font-size: 2.5rem;
+  font-size: 2.2rem; /* CORREGIDO: mismo tamaño que otras páginas */
   font-weight: 700;
   color: var(--ion-text-color);
-  margin: 0 0 8px 0; /* ✅ Reducido margen para que la línea esté más cerca */
+  margin: 0 0 0.5rem 0; /* CORREGIDO: mismo margen que otras páginas */
   letter-spacing: -0.5px;
+  position: relative;
+  display: inline-block;
 }
 
 /* ✅ NUEVA línea morada debajo del título principal */
-.linea-titulo-principal {
-  width: 80px; /* ✅ Línea similar a la de la imagen 2 */
-  height: 3px;
-  background: var(--ion-color-primary);
+.titulo-pagina::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--ion-color-primary), #a160fb);
   border-radius: 2px;
-  margin: 0 0 16px 0; /* ✅ Espacio entre línea y descripción */
 }
 
 .descripcion-pagina {
-  font-size: 1.1rem;
-  color: var(--ion-text-color-step-400);
-  margin: 0;
+  font-size: 1rem;
+  color: var(--ion-color-medium);
+  margin: 0.5rem 0 0 0;
   font-weight: 400;
   line-height: 1.5;
 }
@@ -674,7 +680,7 @@
 /* Tablet grande */
 @media (max-width: 1200px) {
   .contenedor-reservas-profesional {
-    padding: 24px 20px;
+    padding: var(--margenPaginaTablet, 24px 32px); /* CORREGIDO: usar variable de márgenes */
   }
   
   .layout-reservas-dos-columnas {
@@ -700,11 +706,11 @@
 /* Tablet */
 @media (max-width: 768px) {
   .contenedor-reservas-profesional {
-    padding: 20px 16px;
+    padding: var(--margenPaginaMobile, 20px 24px); /* CORREGIDO: usar variable de márgenes */
   }
   
   .titulo-pagina {
-    font-size: 2.2rem;
+    font-size: 1.8rem;
   }
   
   .descripcion-pagina {
@@ -742,7 +748,7 @@
 /* Mobile */
 @media (max-width: 480px) {
   .contenedor-reservas-profesional {
-    padding: 16px 12px;
+    padding: var(--margenPaginaMobileSmall, 16px 20px); /* CORREGIDO: usar variable de márgenes */
   }
   
   .encabezado-pagina {
@@ -750,7 +756,7 @@
   }
   
   .titulo-pagina {
-    font-size: 1.9rem;
+    font-size: 1.6rem;
   }
   
   .encabezado-tarjeta-unificado {
@@ -811,7 +817,7 @@
 /* Mobile muy pequeño */
 @media (max-width: 360px) {
   .contenedor-reservas-profesional {
-    padding: 12px 8px;
+    padding: 12px 16px; /* Para móviles muy pequeños */
   }
   
   .titulo-pagina {

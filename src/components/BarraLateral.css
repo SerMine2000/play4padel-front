@@ -1,4 +1,4 @@
-/* BarraLateral.css - Diseño mejorado 2025 */
+/* BarraLateral.css - Diseño mejorado 2025 con modo oscuro completo */
 
 .barra-lateral {
   width: 250px;
@@ -197,4 +197,51 @@
   .menu-item-text {
     font-size: 14px;
   }
+}
+
+/* ===== MEJORAS MODO OSCURO ===== */
+
+/* Modo oscuro para barra lateral */
+.ion-palette-dark .barra-lateral {
+  background-color: #1a0b1d; /* Más oscuro en modo oscuro */
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.6);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ion-palette-dark .logo-container {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.ion-palette-dark .sidebar-logo {
+  color: #FFFFFF;
+}
+
+.ion-palette-dark .menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.ion-palette-dark .menu-item.active {
+  background-color: rgba(0, 255, 102, 0.2);
+  color: #00FF66;
+}
+
+.ion-palette-dark .menu-button-float {
+  background: #1a0b1d;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.ion-palette-dark .menu-button-float:hover {
+  background: #2a1a2d;
+}
+
+.ion-palette-dark .sidebar-close-button {
+  background-color: #2a1a2d;
+}
+
+.ion-palette-dark .sidebar-close-button:hover {
+  background-color: #3a2a3d;
+}
+
+.ion-palette-dark .sidebar-overlay {
+  background-color: rgba(0, 0, 0, 0.7);
 }

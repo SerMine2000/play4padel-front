@@ -1,60 +1,243 @@
+/* SolicitarClub.css - Estilo similar a Pay con modo oscuro completo */
+
 .solicitar-club-container {
-  padding: 1rem;
-  max-width: 1000px;
-  margin: 0 auto;
+  padding: 0;
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--ion-background-color);
+  color: var(--ion-text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* ===== HEADER SIMILAR A PAY ===== */
 .solicitar-club-header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.solicitar-club-header h1 {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  color: var(--ion-color-primary);
-  margin-bottom: 0.5rem;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 32px 40px 24px 40px;
+  background-color: var(--ion-background-color);
+  border-bottom: 1px solid var(--ion-border-color);
+  transition: all 0.3s ease;
 }
 
-.solicitar-club-header p {
+.back-button {
+  font-size: 24px;
+  color: var(--ion-color-primary);
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.back-button:hover {
+  transform: translateX(-2px);
+  color: var(--ion-color-primary-shade);
+}
+
+.solicitar-club-header-content {
+  flex: 1;
+}
+
+.solicitar-club-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--ion-text-color);
+  margin: 0 0 0.5rem 0;
+  position: relative;
+  display: inline-block;
+}
+
+.solicitar-club-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--ion-color-primary), #a160fb);
+  border-radius: 2px;
+}
+
+.solicitar-club-description {
   color: var(--ion-color-medium);
   font-size: 1rem;
+  margin: 16px 0 0 0;
+  line-height: 1.5;
 }
 
-.form-section {
-  margin-bottom: 2rem;
+/* ===== CONTENIDO PRINCIPAL ===== */
+.solicitar-club-container ion-card {
+  margin: 24px 40px;
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
+  background-color: var(--color-panel);
+  border: 1px solid var(--ion-border-color);
+  transition: all 0.3s ease;
 }
 
-.form-section h3 {
-  color: var(--ion-color-primary);
-  margin-bottom: 1rem;
-  padding-left: 1rem;
-  border-left: 3px solid var(--ion-color-primary);
+.solicitar-club-container ion-card-header {
+  background-color: transparent;
+  padding: 24px 24px 16px 24px;
 }
 
-.required-field {
-  position: relative;
-}
-
-.required-field::after {
-  content: '*';
-  color: var(--ion-color-danger);
-  margin-left: 4px;
-}
-
-.estado-chip {
+.solicitar-club-container ion-card-title {
+  font-size: 1.4rem;
   font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.75rem;
+  color: var(--ion-text-color);
+  margin: 0;
 }
 
-.info-section {
-  background: var(--ion-color-light);
+.solicitar-club-container ion-card-content {
+  padding: 0 24px 24px 24px;
+  background-color: transparent;
+}
+
+/* ===== CAMPOS DEL FORMULARIO MEJORADOS ===== */
+.form-field {
+  margin-bottom: 20px;
+  border-radius: 12px;
+  background-color: var(--colorFondoCampo);
+  border: 1px solid var(--colorBordeCampo);
+  transition: all 0.3s ease;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  --min-height: 60px;
+}
+
+.form-field:focus-within {
+  background-color: var(--colorFondoCampoFocus);
+  border-color: var(--colorBordeCampoFocus);
+  box-shadow: 0 0 0 3px rgba(97, 41, 240, 0.1);
+}
+
+.field-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--ion-text-color);
+  margin-bottom: 8px;
+  line-height: 1.2;
+  position: relative;
+  top: -2px;
+}
+
+.form-field ion-input,
+.form-field ion-textarea,
+.form-field ion-select {
+  --color: var(--ion-text-color);
+  --placeholder-color: var(--colorTextoPlaceholder);
+  --background: transparent;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.form-field ion-input {
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+}
+
+.form-field ion-textarea {
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  min-height: 100px;
+}
+
+.form-field ion-select {
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+}
+
+/* Campos requeridos */
+.field-label::after {
+  content: '';
+}
+
+.form-field ion-label:has-text("*")::after,
+.field-label:has-text("*")::after {
+  content: ' *';
+  color: var(--ion-color-danger);
+  font-weight: bold;
+}
+
+/* ===== SOLICITUDES EXISTENTES ===== */
+.solicitud-item {
+  border-left: 4px solid transparent;
+  transition: all 0.2s ease;
   border-radius: 8px;
+  margin-bottom: 8px;
+  background-color: var(--colorFondoSeccionConfig);
+}
+
+.solicitud-item.pendiente {
+  border-left-color: var(--ion-color-warning);
+  background-color: var(--colorFondoTarjetaConfig);
+}
+
+.solicitud-item.aprobada {
+  border-left-color: var(--ion-color-success);
+  background-color: rgba(76, 175, 80, 0.05);
+}
+
+.solicitud-item.rechazada {
+  border-left-color: var(--ion-color-danger);
+  background-color: var(--colorFondoRechazoConfig);
+}
+
+/* ===== ESTADO PENDIENTE ===== */
+.pending-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  background-color: var(--colorFondoMensajeConfig);
+  border-radius: 12px;
+  margin: 16px 0;
+}
+
+.pending-state ion-icon {
+  margin-bottom: 1rem;
+  color: var(--ion-color-warning);
+}
+
+.pending-state h3 {
+  color: var(--ion-color-warning);
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.pending-state p {
+  color: var(--ion-color-medium);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ===== BOTONES ===== */
+.solicitar-club-container ion-button {
+  height: 48px;
+  font-weight: 600;
+  border-radius: 12px;
+  --box-shadow: 0 4px 12px rgba(97, 41, 240, 0.25);
+  transition: all 0.2s ease;
+}
+
+.solicitar-club-container ion-button:hover {
+  --box-shadow: 0 6px 16px rgba(97, 41, 240, 0.35);
+  transform: translateY(-1px);
+}
+
+.solicitar-club-container ion-button[disabled] {
+  --box-shadow: none;
+  transform: none;
+  opacity: 0.6;
+}
+
+/* ===== INFORMACIÓN DEL PROCESO ===== */
+.info-section {
+  background-color: var(--colorFondoSeccionConfig);
+  border-radius: 12px;
   padding: 1rem;
   margin-bottom: 1rem;
+  border: 1px solid var(--ion-border-color);
 }
 
 .info-section h4 {
@@ -63,6 +246,8 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
 .info-section p {
@@ -71,146 +256,108 @@
   line-height: 1.4;
 }
 
-.pending-state {
-  text-align: center;
-  padding: 3rem 1rem;
-}
-
-.pending-state ion-icon {
-  margin-bottom: 1rem;
-}
-
-.pending-state h3 {
-  color: var(--ion-color-warning);
-  margin-bottom: 1rem;
-}
-
-.pending-state p {
-  color: var(--ion-color-medium);
-  line-height: 1.5;
-}
-
-.solicitud-item {
-  border-left: 4px solid transparent;
-  transition: all 0.2s ease;
-}
-
-.solicitud-item.pendiente {
-  border-left-color: var(--ion-color-warning);
-  background: rgba(255, 193, 7, 0.05);
-}
-
-.solicitud-item.aprobada {
-  border-left-color: var(--ion-color-success);
-  background: rgba(40, 167, 69, 0.05);
-}
-
-.solicitud-item.rechazada {
-  border-left-color: var(--ion-color-danger);
-  background: rgba(220, 53, 69, 0.05);
-}
-
-.proceso-timeline {
-  padding: 1rem 0;
-}
-
-.timeline-step {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 1rem 0;
-  border-left: 2px solid var(--ion-color-light);
-  padding-left: 2rem;
-  margin-left: 1rem;
-  position: relative;
-}
-
-.timeline-step::before {
-  content: '';
-  position: absolute;
-  left: -6px;
-  top: 1.5rem;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--ion-color-medium);
-}
-
-.timeline-step.active::before {
-  background: var(--ion-color-primary);
-}
-
-.timeline-content h4 {
-  margin: 0 0 0.25rem 0;
-  font-size: 1rem;
+/* ===== CHIPS DE ESTADO ===== */
+ion-chip {
   font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
 }
 
-.timeline-content p {
-  margin: 0;
+/* ===== NOTAS Y COMENTARIOS ===== */
+ion-note {
+  display: block;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
   font-size: 0.9rem;
-  color: var(--ion-color-medium);
   line-height: 1.4;
 }
 
-.form-note {
-  background: var(--ion-color-light);
-  padding: 0.75rem;
-  border-radius: 4px;
-  margin-top: 0.5rem;
-  font-size: 0.85rem;
-  color: var(--ion-color-medium);
+ion-note[color="danger"] {
+  background-color: var(--colorFondoRechazoConfig);
+  border: 1px solid var(--colorBordeRojoConfig);
 }
 
-.form-note ion-icon {
-  margin-right: 0.5rem;
-  vertical-align: middle;
+ion-note[color="medium"] {
+  background-color: var(--colorFondoComentariosConfig);
+  border: 1px solid var(--ion-border-color);
 }
 
-/* Responsive adjustments */
+/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
-  .solicitar-club-container {
-    padding: 0.5rem;
+  .solicitar-club-header {
+    padding: 20px 24px 16px 24px;
+    gap: 16px;
   }
   
-  .solicitar-club-header h1 {
-    font-size: 1.5rem;
-    flex-direction: column;
-    gap: 0.25rem;
+  .solicitar-club-title {
+    font-size: 1.8rem;
   }
   
-  .form-section h3 {
-    font-size: 1.1rem;
+  .solicitar-club-container ion-card {
+    margin: 16px 24px;
   }
   
-  .pending-state {
-    padding: 2rem 1rem;
+  .back-button {
+    font-size: 22px;
   }
 }
 
-/* Dark theme adjustments */
-@media (prefers-color-scheme: dark) {
-  .info-section {
-    background: var(--ion-color-dark);
+@media (max-width: 480px) {
+  .solicitar-club-header {
+    padding: 16px 20px 12px 20px;
+    gap: 12px;
   }
   
-  .form-note {
-    background: var(--ion-color-dark);
+  .solicitar-club-title {
+    font-size: 1.6rem;
   }
   
-  .timeline-step {
-    border-left-color: var(--ion-color-dark);
+  .solicitar-club-container ion-card {
+    margin: 12px 20px;
   }
   
-  .solicitud-item.pendiente {
-    background: rgba(255, 193, 7, 0.1);
+  .solicitar-club-container ion-card-header {
+    padding: 20px 20px 12px 20px;
   }
   
-  .solicitud-item.aprobada {
-    background: rgba(40, 167, 69, 0.1);
+  .solicitar-club-container ion-card-content {
+    padding: 0 20px 20px 20px;
   }
-  
-  .solicitud-item.rechazada {
-    background: rgba(220, 53, 69, 0.1);
-  }
+}
+
+/* ===== MODO OSCURO ESPECÍFICO ===== */
+.ion-palette-dark .solicitar-club-container {
+  background-color: var(--ion-background-color);
+}
+
+.ion-palette-dark .solicitar-club-header {
+  background-color: var(--ion-background-color);
+  border-bottom-color: var(--ion-border-color);
+}
+
+.ion-palette-dark .solicitar-club-container ion-card {
+  background-color: var(--color-panel);
+  border-color: var(--ion-border-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.ion-palette-dark .form-field {
+  background-color: var(--colorFondoCampo);
+  border-color: var(--colorBordeCampo);
+}
+
+.ion-palette-dark .form-field:focus-within {
+  background-color: var(--colorFondoCampoFocus);
+  border-color: var(--colorBordeCampoFocus);
+  box-shadow: 0 0 0 3px rgba(0, 255, 102, 0.15);
+}
+
+.ion-palette-dark .pending-state {
+  background-color: var(--colorFondoMensajeConfig);
+}
+
+.ion-palette-dark .info-section {
+  background-color: var(--colorFondoSeccionConfig);
+  border-color: var(--ion-border-color);
 }

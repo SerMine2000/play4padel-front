@@ -23,12 +23,7 @@ import {
   IonSelect,
   IonSelectOption,
   IonText,
-  IonNote,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonButtons,
-  IonBackButton
+  IonNote
 } from '@ionic/react';
 import {
   businessOutline,
@@ -40,14 +35,17 @@ import {
   callOutline,
   mailOutline,
   globeOutline,
-  informationCircleOutline
+  informationCircleOutline,
+  arrowBackOutline
 } from 'ionicons/icons';
 import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import solicitudesService, { SolicitudClubData, MiSolicitudClub } from '../../services/solicitudes.service';
 import './SolicitarClub.css';
 
 const SolicitarClub: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   
   // Estado del formulario
   const [formData, setFormData] = useState<SolicitudClubData>({
@@ -109,6 +107,16 @@ const SolicitarClub: React.FC = () => {
     setFormData(prev => ({
       ...prev,
       [field]: value
+    }));
+  };
+
+  // Función para manejar inputs numéricos (solo números)
+  const handleNumericInputChange = (field: keyof SolicitudClubData, value: string) => {
+    // Solo permitir números
+    const numericValue = value.replace(/[^0-9]/g, '');
+    setFormData(prev => ({
+      ...prev,
+      [field]: numericValue
     }));
   };
 
@@ -197,23 +205,21 @@ const SolicitarClub: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonButtons slot="start">
-            <IonBackButton defaultHref="/home" />
-          </IonButtons>
-          <IonTitle>Solicitar Club</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      
       <IonContent>
         <div className="solicitar-club-container">
+          {/* Header con botón de retroceso */}
           <div className="solicitar-club-header">
-            <h1>
-              <IonIcon icon={businessOutline} />
-              Solicitar Crear Club
-            </h1>
-            <p>Envía tu solicitud para convertirte en administrador de un nuevo club de pádel</p>
+            <IonIcon
+              icon={arrowBackOutline}
+              className="back-button"
+              onClick={() => navigate(-1)}
+            />
+            <div className="solicitar-club-header-content">
+              <h1 className="solicitar-club-title">Solicitar Crear Club</h1>
+              <p className="solicitar-club-description">
+                Envía tu solicitud para convertirte en administrador de un nuevo club de pádel
+              </p>
+            </div>
           </div>
 
           {/* Mis Solicitudes */}
@@ -277,8 +283,8 @@ const SolicitarClub: React.FC = () => {
                   <IonGrid>
                     <IonRow>
                       <IonCol size="12" sizeMd="6">
-                        <IonItem>
-                          <IonLabel position="stacked">Nombre del Club *</IonLabel>
+                        <IonItem className="form-field">
+                          <IonLabel position="stacked" className="field-label">Nombre del Club *</IonLabel>
                           <IonInput
                             value={formData.nombre_club}
                             onIonInput={(e) => handleInputChange('nombre_club', e.detail.value!)}
@@ -289,13 +295,13 @@ const SolicitarClub: React.FC = () => {
                       </IonCol>
                       
                       <IonCol size="12" sizeMd="6">
-                        <IonItem>
-                          <IonLabel position="stacked">Teléfono</IonLabel>
+                        <IonItem className="form-field">
+                          <IonLabel position="stacked" className="field-label">Teléfono</IonLabel>
                           <IonInput
                             value={formData.telefono}
-                            onIonInput={(e) => handleInputChange('telefono', e.detail.value!)}
+                            onIonInput={(e) => handleNumericInputChange('telefono', e.detail.value!)}
                             placeholder="912345678"
-                            type="tel"
+                            inputmode="numeric"
                           />
                         </IonItem>
                       </IonCol>
@@ -303,8 +309,8 @@ const SolicitarClub: React.FC = () => {
 
                     <IonRow>
                       <IonCol size="12">
-                        <IonItem>
-                          <IonLabel position="stacked">Dirección *</IonLabel>
+                        <IonItem className="form-field">
+                          <IonLabel position="stacked" className="field-label">Dirección *</IonLabel>
                           <IonInput
                             value={formData.direccion}
                             onIonInput={(e) => handleInputChange('direccion', e.detail.value!)}
@@ -317,8 +323,8 @@ const SolicitarClub: React.FC = () => {
 
                     <IonRow>
                       <IonCol size="12" sizeMd="6">
-                        <IonItem>
-                          <IonLabel position="stacked">Email del Club</IonLabel>
+                        <IonItem className="form-field">
+                          <IonLabel position="stacked" className="field-label">Email del Club</IonLabel>
                           <IonInput
                             value={formData.email}
                             onIonInput={(e) => handleInputChange('email', e.detail.value!)}
@@ -329,8 +335,8 @@ const SolicitarClub: React.FC = () => {
                       </IonCol>
                       
                       <IonCol size="12" sizeMd="6">
-                        <IonItem>
-                          <IonLabel position="stacked">Sitio Web</IonLabel>
+                        <IonItem className="form-field">
+                          <IonLabel position="stacked" className="field-label">Sitio Web</IonLabel>
                           <IonInput
                             value={formData.sitio_web}
                             onIonInput={(e) => handleInputChange('sitio_web', e.detail.value!)}
@@ -343,8 +349,8 @@ const SolicitarClub: React.FC = () => {
 
                     <IonRow>
                       <IonCol size="12" sizeMd="6">
-                        <IonItem>
-                          <IonLabel position="stacked">Horario Apertura *</IonLabel>
+                        <IonItem className="form-field">
+                          <IonLabel position="stacked" className="field-label">Horario Apertura *</IonLabel>
                           <IonInput
                             value={formData.horario_apertura}
                             onIonInput={(e) => handleInputChange('horario_apertura', e.detail.value!)}
@@ -355,8 +361,8 @@ const SolicitarClub: React.FC = () => {
                       </IonCol>
                       
                       <IonCol size="12" sizeMd="6">
-                        <IonItem>
-                          <IonLabel position="stacked">Horario Cierre *</IonLabel>
+                        <IonItem className="form-field">
+                          <IonLabel position="stacked" className="field-label">Horario Cierre *</IonLabel>
                           <IonInput
                             value={formData.horario_cierre}
                             onIonInput={(e) => handleInputChange('horario_cierre', e.detail.value!)}
@@ -369,8 +375,8 @@ const SolicitarClub: React.FC = () => {
 
                     <IonRow>
                       <IonCol size="12" sizeMd="6">
-                        <IonItem>
-                          <IonLabel position="stacked">Número Estimado de Pistas</IonLabel>
+                        <IonItem className="form-field">
+                          <IonLabel position="stacked" className="field-label">Número Estimado de Pistas</IonLabel>
                           <IonSelect
                             value={formData.numero_pistas_estimado}
                             onIonChange={(e) => handleInputChange('numero_pistas_estimado', e.detail.value)}
@@ -389,8 +395,8 @@ const SolicitarClub: React.FC = () => {
 
                     <IonRow>
                       <IonCol size="12">
-                        <IonItem>
-                          <IonLabel position="stacked">Descripción del Club</IonLabel>
+                        <IonItem className="form-field">
+                          <IonLabel position="stacked" className="field-label">Descripción del Club</IonLabel>
                           <IonTextarea
                             value={formData.descripcion}
                             onIonInput={(e) => handleInputChange('descripcion', e.detail.value!)}
@@ -403,8 +409,8 @@ const SolicitarClub: React.FC = () => {
 
                     <IonRow>
                       <IonCol size="12">
-                        <IonItem>
-                          <IonLabel position="stacked">Motivo de la Solicitud *</IonLabel>
+                        <IonItem className="form-field">
+                          <IonLabel position="stacked" className="field-label">Motivo de la Solicitud *</IonLabel>
                           <IonTextarea
                             value={formData.motivo_solicitud}
                             onIonInput={(e) => handleInputChange('motivo_solicitud', e.detail.value!)}
@@ -418,8 +424,8 @@ const SolicitarClub: React.FC = () => {
 
                     <IonRow>
                       <IonCol size="12">
-                        <IonItem>
-                          <IonLabel position="stacked">Experiencia Previa</IonLabel>
+                        <IonItem className="form-field">
+                          <IonLabel position="stacked" className="field-label">Experiencia Previa</IonLabel>
                           <IonTextarea
                             value={formData.experiencia_previa}
                             onIonInput={(e) => handleInputChange('experiencia_previa', e.detail.value!)}

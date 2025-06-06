@@ -363,6 +363,7 @@ const Pay: React.FC = () => {
           </div>
         </div>
   
+        {/* SOLO UN TOAST - ELIMINADO IonLoading duplicado */}
         <IonToast
           isOpen={toast.show}
           onDidDismiss={() => setToast({ ...toast, show: false })}

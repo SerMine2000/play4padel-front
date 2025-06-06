@@ -1,8 +1,34 @@
-// src/pages/Configuracion.tsx
+// src/pages/Configuracion/Configuracion.tsx
 import React, { useEffect, useState } from 'react';
-import Estructura from '../../components/Estructura';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonLabel, IonToggle, IonButton, IonAlert, IonBackButton, IonButtons, IonIcon, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonText, IonChip, IonList } from '@ionic/react';
-import { arrowBack, businessOutline, addOutline, timeOutline, checkmarkCircleOutline, closeCircleOutline } from 'ionicons/icons';
+import {
+  IonPage, 
+  IonContent, 
+  IonItem, 
+  IonLabel, 
+  IonToggle, 
+  IonButton, 
+  IonAlert, 
+  IonIcon, 
+  IonCard, 
+  IonCardHeader, 
+  IonCardTitle, 
+  IonCardContent, 
+  IonText, 
+  IonChip, 
+  IonList,
+  IonLoading
+} from '@ionic/react';
+import {
+  businessOutline, 
+  addOutline, 
+  timeOutline, 
+  checkmarkCircleOutline, 
+  closeCircleOutline,
+  settingsOutline,
+  trashOutline,
+  moonOutline,
+  sunnyOutline
+} from 'ionicons/icons';
 import { useTheme } from "../../context/ThemeContext";
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -93,133 +119,193 @@ const Configuracion: React.FC = () => {
 
   return (
     <IonPage>
-      <IonContent style={{ paddingLeft: 260, maxWidth: 900, margin: '0 auto', boxSizing: 'border-box' }}>
-          <div className="configuracion-container">
-            <div className="configuracion-panel">
-              <h2>Preferencias</h2>
-              <IonItem>
-                <IonLabel>Cambiar a modo oscuro</IonLabel>
-                <IonToggle checked={theme === 'dark'} onIonChange={toggleTheme} />
-              </IonItem>
+      <IonContent>
+        <IonLoading isOpen={loadingSolicitudes} message="Cargando solicitudes..." />
+        
+        <div className="configuracion-container">
+          {/* Header con título alineado a la izquierda */}
+          <div className="page-header">
+            <h1>Configuración</h1>
+            <p>Personaliza tu experiencia en Play4Padel</p>
+          </div>
 
-              {/* Sección de Club - Solo para usuarios normales */}
-              {shouldShowClubSection() && (
-                <>
-                  <h2>
-                    <IonIcon icon={businessOutline} style={{ marginRight: '0.5rem' }} />
-                    Gestión de Club
-                  </h2>
-                  
+          <div className="configuracion-content">
+            {/* Sección de Preferencias */}
+            <IonCard className="configuracion-section">
+              <IonCardHeader className="section-header">
+                <div className="section-header-content">
+                  <IonIcon icon={settingsOutline} className="section-icon" />
+                  <IonCardTitle>Preferencias</IonCardTitle>
+                </div>
+              </IonCardHeader>
+              <IonCardContent>
+                <IonItem className="config-item">
+                  <IonIcon icon={theme === 'dark' ? moonOutline : sunnyOutline} slot="start" className="item-icon" />
+                  <IonLabel>
+                    <h3>Modo oscuro</h3>
+                    <p>Cambia la apariencia de la aplicación</p>
+                  </IonLabel>
+                  <IonToggle 
+                    checked={theme === 'dark'} 
+                    onIonChange={toggleTheme}
+                    slot="end"
+                  />
+                </IonItem>
+              </IonCardContent>
+            </IonCard>
+
+            {/* Sección de Gestión de Club - Solo para usuarios normales */}
+            {shouldShowClubSection() && (
+              <IonCard className="configuracion-section">
+                <IonCardHeader className="section-header">
+                  <div className="section-header-content">
+                    <IonIcon icon={businessOutline} className="section-icon" />
+                    <IonCardTitle>Gestión de Club</IonCardTitle>
+                  </div>
+                </IonCardHeader>
+                <IonCardContent>
                   {misSolicitudes && misSolicitudes.length > 0 ? (
-                    <IonCard>
-                      <IonCardHeader>
-                        <IonCardTitle>Mis Solicitudes de Club</IonCardTitle>
-                      </IonCardHeader>
-                      <IonCardContent>
-                        <IonList>
-                          {misSolicitudes.map((solicitud) => (
-                            <IonItem key={solicitud.id}>
-                              <IonIcon icon={getEstadoIcon(solicitud.estado)} slot="start" />
-                              <IonLabel>
-                                <h3>{solicitud.nombre_club}</h3>
-                                <p>Solicitado: {formatDate(solicitud.fecha_solicitud)}</p>
-                                {solicitud.fecha_respuesta && (
-                                  <p>Respondido: {formatDate(solicitud.fecha_respuesta)}</p>
-                                )}
-                                {solicitud.motivo_rechazo && (
-                                  <p style={{ color: 'var(--ion-color-danger)', fontSize: '0.9rem' }}>
-                                    <strong>Motivo:</strong> {solicitud.motivo_rechazo}
-                                  </p>
-                                )}
-                                {solicitud.comentarios_admin && (
-                                  <p style={{ color: 'var(--ion-color-medium)', fontSize: '0.9rem' }}>
-                                    <strong>Comentarios:</strong> {solicitud.comentarios_admin}
-                                  </p>
-                                )}
-                              </IonLabel>
-                              <IonChip color={getEstadoColor(solicitud.estado)} slot="end">
+                    <>
+                      <div className="subsection-title">
+                        <h3>Mis Solicitudes de Club</h3>
+                      </div>
+                      <div className="solicitudes-list">
+                        {misSolicitudes.map((solicitud) => (
+                          <div key={solicitud.id} className="solicitud-card">
+                            <div className="solicitud-header">
+                              <div className="solicitud-info">
+                                <IonIcon icon={getEstadoIcon(solicitud.estado)} className="solicitud-icon" />
+                                <div className="solicitud-details">
+                                  <h4>{solicitud.nombre_club}</h4>
+                                  <p className="solicitud-date">Solicitado: {formatDate(solicitud.fecha_solicitud)}</p>
+                                  {solicitud.fecha_respuesta && (
+                                    <p className="solicitud-date">Respondido: {formatDate(solicitud.fecha_respuesta)}</p>
+                                  )}
+                                </div>
+                              </div>
+                              <IonChip color={getEstadoColor(solicitud.estado)} className="estado-chip">
                                 {solicitud.estado}
                               </IonChip>
-                            </IonItem>
-                          ))}
-                        </IonList>
-                        
-                        {!tieneSolicitudPendiente && (
-                          <IonButton 
-                            expand="block" 
-                            fill="outline"
-                            onClick={() => navigate('/solicitar-club')}
-                            style={{ marginTop: '1rem' }}
-                          >
-                            <IonIcon icon={addOutline} slot="start" />
-                            Nueva Solicitud
-                          </IonButton>
-                        )}
-                      </IonCardContent>
-                    </IonCard>
-                  ) : (
-                    <IonCard>
-                      <IonCardHeader>
-                        <IonCardTitle>¿Quieres crear un club?</IonCardTitle>
-                      </IonCardHeader>
-                      <IonCardContent>
-                        <IonText>
-                          <p>Si tienes un club de pádel o quieres crear uno, puedes solicitar convertirte en administrador de club.</p>
-                          <p><strong>Beneficios:</strong></p>
-                          <ul style={{ marginLeft: '1rem' }}>
-                            <li>Gestiona pistas y reservas</li>
-                            <li>Organiza torneos y eventos</li>
-                            <li>Administra socios</li>
-                            <li>Accede a estadísticas</li>
-                          </ul>
-                        </IonText>
-                        
+                            </div>
+                            
+                            {solicitud.motivo_rechazo && (
+                              <div className="solicitud-mensaje rechazo">
+                                <strong>Motivo del rechazo:</strong> {solicitud.motivo_rechazo}
+                              </div>
+                            )}
+                            
+                            {solicitud.comentarios_admin && (
+                              <div className="solicitud-mensaje comentarios">
+                                <strong>Comentarios:</strong> {solicitud.comentarios_admin}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                      
+                      {!tieneSolicitudPendiente && (
                         <IonButton 
                           expand="block" 
+                          fill="outline"
                           onClick={() => navigate('/solicitar-club')}
-                          style={{ marginTop: '1rem' }}
-                          disabled={tieneSolicitudPendiente}
+                          className="nuevo-club-btn"
                         >
                           <IonIcon icon={addOutline} slot="start" />
-                          {tieneSolicitudPendiente ? 'Solicitud Pendiente' : 'Solicitar Crear Club'}
+                          Nueva Solicitud
                         </IonButton>
+                      )}
+                    </>
+                  ) : (
+                    <div className="club-info">
+                      <div className="club-benefits">
+                        <h3>¿Quieres crear un club?</h3>
+                        <p>Si tienes un club de pádel o quieres crear uno, puedes solicitar convertirte en administrador de club.</p>
                         
-                        {loadingSolicitudes && (
-                          <IonText color="medium" style={{ display: 'block', textAlign: 'center', marginTop: '0.5rem' }}>
-                            Cargando solicitudes...
-                          </IonText>
-                        )}
-                      </IonCardContent>
-                    </IonCard>
+                        <div className="benefits-list">
+                          <h4>Beneficios:</h4>
+                          <div className="benefit-item">
+                            <IonIcon icon={checkmarkCircleOutline} className="benefit-icon" />
+                            <span>Gestiona pistas y reservas</span>
+                          </div>
+                          <div className="benefit-item">
+                            <IonIcon icon={checkmarkCircleOutline} className="benefit-icon" />
+                            <span>Organiza torneos y eventos</span>
+                          </div>
+                          <div className="benefit-item">
+                            <IonIcon icon={checkmarkCircleOutline} className="benefit-icon" />
+                            <span>Administra socios</span>
+                          </div>
+                          <div className="benefit-item">
+                            <IonIcon icon={checkmarkCircleOutline} className="benefit-icon" />
+                            <span>Accede a estadísticas</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <IonButton 
+                        expand="block" 
+                        onClick={() => navigate('/solicitar-club')}
+                        disabled={tieneSolicitudPendiente}
+                        className="solicitar-club-btn"
+                      >
+                        <IonIcon icon={addOutline} slot="start" />
+                        {tieneSolicitudPendiente ? 'Solicitud Pendiente' : 'Solicitar Crear Club'}
+                      </IonButton>
+                    </div>
                   )}
-                </>
-              )}
+                </IonCardContent>
+              </IonCard>
+            )}
 
-              <h2>Eliminar cuenta</h2>
-              <IonButton className="boton-rojo" onClick={() => setShowAlert(true)}>
-                Borrar cuenta
-              </IonButton>
-            </div>
-
-            <IonAlert
-              isOpen={showAlert}
-              onDidDismiss={() => setShowAlert(false)}
-              header="Confirmar eliminación"
-              message="¿Estás seguro de que quieres eliminar tu cuenta?"
-              buttons={[
-                {
-                  text: 'Cancelar',
-                  role: 'cancel',
-                  handler: () => {},
-                },
-                {
-                  text: 'Eliminar',
-                  handler: handleDelete,
-                },
-              ]}
-            />
+            {/* Sección de Cuenta */}
+            <IonCard className="configuracion-section danger-section">
+              <IonCardHeader className="section-header">
+                <div className="section-header-content">
+                  <IonIcon icon={trashOutline} className="section-icon danger" />
+                  <IonCardTitle className="danger-title">Eliminar Cuenta</IonCardTitle>
+                </div>
+              </IonCardHeader>
+              <IonCardContent>
+                <div className="danger-content">
+                  <p className="danger-warning">
+                    Esta acción eliminará permanentemente tu cuenta y todos los datos asociados. 
+                    Esta acción no se puede deshacer.
+                  </p>
+                  <IonButton 
+                    color="danger"
+                    fill="solid"
+                    expand="block"
+                    onClick={() => setShowAlert(true)}
+                    className="delete-account-btn"
+                  >
+                    <IonIcon icon={trashOutline} slot="start" />
+                    Eliminar Cuenta
+                  </IonButton>
+                </div>
+              </IonCardContent>
+            </IonCard>
           </div>
-              </IonContent>
+
+          <IonAlert
+            isOpen={showAlert}
+            onDidDismiss={() => setShowAlert(false)}
+            header="Confirmar eliminación"
+            message="¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer."
+            buttons={[
+              {
+                text: 'Cancelar',
+                role: 'cancel',
+                handler: () => {},
+              },
+              {
+                text: 'Eliminar',
+                role: 'destructive',
+                handler: handleDelete,
+              },
+            ]}
+          />
+        </div>
+      </IonContent>
     </IonPage>
   );
 };

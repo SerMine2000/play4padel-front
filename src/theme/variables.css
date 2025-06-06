@@ -1,4 +1,4 @@
-/* variables.css */
+/* variables.css - ACTUALIZADO CON NUEVAS VARIABLES */
 @import '@ionic/react/css/palettes/dark.class.css';
 
 /* ===== MODO CLARO (por defecto) ===== */
@@ -11,11 +11,10 @@
   --ion-color-primary-contrast: #ffffff;
 
   --ion-color-primary-contrast-rgb: 255, 255, 255;
-  --card-shadow: 0 4px 16px rgba(0,0,0,0.25); /* sombra más fuerte y visible para todos los cards */
+  --card-shadow: 0 4px 16px rgba(0,0,0,0.25);
 
   --ion-color-primary-shade: #00e55a;
   --ion-color-primary-tint: #33ff77;
-  /* --home-background-image: url('/img/fondoHomeClaro.jpg'); */
   --color-panel: #ffffff;
   --color-icono-empresa: #00FF66;
   --color-icono-pistas: #00FF66;
@@ -24,6 +23,28 @@
   --color-icono-marcador: #ffc62f;
   --color-icono-estadisticas: #00FF66;
   --ion-border-color: rgba(0, 0, 0, 0.1);
+  
+  /* NUEVAS VARIABLES PARA FORMULARIOS Y CAMPOS */
+  --colorFondoCampo: #ffffff;
+  --colorBordeCampo: rgba(0, 0, 0, 0.1);
+  --colorFondoCampoFocus: #ffffff;
+  --colorBordeCampoFocus: #6129f0;
+  --colorTextoPlaceholder: #666666;
+  --colorFondoSeccionConfig: #ffffff;
+  --colorFondoHoverConfig: rgba(97, 41, 240, 0.05);
+  --colorFondoTarjetaConfig: rgba(97, 41, 240, 0.03);
+  --colorFondoMensajeConfig: rgba(0, 0, 0, 0.03);
+  --colorFondoRechazoConfig: rgba(244, 67, 54, 0.05);
+  --colorFondoComentariosConfig: rgba(146, 158, 171, 0.05);
+  --colorFondoAdvertenciaConfig: rgba(244, 67, 54, 0.05);
+  --colorVerdeConfig: #4caf50;
+  --colorBordeRojoConfig: rgba(244, 67, 54, 0.2);
+  
+  /* VARIABLES PARA MÁRGENES CONSISTENTES */
+  --margenPaginaDesktop: 32px 40px;
+  --margenPaginaTablet: 24px 32px;
+  --margenPaginaMobile: 20px 24px;
+  --margenPaginaMobileSmall: 16px 20px;
 }
 
 /* ===== MODO OSCURO (.ion-palette-dark en <html>) ===== */
@@ -34,14 +55,13 @@
   --ion-background-color: #121212;
   --ion-text-color: #f0f0f0;
   
-  --card-shadow: none; /* sin sombra difuminada en oscuro */
+  --card-shadow: none;
   
   --color-primario: #4CAF50;
   --color-fondo: #121212;
   --color-texto: #f0f0f0;
   --color-secundario: #1e1e1e;
   --color-boton-rojo: #ff4d4d;
-  /* --home-background-image: url('/img/fondoHomeOscuro.jpg'); */
   --color-panel: #1e1e1e;
   --color-icono-empresa: #33ff77;
   --color-icono-pistas: #33ff77;
@@ -50,6 +70,22 @@
   --color-icono-marcador: #ffe066;
   --color-icono-estadisticas: #33ff77;
   --ion-border-color: rgba(255, 255, 255, 0.08);
+  
+  /* VARIABLES PARA MODO OSCURO */
+  --colorFondoCampo: #1e1e1e;
+  --colorBordeCampo: rgba(255, 255, 255, 0.1);
+  --colorFondoCampoFocus: #1e1e1e;
+  --colorBordeCampoFocus: #00FF66;
+  --colorTextoPlaceholder: #888888;
+  --colorFondoSeccionConfig: #1e1e1e;
+  --colorFondoHoverConfig: rgba(0, 255, 102, 0.1);
+  --colorFondoTarjetaConfig: rgba(0, 255, 102, 0.05);
+  --colorFondoMensajeConfig: rgba(255, 255, 255, 0.05);
+  --colorFondoRechazoConfig: rgba(244, 67, 54, 0.1);
+  --colorFondoComentariosConfig: rgba(146, 158, 171, 0.1);
+  --colorFondoAdvertenciaConfig: rgba(244, 67, 54, 0.1);
+  --colorVerdeConfig: #66bb6a;
+  --colorBordeRojoConfig: rgba(244, 67, 54, 0.3);
 }
 
 /* ===== ESTILOS BASE ===== */
@@ -309,4 +345,25 @@ ion-popover ion-icon {
   font-weight: 600;
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
+}
+
+/* ===== ESTILOS GLOBALES PARA TÍTULOS DE PÁGINA ===== */
+.titulo-pagina-global {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--ion-text-color);
+  margin: 0 0 0.5rem 0;
+  position: relative;
+  display: inline-block;
+}
+
+.titulo-pagina-global::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--ion-color-primary), #a160fb);
+  border-radius: 2px;
 }

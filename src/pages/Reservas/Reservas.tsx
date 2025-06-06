@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { IonPage, IonContent, IonButton, IonTextarea, IonDatetime, IonLoading, IonToast, IonIcon } from '@ionic/react';
+import { IonPage, IonContent, IonButton, IonTextarea, IonDatetime, IonToast, IonIcon } from '@ionic/react';
 import { tennisballOutline } from 'ionicons/icons';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -37,7 +37,7 @@ const Reservas: React.FC = () => {
   const [tarifaTotal, setTarifaTotal] = useState<number>(0);
   const [notas, setNotas] = useState<string>('');
   
-  // Estados para UI
+  // Estados para UI - SOLO UN ESTADO DE CARGA
   const [cargando, setCargando] = useState<boolean>(false);
   const [mostrarToast, setMostrarToast] = useState<boolean>(false);
   const [mensajeToast, setMensajeToast] = useState<string>('');
@@ -637,8 +637,17 @@ const Reservas: React.FC = () => {
           </div>
         </div>
         
-        {/* Loading y Toast */}
-        <IonLoading isOpen={cargando} message={"Cargando..."} />
+        {/* SOLO UN COMPONENTE DE CARGA CON ANIMACIÓN */}
+        {cargando && (
+          <div className="loading-overlay">
+            <div className="loading-spinner-animated">
+              <div className="spinner"></div>
+              <p>Cargando...</p>
+            </div>
+          </div>
+        )}
+        
+        {/* Toast para mensajes */}
         <IonToast
           isOpen={mostrarToast}
           onDidDismiss={() => setMostrarToast(false)}

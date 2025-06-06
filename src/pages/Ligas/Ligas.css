@@ -1,4 +1,4 @@
-/* Ligas.css - Diseño elegante y profesional */
+/* Ligas.css - Diseño elegante y profesional COMPACTO */
 
 /* Asegurar que no hay fondos conflictivos */
 body, ion-app, ion-router-outlet, ion-content {
@@ -26,28 +26,28 @@ ion-content {
   box-sizing: border-box;
 }
 
-/* Header elegante */
+/* Header elegante ALINEADO A LA IZQUIERDA */
 .page-header {
-  margin-bottom: 3rem;
-  text-align: center;
-  padding: 2rem 0;
+  margin-bottom: 2rem;
+  text-align: left; /* CAMBIADO: de center a left */
+  padding: 1rem 0;
 }
 
 .page-header h1 {
-  margin: 0 0 1rem 0;
-  font-size: 2.5rem;
+  margin: 0 0 0.5rem 0;
+  font-size: 2.2rem; /* REDUCIDO: de 2.5rem a 2.2rem */
   font-weight: 700;
-  color: var(--ion-color-primary);
-  text-shadow: 0 2px 10px rgba(104, 144, 252, 0.2);
+  color: var(--ion-text-color);
   position: relative;
+  display: inline-block; /* AGREGADO: para que la línea se ajuste al texto */
 }
 
 .page-header h1::after {
   content: '';
   position: absolute;
-  bottom: -0.5rem;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: -8px; /* AJUSTADO: posición de la línea */
+  left: 0; /* CAMBIADO: de center a left */
+  transform: none; /* ELIMINADO: translateX(-50%) */
   width: 60px;
   height: 4px;
   background: linear-gradient(90deg, var(--ion-color-primary), #a160fb);
@@ -56,15 +56,15 @@ ion-content {
 
 .page-header p {
   color: var(--ion-color-medium);
-  margin: 0;
-  font-size: 1.1rem;
+  margin: 0.5rem 0 0 0; /* AJUSTADO */
+  font-size: 1rem;
   font-weight: 400;
 }
 
-/* Cards de ligas mejoradas */
-.liga-card {
+/* Cards de ligas COMPACTAS */
+.liga-card-compact {
   height: 100%;
-  border-radius: 16px;
+  border-radius: 12px; /* REDUCIDO: de 16px a 12px */
   overflow: hidden;
   box-shadow: var(--card-shadow);
   border: 1px solid rgba(161, 96, 251, 0.1);
@@ -72,179 +72,169 @@ ion-content {
   background: var(--color-panel, #ffffff);
 }
 
-.liga-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 40px rgba(161, 96, 251, 0.15);
+.liga-card-compact:hover {
+  transform: translateY(-4px); /* REDUCIDO: de -8px a -4px */
+  box-shadow: 0 8px 25px rgba(161, 96, 251, 0.12); /* REDUCIDO */
   border-color: rgba(161, 96, 251, 0.3);
 }
 
-/* Imagen de la liga */
-.liga-image {
-  height: 200px;
-  overflow: hidden;
-  position: relative;
-  background: linear-gradient(45deg, var(--color-icono-usuarios), var(--ion-color-primary));
-}
-
-.liga-image::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 50%;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.3));
-}
-
-.liga-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.liga-card:hover .liga-image img {
-  transform: scale(1.05);
-}
-
-/* Header del card */
+/* Header del card COMPACTO */
 .card-header-content {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 0.75rem; /* REDUCIDO: de 1rem a 0.75rem */
+  margin-bottom: 1rem; /* REDUCIDO: de 1.5rem a 1rem */
 }
 
 .card-header-content ion-card-title {
   flex: 1;
-  font-size: 1.3rem;
+  font-size: 1.2rem; /* REDUCIDO: de 1.3rem a 1.2rem */
   font-weight: 600;
   line-height: 1.3;
   color: var(--ion-text-color);
 }
 
-/* Info de la liga */
-.liga-info {
-  margin: 1.5rem 0;
+/* NUEVO: Header de card más compacto */
+.liga-card-compact ion-card-header {
+  padding: 1rem 1rem 0 1rem; /* REDUCIDO padding bottom */
 }
 
-.info-row {
+.liga-card-compact ion-card-content {
+  padding: 0 1rem 1rem 1rem; /* AJUSTADO: sin padding top */
+}
+
+/* Info de la liga COMPACTA */
+.liga-info-compact {
+  margin: 0.75rem 0; /* REDUCIDO: de 1.5rem a 0.75rem */
+}
+
+.info-row-compact {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  font-size: 0.95rem;
+  gap: 0.75rem; /* REDUCIDO */
+  margin-bottom: 0.75rem; /* REDUCIDO */
+  font-size: 0.9rem; /* REDUCIDO */
   color: var(--ion-color-medium);
-  padding: 0.75rem;
-  border-radius: 8px;
+  padding: 0.5rem; /* REDUCIDO */
+  border-radius: 6px; /* REDUCIDO */
   transition: all 0.2s ease;
 }
 
-.info-row:hover {
+.info-row-compact:hover {
   background: rgba(161, 96, 251, 0.05);
   color: var(--color-icono-usuarios);
 }
 
-.info-row ion-icon {
+.info-row-compact ion-icon {
   color: var(--ion-color-primary);
-  font-size: 1.2rem;
+  font-size: 1.1rem; /* REDUCIDO */
   transition: transform 0.2s ease;
 }
 
-.info-row:hover ion-icon {
-  transform: scale(1.1);
+/* NUEVO: Grid de información compacto */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  margin: 0.75rem 0;
 }
 
-/* Precio destacado */
-.precio {
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: var(--color-icono-estadisticas);
-  background: rgba(40, 199, 111, 0.1);
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  border: 1px solid rgba(40, 199, 111, 0.2);
-}
-
-/* Premio destacado */
-.premio {
-  font-weight: 600;
-  color: var(--color-icono-marcador);
-  background: rgba(255, 198, 47, 0.1);
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 198, 47, 0.2);
-}
-
-/* Descripción */
-.descripcion {
-  margin: 1.5rem 0;
-  font-size: 0.9rem;
-  color: var(--ion-color-medium);
-  line-height: 1.6;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  padding: 1rem;
-  background: var(--color-panel, #ffffff);
-  border-radius: 8px;
-  border-left: 3px solid var(--ion-border-color, rgba(0, 0, 0, 0.1));
-}
-
-/* Sistema de puntuación mejorado */
-.liga-scoring {
-  margin: 1.5rem 0;
-  padding: 1rem;
-  background: linear-gradient(135deg, 
-    rgba(161, 96, 251, 0.08), 
-    rgba(104, 144, 252, 0.05));
-  border-radius: 12px;
-  border: 1px solid rgba(161, 96, 251, 0.2);
-  position: relative;
-}
-
-.liga-scoring::before {
-  content: '📊';
-  position: absolute;
-  top: 0.75rem;
-  right: 1rem;
-  font-size: 1.2rem;
-  opacity: 0.6;
-}
-
-.liga-scoring small {
-  color: var(--color-icono-usuarios);
-  font-weight: 600;
-  font-size: 0.85rem;
-  line-height: 1.4;
-}
-
-/* Acciones del card */
-.card-actions {
+.info-item {
   display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.card-actions ion-button {
-  --border-radius: 8px;
-  font-weight: 500;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--ion-color-medium);
+  padding: 0.4rem;
+  border-radius: 6px;
   transition: all 0.2s ease;
 }
 
-.card-actions ion-button:hover {
+.info-item:hover {
+  background: rgba(161, 96, 251, 0.05);
+  color: var(--color-icono-usuarios);
+}
+
+.info-item ion-icon {
+  color: var(--ion-color-primary);
+  font-size: 1rem;
+}
+
+/* Premio compacto */
+.premio-compact {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.75rem 0;
+  padding: 0.5rem;
+  background: rgba(255, 198, 47, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 198, 47, 0.2);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-icono-marcador);
+}
+
+.premio-compact ion-icon {
+  color: var(--color-icono-marcador);
+  font-size: 1rem;
+}
+
+/* Precio destacado COMPACTO */
+.precio {
+  font-weight: 700;
+  font-size: 0.95rem; /* REDUCIDO */
+  color: var(--color-icono-estadisticas);
+  background: rgba(40, 199, 111, 0.1);
+  padding: 0.2rem 0.6rem; /* REDUCIDO */
+  border-radius: 16px; /* REDUCIDO */
+  border: 1px solid rgba(40, 199, 111, 0.2);
+}
+
+/* Descripción COMPACTA */
+.descripcion-compact {
+  margin: 0.75rem 0; /* REDUCIDO */
+  font-size: 0.85rem; /* REDUCIDO */
+  color: var(--ion-color-medium);
+  line-height: 1.4; /* REDUCIDO */
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* REDUCIDO: de 3 a 2 líneas */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  padding: 0.75rem; /* REDUCIDO */
+  background: var(--color-panel, #ffffff);
+  border-radius: 6px; /* REDUCIDO */
+  border-left: 3px solid var(--ion-border-color, rgba(0, 0, 0, 0.1));
+}
+
+/* Acciones del card COMPACTAS */
+.card-actions-compact {
+  display: flex;
+  gap: 0.5rem; /* REDUCIDO */
+  flex-wrap: wrap;
+  margin-top: 1rem; /* REDUCIDO */
+  padding-top: 1rem; /* REDUCIDO */
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.card-actions-compact ion-button {
+  --border-radius: 6px; /* REDUCIDO */
+  font-weight: 500;
+  font-size: 0.8rem; /* REDUCIDO */
+  --padding-start: 0.75rem; /* REDUCIDO */
+  --padding-end: 0.75rem; /* REDUCIDO */
+  transition: all 0.2s ease;
+}
+
+.card-actions-compact ion-button:hover {
   transform: translateY(-1px);
 }
 
 /* Estado vacío */
 .empty-state {
   text-align: center;
-  padding: 4rem 2rem;
+  padding: 3rem 2rem; /* REDUCIDO */
   background: var(--color-panel, #ffffff);
   border-radius: 16px;
   box-shadow: var(--card-shadow);
@@ -253,23 +243,23 @@ ion-content {
 }
 
 .empty-icon {
-  font-size: 5rem;
+  font-size: 4rem; /* REDUCIDO */
   color: var(--ion-color-medium);
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem; /* REDUCIDO */
   opacity: 0.6;
 }
 
 .empty-state h2 {
   color: var(--ion-color-medium);
-  margin: 1.5rem 0 1rem 0;
-  font-size: 1.5rem;
+  margin: 1rem 0; /* REDUCIDO */
+  font-size: 1.3rem; /* REDUCIDO */
   font-weight: 600;
 }
 
 .empty-state p {
   color: var(--ion-color-medium);
-  margin-bottom: 2rem;
-  font-size: 1rem;
+  margin-bottom: 1.5rem; /* REDUCIDO */
+  font-size: 0.95rem; /* REDUCIDO */
   opacity: 0.8;
   max-width: 400px;
   margin-left: auto;
@@ -416,7 +406,7 @@ ion-chip[color="medium"] {
   border-color: rgba(146, 158, 171, 0.2);
 }
 
-/* Responsive */
+/* Responsive COMPACTO */
 @media (max-width: 768px) {
   .ligas-container {
     padding: 1rem;
@@ -428,23 +418,23 @@ ion-chip[color="medium"] {
   }
   
   .page-header {
-    padding: 1rem 0;
-    margin-bottom: 2rem;
+    padding: 0.75rem 0; /* REDUCIDO */
+    margin-bottom: 1.5rem; /* REDUCIDO */
   }
   
   .page-header h1 {
-    font-size: 2rem;
+    font-size: 1.8rem; /* REDUCIDO */
   }
   
-  .liga-image {
-    height: 160px;
+  .info-grid {
+    grid-template-columns: 1fr; /* Una columna en móvil */
   }
   
-  .card-actions {
+  .card-actions-compact {
     flex-direction: column;
   }
   
-  .card-actions ion-button {
+  .card-actions-compact ion-button {
     width: 100%;
     margin: 0;
   }
@@ -463,7 +453,27 @@ ion-chip[color="medium"] {
   }
   
   .empty-icon {
-    font-size: 3.5rem;
+    font-size: 3rem; /* REDUCIDO */
+  }
+}
+
+@media (max-width: 576px) {
+  .page-header h1 {
+    font-size: 1.6rem; /* REDUCIDO para móviles pequeños */
+  }
+  
+  .liga-card-compact ion-card-header,
+  .liga-card-compact ion-card-content {
+    padding: 0.75rem; /* REDUCIDO en móviles pequeños */
+  }
+  
+  .info-item {
+    font-size: 0.8rem; /* REDUCIDO */
+    padding: 0.3rem; /* REDUCIDO */
+  }
+  
+  .card-actions-compact ion-button {
+    font-size: 0.75rem; /* REDUCIDO */
   }
 }
 
@@ -479,22 +489,23 @@ ion-chip[color="medium"] {
   background: var(--color-fondo, #121212);
 }
 
-.ion-palette-dark .liga-card {
+.ion-palette-dark .liga-card-compact {
   background: var(--color-panel);
   border-color: rgba(255, 255, 255, 0.1);
 }
 
-.ion-palette-dark .liga-card:hover {
+.ion-palette-dark .liga-card-compact:hover {
   border-color: rgba(161, 96, 251, 0.4);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
 }
 
-.ion-palette-dark .info-row:hover {
+.ion-palette-dark .info-row-compact:hover,
+.ion-palette-dark .info-item:hover {
   background: rgba(161, 96, 251, 0.1);
 }
 
-.ion-palette-dark .descripcion,
-.ion-palette-dark .liga-scoring,
+.ion-palette-dark .descripcion-compact,
+.ion-palette-dark .premio-compact,
 .ion-palette-dark .scoring-section {
   background: rgba(255, 255, 255, 0.03);
   border-color: rgba(255, 255, 255, 0.1);
@@ -516,11 +527,11 @@ ion-chip[color="medium"] {
   border-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Animaciones sutiles */
+/* Animaciones sutiles REDUCIDAS */
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(10px); /* REDUCIDO: de 20px a 10px */
   }
   to {
     opacity: 1;
@@ -528,15 +539,13 @@ ion-chip[color="medium"] {
   }
 }
 
-.liga-card {
-  animation: fadeInUp 0.5s ease-out;
+.liga-card-compact {
+  animation: fadeInUp 0.4s ease-out; /* REDUCIDO: de 0.5s a 0.4s */
 }
 
-.liga-card:nth-child(1) { animation-delay: 0.1s; }
-.liga-card:nth-child(2) { animation-delay: 0.2s; }
-.liga-card:nth-child(3) { animation-delay: 0.3s; }
-.liga-card:nth-child(4) { animation-delay: 0.4s; }
-.liga-card:nth-child(5) { animation-delay: 0.5s; }
-.liga-card:nth-child(6) { animation-delay: 0.6s; }
-
-/* Fix para evitar espacios en blanco - ya configurado arriba */
+.liga-card-compact:nth-child(1) { animation-delay: 0.05s; } /* REDUCIDO */
+.liga-card-compact:nth-child(2) { animation-delay: 0.1s; } /* REDUCIDO */
+.liga-card-compact:nth-child(3) { animation-delay: 0.15s; } /* REDUCIDO */
+.liga-card-compact:nth-child(4) { animation-delay: 0.2s; } /* REDUCIDO */
+.liga-card-compact:nth-child(5) { animation-delay: 0.25s; } /* REDUCIDO */
+.liga-card-compact:nth-child(6) { animation-delay: 0.3s; } /* REDUCIDO */

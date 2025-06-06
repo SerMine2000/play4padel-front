@@ -211,10 +211,8 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
                   if (option.action) {
                     option.action();
                   } else if (option.path) {
-                    if (location.pathname === option.path) {
-                      navigate('/');
-                      setTimeout(() => navigate(option.path), 0);
-                    } else {
+                    // Evitar navegación doble si ya estamos en la ruta
+                    if (location.pathname !== option.path) {
                       navigate(option.path);
                     }
                     if (isMobile) onToggle?.();

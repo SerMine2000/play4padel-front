@@ -1,79 +1,554 @@
-/* src/pages/css/Configuracion.css */
+/* Configuracion.css - Diseño profesional y responsive - TAMAÑO CORREGIDO */
 
-/* Contenedor central igual que Home */
+/* Contenedor principal igual que otras páginas - CORREGIDO EL TAMAÑO */
 .configuracion-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    min-height: calc(100vh - 56px);
-    padding: 16px;
-    --ion-background-color: transparent;
-  }
-  
-  .configuracion-panel {
-    margin: 0 auto;
-    border-radius: 16px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-    overflow: hidden;
-    margin-top: 20px;
-    background-color: var(--color-panel);
+  padding: var(--margenPaginaDesktop, 32px 40px); /* CORREGIDO: usar variable de márgenes */
+  background: var(--ion-background-color);
+  min-height: 100vh;
+  box-sizing: border-box;
+  /* ELIMINADO: max-width que causaba el problema de tamaño reducido */
+  width: 100%; /* AÑADIDO: ocupar todo el ancho */
+}
+
+/* Header igual que otras páginas */
+.page-header {
+  margin-bottom: 2rem;
+  text-align: left;
+  padding: 1rem 0;
+  /* ELIMINADO: max-width para que ocupe todo el ancho */
+  width: 100%; /* AÑADIDO: ocupar todo el ancho */
+}
+
+.page-header h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--ion-text-color);
+  position: relative;
+  display: inline-block;
+}
+
+.page-header h1::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--ion-color-primary), #a160fb);
+  border-radius: 2px;
+}
+
+.page-header p {
+  color: var(--ion-color-medium);
+  margin: 0.5rem 0 0 0;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+/* Contenido principal - CORREGIDO EL TAMAÑO */
+.configuracion-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  /* CORREGIDO: Eliminar max-width restrictivo y permitir que ocupe todo el ancho */
+  width: 100%;
+  max-width: none; /* ELIMINADO: max-width que limitaba el tamaño */
+}
+
+/* Secciones individuales - CORREGIDO EL TAMAÑO */
+.configuracion-section {
+  background: var(--color-panel);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--ion-border-color);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  /* AÑADIDO: asegurar que ocupe todo el ancho disponible */
+  width: 100%;
+  max-width: none;
+}
+
+.configuracion-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Headers de sección */
+.section-header {
+  background: var(--colorFondoSeccionConfig, var(--color-panel));
+  border-bottom: 1px solid var(--ion-border-color);
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
+}
+
+.section-header-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.section-icon {
+  font-size: 1.5rem;
+  color: var(--ion-color-primary);
+  transition: transform 0.2s ease;
+}
+
+.section-header:hover .section-icon {
+  transform: scale(1.1);
+}
+
+.section-header ion-card-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--ion-text-color);
+  margin: 0;
+}
+
+/* Items de configuración */
+.config-item {
+  --background: transparent;
+  --color: var(--ion-text-color);
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  --border-style: none;
+  padding: 1rem 0;
+  margin: 0 1.5rem;
+  border-bottom: 1px solid var(--ion-border-color);
+  transition: all 0.2s ease;
+}
+
+.config-item:last-child {
+  border-bottom: none;
+}
+
+.config-item:hover {
+  background: var(--colorFondoHoverConfig, rgba(161, 96, 251, 0.05));
+  border-radius: 8px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.item-icon {
+  color: var(--ion-color-primary);
+  font-size: 1.2rem;
+  margin-right: 1rem;
+}
+
+.config-item ion-label h3 {
+  color: var(--ion-text-color);
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  font-size: 1rem;
+}
+
+.config-item ion-label p {
+  color: var(--ion-color-medium);
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* Sección de Club */
+.subsection-title {
+  margin-bottom: 1.5rem;
+}
+
+.subsection-title h3 {
+  color: var(--ion-text-color);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--ion-color-primary);
+  display: inline-block;
+}
+
+/* Lista de solicitudes - MEJORADO EL TAMAÑO */
+.solicitudes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  /* AÑADIDO: asegurar que ocupe todo el ancho */
+  width: 100%;
+}
+
+.solicitud-card {
+  background: var(--colorFondoTarjetaConfig, rgba(161, 96, 251, 0.03));
+  border: 1px solid var(--ion-border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.2s ease;
+  /* AÑADIDO: asegurar que ocupe todo el ancho */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.solicitud-card:hover {
+  border-color: var(--ion-color-primary);
+  box-shadow: 0 4px 12px rgba(161, 96, 251, 0.1);
+}
+
+.solicitud-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  /* AÑADIDO: asegurar que ocupe todo el ancho */
+  width: 100%;
+}
+
+.solicitud-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  /* AÑADIDO: permitir que crezca */
+  flex: 1;
+}
+
+.solicitud-icon {
+  font-size: 1.5rem;
+  margin-top: 0.25rem;
+  flex-shrink: 0;
+}
+
+.solicitud-details {
+  /* AÑADIDO: permitir que crezca */
+  flex: 1;
+}
+
+.solicitud-details h4 {
+  color: var(--ion-text-color);
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.solicitud-date {
+  color: var(--ion-color-medium);
+  font-size: 0.85rem;
+  margin: 0.25rem 0;
+}
+
+.estado-chip {
+  flex-shrink: 0;
+  font-weight: 600;
+}
+
+.solicitud-mensaje {
+  background: var(--colorFondoMensajeConfig, rgba(0, 0, 0, 0.03));
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+  border-left: 4px solid var(--ion-color-primary);
+  /* AÑADIDO: asegurar que ocupe todo el ancho */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.solicitud-mensaje.rechazo {
+  border-left-color: var(--ion-color-danger);
+  background: var(--colorFondoRechazoConfig, rgba(244, 67, 54, 0.05));
+  color: var(--ion-color-danger);
+}
+
+.solicitud-mensaje.comentarios {
+  border-left-color: var(--ion-color-medium);
+  background: var(--colorFondoComentariosConfig, rgba(146, 158, 171, 0.05));
+  color: var(--ion-color-medium);
+}
+
+.solicitud-mensaje strong {
+  font-weight: 600;
+}
+
+/* Botón nueva solicitud */
+.nuevo-club-btn {
+  --border-color: var(--ion-color-primary);
+  --color: var(--ion-color-primary);
+  margin-top: 1rem;
+  font-weight: 600;
+  /* AÑADIDO: asegurar que ocupe todo el ancho */
+  width: 100%;
+}
+
+/* Información del club - MEJORADO EL TAMAÑO */
+.club-info {
+  text-align: left;
+  /* AÑADIDO: asegurar que ocupe todo el ancho */
+  width: 100%;
+}
+
+.club-benefits {
+  /* AÑADIDO: asegurar que ocupe todo el ancho */
+  width: 100%;
+}
+
+.club-benefits h3 {
+  color: var(--ion-text-color);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+}
+
+.club-benefits p {
+  color: var(--ion-color-medium);
+  margin: 0 0 1.5rem 0;
+  line-height: 1.6;
+}
+
+.benefits-list {
+  /* AÑADIDO: asegurar que ocupe todo el ancho */
+  width: 100%;
+}
+
+.benefits-list h4 {
+  color: var(--ion-text-color);
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  color: var(--ion-text-color);
+  font-size: 0.95rem;
+  /* AÑADIDO: asegurar que ocupe todo el ancho */
+  width: 100%;
+}
+
+.benefit-icon {
+  color: var(--colorVerdeConfig, #4caf50);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.solicitar-club-btn {
+  --background: var(--ion-color-primary);
+  --color: var(--ion-color-primary-contrast);
+  margin-top: 2rem;
+  font-weight: 600;
+  --border-radius: 8px;
+  /* AÑADIDO: asegurar que ocupe todo el ancho */
+  width: 100%;
+}
+
+.solicitar-club-btn:disabled {
+  --background: var(--ion-color-medium);
+  --color: var(--ion-color-medium-contrast);
+}
+
+/* Sección de peligro */
+.danger-section {
+  border-color: var(--colorBordeRojoConfig, rgba(244, 67, 54, 0.2));
+}
+
+.danger-section .section-icon.danger {
+  color: var(--ion-color-danger);
+}
+
+.danger-title {
+  color: var(--ion-color-danger) !important;
+}
+
+.danger-content {
+  padding: 1.5rem;
+  /* AÑADIDO: asegurar que ocupe todo el ancho */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.danger-warning {
+  color: var(--ion-color-medium);
+  margin: 0 0 1.5rem 0;
+  line-height: 1.6;
+  background: var(--colorFondoAdvertenciaConfig, rgba(244, 67, 54, 0.05));
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid var(--ion-color-danger);
+  /* AÑADIDO: asegurar que ocupe todo el ancho */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.delete-account-btn {
+  --background: var(--ion-color-danger);
+  --color: var(--ion-color-danger-contrast);
+  font-weight: 600;
+  --border-radius: 8px;
+  /* AÑADIDO: asegurar que ocupe todo el ancho */
+  width: 100%;
+}
+
+/* Variables personalizadas para el tema */
+:root {
+  --colorFondoSeccionConfig: var(--color-panel);
+  --colorFondoHoverConfig: rgba(161, 96, 251, 0.05);
+  --colorFondoTarjetaConfig: rgba(161, 96, 251, 0.03);
+  --colorFondoMensajeConfig: rgba(0, 0, 0, 0.03);
+  --colorFondoRechazoConfig: rgba(244, 67, 54, 0.05);
+  --colorFondoComentariosConfig: rgba(146, 158, 171, 0.05);
+  --colorFondoAdvertenciaConfig: rgba(244, 67, 54, 0.05);
+  --colorVerdeConfig: #4caf50;
+  --colorBordeRojoConfig: rgba(244, 67, 54, 0.2);
+}
+
+/* Tema oscuro */
+.ion-palette-dark {
+  --colorFondoSeccionConfig: var(--color-secundario);
+  --colorFondoHoverConfig: rgba(161, 96, 251, 0.1);
+  --colorFondoTarjetaConfig: rgba(161, 96, 251, 0.05);
+  --colorFondoMensajeConfig: rgba(255, 255, 255, 0.05);
+  --colorFondoRechazoConfig: rgba(244, 67, 54, 0.1);
+  --colorFondoComentariosConfig: rgba(146, 158, 171, 0.1);
+  --colorFondoAdvertenciaConfig: rgba(244, 67, 54, 0.1);
+  --colorVerdeConfig: #66bb6a;
+  --colorBordeRojoConfig: rgba(244, 67, 54, 0.3);
+}
+
+.ion-palette-dark .configuracion-container {
+  background: var(--color-fondo);
+}
+
+.ion-palette-dark .configuracion-section {
+  background: var(--color-panel);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.ion-palette-dark .configuracion-section:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.ion-palette-dark .config-item {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.ion-palette-dark .solicitud-card {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.ion-palette-dark .solicitud-card:hover {
+  border-color: var(--ion-color-primary);
+}
+
+/* Responsive - CORREGIDO PARA OCUPAR TODO EL ANCHO */
+@media (max-width: 768px) {
+  .configuracion-container {
+    padding: var(--margenPaginaMobile, 20px 24px); /* CORREGIDO: usar variable de márgenes */
+    /* ASEGURAR que siga ocupando todo el ancho en móvil */
     width: 100%;
-    max-width: 600px;
   }
   
-  .configuracion-panel h2 {
-    margin: 0;
-    padding: 16px;
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--ion-text-color);
-    background-color: var(--color-secundario);
-    border-top-left-radius: 16px;
-    border-top-right-radius: 16px;
+  .page-header h1 {
+    font-size: 1.8rem;
   }
   
-  .configuracion-panel ion-item {
-    --background: transparent;
-    --color: var(--ion-text-color);
-    --padding-start: 16px;
-    --inner-padding-end: 16px;
+  .configuracion-content {
+    gap: 1.5rem;
+    /* ASEGURAR que siga ocupando todo el ancho en móvil */
+    width: 100%;
   }
   
-  /* ✅ Toggle alineado a la derecha */
-  .configuracion-panel ion-item ion-toggle {
-    margin-inline-start: auto;
+  .section-header {
+    padding: 1.25rem 1.25rem 0.75rem 1.25rem;
   }
   
-  /* Variables de color personalizadas */
-  :root {
-    --color-boton-rojo: #ff4d4d;
-    --color-texto-claro: #ffffff;
+  .section-header ion-card-title {
+    font-size: 1.2rem;
   }
   
-  html.ion-palette-dark,
-  html.ion-palette-dark body,
-  .ion-palette-dark {
-    --color-boton-rojo: #ff4d4d;
-    --color-texto-claro: #ffffff;
+  .config-item {
+    margin: 0 1.25rem;
   }
   
-  /* Estilo para el botón rojo de eliminar cuenta */
-  .boton-rojo {
-    width: calc(100% - 32px);
-    margin: 16px;
-    --background: var(--color-boton-rojo);
-    --color: var(--color-texto-claro);
-    font-weight: bold;
-    border-radius: 8px;
-    text-align: center;
+  .solicitud-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
   }
   
-  /* Corrección para modo oscuro (si algún estilo lo anula globalmente) */
-  .ion-palette-dark ion-button.boton-rojo {
-    --background: var(--color-boton-rojo) !important;
-    --color: var(--color-texto-claro) !important;
-    background-color: var(--color-boton-rojo) !important;
-    color: var(--color-texto-claro) !important;
+  .solicitud-info {
+    width: 100%;
   }
   
+  .estado-chip {
+    align-self: flex-start;
+  }
+  
+  .danger-content {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .configuracion-container {
+    padding: var(--margenPaginaMobileSmall, 16px 20px); /* CORREGIDO: usar variable de márgenes */
+    /* ASEGURAR que siga ocupando todo el ancho en móvil pequeño */
+    width: 100%;
+  }
+  
+  .page-header h1 {
+    font-size: 1.6rem;
+  }
+  
+  .configuracion-content {
+    gap: 1.25rem;
+    /* ASEGURAR que siga ocupando todo el ancho en móvil pequeño */
+    width: 100%;
+  }
+  
+  .section-header {
+    padding: 1rem;
+  }
+  
+  .section-header-content {
+    gap: 0.75rem;
+  }
+  
+  .section-icon {
+    font-size: 1.3rem;
+  }
+  
+  .section-header ion-card-title {
+    font-size: 1.1rem;
+  }
+  
+  .config-item {
+    margin: 0 1rem;
+    padding: 0.75rem 0;
+  }
+  
+  .solicitud-card {
+    padding: 1.25rem;
+  }
+  
+  .solicitud-info {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .solicitud-icon {
+    font-size: 1.3rem;
+    margin-top: 0;
+  }
+  
+  .benefits-list {
+    margin-left: 0;
+  }
+  
+  .benefit-item {
+    font-size: 0.9rem;
+  }
+  
+  .danger-content {
+    padding: 1rem;
+  }
+  
+  .danger-warning {
+    padding: 0.75rem;
+  }
+}

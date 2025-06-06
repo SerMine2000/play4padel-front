@@ -16,7 +16,7 @@ import {
   IonSelectOption,
   IonDatetime,
   IonToast,
-  IonSpinner,
+  IonLoading,
   IonGrid,
   IonRow,
   IonCol,
@@ -274,16 +274,10 @@ const Ligas: React.FC = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <IonSpinner />
-      </div>
-    );
-  }
-
   return (
     <div className={`ligas-container ${theme}`}>
+      <IonLoading isOpen={loading} message="Cargando ligas..." />
+      
       <div className="page-header">
         <h1>Ligas</h1>
         <p>Participa en ligas regulares de pádel</p>
@@ -319,13 +313,7 @@ const Ligas: React.FC = () => {
           ) : (
             ligas.map((liga) => (
               <IonCol size="12" sizeMd="6" sizeLg="6" key={liga.id}>
-                <IonCard className="liga-card">
-                  {liga.imagen_url && (
-                    <div className="liga-image">
-                      <img src={liga.imagen_url} alt={liga.nombre} />
-                    </div>
-                  )}
-                  
+                <IonCard className="liga-card-compact">
                   <IonCardHeader>
                     <div className="card-header-content">
                       <IonCardTitle>{liga.nombre}</IonCardTitle>
@@ -336,57 +324,51 @@ const Ligas: React.FC = () => {
                   </IonCardHeader>
 
                   <IonCardContent>
-                    <div className="liga-info">
-                      <div className="info-row">
+                    <div className="liga-info-compact">
+                      <div className="info-row-compact">
                         <IonIcon icon={calendarOutline} />
                         <span>{formatDate(liga.fecha_inicio)} - {formatDate(liga.fecha_fin)}</span>
                       </div>
                       
-                      <div className="info-row">
-                        <IonIcon icon={ribbonOutline} />
-                        <span>{liga.categoria}</span>
-                      </div>
-
-                      <div className="info-row">
-                        <IonIcon icon={statsChartOutline} />
-                        <IonChip color={getNivelColor(liga.nivel)}>
-                          {liga.nivel}
-                        </IonChip>
-                      </div>
-
-                      <div className="info-row">
-                        <IonIcon icon={peopleOutline} />
-                        <span>Máx. {liga.max_parejas} parejas</span>
-                      </div>
-
-                      {liga.precio_inscripcion > 0 && (
-                        <div className="info-row">
-                          <IonIcon icon={cashOutline} />
-                          <span className="precio">€{liga.precio_inscripcion}</span>
+                      <div className="info-grid">
+                        <div className="info-item">
+                          <IonIcon icon={ribbonOutline} />
+                          <span>{liga.categoria}</span>
                         </div>
-                      )}
+                        
+                        <div className="info-item">
+                          <IonIcon icon={statsChartOutline} />
+                          <IonChip color={getNivelColor(liga.nivel)} style={{paddingLeft: 6, paddingRight: 6, minHeight: 22, fontSize: '0.85em', height: 'auto', lineHeight: 1.1 }}>
+                            {liga.nivel}
+                          </IonChip>
+                        </div>
+
+                        <div className="info-item">
+                          <IonIcon icon={peopleOutline} />
+                          <span>Máx. {liga.max_parejas}</span>
+                        </div>
+
+                        {liga.precio_inscripcion > 0 && (
+                          <div className="info-item">
+                            <IonIcon icon={cashOutline} />
+                            <span className="precio">€{liga.precio_inscripcion}</span>
+                          </div>
+                        )}
+                      </div>
 
                       {liga.premio && (
-                        <div className="info-row">
+                        <div className="premio-compact">
                           <IonIcon icon={trophyOutline} />
-                          <span className="premio">{formatPremio(liga.premio)}</span>
+                          <span>{formatPremio(liga.premio)}</span>
                         </div>
                       )}
 
                       {liga.descripcion && (
-                        <p className="descripcion">{liga.descripcion}</p>
+                        <p className="descripcion-compact">{liga.descripcion}</p>
                       )}
                     </div>
 
-                    <div className="liga-scoring">
-                      <small>
-                        Victoria: {liga.puntos_victoria}pts • 
-                        {liga.permite_empate && ` Empate: ${liga.puntos_empate}pts •`}
-                        Derrota: {liga.puntos_derrota}pts
-                      </small>
-                    </div>
-
-                    <div className="card-actions">
+                    <div className="card-actions-compact">
                       <IonButton fill="clear" size="small" routerLink={`/ligas/${liga.id}`}>
                         <IonIcon icon={eyeOutline} slot="start" />
                         Ver detalles

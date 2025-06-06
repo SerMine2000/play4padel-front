@@ -1,4 +1,4 @@
-/* Torneos.css - Diseño elegante y profesional */
+/* Torneos.css - Diseño profesional y consistente */
 
 /* Asegurar que no hay fondos conflictivos */
 body, ion-app, ion-router-outlet, ion-content {
@@ -20,62 +20,61 @@ ion-content {
 }
 
 .torneos-container {
-  padding: 1.5rem;
+  padding: 32px 40px; /* CORREGIDO: mismo padding que otras páginas */
   background: var(--ion-background-color);
   margin: 0;
   box-sizing: border-box;
 }
 
-/* Header elegante */
+/* Header igual que otras páginas */
 .page-header {
-  margin-bottom: 3rem;
-  text-align: center;
-  padding: 2rem 0;
+  margin-bottom: 2rem;
+  text-align: left;
+  padding: 1rem 0;
 }
 
 .page-header h1 {
-  margin: 0 0 1rem 0;
-  font-size: 2.5rem;
+  margin: 0 0 0.5rem 0;
+  font-size: 2.2rem;
   font-weight: 700;
-  color: #00FF66;
-  text-shadow: 0 2px 10px rgba(0, 255, 102, 0.2);
+  color: var(--ion-text-color);
   position: relative;
+  display: inline-block;
 }
 
 .page-header h1::after {
   content: '';
   position: absolute;
-  bottom: -0.5rem;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: -8px;
+  left: 0;
   width: 60px;
   height: 4px;
-  background: #00FF66;
+  background: linear-gradient(90deg, var(--ion-color-primary), #a160fb);
   border-radius: 2px;
 }
 
 .page-header p {
   color: var(--ion-color-medium);
-  margin: 0;
-  font-size: 1.1rem;
+  margin: 0.5rem 0 0 0;
+  font-size: 1rem;
   font-weight: 400;
 }
 
-/* Cards de torneos mejoradas */
+/* Cards de torneos */
 .torneo-card {
   height: 100%;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: var(--card-shadow);
-  border: 1px solid rgba(0, 255, 102, 0.1);
+  border: 1px solid rgba(161, 96, 251, 0.1);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background: var(--color-panel, #ffffff);
 }
 
 .torneo-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 40px rgba(0, 255, 102, 0.15);
-  border-color: rgba(0, 255, 102, 0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(161, 96, 251, 0.12);
+  border-color: rgba(161, 96, 251, 0.3);
 }
 
 /* Imagen del torneo */
@@ -83,7 +82,7 @@ ion-content {
   height: 200px;
   overflow: hidden;
   position: relative;
-  background: linear-gradient(45deg, #00FF66, #a160fb);
+  background: linear-gradient(45deg, var(--color-icono-usuarios), var(--ion-color-primary));
 }
 
 .torneo-image::after {
@@ -113,42 +112,50 @@ ion-content {
   justify-content: space-between;
   align-items: flex-start;
   gap: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .card-header-content ion-card-title {
   flex: 1;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: 600;
   line-height: 1.3;
   color: var(--ion-text-color);
 }
 
+.torneo-card ion-card-header {
+  padding: 1rem 1rem 0 1rem;
+}
+
+.torneo-card ion-card-content {
+  padding: 0 1rem 1rem 1rem;
+}
+
 /* Info del torneo */
 .torneo-info {
-  margin: 1.5rem 0;
+  margin: 0.75rem 0;
 }
 
 .info-row {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  font-size: 0.95rem;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
   color: var(--ion-color-medium);
-  padding: 0.75rem;
-  border-radius: 8px;
+  padding: 0.5rem;
+  border-radius: 6px;
   transition: all 0.2s ease;
 }
 
 .info-row:hover {
-  background: rgba(0, 255, 102, 0.05);
-  color: #00FF66;
+  background: rgba(161, 96, 251, 0.05);
+  color: var(--color-icono-usuarios);
 }
 
 .info-row ion-icon {
-  color: #00FF66;
-  font-size: 1.2rem;
+  color: var(--ion-color-primary);
+  font-size: 1.1rem;
   transition: transform 0.2s ease;
 }
 
@@ -159,43 +166,46 @@ ion-content {
 /* Precio destacado */
 .precio {
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   color: var(--color-icono-estadisticas);
   background: rgba(40, 199, 111, 0.1);
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
+  padding: 0.2rem 0.6rem;
+  border-radius: 16px;
   border: 1px solid rgba(40, 199, 111, 0.2);
 }
 
 /* Descripción */
 .descripcion {
-  margin: 1.5rem 0;
-  font-size: 0.9rem;
+  margin: 0.75rem 0;
+  font-size: 0.85rem;
   color: var(--ion-color-medium);
-  line-height: 1.6;
+  line-height: 1.4;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  padding: 1rem;
+  padding: 0.75rem;
   background: var(--color-panel, #ffffff);
-  border-radius: 8px;
+  border-radius: 6px;
   border-left: 3px solid var(--ion-border-color, rgba(0, 0, 0, 0.1));
 }
 
 /* Acciones del card */
 .card-actions {
   display: flex;
-  gap: 0.75rem;
+  gap: 0.5rem;
   flex-wrap: wrap;
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
   border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .card-actions ion-button {
-  --border-radius: 8px;
+  --border-radius: 6px;
   font-weight: 500;
+  font-size: 0.8rem;
+  --padding-start: 0.75rem;
+  --padding-end: 0.75rem;
   transition: all 0.2s ease;
 }
 
@@ -206,32 +216,32 @@ ion-content {
 /* Estado vacío */
 .empty-state {
   text-align: center;
-  padding: 4rem 2rem;
+  padding: 3rem 2rem;
   background: var(--color-panel, #ffffff);
   border-radius: 16px;
   box-shadow: var(--card-shadow);
-  border: 2px dashed rgba(0, 255, 102, 0.2);
+  border: 2px dashed rgba(161, 96, 251, 0.2);
   margin: 2rem 0;
 }
 
 .empty-icon {
-  font-size: 5rem;
+  font-size: 4rem;
   color: var(--ion-color-medium);
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   opacity: 0.6;
 }
 
 .empty-state h2 {
   color: var(--ion-color-medium);
-  margin: 1.5rem 0 1rem 0;
-  font-size: 1.5rem;
+  margin: 1rem 0;
+  font-size: 1.3rem;
   font-weight: 600;
 }
 
 .empty-state p {
   color: var(--ion-color-medium);
-  margin-bottom: 2rem;
-  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
   opacity: 0.8;
   max-width: 400px;
   margin-left: auto;
@@ -245,7 +255,7 @@ ion-content {
   justify-content: space-between;
   align-items: center;
   padding: 2rem;
-  background: linear-gradient(135deg, #00FF66, #a160fb);
+  background: linear-gradient(135deg, var(--color-icono-usuarios), var(--ion-color-primary));
   color: white;
 }
 
@@ -269,7 +279,7 @@ ion-content {
 }
 
 .modal-content ion-item {
-  --background: white;
+  --background: var(--color-panel, #ffffff);
   --border-radius: 8px;
   margin-bottom: 1rem;
   border: 1px solid rgba(0, 0, 0, 0.06);
@@ -290,9 +300,9 @@ ion-content {
 }
 
 .torneos-fab ion-fab-button {
-  --background: #00FF66;
+  --background: linear-gradient(135deg, var(--color-icono-usuarios), var(--ion-color-primary));
   --color: white;
-  --box-shadow: 0 8px 25px rgba(0, 255, 102, 0.4);
+  --box-shadow: 0 8px 25px rgba(161, 96, 251, 0.4);
   --border-radius: 16px;
   width: 56px;
   height: 56px;
@@ -301,24 +311,24 @@ ion-content {
 
 .torneos-fab ion-fab-button:hover {
   transform: scale(1.1);
-  --box-shadow: 0 12px 30px rgba(0, 255, 102, 0.5);
+  --box-shadow: 0 12px 30px rgba(161, 96, 251, 0.5);
 }
 
 /* Chips mejorados */
 ion-chip {
-  --background: rgba(0, 255, 102, 0.1);
-  --color: #00FF66;
-  border: 1px solid rgba(0, 255, 102, 0.2);
+  --background: rgba(161, 96, 251, 0.1);
+  --color: var(--color-icono-usuarios);
+  border: 1px solid rgba(161, 96, 251, 0.2);
   font-weight: 500;
   transition: all 0.2s ease;
 }
 
 ion-chip:hover {
-  --background: rgba(0, 255, 102, 0.15);
+  --background: rgba(161, 96, 251, 0.15);
   transform: translateY(-1px);
 }
 
-/* Estados de chips */
+/* Estados de chips específicos */
 ion-chip[color="success"] {
   --background: rgba(40, 199, 111, 0.1);
   --color: var(--color-icono-estadisticas);
@@ -331,12 +341,6 @@ ion-chip[color="warning"] {
   border-color: rgba(255, 198, 47, 0.2);
 }
 
-ion-chip[color="danger"] {
-  --background: rgba(244, 67, 54, 0.1);
-  --color: var(--ion-color-danger);
-  border-color: rgba(244, 67, 54, 0.2);
-}
-
 ion-chip[color="medium"] {
   --background: rgba(146, 158, 171, 0.1);
   --color: var(--ion-color-medium);
@@ -346,8 +350,8 @@ ion-chip[color="medium"] {
 /* Responsive */
 @media (max-width: 768px) {
   .torneos-container {
-    padding: 1rem;
-    background: var(--ion-background-color);
+    padding: 20px 24px;
+    background: var(--ion-background-color, #ffffff);
   }
   
   .ion-palette-dark .torneos-container {
@@ -355,16 +359,12 @@ ion-chip[color="medium"] {
   }
   
   .page-header {
-    padding: 1rem 0;
-    margin-bottom: 2rem;
+    padding: 0.75rem 0;
+    margin-bottom: 1.5rem;
   }
   
   .page-header h1 {
-    font-size: 2rem;
-  }
-  
-  .torneo-image {
-    height: 160px;
+    font-size: 1.8rem;
   }
   
   .card-actions {
@@ -386,7 +386,31 @@ ion-chip[color="medium"] {
   }
   
   .empty-icon {
-    font-size: 3.5rem;
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .torneos-container {
+    padding: 16px 20px;
+  }
+  
+  .page-header h1 {
+    font-size: 1.6rem;
+  }
+  
+  .torneo-card ion-card-header,
+  .torneo-card ion-card-content {
+    padding: 0.75rem;
+  }
+  
+  .info-row {
+    font-size: 0.8rem;
+    padding: 0.3rem;
+  }
+  
+  .card-actions ion-button {
+    font-size: 0.75rem;
   }
 }
 
@@ -408,17 +432,17 @@ ion-chip[color="medium"] {
 }
 
 .ion-palette-dark .torneo-card:hover {
-  border-color: rgba(0, 255, 102, 0.4);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  border-color: rgba(161, 96, 251, 0.4);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
 }
 
 .ion-palette-dark .info-row:hover {
-  background: rgba(0, 255, 102, 0.1);
+  background: rgba(161, 96, 251, 0.1);
 }
 
 .ion-palette-dark .descripcion {
-  background: var(--color-secundario, #1e1e1e);
-  border-left: 3px solid var(--ion-border-color, rgba(255, 255, 255, 0.1));
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .ion-palette-dark .empty-state {
@@ -440,7 +464,7 @@ ion-chip[color="medium"] {
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -449,14 +473,12 @@ ion-chip[color="medium"] {
 }
 
 .torneo-card {
-  animation: fadeInUp 0.5s ease-out;
+  animation: fadeInUp 0.4s ease-out;
 }
 
-.torneo-card:nth-child(1) { animation-delay: 0.1s; }
-.torneo-card:nth-child(2) { animation-delay: 0.2s; }
-.torneo-card:nth-child(3) { animation-delay: 0.3s; }
-.torneo-card:nth-child(4) { animation-delay: 0.4s; }
-.torneo-card:nth-child(5) { animation-delay: 0.5s; }
-.torneo-card:nth-child(6) { animation-delay: 0.6s; }
-
-/* Fix para evitar espacios en blanco - ya configurado arriba */
+.torneo-card:nth-child(1) { animation-delay: 0.05s; }
+.torneo-card:nth-child(2) { animation-delay: 0.1s; }
+.torneo-card:nth-child(3) { animation-delay: 0.15s; }
+.torneo-card:nth-child(4) { animation-delay: 0.2s; }
+.torneo-card:nth-child(5) { animation-delay: 0.25s; }
+.torneo-card:nth-child(6) { animation-delay: 0.3s; }

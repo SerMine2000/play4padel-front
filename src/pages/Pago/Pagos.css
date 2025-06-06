@@ -1,7 +1,7 @@
-/* Pagos.css - Estilos para la página de pagos */
+/* Pagos.css - Estilos para la página de pagos CORREGIDOS */
 
 .pagos-container {
-  padding: 24px;
+  padding: var(--margenPaginaDesktop, 32px 40px); /* CORREGIDO: usar variable de márgenes */
   background-color: var(--ion-background-color);
   min-height: calc(100vh - 64px);
   display: flex;
@@ -29,31 +29,31 @@
   flex: 1;
 }
 
+/* CORREGIDO: Título igual que otras páginas con línea morada */
 .pagos-title {
-  font-size: 2.2rem;
+  font-size: 2.2rem; /* CORREGIDO: mismo tamaño que otras páginas */
   font-weight: 700;
   color: var(--ion-text-color);
-  letter-spacing: 0.5px;
   position: relative;
-  margin: 0 0 12px 0;
+  display: inline-block;
+  margin: 0 0 0.5rem 0; /* CORREGIDO: mismo margen que otras páginas */
 }
 
 .pagos-title::after {
   content: '';
   position: absolute;
-  left: 0;
   bottom: -8px;
+  left: 0;
   width: 60px;
-  height: 3px;
-  background: var(--ion-color-primary);
-  border-radius: 3px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--ion-color-primary), #a160fb);
+  border-radius: 2px;
 }
 
 .pagos-description {
   font-size: 1rem;
-  color: var(--ion-text-color);
-  opacity: 0.7;
-  margin: 0;
+  color: var(--ion-color-medium);
+  margin: 0.5rem 0 0 0;
   line-height: 1.4;
 }
 
@@ -211,8 +211,8 @@
   width: 100%;
   padding: 16px 18px;
   border-radius: 10px;
-  background-color: var(--ion-background-color);
-  border: 1px solid var(--ion-border-color);
+  background-color: var(--colorFondoCampo, #ffffff); /* CORREGIDO: usar variable con fallback */
+  border: 1px solid var(--colorBordeCampo, rgba(0, 0, 0, 0.1)); /* CORREGIDO: usar variable con fallback */
   color: var(--ion-text-color);
   font-size: 1rem;
   transition: border 0.2s ease, box-shadow 0.2s ease;
@@ -222,7 +222,7 @@
 
 .form-input:focus {
   outline: none;
-  border-color: var(--ion-color-primary);
+  border-color: var(--colorBordeCampoFocus, #6129f0); /* CORREGIDO: usar variable con fallback */
   box-shadow: 0 0 0 3px rgba(97, 41, 240, 0.15);
 }
 
@@ -243,13 +243,13 @@
   gap: 20px;
 }
 
-/* Estilo específico para elementos de Stripe - SOLUCIÓN PARA CAMPOS OSCUROS */
+/* Estilo específico para elementos de Stripe - CORREGIDO CON VARIABLES */
 .StripeElement {
   width: 100%;
   padding: 16px 18px;
   border-radius: 10px;
-  background-color: var(--ion-background-color) !important;
-  border: 1px solid var(--ion-border-color) !important;
+  background-color: var(--colorFondoCampo, #ffffff) !important; /* CORREGIDO: usar variable con fallback */
+  border: 1px solid var(--colorBordeCampo, rgba(0, 0, 0, 0.1)) !important; /* CORREGIDO: usar variable con fallback */
   color: var(--ion-text-color) !important;
   font-size: 1rem;
   transition: border 0.2s ease, box-shadow 0.2s ease;
@@ -259,7 +259,7 @@
 
 .StripeElement:focus, .StripeElement--focus {
   outline: none !important;
-  border-color: var(--ion-color-primary) !important;
+  border-color: var(--colorBordeCampoFocus, #6129f0) !important; /* CORREGIDO: usar variable con fallback */
   box-shadow: 0 0 0 3px rgba(97, 41, 240, 0.15) !important;
 }
 
@@ -273,7 +273,7 @@
 }
 
 .StripeElement--complete {
-  border-color: var(--ion-color-primary) !important;
+  border-color: var(--colorBordeCampoFocus, #6129f0) !important; /* CORREGIDO: usar variable con fallback */
 }
 
 /* Botón de pago */
@@ -375,12 +375,16 @@
   .payment-form {
     padding: 24px;
   }
+  
+  .pagos-container {
+    padding: var(--margenPaginaTablet, 24px 32px); /* CORREGIDO: usar variable de márgenes */
+  }
 }
 
 /* Responsive - Mobile */
 @media (max-width: 768px) {
   .pagos-container {
-    padding: 16px;
+    padding: var(--margenPaginaMobile, 20px 24px); /* CORREGIDO: usar variable de márgenes */
   }
   
   .pagos-content-wrapper {
@@ -420,7 +424,7 @@
 
 @media (max-width: 480px) {
   .pagos-container {
-    padding: 12px;
+    padding: var(--margenPaginaMobileSmall, 16px 20px); /* CORREGIDO: usar variable de márgenes */
   }
   
   .pagos-header {
