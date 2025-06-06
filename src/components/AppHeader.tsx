@@ -1,23 +1,26 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { IonHeader, IonToolbar, IonButtons, IonButton } from '@ionic/react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Avatar from './Avatar';
+import ToggleTheme from '../pages/ToggleTheme';
 import './AppHeader.css';
-
-// Colores del logo Play4Padel para el borde del avatar
-const brightGreen = '#00FF66'; // Verde brillante de la "P" en el logo
 
 const AppHeader: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  
   const handleProfileClick = () => {
     navigate('/profile');
   };
 
   return (
     <IonHeader className="ion-no-border app-header">
-      <IonToolbar style={{backgroundColor: '#2D0A31'}}>
+      <IonToolbar>
+        <IonButtons slot="start">
+          <ToggleTheme />
+        </IonButtons>
+        
         <IonButtons slot="end">
           <IonButton
             fill="clear"

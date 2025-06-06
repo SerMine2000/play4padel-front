@@ -1,108 +1,111 @@
-/* variables.css - ACTUALIZADO CON NUEVAS VARIABLES */
+/* variables.css - Sistema de colores reorganizado con variables lógicas en castellano */
 @import '@ionic/react/css/palettes/dark.class.css';
 
 /* ===== MODO CLARO (por defecto) ===== */
 :root {
-  --ion-color-primary: #6129f0;
-  --ion-background-color: #f2f5ff;
-  --ion-text-color: #000000;
-
-  --ion-color-primary-rgb: 0, 255, 102;
-  --ion-color-primary-contrast: #ffffff;
-
-  --ion-color-primary-contrast-rgb: 255, 255, 255;
-  --card-shadow: 0 4px 16px rgba(0,0,0,0.25);
-
-  --ion-color-primary-shade: #00e55a;
-  --ion-color-primary-tint: #33ff77;
-  --color-panel: #ffffff;
-  --color-icono-empresa: #00FF66;
-  --color-icono-pistas: #00FF66;
-  --color-icono-calendario: #a160fb;
-  --color-icono-usuarios: #a160fb;
-  --color-icono-marcador: #ffc62f;
-  --color-icono-estadisticas: #00FF66;
-  --ion-border-color: rgba(0, 0, 0, 0.1);
+  /* COLORES PRINCIPALES */
+  --color-primario: #6129f0;
+  --color-primario-contraste: #ffffff;
+  --color-secundario: #00FF66;
   
-  /* NUEVAS VARIABLES PARA FORMULARIOS Y CAMPOS */
-  --colorFondoCampo: #ffffff;
-  --colorBordeCampo: rgba(0, 0, 0, 0.1);
-  --colorFondoCampoFocus: #ffffff;
-  --colorBordeCampoFocus: #6129f0;
-  --colorTextoPlaceholder: #666666;
-  --colorFondoSeccionConfig: #ffffff;
-  --colorFondoHoverConfig: rgba(97, 41, 240, 0.05);
-  --colorFondoTarjetaConfig: rgba(97, 41, 240, 0.03);
-  --colorFondoMensajeConfig: rgba(0, 0, 0, 0.03);
-  --colorFondoRechazoConfig: rgba(244, 67, 54, 0.05);
-  --colorFondoComentariosConfig: rgba(146, 158, 171, 0.05);
-  --colorFondoAdvertenciaConfig: rgba(244, 67, 54, 0.05);
-  --colorVerdeConfig: #4caf50;
-  --colorBordeRojoConfig: rgba(244, 67, 54, 0.2);
+  /* FONDOS PRINCIPALES */
+  --fondo-aplicacion: #f2f5ff;
+  --fondo-contenido: #ffffff;
+  --fondo-panel-navegacion: #2D0A31; /* Morado para barra lateral y header */
+  --fondo-card: #ffffff;
+  --fondo-input: #ffffff;
   
-  /* VARIABLES PARA MÁRGENES CONSISTENTES */
-  --margenPaginaDesktop: 32px 40px;
-  --margenPaginaTablet: 24px 32px;
-  --margenPaginaMobile: 20px 24px;
-  --margenPaginaMobileSmall: 16px 20px;
+  /* TEXTOS */
+  --texto-principal: #000000;
+  --texto-secundario: #666666;
+  --texto-panel-navegacion: #ffffff; /* Texto blanco en paneles morados */
+  --texto-placeholder: #999999;
+  
+  /* BORDES Y SOMBRAS */
+  --borde-principal: rgba(0, 0, 0, 0.1);
+  --borde-input: rgba(0, 0, 0, 0.15);
+  --sombra-card: 0 4px 12px rgba(0, 0, 0, 0.08);
+  
+  /* ICONOS CON COLORES ESPECÍFICOS */
+  --icono-inicio: #00FF66;
+  --icono-pistas: #00FF66;
+  --icono-calendario: #a160fb;
+  --icono-usuarios: #a160fb;
+  --icono-marcador: #ffc62f;
+  --icono-estadisticas: #00FF66;
+  --icono-torneos: #ff6b6b;
+  --icono-configuracion: #64b5f6;
+  
+  /* ESTADOS INTERACTIVOS */
+  --hover-panel: rgba(255, 255, 255, 0.1);
+  --hover-card: rgba(97, 41, 240, 0.05);
+  --active-item: rgba(0, 255, 102, 0.15);
+  
+  /* VARIABLES IONIC COMPATIBLES */
+  --ion-color-primary: var(--color-primario);
+  --ion-color-primary-contrast: var(--color-primario-contraste);
+  --ion-background-color: var(--fondo-aplicacion);
+  --ion-text-color: var(--texto-principal);
+  --ion-border-color: var(--borde-principal);
 }
 
 /* ===== MODO OSCURO (.ion-palette-dark en <html>) ===== */
 .ion-palette-dark {
-  --ion-color-primary: #00FF66;
-  --ion-color-primary-contrast: #ffffff;
+  /* COLORES PRINCIPALES */
+  --color-primario: #00FF66;
+  --color-primario-contraste: #ffffff;
+  --color-secundario: #33ff77;
   
-  --ion-background-color: #121212;
-  --ion-text-color: #f0f0f0;
+  /* FONDOS PRINCIPALES */
+  --fondo-aplicacion: #0a0a0a; /* Muy oscuro */
+  --fondo-contenido: #121212; /* Oscuro principal */
+  --fondo-panel-navegacion: #1a1a1a; /* Oscuro para navegación */
+  --fondo-card: #1e1e1e; /* Ligeramente más claro que el contenido */
+  --fondo-input: #252525; /* Más claro para inputs */
   
-  --card-shadow: none;
+  /* TEXTOS */
+  --texto-principal: #ffffff;
+  --texto-secundario: #b3b3b3;
+  --texto-panel-navegacion: #ffffff;
+  --texto-placeholder: #777777;
   
-  --color-primario: #4CAF50;
-  --color-fondo: #121212;
-  --color-texto: #f0f0f0;
-  --color-secundario: #1e1e1e;
-  --color-boton-rojo: #ff4d4d;
-  --color-panel: #1e1e1e;
-  --color-icono-empresa: #33ff77;
-  --color-icono-pistas: #33ff77;
-  --color-icono-calendario: #c490ff;
-  --color-icono-usuarios: #caa9ff;
-  --color-icono-marcador: #ffe066;
-  --color-icono-estadisticas: #33ff77;
-  --ion-border-color: rgba(255, 255, 255, 0.08);
+  /* BORDES Y SOMBRAS */
+  --borde-principal: rgba(255, 255, 255, 0.1);
+  --borde-input: rgba(255, 255, 255, 0.15);
+  --sombra-card: 0 4px 20px rgba(0, 0, 0, 0.4);
   
-  /* VARIABLES PARA MODO OSCURO */
-  --colorFondoCampo: #1e1e1e;
-  --colorBordeCampo: rgba(255, 255, 255, 0.1);
-  --colorFondoCampoFocus: #1e1e1e;
-  --colorBordeCampoFocus: #00FF66;
-  --colorTextoPlaceholder: #888888;
-  --colorFondoSeccionConfig: #1e1e1e;
-  --colorFondoHoverConfig: rgba(0, 255, 102, 0.1);
-  --colorFondoTarjetaConfig: rgba(0, 255, 102, 0.05);
-  --colorFondoMensajeConfig: rgba(255, 255, 255, 0.05);
-  --colorFondoRechazoConfig: rgba(244, 67, 54, 0.1);
-  --colorFondoComentariosConfig: rgba(146, 158, 171, 0.1);
-  --colorFondoAdvertenciaConfig: rgba(244, 67, 54, 0.1);
-  --colorVerdeConfig: #66bb6a;
-  --colorBordeRojoConfig: rgba(244, 67, 54, 0.3);
+  /* ICONOS - Más brillantes para modo oscuro */
+  --icono-inicio: #33ff77;
+  --icono-pistas: #33ff77;
+  --icono-calendario: #c490ff;
+  --icono-usuarios: #caa9ff;
+  --icono-marcador: #ffe066;
+  --icono-estadisticas: #33ff77;
+  --icono-torneos: #ff8a80;
+  --icono-configuracion: #81c784;
+  
+  /* ESTADOS INTERACTIVOS */
+  --hover-panel: rgba(255, 255, 255, 0.08);
+  --hover-card: rgba(0, 255, 102, 0.1);
+  --active-item: rgba(0, 255, 102, 0.2);
+  
+  /* VARIABLES IONIC COMPATIBLES */
+  --ion-color-primary: var(--color-primario);
+  --ion-color-primary-contrast: var(--color-primario-contraste);
+  --ion-background-color: var(--fondo-aplicacion);
+  --ion-text-color: var(--texto-principal);
+  --ion-border-color: var(--borde-principal);
 }
 
-/* ===== ESTILOS BASE ===== */
+/* ===== ESTILOS BASE GLOBALES ===== */
 body, ion-app {
-  background-color: #f2f5ff;
-  color: var(--ion-text-color);
+  background-color: var(--fondo-aplicacion);
+  color: var(--texto-principal);
   transition: background-color 0.3s ease, color 0.3s ease;
   min-height: 100vh;
   height: 100%;
-
-  background-image: var(--home-background-image);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
-/* Asegurar que no hay espacios en blanco en la aplicación */
 html, body {
   height: 100%;
   margin: 0;
@@ -114,244 +117,98 @@ ion-app, ion-router-outlet, ion-content {
   min-height: 100vh;
 }
 
-ion-card,
-ion-toolbar,
-ion-title,
-ion-label,
-ion-text,
-ion-input,
-ion-textarea,
-ion-button {
-  background-color: #f2f5ff;
-  color: var(--ion-text-color);
-  transition: background-color 0.3s ease, color 0.3s ease;
+/* CARDS GLOBALES */
+ion-card {
+  background-color: var(--fondo-card);
+  color: var(--texto-principal);
+  border-radius: 12px;
+  box-shadow: var(--sombra-card);
+  border: 1px solid var(--borde-principal);
+  transition: all 0.3s ease;
 }
 
-/* Ion-item e ion-list con fondo transparente para evitar fondo grisáceo en listas */
+ion-card:hover {
+  box-shadow: var(--sombra-card);
+  transform: translateY(-2px);
+}
+
+/* TEXTOS GLOBALES */
+h1, h2, h3, h4, h5, h6,
+p, span, div, ion-label, ion-text {
+  color: var(--texto-principal);
+  transition: color 0.3s ease;
+}
+
+/* INPUTS GLOBALES */
+ion-input, ion-textarea, ion-select {
+  --background: var(--fondo-input);
+  --color: var(--texto-principal);
+  --placeholder-color: var(--texto-placeholder);
+  --border-color: var(--borde-input);
+  border: 1px solid var(--borde-input);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+ion-input:focus-within, 
+ion-textarea:focus-within, 
+ion-select:focus-within {
+  --border-color: var(--color-primario);
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 3px rgba(var(--color-primario), 0.1);
+}
+
+/* ITEMS Y LISTAS */
 ion-item {
-  --background: transparent !important;
-  background-color: transparent !important;
-  --color: var(--ion-text-color);
+  --background: transparent;
+  --color: var(--texto-principal);
+  --border-color: var(--borde-principal);
+  background-color: transparent;
 }
 
 ion-list {
-  --background: transparent !important;
-  background-color: transparent !important;
-}
-
-/* Forzar transparencia en todas las partes de ion-item */
-ion-item::part(native) {
-  background-color: transparent !important;
-}
-
-ion-card {
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-ion-button {
-  --background: var(--ion-color-primary);
-  --color: var(--ion-color-primary-contrast);
-}
-
-ion-button[color="danger"] {
-  --background: var(--ion-color-danger);
-}
-
-ion-card-title[color="danger"] {
-  color: var(--ion-color-danger);
-}
-
-/* ===== AJUSTES MODO OSCURO PERSONALIZADOS ===== */
-body.ion-palette-dark,
-.ion-palette-dark body {
-  background-color: var(--color-fondo);
-  color: var(--color-texto);
-}
-
-.ion-palette-dark h1,
-.ion-palette-dark h2,
-.ion-palette-dark h3,
-.ion-palette-dark h4,
-.ion-palette-dark h5,
-.ion-palette-dark h6,
-.ion-palette-dark p,
-.ion-palette-dark ul,
-.ion-palette-dark li,
-.ion-palette-dark strong,
-.ion-palette-dark small {
-  color: var(--ion-text-color);
-}
-
-.ion-palette-dark p,
-.ion-palette-dark li {
-  font-size: 16px;
-  line-height: 1.5;
-}
-
-.ion-palette-dark .seccion,
-.ion-palette-dark .card,
-.ion-palette-dark .panel {
-  background-color: var(--color-secundario);
-  color: var(--color-texto);
-}
-
-.ion-palette-dark .boton-rojo {
-  background-color: var(--color-boton-rojo);
-  color: #fff;
-}
-
-.ion-palette-dark input,
-.ion-palette-dark select,
-.ion-palette-dark textarea {
-  background-color: var(--color-secundario);
-  color: var(--color-texto);
-  border: 1px solid var(--color-primario);
-}
-
-/* ===== CORRECCIONES PARA ION-ITEM, ION-LIST Y COMPONENTES DENTRO DE CARDS ===== */
-.ion-palette-dark ion-item {
-  --background: transparent !important;
-  background-color: transparent !important;
-  --color: var(--color-texto);
-  --border-color: rgba(255, 255, 255, 0.1);
-}
-
-.ion-palette-dark ion-list {
-  --background: transparent !important;
-  background-color: transparent !important;
-}
-
-.ion-palette-dark ion-item::part(native) {
-  background-color: transparent !important;
-}
-
-.ion-palette-dark ion-label {
-  color: var(--color-texto);
-}
-
-.ion-palette-dark ion-icon {
-  color: var(--color-texto);
-}
-
-.ion-palette-dark ion-card ion-item {
   --background: transparent;
-  background-color: transparent !important;
-  --ion-background-color: transparent;
-  --color: var(--color-texto);
-  border: none;
-}
-
-.ion-palette-dark ion-card-title,
-.ion-palette-dark ion-card-header,
-.ion-palette-dark ion-card-content {
   background-color: transparent;
-  color: var(--ion-text-color);
 }
 
-/* ===== MEJORAS VISUALES: CABECERAS, CARDS, AVATARES ===== */
-ion-header,
-.ion-palette-dark ion-header {
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  background-color: var(--ion-background-color);
+/* BOTONES GLOBALES */
+ion-button {
+  --background: var(--color-primario);
+  --color: var(--color-primario-contraste);
+  --border-radius: 8px;
+  transition: all 0.3s ease;
 }
 
-.ion-palette-dark ion-card {
-  background-color: #1e1e1e;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+ion-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(var(--color-primario), 0.3);
 }
 
-ion-avatar img {
-  border-radius: 50%;
-  border: 2px solid var(--ion-color-primary);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+/* HEADERS GLOBALES */
+ion-header, ion-toolbar {
+  --background: var(--fondo-panel-navegacion);
+  --color: var(--texto-panel-navegacion);
+  background-color: var(--fondo-panel-navegacion);
+  color: var(--texto-panel-navegacion);
+  transition: all 0.3s ease;
 }
 
-.ion-palette-dark ion-avatar {
-  background-color: transparent !important;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 2px solid var(--ion-color-primary);
-}
-
-/* Toolbar interior (evita doble fondo en modo oscuro) */
-.ion-palette-dark ion-toolbar,
-.ion-palette-dark ion-toolbar * {
-  background-color: transparent !important;
-  --background: transparent !important;
-}
-
-.ion-palette-dark ion-title {
-  background-color: transparent !important;
-  color: var(--ion-color-primary-contrast);
-}
-
-.ion-palette-dark ion-button {
-  background-color: transparent !important;
-  --background: transparent !important;
-  box-shadow: none !important;
-}
-
-ion-header,
-ion-toolbar {
-  box-shadow: none !important;
-  border-bottom: none !important;
-}
-
-/* ===== MENÚ DESPLEGABLE DEL AVATAR (IONIC 7+) ===== */
-ion-popover::part(content) {
-  background: var(--color-secundario) !important;
-  color: var(--ion-text-color) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  border-radius: 12px !important;
-}
-
-ion-popover ion-item:last-child::part(native) {
-  border-bottom: none;
-}
-
-ion-popover ion-item {
-  --color: var(--ion-text-color) !important;
-  color: var(--ion-text-color) !important;
-  fill: var(--ion-text-color) !important;
-}
-
-ion-popover ion-label,
-ion-popover ion-icon {
-  color: var(--ion-text-color) !important;
-  fill: var(--ion-text-color) !important;
-}
-
-.ion-palette-dark ion-popover ion-item::part(native) {
-  background-color: transparent !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.ion-palette-dark ion-popover ion-item {
-  --background: transparent !important;
-}
-
-
-/* ===== Cabeceras verdes interiores ===== */
+/* CABECERAS INTERNAS DE CARDS */
 .cabecera-verde {
-  background-color: var(--ion-color-primary);
-  color: var(--ion-color-primary-contrast); /* SIEMPRE blanco */
+  background-color: var(--color-primario);
+  color: var(--color-primario-contraste);
   padding: 16px;
   font-size: 18px;
   font-weight: 600;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
 }
 
-/* ===== ESTILOS GLOBALES PARA TÍTULOS DE PÁGINA ===== */
+/* TÍTULOS DE PÁGINA */
 .titulo-pagina-global {
   font-size: 2.2rem;
   font-weight: 700;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   margin: 0 0 0.5rem 0;
   position: relative;
   display: inline-block;
@@ -364,6 +221,47 @@ ion-popover ion-icon {
   left: 0;
   width: 60px;
   height: 4px;
-  background: linear-gradient(90deg, var(--ion-color-primary), #a160fb);
+  background: linear-gradient(90deg, var(--color-primario), var(--color-secundario));
   border-radius: 2px;
+}
+
+/* POPOVER PARA AVATARES */
+ion-popover::part(content) {
+  background: var(--fondo-card);
+  color: var(--texto-principal);
+  box-shadow: var(--sombra-card);
+  border-radius: 12px;
+  border: 1px solid var(--borde-principal);
+}
+
+ion-popover ion-item {
+  --color: var(--texto-principal);
+  color: var(--texto-principal);
+}
+
+ion-popover ion-label,
+ion-popover ion-icon {
+  color: var(--texto-principal);
+}
+
+/* UTILIDADES DE RESPONSIVE */
+@media (max-width: 768px) {
+  .titulo-pagina-global {
+    font-size: 1.8rem;
+  }
+  
+  ion-card {
+    margin: 8px;
+    border-radius: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .titulo-pagina-global {
+    font-size: 1.5rem;
+  }
+  
+  ion-card {
+    margin: 4px;
+  }
 }

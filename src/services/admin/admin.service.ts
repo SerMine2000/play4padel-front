@@ -6,6 +6,9 @@ export interface AdminDashboardStats {
   totalReservations: number;
   totalRevenue: number;
   activeUsers: number;
+  totalPistas: number;
+  ligasActivas: number;
+  torneosActivos: number;
   recentUsers: any[];
   recentClubs: any[];
   monthlyGrowth: {

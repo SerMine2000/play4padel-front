@@ -30,7 +30,9 @@ import {
   trendingUpOutline,
   statsChartOutline,
   warningOutline,
-  checkmarkCircleOutline
+  checkmarkCircleOutline,
+  trophyOutline,
+  medalOutline
 } from 'ionicons/icons';
 import { useAuth } from '../../context/AuthContext';
 import adminStatsService, { AdminDashboardStats } from '../../services/admin/admin.service';
@@ -129,9 +131,6 @@ const DashboardAdministrador: React.FC = () => {
                       <div className="stats-info">
                         <h2>{estadisticas.totalUsers}</h2>
                         <p>Total Usuarios</p>
-                        <IonChip color="success" style={{ fontSize: '0.7rem', height: '20px' }}>
-                          +{estadisticas.monthlyGrowth.users}% este mes
-                        </IonChip>
                       </div>
                     </div>
                   </IonCardContent>
@@ -148,9 +147,6 @@ const DashboardAdministrador: React.FC = () => {
                       <div className="stats-info">
                         <h2>{estadisticas.totalClubs}</h2>
                         <p>Clubes Registrados</p>
-                        <IonChip color="primary" style={{ fontSize: '0.7rem', height: '20px' }}>
-                          {estadisticas.recentClubs.length} nuevos
-                        </IonChip>
                       </div>
                     </div>
                   </IonCardContent>
@@ -167,9 +163,6 @@ const DashboardAdministrador: React.FC = () => {
                       <div className="stats-info">
                         <h2>{estadisticas.totalReservations}</h2>
                         <p>Total Reservas</p>
-                        <IonChip color="success" style={{ fontSize: '0.7rem', height: '20px' }}>
-                          +{estadisticas.monthlyGrowth.reservations}% este mes
-                        </IonChip>
                       </div>
                     </div>
                   </IonCardContent>
@@ -186,9 +179,6 @@ const DashboardAdministrador: React.FC = () => {
                       <div className="stats-info">
                         <h2>{formatearMoneda(estadisticas.totalRevenue)}</h2>
                         <p>Ingresos Totales</p>
-                        <IonChip color="success" style={{ fontSize: '0.7rem', height: '20px' }}>
-                          +{estadisticas.monthlyGrowth.revenue}% este mes
-                        </IonChip>
                       </div>
                     </div>
                   </IonCardContent>
@@ -211,12 +201,16 @@ const DashboardAdministrador: React.FC = () => {
                         <span>Usuarios Activos: {estadisticas.activeUsers}</span>
                       </div>
                       <div className="status-item">
-                        <IonIcon icon={calendarOutline} color="primary" />
-                        <span>Reservas de Pistas: {estadisticas.totalReservations}</span>
+                        <IonIcon name="tennisball-outline" color="warning" />
+                        <span>Total Pistas: {estadisticas.totalPistas}</span>
                       </div>
                       <div className="status-item">
-                        <IonIcon icon={trendingUpOutline} color="primary" />
-                        <span>Sistema Operativo: 99.9% Uptime</span>
+                        <IonIcon icon={trophyOutline} color="tertiary" />
+                        <span>Ligas Activas: {estadisticas.ligasActivas}</span>
+                      </div>
+                      <div className="status-item">
+                        <IonIcon icon={medalOutline} color="secondary" />
+                        <span>Torneos Activos: {estadisticas.torneosActivos}</span>
                       </div>
                     </div>
                   </IonCardContent>
@@ -230,15 +224,30 @@ const DashboardAdministrador: React.FC = () => {
                   </IonCardHeader>
                   <IonCardContent>
                     <div className="quick-actions">
-                      <IonButton expand="block" fill="outline" routerLink="/manage-clubs">
+                      <IonButton 
+                        expand="block" 
+                        fill="solid" 
+                        className="boton-accion-rapida boton-clubes"
+                        routerLink="/manage-clubs"
+                      >
                         <IonIcon icon={businessOutline} slot="start" />
                         Gestionar Clubes
                       </IonButton>
-                      <IonButton expand="block" fill="outline" routerLink="/manage-users">
+                      <IonButton 
+                        expand="block" 
+                        fill="solid" 
+                        className="boton-accion-rapida boton-usuarios"
+                        routerLink="/manage-users"
+                      >
                         <IonIcon icon={peopleOutline} slot="start" />
                         Gestionar Usuarios
                       </IonButton>
-                      <IonButton expand="block" fill="outline" routerLink="/admin/system-reports">
+                      <IonButton 
+                        expand="block" 
+                        fill="solid" 
+                        className="boton-accion-rapida boton-reportes"
+                        routerLink="/admin/system-reports"
+                      >
                         <IonIcon icon={statsChartOutline} slot="start" />
                         Ver Reportes
                       </IonButton>

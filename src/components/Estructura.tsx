@@ -5,11 +5,6 @@ import BarraLateral from './BarraLateral';
 import AppHeader from './AppHeader';
 import './Estructura.css';
 
-// Colores del logo Play4Padel
-const primaryPurple = '#2D0A31'; // Púrpura oscuro del fondo del logo
-const brightGreen = '#00FF66'; // Verde brillante de la "P" en el logo
-const darkPurple = '#110514'; // Fondo más oscuro
-
 const Estructura: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -38,7 +33,7 @@ const Estructura: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   return (
     <IonPage className="app-container">
-      <div className={`layout-container ${isMobile ? 'mobile' : 'desktop'} ${sidebarOpen && isMobile ? 'sidebar-open' : ''}`}>
+      <div className="estructura-app">
         {/* Barra lateral */}
         <BarraLateral 
           isMobile={isMobile} 
@@ -47,16 +42,16 @@ const Estructura: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         />
 
         {/* Contenido principal */}
-        <div className="main-content">
+        <div className={`contenido-principal ${!isMobile && sidebarOpen ? 'con-sidebar' : ''}`}>
           {/* Cabecera */}
-          <div className="header-container">
-            <AppHeader />
-          </div>
+          <AppHeader />
 
-          {/* Contenido de cada página */}
-          <IonContent className="page-content">
-            {children}
-          </IonContent>
+          {/* Área de contenido */}
+          <div className="area-contenido">
+            <IonContent className="page-content">
+              {children}
+            </IonContent>
+          </div>
         </div>
       </div>
     </IonPage>

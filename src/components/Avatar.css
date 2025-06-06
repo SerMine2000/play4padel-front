@@ -1,3 +1,5 @@
+/* Avatar.css - Actualizado con variables lógicas */
+
 /* Estilos para el componente Avatar */
 .avatar-generado {
   display: flex;
@@ -9,22 +11,57 @@
   user-select: none;
   text-align: center;
   line-height: 1;
+  border: 2px solid var(--color-primario);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .avatar-generado:hover {
   filter: brightness(1.1);
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .avatar-generado[style*="cursor: pointer"] {
-  cursor: pointer !important;
+  cursor: pointer;
 }
 
 /* Estilos específicos para el header */
 .avatar-header {
   border-radius: 50%;
+  border: 2px solid var(--color-primario);
+  transition: all 0.2s ease;
+}
+
+.avatar-header:hover {
+  box-shadow: 0 4px 12px rgba(var(--color-primario), 0.3);
 }
 
 /* Estilos para el preview del avatar */
 .avatar-preview {
   border-radius: 50%;
+  border: 3px solid var(--color-primario);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Modo oscuro específico */
+.ion-palette-dark .avatar-generado {
+  border-color: var(--color-primario);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.ion-palette-dark .avatar-generado:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.ion-palette-dark .avatar-header {
+  border-color: var(--color-primario);
+}
+
+.ion-palette-dark .avatar-header:hover {
+  box-shadow: 0 4px 12px rgba(var(--color-primario), 0.4);
+}
+
+.ion-palette-dark .avatar-preview {
+  border-color: var(--color-primario);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }

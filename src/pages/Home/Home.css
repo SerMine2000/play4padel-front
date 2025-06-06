@@ -1,12 +1,12 @@
-/* Home.css - Rediseño moderno 2025 con soporte para temas - MÁRGENES CONSISTENTES */
+/* Home.css - Actualizado con nuevo sistema de variables lógicas */
 
 .dashboard-contenido {
-  padding: var(--margenPaginaDesktop, 32px 40px); /* CORREGIDO: usar variable de márgenes */
+  padding: var(--margenPaginaDesktop, 32px 40px);
   display: flex;
   flex-direction: column;
   gap: 24px;
-  background: var(--ion-background-color) !important;
-  color: var(--ion-text-color);
+  background: var(--fondo-aplicacion);
+  color: var(--texto-principal);
   height: 100vh;
   overflow: hidden;
   box-sizing: border-box;
@@ -23,14 +23,14 @@
   font-size: 1.8rem;
   font-weight: 700;
   margin: 0 0 8px 0;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
 }
 
 .descripcion-dashboard {
   font-size: 1rem;
   margin: 0;
-  color: var(--ion-text-color);
-  opacity: 0.7;
+  color: var(--texto-secundario);
+  opacity: 0.8;
 }
 
 /* Grid de tarjetas en formato moderno */
@@ -44,22 +44,27 @@
 }
 
 .card-resumen {
-  background: var(--color-panel);
+  background: var(--fondo-card);
   border-radius: 16px;
-  box-shadow: var(--card-shadow);
+  box-shadow: var(--sombra-card);
   padding: 20px;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border: 1px solid var(--ion-border-color);
+  border: 1px solid var(--borde-principal);
+  transition: all 0.3s ease;
+}
+
+.card-resumen:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sombra-card);
 }
 
 .card-titulo {
   font-size: 0.85rem;
   font-weight: 500;
-  color: var(--ion-text-color);
-  opacity: 0.7;
+  color: var(--texto-secundario);
   margin-bottom: 12px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -68,7 +73,7 @@
 .card-valor {
   font-size: 2rem;
   font-weight: 600;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
 }
 
 /* Containers de reservas y pistas */
@@ -83,13 +88,13 @@
 }
 
 .proximas-reservas, .estado-pistas {
-  background: var(--color-panel);
+  background: var(--fondo-card);
   border-radius: 16px;
-  box-shadow: var(--card-shadow);
+  box-shadow: var(--sombra-card);
   padding: 22px;
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--ion-border-color);
+  border: 1px solid var(--borde-principal);
   min-height: 0;
   overflow: hidden;
 }
@@ -99,7 +104,7 @@
   font-weight: 600;
   margin-top: 0;
   margin-bottom: 18px;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   letter-spacing: 0.5px;
   position: relative;
   padding-bottom: 12px;
@@ -113,7 +118,7 @@
   bottom: 0;
   width: 40px;
   height: 3px;
-  background: var(--ion-color-primary);
+  background: var(--color-primario);
   border-radius: 3px;
 }
 
@@ -123,8 +128,7 @@
   align-items: center;
   text-align: center;
   height: 140px;
-  color: var(--ion-text-color);
-  opacity: 0.6;
+  color: var(--texto-secundario);
   font-size: 1.1rem;
   font-weight: 500;
   line-height: 1.4;
@@ -137,8 +141,7 @@
   align-items: center;
   text-align: center;
   flex: 1;
-  color: var(--ion-text-color);
-  opacity: 0.6;
+  color: var(--texto-secundario);
   font-size: 1.1rem;
   font-weight: 500;
   line-height: 1.4;
@@ -163,7 +166,7 @@
 }
 
 .reservas-list::-webkit-scrollbar-thumb {
-  background: var(--ion-color-primary);
+  background: var(--color-primario);
   border-radius: 3px;
   opacity: 0.5;
 }
@@ -173,7 +176,7 @@
 }
 
 .reserva-card {
-  background: var(--color-panel);
+  background: var(--fondo-aplicacion);
   margin: 0 0 12px 0;
   padding: 18px 20px;
   border-radius: 12px;
@@ -181,14 +184,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-left: 3px solid var(--ion-color-primary);
+  border-left: 3px solid var(--color-primario);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border: 1px solid var(--ion-border-color);
+  border: 1px solid var(--borde-principal);
 }
 
 .reserva-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--sombra-card);
+  background: var(--hover-card);
 }
 
 .reserva-info-left {
@@ -201,7 +205,7 @@
 .reserva-club-nombre {
   margin: 0 0 4px 0;
   font-weight: 700;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   font-size: 1.05rem;
   line-height: 1.3;
 }
@@ -209,13 +213,12 @@
 .reserva-pista-nombre {
   margin: 0;
   font-size: 0.92rem;
-  color: var(--ion-text-color);
-  opacity: 0.7;
+  color: var(--texto-secundario);
   font-weight: 500;
 }
 
 .reserva-fecha {
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   font-size: 1.02rem;
   font-weight: 600;
   text-align: right;
@@ -232,14 +235,13 @@
 
 .club-nombre-bajo {
   font-size: 0.85rem;
-  color: var(--ion-text-color);
-  opacity: 0.6;
+  color: var(--texto-secundario);
   margin-top: 2px;
 }
 
 .btn-cambiar-club {
-  background: var(--ion-color-primary);
-  color: var(--ion-color-primary-contrast);
+  background: var(--color-primario);
+  color: var(--color-primario-contraste);
   border: none;
   border-radius: 8px;
   padding: 9px 16px;
@@ -254,13 +256,14 @@
 .btn-cambiar-club:hover {
   opacity: 0.9;
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(var(--color-primario), 0.3);
 }
 
 /* Grid de pistas en 2 columnas */
 .estado-pistas-grid-2col {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px; /* RESTAURADO: gap apropiado */
+  gap: 16px;
   flex: 1;
   overflow-y: auto;
   min-height: 0;
@@ -278,7 +281,7 @@
 }
 
 .estado-pistas-grid-2col::-webkit-scrollbar-thumb {
-  background: var(--ion-color-primary);
+  background: var(--color-primario);
   border-radius: 3px;
   opacity: 0.5;
 }
@@ -287,37 +290,38 @@
   opacity: 0.8;
 }
 
-/* CORREGIDO: Rows de pistas COMO EN IMAGEN 2 */
+/* Rows de pistas */
 .estado-pista-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: var(--color-panel);
-  padding: 16px 20px; /* RESTAURADO: como imagen 2 */
-  border-radius: 12px; /* RESTAURADO: border radius más grande */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* RESTAURADO: sombra más visible */
-  border: 1px solid var(--ion-border-color);
+  background: var(--fondo-aplicacion);
+  padding: 16px 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--borde-principal);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  min-height: 60px; /* CORREGIDO: altura como imagen 2 */
+  min-height: 60px;
 }
 
 .estado-pista-row:hover {
-  transform: translateY(-2px); /* RESTAURADO: hover más visible */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12); /* RESTAURADO: sombra hover */
+  transform: translateY(-2px);
+  box-shadow: var(--sombra-card);
+  background: var(--hover-card);
 }
 
 .pista-nombre {
   font-weight: 600;
-  color: var(--ion-text-color);
-  font-size: 1rem; /* RESTAURADO: tamaño apropiado */
+  color: var(--texto-principal);
+  font-size: 1rem;
   text-align: left;
   line-height: 1.3;
 }
 
 .estado-badge {
-  padding: 8px 14px; /* RESTAURADO: padding apropiado */
-  border-radius: 8px; /* RESTAURADO: border radius apropiado */
-  font-size: 0.85rem; /* RESTAURADO: tamaño de fuente apropiado */
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
   font-weight: 600;
   letter-spacing: 0.3px;
   text-transform: capitalize;
@@ -325,7 +329,7 @@
   white-space: nowrap;
 }
 
-/* Estados de las pistas - COLORES MANTENIDOS */
+/* Estados de las pistas - Mantener colores específicos */
 .disponible {
   background: rgba(46, 125, 50, 0.15);
   color: #4caf50;
@@ -350,15 +354,15 @@
   border: 1px solid rgba(198, 40, 40, 0.3);
 }
 
-/* Nuevo selector de clubes tipo dropdown */
+/* Selector de clubes dropdown */
 .club-selector-dropdown {
   position: relative;
   display: inline-block;
 }
 
 .club-selector-button {
-  background: var(--ion-color-primary);
-  color: var(--ion-color-primary-contrast);
+  background: var(--color-primario);
+  color: var(--color-primario-contraste);
   border: none;
   border-radius: 8px;
   padding: 9px 16px;
@@ -376,16 +380,17 @@
 .club-selector-button:hover {
   opacity: 0.9;
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(var(--color-primario), 0.3);
 }
 
 .club-dropdown-content {
   position: absolute;
   top: 100%;
   right: 0;
-  background: var(--color-panel);
-  border: 1px solid var(--ion-border-color);
+  background: var(--fondo-card);
+  border: 1px solid var(--borde-principal);
   border-radius: 12px;
-  box-shadow: var(--card-shadow);
+  box-shadow: var(--sombra-card);
   z-index: 1000;
   min-width: 250px;
   max-height: 300px;
@@ -396,9 +401,9 @@
 .club-dropdown-item {
   padding: 12px 16px;
   cursor: pointer;
-  border-bottom: 1px solid var(--ion-border-color);
-  color: var(--ion-text-color);
-  transition: background-color 0.2s ease;
+  border-bottom: 1px solid var(--borde-principal);
+  color: var(--texto-principal);
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -409,8 +414,8 @@
 }
 
 .club-dropdown-item:hover {
-  background: var(--ion-color-primary);
-  color: var(--ion-color-primary-contrast);
+  background: var(--color-primario);
+  color: var(--color-primario-contraste);
 }
 
 .club-dropdown-item:first-child {
@@ -435,13 +440,13 @@
   }
   
   .dashboard-contenido {
-    padding: var(--margenPaginaTablet, 24px 32px); /* CORREGIDO: usar variable de márgenes */
+    padding: var(--margenPaginaTablet, 24px 32px);
   }
 }
 
 @media (max-width: 768px) {
   .dashboard-contenido {
-    padding: var(--margenPaginaMobile, 20px 24px); /* CORREGIDO: usar variable de márgenes */
+    padding: var(--margenPaginaMobile, 20px 24px);
     gap: 16px;
     height: 100vh;
   }
@@ -484,23 +489,23 @@
   }
   
   .estado-pista-row {
-    padding: 12px 16px; /* MANTENER tamaño en tablet */
-    min-height: 50px; /* REDUCIR ligeramente en tablet */
+    padding: 12px 16px;
+    min-height: 50px;
   }
   
   .pista-nombre {
-    font-size: 0.95rem; /* REDUCIR ligeramente en tablet */
+    font-size: 0.95rem;
   }
   
   .estado-badge {
-    padding: 6px 12px; /* REDUCIR ligeramente en tablet */
-    font-size: 0.8rem; /* REDUCIR ligeramente en tablet */
+    padding: 6px 12px;
+    font-size: 0.8rem;
   }
 }
 
 @media (max-width: 576px) {
   .dashboard-contenido {
-    padding: var(--margenPaginaMobileSmall, 16px 20px); /* CORREGIDO: usar variable de márgenes */
+    padding: var(--margenPaginaMobileSmall, 16px 20px);
     height: 100vh;
   }
   
@@ -543,16 +548,70 @@
   }
   
   .estado-pista-row {
-    padding: 10px 14px; /* REDUCIR para móviles pequeños pero mantener proporción */
-    min-height: 40px; /* REDUCIR para móviles pequeños */
+    padding: 10px 14px;
+    min-height: 40px;
   }
   
   .pista-nombre {
-    font-size: 0.9rem; /* REDUCIR para móviles pequeños */
+    font-size: 0.9rem;
   }
   
   .estado-badge {
-    padding: 4px 10px; /* REDUCIR para móviles pequeños */
-    font-size: 0.75rem; /* REDUCIR para móviles pequeños */
+    padding: 4px 10px;
+    font-size: 0.75rem;
   }
+}
+
+/* MODO OSCURO ESPECÍFICO */
+.ion-palette-dark .dashboard-contenido {
+  background: var(--fondo-aplicacion);
+}
+
+.ion-palette-dark .card-resumen {
+  background: var(--fondo-card);
+  border-color: var(--borde-principal);
+  box-shadow: var(--sombra-card);
+}
+
+.ion-palette-dark .proximas-reservas, 
+.ion-palette-dark .estado-pistas {
+  background: var(--fondo-card);
+  border-color: var(--borde-principal);
+  box-shadow: var(--sombra-card);
+}
+
+.ion-palette-dark .reserva-card {
+  background: var(--fondo-input);
+  border-color: var(--borde-principal);
+}
+
+.ion-palette-dark .reserva-card:hover {
+  background: var(--hover-card);
+  box-shadow: var(--sombra-card);
+}
+
+.ion-palette-dark .estado-pista-row {
+  background: var(--fondo-input);
+  border-color: var(--borde-principal);
+}
+
+.ion-palette-dark .estado-pista-row:hover {
+  background: var(--hover-card);
+  box-shadow: var(--sombra-card);
+}
+
+.ion-palette-dark .club-dropdown-content {
+  background: var(--fondo-card);
+  border-color: var(--borde-principal);
+  box-shadow: var(--sombra-card);
+}
+
+.ion-palette-dark .club-dropdown-item {
+  border-color: var(--borde-principal);
+  color: var(--texto-principal);
+}
+
+.ion-palette-dark .club-dropdown-item:hover {
+  background: var(--color-primario);
+  color: var(--color-primario-contraste);
 }

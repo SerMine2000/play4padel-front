@@ -1,29 +1,28 @@
-/* Configuracion.css - Diseño profesional y responsive - TAMAÑO CORREGIDO */
+/* Configuracion.css - Actualizado con nuevo sistema de variables lógicas */
 
-/* Contenedor principal igual que otras páginas - CORREGIDO EL TAMAÑO */
+/* Contenedor principal */
 .configuracion-container {
-  padding: var(--margenPaginaDesktop, 32px 40px); /* CORREGIDO: usar variable de márgenes */
-  background: var(--ion-background-color);
+  padding: var(--margenPaginaDesktop, 32px 40px);
+  background: var(--fondo-aplicacion);
+  color: var(--texto-principal);
   min-height: 100vh;
   box-sizing: border-box;
-  /* ELIMINADO: max-width que causaba el problema de tamaño reducido */
-  width: 100%; /* AÑADIDO: ocupar todo el ancho */
+  width: 100%;
 }
 
-/* Header igual que otras páginas */
+/* Header */
 .page-header {
   margin-bottom: 2rem;
   text-align: left;
   padding: 1rem 0;
-  /* ELIMINADO: max-width para que ocupe todo el ancho */
-  width: 100%; /* AÑADIDO: ocupar todo el ancho */
+  width: 100%;
 }
 
 .page-header h1 {
   margin: 0 0 0.5rem 0;
   font-size: 2.2rem;
   font-weight: 700;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   position: relative;
   display: inline-block;
 }
@@ -35,49 +34,48 @@
   left: 0;
   width: 60px;
   height: 4px;
-  background: linear-gradient(90deg, var(--ion-color-primary), #a160fb);
+  background: linear-gradient(90deg, var(--color-primario), var(--color-secundario));
   border-radius: 2px;
 }
 
 .page-header p {
-  color: var(--ion-color-medium);
+  color: var(--texto-secundario);
   margin: 0.5rem 0 0 0;
   font-size: 1rem;
   font-weight: 400;
 }
 
-/* Contenido principal - CORREGIDO EL TAMAÑO */
+/* Contenido principal */
 .configuracion-content {
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  /* CORREGIDO: Eliminar max-width restrictivo y permitir que ocupe todo el ancho */
   width: 100%;
-  max-width: none; /* ELIMINADO: max-width que limitaba el tamaño */
+  max-width: none;
 }
 
-/* Secciones individuales - CORREGIDO EL TAMAÑO */
+/* Secciones individuales */
 .configuracion-section {
-  background: var(--color-panel);
+  background: var(--fondo-card);
+  color: var(--texto-principal);
   border-radius: 16px;
-  box-shadow: var(--card-shadow);
-  border: 1px solid var(--ion-border-color);
+  box-shadow: var(--sombra-card);
+  border: 1px solid var(--borde-principal);
   overflow: hidden;
   transition: all 0.3s ease;
-  /* AÑADIDO: asegurar que ocupe todo el ancho disponible */
   width: 100%;
   max-width: none;
 }
 
 .configuracion-section:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--sombra-card);
 }
 
 /* Headers de sección */
 .section-header {
-  background: var(--colorFondoSeccionConfig, var(--color-panel));
-  border-bottom: 1px solid var(--ion-border-color);
+  background: var(--fondo-card);
+  border-bottom: 1px solid var(--borde-principal);
   padding: 1.5rem 1.5rem 1rem 1.5rem;
 }
 
@@ -89,7 +87,7 @@
 
 .section-icon {
   font-size: 1.5rem;
-  color: var(--ion-color-primary);
+  color: var(--color-primario);
   transition: transform 0.2s ease;
 }
 
@@ -100,20 +98,20 @@
 .section-header ion-card-title {
   font-size: 1.3rem;
   font-weight: 600;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   margin: 0;
 }
 
 /* Items de configuración */
 .config-item {
   --background: transparent;
-  --color: var(--ion-text-color);
+  --color: var(--texto-principal);
   --padding-start: 0;
   --inner-padding-end: 0;
   --border-style: none;
   padding: 1rem 0;
   margin: 0 1.5rem;
-  border-bottom: 1px solid var(--ion-border-color);
+  border-bottom: 1px solid var(--borde-principal);
   transition: all 0.2s ease;
 }
 
@@ -122,7 +120,7 @@
 }
 
 .config-item:hover {
-  background: var(--colorFondoHoverConfig, rgba(161, 96, 251, 0.05));
+  background: var(--hover-card);
   border-radius: 8px;
   padding-left: 1rem;
   padding-right: 1rem;
@@ -131,20 +129,20 @@
 }
 
 .item-icon {
-  color: var(--ion-color-primary);
+  color: var(--color-primario);
   font-size: 1.2rem;
   margin-right: 1rem;
 }
 
 .config-item ion-label h3 {
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   font-weight: 600;
   margin: 0 0 0.25rem 0;
   font-size: 1rem;
 }
 
 .config-item ion-label p {
-  color: var(--ion-color-medium);
+  color: var(--texto-secundario);
   margin: 0;
   font-size: 0.9rem;
 }
@@ -155,39 +153,38 @@
 }
 
 .subsection-title h3 {
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   font-size: 1.1rem;
   font-weight: 600;
   margin: 0;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--ion-color-primary);
+  border-bottom: 2px solid var(--color-primario);
   display: inline-block;
 }
 
-/* Lista de solicitudes - MEJORADO EL TAMAÑO */
+/* Lista de solicitudes */
 .solicitudes-list {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   margin-bottom: 1.5rem;
-  /* AÑADIDO: asegurar que ocupe todo el ancho */
   width: 100%;
 }
 
 .solicitud-card {
-  background: var(--colorFondoTarjetaConfig, rgba(161, 96, 251, 0.03));
-  border: 1px solid var(--ion-border-color);
+  background: var(--fondo-input);
+  border: 1px solid var(--borde-principal);
   border-radius: 12px;
   padding: 1.5rem;
   transition: all 0.2s ease;
-  /* AÑADIDO: asegurar que ocupe todo el ancho */
   width: 100%;
   box-sizing: border-box;
 }
 
 .solicitud-card:hover {
-  border-color: var(--ion-color-primary);
-  box-shadow: 0 4px 12px rgba(161, 96, 251, 0.1);
+  border-color: var(--color-primario);
+  box-shadow: var(--sombra-card);
+  background: var(--hover-card);
 }
 
 .solicitud-header {
@@ -195,7 +192,6 @@
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 1rem;
-  /* AÑADIDO: asegurar que ocupe todo el ancho */
   width: 100%;
 }
 
@@ -203,7 +199,6 @@
   display: flex;
   align-items: flex-start;
   gap: 1rem;
-  /* AÑADIDO: permitir que crezca */
   flex: 1;
 }
 
@@ -211,22 +206,22 @@
   font-size: 1.5rem;
   margin-top: 0.25rem;
   flex-shrink: 0;
+  color: var(--color-primario);
 }
 
 .solicitud-details {
-  /* AÑADIDO: permitir que crezca */
   flex: 1;
 }
 
 .solicitud-details h4 {
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   font-weight: 600;
   margin: 0 0 0.5rem 0;
   font-size: 1.1rem;
 }
 
 .solicitud-date {
-  color: var(--ion-color-medium);
+  color: var(--texto-secundario);
   font-size: 0.85rem;
   margin: 0.25rem 0;
 }
@@ -237,26 +232,26 @@
 }
 
 .solicitud-mensaje {
-  background: var(--colorFondoMensajeConfig, rgba(0, 0, 0, 0.03));
+  background: var(--fondo-aplicacion);
   border-radius: 8px;
   padding: 1rem;
   margin-top: 1rem;
-  border-left: 4px solid var(--ion-color-primary);
-  /* AÑADIDO: asegurar que ocupe todo el ancho */
+  border-left: 4px solid var(--color-primario);
   width: 100%;
   box-sizing: border-box;
+  color: var(--texto-principal);
 }
 
 .solicitud-mensaje.rechazo {
-  border-left-color: var(--ion-color-danger);
-  background: var(--colorFondoRechazoConfig, rgba(244, 67, 54, 0.05));
-  color: var(--ion-color-danger);
+  border-left-color: #dc3545;
+  background: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
 }
 
 .solicitud-mensaje.comentarios {
-  border-left-color: var(--ion-color-medium);
-  background: var(--colorFondoComentariosConfig, rgba(146, 158, 171, 0.05));
-  color: var(--ion-color-medium);
+  border-left-color: var(--texto-secundario);
+  background: var(--fondo-input);
+  color: var(--texto-secundario);
 }
 
 .solicitud-mensaje strong {
@@ -265,46 +260,42 @@
 
 /* Botón nueva solicitud */
 .nuevo-club-btn {
-  --border-color: var(--ion-color-primary);
-  --color: var(--ion-color-primary);
+  --border-color: var(--color-primario);
+  --color: var(--color-primario);
   margin-top: 1rem;
   font-weight: 600;
-  /* AÑADIDO: asegurar que ocupe todo el ancho */
   width: 100%;
 }
 
-/* Información del club - MEJORADO EL TAMAÑO */
+/* Información del club */
 .club-info {
   text-align: left;
-  /* AÑADIDO: asegurar que ocupe todo el ancho */
   width: 100%;
 }
 
 .club-benefits {
-  /* AÑADIDO: asegurar que ocupe todo el ancho */
   width: 100%;
 }
 
 .club-benefits h3 {
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   font-size: 1.2rem;
   font-weight: 600;
   margin: 0 0 1rem 0;
 }
 
 .club-benefits p {
-  color: var(--ion-color-medium);
+  color: var(--texto-secundario);
   margin: 0 0 1.5rem 0;
   line-height: 1.6;
 }
 
 .benefits-list {
-  /* AÑADIDO: asegurar que ocupe todo el ancho */
   width: 100%;
 }
 
 .benefits-list h4 {
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   font-size: 1rem;
   font-weight: 600;
   margin: 0 0 1rem 0;
@@ -315,131 +306,74 @@
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 0.75rem;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   font-size: 0.95rem;
-  /* AÑADIDO: asegurar que ocupe todo el ancho */
   width: 100%;
 }
 
 .benefit-icon {
-  color: var(--colorVerdeConfig, #4caf50);
+  color: var(--color-secundario);
   font-size: 1.1rem;
   flex-shrink: 0;
 }
 
 .solicitar-club-btn {
-  --background: var(--ion-color-primary);
-  --color: var(--ion-color-primary-contrast);
+  --background: var(--color-primario);
+  --color: var(--color-primario-contraste);
   margin-top: 2rem;
   font-weight: 600;
   --border-radius: 8px;
-  /* AÑADIDO: asegurar que ocupe todo el ancho */
   width: 100%;
 }
 
 .solicitar-club-btn:disabled {
-  --background: var(--ion-color-medium);
-  --color: var(--ion-color-medium-contrast);
+  --background: var(--texto-secundario);
+  --color: var(--color-primario-contraste);
 }
 
 /* Sección de peligro */
 .danger-section {
-  border-color: var(--colorBordeRojoConfig, rgba(244, 67, 54, 0.2));
+  border-color: rgba(220, 53, 69, 0.3);
 }
 
 .danger-section .section-icon.danger {
-  color: var(--ion-color-danger);
+  color: #dc3545;
 }
 
 .danger-title {
-  color: var(--ion-color-danger) !important;
+  color: #dc3545 !important;
 }
 
 .danger-content {
   padding: 1.5rem;
-  /* AÑADIDO: asegurar que ocupe todo el ancho */
   width: 100%;
   box-sizing: border-box;
 }
 
 .danger-warning {
-  color: var(--ion-color-medium);
+  color: var(--texto-secundario);
   margin: 0 0 1.5rem 0;
   line-height: 1.6;
-  background: var(--colorFondoAdvertenciaConfig, rgba(244, 67, 54, 0.05));
+  background: rgba(220, 53, 69, 0.1);
   padding: 1rem;
   border-radius: 8px;
-  border-left: 4px solid var(--ion-color-danger);
-  /* AÑADIDO: asegurar que ocupe todo el ancho */
+  border-left: 4px solid #dc3545;
   width: 100%;
   box-sizing: border-box;
 }
 
 .delete-account-btn {
-  --background: var(--ion-color-danger);
-  --color: var(--ion-color-danger-contrast);
+  --background: #dc3545;
+  --color: white;
   font-weight: 600;
   --border-radius: 8px;
-  /* AÑADIDO: asegurar que ocupe todo el ancho */
   width: 100%;
 }
 
-/* Variables personalizadas para el tema */
-:root {
-  --colorFondoSeccionConfig: var(--color-panel);
-  --colorFondoHoverConfig: rgba(161, 96, 251, 0.05);
-  --colorFondoTarjetaConfig: rgba(161, 96, 251, 0.03);
-  --colorFondoMensajeConfig: rgba(0, 0, 0, 0.03);
-  --colorFondoRechazoConfig: rgba(244, 67, 54, 0.05);
-  --colorFondoComentariosConfig: rgba(146, 158, 171, 0.05);
-  --colorFondoAdvertenciaConfig: rgba(244, 67, 54, 0.05);
-  --colorVerdeConfig: #4caf50;
-  --colorBordeRojoConfig: rgba(244, 67, 54, 0.2);
-}
-
-/* Tema oscuro */
-.ion-palette-dark {
-  --colorFondoSeccionConfig: var(--color-secundario);
-  --colorFondoHoverConfig: rgba(161, 96, 251, 0.1);
-  --colorFondoTarjetaConfig: rgba(161, 96, 251, 0.05);
-  --colorFondoMensajeConfig: rgba(255, 255, 255, 0.05);
-  --colorFondoRechazoConfig: rgba(244, 67, 54, 0.1);
-  --colorFondoComentariosConfig: rgba(146, 158, 171, 0.1);
-  --colorFondoAdvertenciaConfig: rgba(244, 67, 54, 0.1);
-  --colorVerdeConfig: #66bb6a;
-  --colorBordeRojoConfig: rgba(244, 67, 54, 0.3);
-}
-
-.ion-palette-dark .configuracion-container {
-  background: var(--color-fondo);
-}
-
-.ion-palette-dark .configuracion-section {
-  background: var(--color-panel);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-.ion-palette-dark .configuracion-section:hover {
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-}
-
-.ion-palette-dark .config-item {
-  border-bottom-color: rgba(255, 255, 255, 0.1);
-}
-
-.ion-palette-dark .solicitud-card {
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-.ion-palette-dark .solicitud-card:hover {
-  border-color: var(--ion-color-primary);
-}
-
-/* Responsive - CORREGIDO PARA OCUPAR TODO EL ANCHO */
+/* Responsive */
 @media (max-width: 768px) {
   .configuracion-container {
-    padding: var(--margenPaginaMobile, 20px 24px); /* CORREGIDO: usar variable de márgenes */
-    /* ASEGURAR que siga ocupando todo el ancho en móvil */
+    padding: var(--margenPaginaMobile, 20px 24px);
     width: 100%;
   }
   
@@ -449,7 +383,6 @@
   
   .configuracion-content {
     gap: 1.5rem;
-    /* ASEGURAR que siga ocupando todo el ancho en móvil */
     width: 100%;
   }
   
@@ -486,8 +419,7 @@
 
 @media (max-width: 576px) {
   .configuracion-container {
-    padding: var(--margenPaginaMobileSmall, 16px 20px); /* CORREGIDO: usar variable de márgenes */
-    /* ASEGURAR que siga ocupando todo el ancho en móvil pequeño */
+    padding: var(--margenPaginaMobileSmall, 16px 20px);
     width: 100%;
   }
   
@@ -497,7 +429,6 @@
   
   .configuracion-content {
     gap: 1.25rem;
-    /* ASEGURAR que siga ocupando todo el ancho en móvil pequeño */
     width: 100%;
   }
   
@@ -551,4 +482,52 @@
   .danger-warning {
     padding: 0.75rem;
   }
+}
+
+/* MODO OSCURO ESPECÍFICO */
+.ion-palette-dark .configuracion-container {
+  background: var(--fondo-aplicacion);
+}
+
+.ion-palette-dark .configuracion-section {
+  background: var(--fondo-card);
+  border-color: var(--borde-principal);
+  box-shadow: var(--sombra-card);
+}
+
+.ion-palette-dark .configuracion-section:hover {
+  box-shadow: var(--sombra-card);
+}
+
+.ion-palette-dark .config-item {
+  border-bottom-color: var(--borde-principal);
+}
+
+.ion-palette-dark .config-item:hover {
+  background: var(--hover-card);
+}
+
+.ion-palette-dark .solicitud-card {
+  background: var(--fondo-input);
+  border-color: var(--borde-principal);
+}
+
+.ion-palette-dark .solicitud-card:hover {
+  border-color: var(--color-primario);
+  background: var(--hover-card);
+  box-shadow: var(--sombra-card);
+}
+
+.ion-palette-dark .solicitud-mensaje {
+  background: var(--fondo-aplicacion);
+  color: var(--texto-principal);
+}
+
+.ion-palette-dark .solicitud-mensaje.comentarios {
+  background: var(--fondo-input);
+  color: var(--texto-secundario);
+}
+
+.ion-palette-dark .danger-warning {
+  background: rgba(220, 53, 69, 0.15);
 }

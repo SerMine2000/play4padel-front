@@ -10,12 +10,6 @@ import { useAuth } from '../context/AuthContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './BarraLateral.css';
 
-const primaryPurple = '#2D0A31';
-const brightGreen = '#00FF66';
-const pureWhite = '#FFFFFF';
-const darkPurple = '#110514';
-const mediumPurple = '#3D1A41';
-
 const ROLES = {
   ADMIN: 1,
   CLUB: 2,
@@ -183,11 +177,11 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
           <div
             className="sidebar-logo"
             onClick={() => {
-              navigate('/home'); // Todos van a /home ahora
+              navigate('/home');
               if (isMobile) onToggle?.();
             }}
           >
-            Play<span style={{ color: brightGreen }}>4</span>Padel
+            Play<span style={{ color: 'var(--color-primario)' }}>4</span>Padel
           </div>
 
           {isMobile && (
@@ -197,8 +191,6 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
           )}
         </div>
 
-        
-
         <div className="menu-container">
           {[...roleSpecificOptions, ...baseOptions].map((option, index) => {
             const isActive = location.pathname === option.path;
@@ -207,6 +199,8 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
               <div
                 key={index}
                 className={`menu-item ${isActive ? 'active' : ''}`}
+                data-route={option.path}
+                data-action={option.action ? 'logout' : undefined}
                 onClick={() => {
                   if (option.action) {
                     option.action();

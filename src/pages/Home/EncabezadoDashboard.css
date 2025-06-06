@@ -1,10 +1,10 @@
-/* EncabezadoDashboard.css */
+/* EncabezadoDashboard.css - Actualizado con variables lógicas */
 
 .encabezado-dashboard {
   padding: 0 0 16px 0;
   background: none;
   border-radius: 0;
-  color: #222;
+  color: var(--texto-principal);
   margin-bottom: 0;
   text-align: left;
 }
@@ -12,11 +12,25 @@
 .titulo-dashboard {
   font-size: 1.6rem;
   font-weight: bold;
+  color: var(--texto-principal);
   margin-bottom: 4px;
 }
 
 .descripcion-dashboard {
   font-size: 1rem;
-  color: var(--ion-text-color);
+  color: var(--texto-secundario);
   opacity: 0.8;
+}
+
+/* Modo oscuro específico */
+.ion-palette-dark .encabezado-dashboard {
+  color: var(--texto-principal);
+}
+
+.ion-palette-dark .titulo-dashboard {
+  color: var(--texto-principal);
+}
+
+.ion-palette-dark .descripcion-dashboard {
+  color: var(--texto-secundario);
 }

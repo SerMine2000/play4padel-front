@@ -97,19 +97,129 @@
   font-weight: 500;
 }
 
-/* Acciones rápidas */
+/* ===== ACCIONES RÁPIDAS ===== */
 .quick-actions {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
+  padding: 4px 0;
 }
 
-.quick-actions ion-button {
-  --border-radius: 8px;
-  --padding-start: 16px;
-  --padding-end: 16px;
-  height: 44px;
-  font-weight: 500;
+/* Variables botones */
+:root {
+  --colorBotonPrimario: #2563eb;
+  --colorBotonPrimarioHover: #1d4ed8;
+  --colorBotonSecundario: #059669;
+  --colorBotonSecundarioHover: #047857;
+  --colorBotonTerciario: #dc2626;
+  --colorBotonTerciarioHover: #b91c1c;
+  --colorBotonAccento: #7c3aed;
+  --colorBotonAcentoHover: #6d28d9;
+  --colorTextoBoton: #ffffff;
+  --colorFondoBotonClaro: #f8fafc;
+  --colorBordeBoton: #e2e8f0;
+  --sombriBotonSutil: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --sombriBotonHover: 0 4px 16px rgba(0, 0, 0, 0.15);
+  --radioBordeBoton: 12px;
+  --transicionBoton: all 0.3s ease;
+}
+
+/* Estilo base para botones de acciones rápidas */
+.quick-actions .boton-accion-rapida {
+  --background: var(--colorBotonPrimario);
+  --background-activated: var(--colorBotonPrimarioHover);
+  --background-hover: var(--colorBotonPrimarioHover);
+  --color: var(--colorTextoBoton);
+  --border-radius: var(--radioBordeBoton);
+  --padding-start: 20px;
+  --padding-end: 20px;
+  --box-shadow: var(--sombriBotonSutil);
+  height: 52px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin: 0;
+  text-transform: none;
+  transition: var(--transicionBoton);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Efecto de hover personalizado */
+.quick-actions .boton-accion-rapida:hover {
+  --box-shadow: var(--sombriBotonHover);
+  transform: translateY(-2px);
+}
+
+/* Botón para gestionar clubes */
+.quick-actions .boton-clubes {
+  --background: var(--colorBotonPrimario);
+  --background-activated: var(--colorBotonPrimarioHover);
+  --background-hover: var(--colorBotonPrimarioHover);
+}
+
+/* Botón para gestionar usuarios */
+.quick-actions .boton-usuarios {
+  --background: var(--colorBotonSecundario);
+  --background-activated: var(--colorBotonSecundarioHover);
+  --background-hover: var(--colorBotonSecundarioHover);
+}
+
+/* Botón para reportes - Púrpura elegante */
+.quick-actions .boton-reportes {
+  --background: var(--colorBotonAccento);
+  --background-activated: var(--colorBotonAcentoHover);
+  --background-hover: var(--colorBotonAcentoHover);
+}
+
+/* Icono dentro del botón */
+.quick-actions .boton-accion-rapida ion-icon {
+  font-size: 1.3rem;
+  margin-right: 8px;
+}
+
+/* Efecto de ondas en el botón */
+.quick-actions .boton-accion-rapida::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+.quick-actions .boton-accion-rapida:active::before {
+  width: 100%;
+  height: 100%;
+}
+
+/* Responsive para botones en móviles */
+@media (max-width: 768px) {
+  .quick-actions .boton-accion-rapida {
+    height: 48px;
+    font-size: 0.9rem;
+    --padding-start: 16px;
+    --padding-end: 16px;
+  }
+  
+  .quick-actions .boton-accion-rapida ion-icon {
+    font-size: 1.2rem;
+  }
+}
+
+/* Soporte para tema oscuro en botones */
+.ion-palette-dark {
+  --colorBotonPrimario: #3b82f6;
+  --colorBotonPrimarioHover: #2563eb;
+  --colorBotonSecundario: #10b981;
+  --colorBotonSecundarioHover: #059669;
+  --colorBotonAccento: #8b5cf6;
+  --colorBotonAcentoHover: #7c3aed;
+  --sombriBotonSutil: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --sombriBotonHover: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 /* ===== TÍTULOS DE CARDS MEJORADOS ===== */
