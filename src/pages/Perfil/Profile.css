@@ -351,98 +351,162 @@
 
 /* ===== BOTONES DE ACCIÓN ===== */
 .action-buttons {
-  margin: 1.5rem 0 1rem 0;
+  margin: 2rem 0;
   padding-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
 }
 
-.primary-button {
-  --background: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
-  --color: var(--color-primario-contraste);
-  --border-radius: 12px;
+/* === BOTÓN PRIMARIO === */
+ion-button.primary-button {
+  --border-radius: 16px;
+  --padding-start: 2rem;
+  --padding-end: 2rem;
   --padding-top: 1rem;
   --padding-bottom: 1rem;
-  --border-style: none;
-  --border-width: 0;
   --box-shadow: none;
   --ripple-color: transparent;
+  --border-width: 0;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  box-shadow: 0 4px 15px rgba(var(--color-primario), 0.3);
+  font-size: 1rem;
   transition: all 0.3s ease;
+  width: 100%;
+  max-width: 500px;
 }
 
-.primary-button:hover {
+ion-button.primary-button::part(native) {
+  border-radius: 16px;
+  padding: 1rem 2rem;
+  width: 100%;
+  min-width: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #00c853, #00e676);
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 200, 83, 0.3);
+}
+
+ion-button.primary-button:hover::part(native) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(var(--color-primario), 0.4);
+  box-shadow: 0 6px 20px rgba(0, 200, 83, 0.4);
 }
 
-.secondary-button {
-  --background: linear-gradient(135deg, var(--icono-configuracion), var(--color-secundario));
-  --color: white;
-  --border-radius: 12px;
+/* === BOTÓN SECUNDARIO === */
+ion-button.secondary-button {
+  --border-radius: 16px;
+  --padding-start: 2rem;
+  --padding-end: 2rem;
   --padding-top: 1rem;
   --padding-bottom: 1rem;
-  --border-style: none;
-  --border-width: 0;
   --box-shadow: none;
   --ripple-color: transparent;
+  --border-width: 0;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  box-shadow: 0 4px 15px rgba(100, 181, 246, 0.3);
+  font-size: 1rem;
   transition: all 0.3s ease;
+  width: 100%;
+  max-width: 500px;
 }
 
-.secondary-button:hover {
+ion-button.secondary-button::part(native) {
+  border-radius: 16px;
+  padding: 1rem 2rem;
+  width: 100%;
+  min-width: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #00c853, #00e676);
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 200, 83, 0.3);
+}
+
+ion-button.secondary-button:hover::part(native) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(100, 181, 246, 0.4);
+  box-shadow: 0 6px 20px rgba(0, 200, 83, 0.4);
 }
 
-.success-button {
-  --background: linear-gradient(135deg, var(--color-secundario), #00e676);
-  --color: white;
-  --border-radius: 12px;
+/* === BOTÓN SUCCESS === */
+ion-button.success-button {
+  --border-radius: 16px;
+  --padding-start: 2rem;
+  --padding-end: 2rem;
   --padding-top: 1rem;
   --padding-bottom: 1rem;
-  --border-style: none;
-  --border-width: 0;
   --box-shadow: none;
   --ripple-color: transparent;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 4px 15px rgba(0, 255, 102, 0.3);
-  transition: all 0.3s ease;
-}
-
-.success-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 255, 102, 0.4);
-}
-
-.cancel-button {
-  --background: #dc3545;
-  --background-activated: #c82333;
-  --background-focused: #c82333;
-  --background-hover: #c82333;
-  --color: white;
-  --border-radius: 12px;
-  --padding-top: 1rem;
-  --padding-bottom: 1rem;
-  --border-style: none;
   --border-width: 0;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+  font-size: 1rem;
   transition: all 0.3s ease;
+  width: 100%;
+  max-width: 500px;
 }
 
-.cancel-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+ion-button.success-button::part(native) {
+  border-radius: 16px;
+  padding: 1rem 2rem;
+  width: 100%;
+  min-width: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #00c853, #00e676);
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 200, 83, 0.3);
 }
+
+ion-button.success-button:hover::part(native) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 200, 83, 0.4);
+}
+
+/* === BOTÓN CANCELAR === */
+ion-button.cancel-button {
+  --border-radius: 16px;
+  --padding-start: 2rem;
+  --padding-end: 2rem;
+  --padding-top: 1rem;
+  --padding-bottom: 1rem;
+  --box-shadow: none;
+  --ripple-color: transparent;
+  --border-width: 0;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 500px;
+}
+
+ion-button.cancel-button::part(native) {
+  border-radius: 16px;
+  padding: 1rem 2rem;
+  width: 100%;
+  min-width: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #c62828, #f44336);
+  color: white;
+  box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+}
+
+ion-button.cancel-button:hover::part(native) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
+}
+
 
 /* ===== VISTA PREVIA DE AVATAR ===== */
 .avatar-preview-overlay {
