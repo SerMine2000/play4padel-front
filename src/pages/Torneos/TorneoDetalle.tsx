@@ -9,9 +9,7 @@ import {
   IonIcon,
   IonItem,
   IonLabel,
-  IonList,
   IonModal,
-  IonInput,
   IonSelect,
   IonSelectOption,
   IonToast,
@@ -32,8 +30,6 @@ import {
   trophyOutline,
   calendarOutline,
   peopleOutline,
-  locationOutline,
-  timeOutline,
   podiumOutline,
   playOutline,
   personOutline,
@@ -163,14 +159,14 @@ const TorneoDetalle: React.FC = () => {
     try {
       const response = await ApiService.post(`/torneos/${id}/generar_fixture`, {});
       if (response) {
-        setToastMessage('Fixture generado exitosamente');
+        setToastMessage('Cuadro generado exitosamente');
         setShowToast(true);
         setShowGenerateFixtureAlert(false);
         loadPartidos();
       }
     } catch (error) {
       console.error('Error al generar fixture:', error);
-      setToastMessage('Error al generar el fixture');
+      setToastMessage('Error al generar el cuadro');
       setShowToast(true);
     }
   };
@@ -262,22 +258,86 @@ const TorneoDetalle: React.FC = () => {
 
   return (
     <div className={`torneo-detalle-container ${theme}`}>
-      {/* Header */}
+      <div className="torneo-content">
+      {/* Header rediseñado */}
       <div className="torneo-header">
-        <IonButton fill="clear" onClick={() => navigate(-1)}>
-          <IonIcon icon={arrowBackOutline} />
-        </IonButton>
-        <div className="header-content">
-          <h1>{torneo.nombre}</h1>
-          <div className="header-info">
-            <IonChip color="primary">
+        <div className="header-top">
+          <IonButton fill="clear" onClick={() => navigate(-1)}>
+            <IonIcon icon={arrowBackOutline} />
+            Volver
+          </IonButton>
+          <div className="title-section">
+            <h1>{torneo.nombre}</h1>
+            <IonChip className="status-chip">
               <IonIcon icon={trophyOutline} />
-              <IonLabel>{torneo.tipo}</IonLabel>
+              <IonLabel>Torneo Activo</IonLabel>
             </IonChip>
-            <IonChip color="success">
+          </div>
+        </div>
+        
+        <div className="header-bottom">
+          <div className="header-info">
+            <div className="info-chip">
+              <IonIcon icon={trophyOutline} />
+              <div className="info-chip-content">
+                <h3>Tipo de Torneo</h3>
+                <p>{torneo.tipo}</p>
+              </div>
+            </div>
+            
+            <div className="info-chip">
               <IonIcon icon={calendarOutline} />
-              <IonLabel>{formatDate(torneo.fecha_inicio)}</IonLabel>
-            </IonChip>
+              <div className="info-chip-content">
+                <h3>Fecha de Inicio</h3>
+                <p>{formatDate(torneo.fecha_inicio)}</p>
+              </div>
+            </div>
+            
+            <div className="info-chip">
+              <IonIcon icon={peopleOutline} />
+              <div className="info-chip-content">
+                <h3>Parejas Inscritas</h3>
+                <p>{parejas.length} {torneo.max_parejas ? `/ ${torneo.max_parejas}` : ''}</p>
+              </div>
+            </div>
+            
+            {torneo.precio_inscripcion && (
+              <div className="info-chip">
+                <IonIcon icon={podiumOutline} />
+                <div className="info-chip-content">
+                  <h3>Precio</h3>
+                  <p>{formatPrecio(torneo.precio_inscripcion)}</p>
+                </div>
+              </div>
+            )}
+          </div>
+          
+          <div className="torneo-status">
+            {partidos.length > 0 && (
+              <IonChip color="success">
+                <IonIcon icon={playOutline} />
+                <IonLabel>Cuadro Generado</IonLabel>
+              </IonChip>
+            )}
+            
+            {canManage && (
+              <div className="header-actions">
+                <IonButton fill="outline" onClick={() => setIsInscriptionModalOpen(true)}>
+                  <IonIcon icon={addOutline} slot="start" />
+                  <IonLabel>Inscribir Pareja</IonLabel>
+                </IonButton>
+                
+                {parejas.length >= 2 && (
+                  <IonButton 
+                    onClick={() => setShowGenerateFixtureAlert(true)}
+                    disabled={partidos.length > 0}
+                  >
+                    <IonIcon icon={playOutline} slot="start" />
+                    <IonLabel>{partidos.length > 0 ? 'Cuadro Ya Generado' : 'Generar Cuadro'}</IonLabel>
+                  </IonButton>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -291,7 +351,7 @@ const TorneoDetalle: React.FC = () => {
           <IonLabel>Parejas ({parejas.length})</IonLabel>
         </IonSegmentButton>
         <IonSegmentButton value="fixture">
-          <IonLabel>Fixture ({partidos.length})</IonLabel>
+          <IonLabel>Cuadro ({partidos.length})</IonLabel>
         </IonSegmentButton>
       </IonSegment>
 
@@ -349,25 +409,6 @@ const TorneoDetalle: React.FC = () => {
               </IonCardContent>
             </IonCard>
 
-            {canManage && (
-              <div className="admin-actions">
-                <IonButton expand="block" fill="outline" onClick={() => setIsInscriptionModalOpen(true)}>
-                  <IonIcon icon={addOutline} slot="start" />
-                  Inscribir Pareja
-                </IonButton>
-                
-                {parejas.length >= 2 && (
-                  <IonButton 
-                    expand="block" 
-                    onClick={() => setShowGenerateFixtureAlert(true)}
-                    disabled={partidos.length > 0}
-                  >
-                    <IonIcon icon={playOutline} slot="start" />
-                    {partidos.length > 0 ? 'Fixture Ya Generado' : 'Generar Fixture'}
-                  </IonButton>
-                )}
-              </div>
-            )}
           </div>
         )}
 
@@ -428,8 +469,8 @@ const TorneoDetalle: React.FC = () => {
               <IonCard className="empty-state">
                 <IonCardContent>
                   <IonIcon icon={playOutline} />
-                  <h2>No hay fixture generado</h2>
-                  <p>El fixture se generará automáticamente cuando haya suficientes parejas inscritas.</p>
+                  <h2>No hay cuadro generado</h2>
+                  <p>El cuadro se generará automáticamente cuando haya suficientes parejas inscritas.</p>
                 </IonCardContent>
               </IonCard>
             ) : (
@@ -532,7 +573,7 @@ const TorneoDetalle: React.FC = () => {
         <div className="modal-footer">
           <IonButton expand="block" onClick={handleInscribirPareja}>
             <IonIcon icon={checkmarkCircleOutline} slot="start" />
-            Inscribir Pareja
+            <IonLabel>Inscribir Pareja</IonLabel>
           </IonButton>
         </div>
       </IonModal>
@@ -541,8 +582,8 @@ const TorneoDetalle: React.FC = () => {
       <IonAlert
         isOpen={showGenerateFixtureAlert}
         onDidDismiss={() => setShowGenerateFixtureAlert(false)}
-        header="Generar Fixture"
-        message={`¿Estás seguro de generar el fixture para este torneo? Se crearán los partidos para las ${parejas.length} parejas inscritas.`}
+        header="Generar Cuadro"
+        message={`¿Estás seguro de generar el cuadro para este torneo? Se crearán los partidos para las ${parejas.length} parejas inscritas.`}
         buttons={[
           {
             text: 'Cancelar',
@@ -563,6 +604,7 @@ const TorneoDetalle: React.FC = () => {
         duration={3000}
         position="bottom"
       />
+      </div>
     </div>
   );
 };

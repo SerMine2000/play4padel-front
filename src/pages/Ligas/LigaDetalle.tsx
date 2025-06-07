@@ -9,7 +9,6 @@ import {
   IonIcon,
   IonItem,
   IonLabel,
-  IonList,
   IonModal,
   IonInput,
   IonSelect,
@@ -25,7 +24,6 @@ import {
   IonAlert,
   IonBadge,
   IonAvatar,
-  IonTextarea,
   IonRange
 } from '@ionic/react';
 import {
@@ -42,7 +40,6 @@ import {
   podiumOutline,
   statsChartOutline,
   medalOutline,
-  timeOutline,
   cashOutline,
   createOutline
 } from 'ionicons/icons';
@@ -407,25 +404,101 @@ const LigaDetalle: React.FC = () => {
 
   return (
     <div className={`liga-detalle-container ${theme}`}>
-      {/* Header */}
+      <div className="liga-content">
+      {/* Header rediseñado */}
       <div className="liga-header">
-        <IonButton fill="clear" onClick={() => navigate(-1)}>
-          <IonIcon icon={arrowBackOutline} />
-        </IonButton>
-        <div className="header-content">
-          <h1>{liga.nombre}</h1>
+        <div className="header-top">
+          <IonButton fill="clear" onClick={() => navigate(-1)}>
+            <IonIcon icon={arrowBackOutline} />
+            <IonLabel>Volver</IonLabel>
+          </IonButton>
+          <div className="title-section">
+            <h1>{liga.nombre}</h1>
+            <div className="title-chips">
+              <IonChip className="status-chip">
+                <IonIcon icon={ribbonOutline} />
+                <IonLabel>Liga Activa</IonLabel>
+              </IonChip>
+              <IonChip className="estado-chip" color={getEstadoColor(liga.estado)}>
+                <IonLabel>{getEstadoText(liga.estado)}</IonLabel>
+              </IonChip>
+            </div>
+          </div>
+        </div>
+        
+        <div className="header-bottom">
           <div className="header-info">
-            <IonChip color="primary">
+            <div className="info-chip">
               <IonIcon icon={ribbonOutline} />
-              <IonLabel>{liga.categoria}</IonLabel>
-            </IonChip>
-            <IonChip color={getEstadoColor(liga.estado)}>
-              <IonLabel>{getEstadoText(liga.estado)}</IonLabel>
-            </IonChip>
-            <IonChip color="tertiary">
+              <div className="info-chip-content">
+                <h3>Categoría</h3>
+                <p>{liga.categoria}</p>
+              </div>
+            </div>
+            
+            <div className="info-chip">
+              <IonIcon icon={calendarOutline} />
+              <div className="info-chip-content">
+                <h3>Fecha de Inicio</h3>
+                <p>{formatDate(liga.fecha_inicio)}</p>
+              </div>
+            </div>
+            
+            <div className="info-chip">
               <IonIcon icon={statsChartOutline} />
-              <IonLabel>{liga.nivel}</IonLabel>
-            </IonChip>
+              <div className="info-chip-content">
+                <h3>Nivel</h3>
+                <p>{liga.nivel}</p>
+              </div>
+            </div>
+            
+            <div className="info-chip">
+              <IonIcon icon={peopleOutline} />
+              <div className="info-chip-content">
+                <h3>Parejas Inscritas</h3>
+                <p>{parejas.length} / {liga.max_parejas}</p>
+              </div>
+            </div>
+            
+            {liga.precio_inscripcion > 0 && (
+              <div className="info-chip">
+                <IonIcon icon={cashOutline} />
+                <div className="info-chip-content">
+                  <h3>Precio</h3>
+                  <p>€{liga.precio_inscripcion}</p>
+                </div>
+              </div>
+            )}
+          </div>
+          
+          <div className="liga-status">
+            <div className="status-chips">
+              {partidos.length > 0 && (
+                <IonChip color="success">
+                  <IonIcon icon={playOutline} />
+                  <IonLabel>Partidos Generados</IonLabel>
+                </IonChip>
+              )}
+            </div>
+            
+            {canManage && (
+              <div className="header-actions">
+                <IonButton onClick={() => setIsInscriptionModalOpen(true)}>
+                  <IonIcon icon={addOutline} slot="start" />
+                  <IonLabel>Inscribir Pareja</IonLabel>
+                </IonButton>
+                
+                {parejas.length >= 2 && (
+                  <IonButton 
+                    onClick={() => setShowGeneratePartidosAlert(true)}
+                    disabled={partidos.length > 0}
+                  >
+                    <IonIcon icon={playOutline} slot="start" />
+                    <IonLabel>{partidos.length > 0 ? 'Partidos Ya Generados' : 'Generar Partidos'}</IonLabel>
+                  </IonButton>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -522,46 +595,45 @@ const LigaDetalle: React.FC = () => {
                 )}
 
                 <div className="scoring-section">
-                  <h3>Sistema de Puntuación</h3>
-                  <div className="scoring-info">
-                    <div className="scoring-item">
-                      <span className="label">Victoria:</span>
-                      <span className="value">{liga.puntos_victoria} pts</span>
+                  <div className="scoring-header">
+                    <IonIcon icon={statsChartOutline} />
+                    <h3>Sistema de Puntuación</h3>
+                  </div>
+                  <div className="scoring-grid">
+                    <div className="scoring-card victory">
+                      <div className="scoring-icon">
+                        <IonIcon icon={trophyOutline} />
+                      </div>
+                      <div className="scoring-content">
+                        <span className="label">Victoria</span>
+                        <span className="value">{liga.puntos_victoria} pts</span>
+                      </div>
                     </div>
                     {liga.permite_empate && (
-                      <div className="scoring-item">
-                        <span className="label">Empate:</span>
-                        <span className="value">{liga.puntos_empate} pts</span>
+                      <div className="scoring-card draw">
+                        <div className="scoring-icon">
+                          <IonIcon icon={ribbonOutline} />
+                        </div>
+                        <div className="scoring-content">
+                          <span className="label">Empate</span>
+                          <span className="value">{liga.puntos_empate} pts</span>
+                        </div>
                       </div>
                     )}
-                    <div className="scoring-item">
-                      <span className="label">Derrota:</span>
-                      <span className="value">{liga.puntos_derrota} pts</span>
+                    <div className="scoring-card defeat">
+                      <div className="scoring-icon">
+                        <IonIcon icon={closeCircleOutline} />
+                      </div>
+                      <div className="scoring-content">
+                        <span className="label">Derrota</span>
+                        <span className="value">{liga.puntos_derrota} pts</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </IonCardContent>
             </IonCard>
 
-            {canManage && (
-              <div className="admin-actions">
-                <IonButton expand="block" fill="outline" onClick={() => setIsInscriptionModalOpen(true)}>
-                  <IonIcon icon={addOutline} slot="start" />
-                  Inscribir Pareja
-                </IonButton>
-                
-                {parejas.length >= 2 && (
-                  <IonButton 
-                    expand="block" 
-                    onClick={() => setShowGeneratePartidosAlert(true)}
-                    disabled={partidos.length > 0}
-                  >
-                    <IonIcon icon={playOutline} slot="start" />
-                    {partidos.length > 0 ? 'Partidos Ya Generados' : 'Generar Partidos'}
-                  </IonButton>
-                )}
-              </div>
-            )}
           </div>
         )}
 
@@ -808,7 +880,7 @@ const LigaDetalle: React.FC = () => {
         <div className="modal-footer">
           <IonButton expand="block" onClick={handleInscribirPareja}>
             <IonIcon icon={checkmarkCircleOutline} slot="start" />
-            Inscribir Pareja
+            <IonLabel>Inscribir Pareja</IonLabel>
           </IonButton>
         </div>
       </IonModal>
@@ -901,7 +973,7 @@ const LigaDetalle: React.FC = () => {
         <div className="modal-footer">
           <IonButton expand="block" onClick={handleRegistrarResultado}>
             <IonIcon icon={checkmarkCircleOutline} slot="start" />
-            Registrar Resultado
+            <IonLabel>Registrar Resultado</IonLabel>
           </IonButton>
         </div>
       </IonModal>
@@ -932,6 +1004,7 @@ const LigaDetalle: React.FC = () => {
         duration={3000}
         position="bottom"
       />
+      </div>
     </div>
   );
 };
