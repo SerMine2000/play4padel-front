@@ -8,8 +8,6 @@ import {
   IonIcon,
   IonItem,
   IonLabel,
-  IonList,
-  IonModal,
   IonInput,
   IonTextarea,
   IonSelect,
@@ -24,8 +22,7 @@ import {
   IonFab,
   IonFabButton,
   IonAlert,
-  IonToggle,
-  IonBadge
+  IonToggle
 } from '@ionic/react';
 import {
   addOutline,
@@ -40,7 +37,8 @@ import {
   trophyOutline,
   cashOutline,
   playOutline,
-  statsChartOutline
+  statsChartOutline,
+  closeOutline
 } from 'ionicons/icons';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -55,7 +53,6 @@ const Ligas: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [selectedLiga, setSelectedLiga] = useState<Liga | null>(null);
   const [editingLiga, setEditingLiga] = useState<Liga | null>(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
@@ -155,25 +152,6 @@ const Ligas: React.FC = () => {
     }
   };
 
-  const handleDeleteLiga = async () => {
-    try {
-      if (ligaToDelete) {
-        const response = await ApiService.delete(`/ligas/${ligaToDelete.id}`);
-        if (response) {
-          setToastMessage('Liga eliminada exitosamente');
-          setShowToast(true);
-          setShowDeleteAlert(false);
-          setLigaToDelete(null);
-          loadLigas();
-        }
-      }
-    } catch (error) {
-      console.error('Error al eliminar liga:', error);
-      setToastMessage('Error al eliminar la liga');
-      setShowToast(true);
-    }
-  };
-
   const handleEditLiga = (liga: Liga) => {
     setEditingLiga(liga);
     setFormData({
@@ -232,6 +210,25 @@ const Ligas: React.FC = () => {
     }
   };
 
+  const handleDeleteLiga = async () => {
+    try {
+      if (ligaToDelete) {
+        const response = await ApiService.delete(`/ligas/${ligaToDelete.id}`);
+        if (response) {
+          setToastMessage('Liga eliminada exitosamente');
+          setShowToast(true);
+          setShowDeleteAlert(false);
+          setLigaToDelete(null);
+          loadLigas();
+        }
+      }
+    } catch (error) {
+      console.error('Error al eliminar liga:', error);
+      setToastMessage('Error al eliminar la liga');
+      setShowToast(true);
+    }
+  };
+
   const resetForm = () => {
     setFormData({
       nombre: '',
@@ -252,7 +249,6 @@ const Ligas: React.FC = () => {
       puntos_derrota: '0',
       permite_empate: true
     });
-    setSelectedLiga(null);
   };
 
   // Función para formatear el premio
@@ -338,9 +334,129 @@ const Ligas: React.FC = () => {
     <div className={`ligas-container ${theme}`}>
       <IonLoading isOpen={loading} message="Cargando ligas..." />
       
-      <div className="page-header">
-        <h1>Ligas</h1>
-        <p>Participa en ligas regulares de pádel</p>
+      <div className="ligas-content">
+        <div className="page-header">
+          <h1>Ligas</h1>
+          <p>Participa en ligas regulares de pádel</p>
+        </div>
+
+        <div className="ligas-grid">
+          {ligas.length === 0 ? (
+            <div className="empty-state">
+              <IonIcon icon={ribbonOutline} className="empty-icon" />
+              <h2>No hay ligas disponibles</h2>
+              <p>Las ligas aparecerán aquí cuando estén disponibles. ¡Mantente atento a las próximas competencias!</p>
+              {canManage && (
+                <IonButton fill="clear" onClick={() => setIsCreateModalOpen(true)}>
+                  <IonIcon icon={addOutline} slot="start" />
+                  Crear primera liga
+                </IonButton>
+              )}
+            </div>
+          ) : (
+            ligas.map((liga) => (
+              <IonCard className="liga-card" key={liga.id}>
+                {liga.imagen_url && (
+                  <div className="liga-image">
+                    <img src={liga.imagen_url} alt={liga.nombre} />
+                  </div>
+                )}
+                
+                <IonCardHeader>
+                  <div className="card-header-content">
+                    <IonCardTitle>{liga.nombre}</IonCardTitle>
+                    <IonChip color={getEstadoColor(liga.estado)}>
+                      {getEstadoText(liga.estado)}
+                    </IonChip>
+                  </div>
+                </IonCardHeader>
+
+                <IonCardContent>
+                  <div className="liga-info">
+                    {/* Toda la información con el mismo formato */}
+                    <div className="liga-info-grid">
+                      <div className="info-row">
+                        <IonIcon icon={calendarOutline} />
+                        <span>{formatDate(liga.fecha_inicio)} - {formatDate(liga.fecha_fin)}</span>
+                      </div>
+                      
+                      <div className="info-row">
+                        <IonIcon icon={ribbonOutline} />
+                        <span>{liga.categoria}</span>
+                      </div>
+                      
+                      <div className="info-row with-chip">
+                        <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+                          <IonIcon icon={statsChartOutline} />
+                          <span>Nivel:</span>
+                        </div>
+                        <IonChip color={getNivelColor(liga.nivel)}>
+                          {liga.nivel}
+                        </IonChip>
+                      </div>
+
+                      <div className="info-row">
+                        <IonIcon icon={peopleOutline} />
+                        <span>Máx. {liga.max_parejas || 'Sin límite'} parejas</span>
+                      </div>
+
+                      {liga.precio_inscripcion > 0 && (
+                        <div className="info-row">
+                          <IonIcon icon={cashOutline} />
+                          <span>€{liga.precio_inscripcion}</span>
+                        </div>
+                      )}
+
+                      {liga.premio && (
+                        <div className="info-row">
+                          <IonIcon icon={trophyOutline} />
+                          <span>{formatPremio(liga.premio)}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {liga.descripcion && (
+                      <p className="descripcion">{liga.descripcion}</p>
+                    )}
+                  </div>
+
+                  <div className="card-actions">
+                    <IonButton fill="clear" size="small" routerLink={`/ligas/${liga.id}`}>
+                      <IonIcon icon={eyeOutline} slot="start" />
+                      Ver detalles
+                    </IonButton>
+                    
+                    {canManage && (
+                      <>
+                        <IonButton 
+                          fill="clear" 
+                          size="small" 
+                          color="medium"
+                          onClick={() => handleEditLiga(liga)}
+                        >
+                          <IonIcon icon={createOutline} slot="start" />
+                          Editar
+                        </IonButton>
+                        <IonButton 
+                          fill="clear" 
+                          size="small" 
+                          color="danger"
+                          onClick={() => {
+                            setLigaToDelete(liga);
+                            setShowDeleteAlert(true);
+                          }}
+                        >
+                          <IonIcon icon={trashOutline} slot="start" />
+                          Eliminar
+                        </IonButton>
+                      </>
+                    )}
+                  </div>
+                </IonCardContent>
+              </IonCard>
+            ))
+          )}
+        </div>
       </div>
 
       {/* FAB flotante fijo */}
@@ -352,436 +468,377 @@ const Ligas: React.FC = () => {
         </IonFab>
       )}
 
-      <IonGrid>
-        <IonRow>
-          {ligas.length === 0 ? (
-            <IonCol size="12">
-              <IonCard className="empty-state">
-                <IonCardContent className="text-center">
-                  <IonIcon icon={ribbonOutline} className="empty-icon" />
-                  <h2>No hay ligas disponibles</h2>
-                  <p>Las ligas aparecerán aquí cuando estén disponibles.</p>
-                  {canManage && (
-                    <IonButton fill="clear" onClick={() => setIsCreateModalOpen(true)}>
-                      <IonIcon icon={addOutline} slot="start" />
-                      Crear primera liga
-                    </IonButton>
-                  )}
-                </IonCardContent>
-              </IonCard>
-            </IonCol>
-          ) : (
-            ligas.map((liga) => (
-              <IonCol size="12" sizeMd="6" sizeLg="6" key={liga.id}>
-                <IonCard className="liga-card-compact">
-                  <IonCardHeader>
-                    <div className="card-header-content">
-                      <IonCardTitle>{liga.nombre}</IonCardTitle>
-                      <IonChip color={getEstadoColor(liga.estado)}>
-                        {getEstadoText(liga.estado)}
-                      </IonChip>
-                    </div>
-                  </IonCardHeader>
-
-                  <IonCardContent>
-                    <div className="liga-info-compact">
-                      <div className="info-row-compact">
-                        <IonIcon icon={calendarOutline} />
-                        <span>{formatDate(liga.fecha_inicio)} - {formatDate(liga.fecha_fin)}</span>
-                      </div>
-                      
-                      <div className="info-grid">
-                        <div className="info-item">
-                          <IonIcon icon={ribbonOutline} />
-                          <span>{liga.categoria}</span>
-                        </div>
-                        
-                        <div className="info-item">
-                          <IonIcon icon={statsChartOutline} />
-                          <IonChip color={getNivelColor(liga.nivel)} style={{paddingLeft: 6, paddingRight: 6, minHeight: 22, fontSize: '0.85em', height: 'auto', lineHeight: 1.1 }}>
-                            {liga.nivel}
-                          </IonChip>
-                        </div>
-
-                        <div className="info-item">
-                          <IonIcon icon={peopleOutline} />
-                          <span>Máx. {liga.max_parejas}</span>
-                        </div>
-
-                        {liga.precio_inscripcion > 0 && (
-                          <div className="info-item">
-                            <IonIcon icon={cashOutline} />
-                            <span className="precio">€{liga.precio_inscripcion}</span>
-                          </div>
-                        )}
-                      </div>
-
-                      {liga.premio && (
-                        <div className="premio-compact">
-                          <IonIcon icon={trophyOutline} />
-                          <span>{formatPremio(liga.premio)}</span>
-                        </div>
-                      )}
-
-                      {liga.descripcion && (
-                        <p className="descripcion-compact">{liga.descripcion}</p>
-                      )}
-                    </div>
-
-                    <div className="card-actions-compact">
-                      <IonButton fill="clear" size="small" routerLink={`/ligas/${liga.id}`}>
-                        <IonIcon icon={eyeOutline} slot="start" />
-                        Ver detalles
-                      </IonButton>
-                      
-                      {canManage && (
-                        <>
-                          <IonButton 
-                            fill="clear" 
-                            size="small" 
-                            color="medium"
-                            onClick={() => handleEditLiga(liga)}
-                          >
-                            <IonIcon icon={createOutline} slot="start" />
-                            Editar
-                          </IonButton>
-                          <IonButton 
-                            fill="clear" 
-                            size="small" 
-                            color="danger"
-                            onClick={() => {
-                              setLigaToDelete(liga);
-                              setShowDeleteAlert(true);
-                            }}
-                          >
-                            <IonIcon icon={trashOutline} slot="start" />
-                            Eliminar
-                          </IonButton>
-                        </>
-                      )}
-                    </div>
-                  </IonCardContent>
-                </IonCard>
-              </IonCol>
-            ))
-          )}
-        </IonRow>
-      </IonGrid>
-
-      {/* Modal para crear liga */}
-      <IonModal isOpen={isCreateModalOpen} onDidDismiss={() => setIsCreateModalOpen(false)}>
-        <div className="modal-header">
-          <h2>Crear Nueva Liga</h2>
-          <IonButton fill="clear" onClick={() => setIsCreateModalOpen(false)}>
-            Cancelar
-          </IonButton>
-        </div>
-
-        <div className="modal-content">
-          <IonItem>
-            <IonLabel position="stacked">Nombre de la Liga *</IonLabel>
-            <IonInput
-              value={formData.nombre}
-              onIonInput={(e) => setFormData({ ...formData, nombre: e.detail.value! })}
-              placeholder="Ej: Liga de Primavera 2024"
-            />
-          </IonItem>
-
-          <IonItem>
-            <IonLabel position="stacked">Club *</IonLabel>
-            <IonSelect
-              value={formData.id_club}
-              onIonChange={(e) => setFormData({ ...formData, id_club: e.detail.value })}
-              placeholder="Selecciona un club"
-            >
-              {clubes.map((club) => (
-                <IonSelectOption key={club.id} value={club.id}>
-                  {club.nombre}
-                </IonSelectOption>
-              ))}
-            </IonSelect>
-          </IonItem>
-
-          <IonItem>
-            <IonLabel position="stacked">Fecha de Inicio *</IonLabel>
-            <IonDatetime
-              value={formData.fecha_inicio}
-              onIonChange={(e) => setFormData({ ...formData, fecha_inicio: e.detail.value as string })}
-              presentation="date"
-            />
-          </IonItem>
-
-          <IonItem>
-            <IonLabel position="stacked">Fecha de Fin *</IonLabel>
-            <IonDatetime
-              value={formData.fecha_fin}
-              onIonChange={(e) => setFormData({ ...formData, fecha_fin: e.detail.value as string })}
-              presentation="date"
-            />
-          </IonItem>
-
-          <IonItem>
-            <IonLabel position="stacked">Categoría *</IonLabel>
-            <IonSelect
-              value={formData.categoria}
-              onIonChange={(e) => setFormData({ ...formData, categoria: e.detail.value })}
-              placeholder="Selecciona la categoría"
-            >
-              <IonSelectOption value="masculina">Masculina</IonSelectOption>
-              <IonSelectOption value="femenina">Femenina</IonSelectOption>
-              <IonSelectOption value="mixta">Mixta</IonSelectOption>
-              <IonSelectOption value="veteranos">Veteranos</IonSelectOption>
-              <IonSelectOption value="junior">Junior</IonSelectOption>
-            </IonSelect>
-          </IonItem>
-
-          <IonItem>
-            <IonLabel position="stacked">Nivel *</IonLabel>
-            <IonSelect
-              value={formData.nivel}
-              onIonChange={(e) => setFormData({ ...formData, nivel: e.detail.value })}
-              placeholder="Selecciona el nivel"
-            >
-              <IonSelectOption value="principiante">Principiante</IonSelectOption>
-              <IonSelectOption value="intermedio">Intermedio</IonSelectOption>
-              <IonSelectOption value="avanzado">Avanzado</IonSelectOption>
-              <IonSelectOption value="profesional">Profesional</IonSelectOption>
-            </IonSelect>
-          </IonItem>
-
-          <IonItem>
-            <IonLabel position="stacked">Precio de Inscripción (€) *</IonLabel>
-            <IonInput
-              type="number"
-              value={formData.precio_inscripcion}
-              onIonInput={(e) => setFormData({ ...formData, precio_inscripcion: e.detail.value! })}
-              placeholder="0.00"
-            />
-          </IonItem>
-
-          <IonItem>
-            <IonLabel position="stacked">Máximo de Parejas</IonLabel>
-            <IonInput
-              type="number"
-              value={formData.max_parejas}
-              onIonInput={(e) => setFormData({ ...formData, max_parejas: e.detail.value! })}
-              placeholder="Ej: 12"
-            />
-          </IonItem>
-
-          <IonItem>
-            <IonLabel position="stacked">Descripción</IonLabel>
-            <IonTextarea
-              value={formData.descripcion}
-              onIonInput={(e) => setFormData({ ...formData, descripcion: e.detail.value! })}
-              placeholder="Describe la liga..."
-              rows={3}
-            />
-          </IonItem>
-
-          <IonItem>
-            <IonLabel position="stacked">Premio</IonLabel>
-            <IonInput
-              value={formData.premio}
-              onIonInput={(e) => setFormData({ ...formData, premio: e.detail.value! })}
-              placeholder="Ej: Trofeo + 100€"
-            />
-          </IonItem>
-
-          {/* Sistema de puntuación */}
-          <div className="scoring-section">
-            <h3>Sistema de Puntuación</h3>
+      {/* Modal personalizado para crear liga */}
+      {isCreateModalOpen && (
+        <div className="ligas-modal-overlay" onClick={() => setIsCreateModalOpen(false)}>
+          <div className="ligas-modal-container" onClick={(e) => e.stopPropagation()}>
+            <div className="ligas-modal-header">
+              <h2>Crear Nueva Liga</h2>
+              <button 
+                className="ligas-modal-close"
+                onClick={() => setIsCreateModalOpen(false)}
+              >
+                <IonIcon icon={closeOutline} />
+              </button>
+            </div>
             
-            <IonItem>
-              <IonLabel position="stacked">Puntos por Victoria</IonLabel>
-              <IonInput
-                type="number"
-                value={formData.puntos_victoria}
-                onIonInput={(e) => setFormData({ ...formData, puntos_victoria: e.detail.value! })}
-              />
-            </IonItem>
+            <div className="ligas-modal-content">
+              <div className="ligas-form-container">
+                <IonItem>
+                  <IonLabel position="stacked">Nombre de la Liga *</IonLabel>
+                  <IonInput
+                    value={formData.nombre}
+                    onIonInput={(e) => setFormData({ ...formData, nombre: e.detail.value! })}
+                    placeholder="Ej: Liga de Primavera 2024"
+                  />
+                </IonItem>
 
-            <IonItem>
-              <IonLabel position="stacked">Puntos por Empate</IonLabel>
-              <IonInput
-                type="number"
-                value={formData.puntos_empate}
-                onIonInput={(e) => setFormData({ ...formData, puntos_empate: e.detail.value! })}
-                disabled={!formData.permite_empate}
-              />
-            </IonItem>
+                <IonGrid>
+                  <IonRow>
+                    <IonCol size="12" sizeMd="6">
+                      <IonItem>
+                        <IonLabel position="stacked">Club *</IonLabel>
+                        <IonSelect
+                          value={formData.id_club}
+                          onIonChange={(e) => setFormData({ ...formData, id_club: e.detail.value })}
+                          placeholder="Selecciona un club"
+                        >
+                          {clubes.map((club) => (
+                            <IonSelectOption key={club.id} value={club.id}>
+                              {club.nombre}
+                            </IonSelectOption>
+                          ))}
+                        </IonSelect>
+                      </IonItem>
+                    </IonCol>
+                    
+                    <IonCol size="12" sizeMd="6">
+                      <IonItem>
+                        <IonLabel position="stacked">Categoría *</IonLabel>
+                        <IonSelect
+                          value={formData.categoria}
+                          onIonChange={(e) => setFormData({ ...formData, categoria: e.detail.value })}
+                          placeholder="Selecciona la categoría"
+                        >
+                          <IonSelectOption value="masculina">Masculina</IonSelectOption>
+                          <IonSelectOption value="femenina">Femenina</IonSelectOption>
+                          <IonSelectOption value="mixta">Mixta</IonSelectOption>
+                          <IonSelectOption value="veteranos">Veteranos</IonSelectOption>
+                          <IonSelectOption value="junior">Junior</IonSelectOption>
+                        </IonSelect>
+                      </IonItem>
+                    </IonCol>
+                  </IonRow>
 
-            <IonItem>
-              <IonLabel position="stacked">Puntos por Derrota</IonLabel>
-              <IonInput
-                type="number"
-                value={formData.puntos_derrota}
-                onIonInput={(e) => setFormData({ ...formData, puntos_derrota: e.detail.value! })}
-              />
-            </IonItem>
+                  <IonRow>
+                    <IonCol size="12" sizeMd="6">
+                      <IonItem>
+                        <IonLabel position="stacked">Fecha de Inicio *</IonLabel>
+                        <IonDatetime
+                          value={formData.fecha_inicio}
+                          onIonChange={(e) => setFormData({ ...formData, fecha_inicio: e.detail.value as string })}
+                          presentation="date"
+                        />
+                      </IonItem>
+                    </IonCol>
+                    
+                    <IonCol size="12" sizeMd="6">
+                      <IonItem>
+                        <IonLabel position="stacked">Fecha de Fin *</IonLabel>
+                        <IonDatetime
+                          value={formData.fecha_fin}
+                          onIonChange={(e) => setFormData({ ...formData, fecha_fin: e.detail.value as string })}
+                          presentation="date"
+                        />
+                      </IonItem>
+                    </IonCol>
+                  </IonRow>
 
-            <IonItem>
-              <IonLabel>Permitir Empates</IonLabel>
-              <IonToggle
-                checked={formData.permite_empate}
-                onIonChange={(e) => setFormData({ ...formData, permite_empate: e.detail.checked })}
-              />
-            </IonItem>
+                  <IonRow>
+                    <IonCol size="12" sizeMd="6">
+                      <IonItem>
+                        <IonLabel position="stacked">Nivel *</IonLabel>
+                        <IonSelect
+                          value={formData.nivel}
+                          onIonChange={(e) => setFormData({ ...formData, nivel: e.detail.value })}
+                          placeholder="Selecciona el nivel"
+                        >
+                          <IonSelectOption value="principiante">Principiante</IonSelectOption>
+                          <IonSelectOption value="intermedio">Intermedio</IonSelectOption>
+                          <IonSelectOption value="avanzado">Avanzado</IonSelectOption>
+                          <IonSelectOption value="profesional">Profesional</IonSelectOption>
+                        </IonSelect>
+                      </IonItem>
+                    </IonCol>
+                    
+                    <IonCol size="12" sizeMd="6">
+                      <IonItem>
+                        <IonLabel position="stacked">Precio de Inscripción (€)</IonLabel>
+                        <IonInput
+                          type="number"
+                          value={formData.precio_inscripcion}
+                          onIonInput={(e) => setFormData({ ...formData, precio_inscripcion: e.detail.value! })}
+                          placeholder="0.00"
+                        />
+                      </IonItem>
+                    </IonCol>
+                  </IonRow>
+
+                  <IonRow>
+                    <IonCol size="12" sizeMd="6">
+                      <IonItem>
+                        <IonLabel position="stacked">Máximo de Parejas</IonLabel>
+                        <IonInput
+                          type="number"
+                          value={formData.max_parejas}
+                          onIonInput={(e) => setFormData({ ...formData, max_parejas: e.detail.value! })}
+                          placeholder="Ej: 12"
+                        />
+                      </IonItem>
+                    </IonCol>
+                    
+                    <IonCol size="12" sizeMd="6">
+                      <IonItem>
+                        <IonLabel position="stacked">Premio</IonLabel>
+                        <IonInput
+                          value={formData.premio}
+                          onIonInput={(e) => setFormData({ ...formData, premio: e.detail.value! })}
+                          placeholder="Ej: Trofeo + 100€"
+                        />
+                      </IonItem>
+                    </IonCol>
+                  </IonRow>
+
+                  <IonRow>
+                    <IonCol size="12">
+                      <IonItem>
+                        <IonLabel position="stacked">Descripción</IonLabel>
+                        <IonTextarea
+                          value={formData.descripcion}
+                          onIonInput={(e) => setFormData({ ...formData, descripcion: e.detail.value! })}
+                          placeholder="Describe la liga..."
+                          rows={3}
+                        />
+                      </IonItem>
+                    </IonCol>
+                  </IonRow>
+                </IonGrid>
+
+                <div className="ligas-form-actions">
+                  <IonButton
+                    fill="clear"
+                    color="medium"
+                    onClick={() => setIsCreateModalOpen(false)}
+                  >
+                    Cancelar
+                  </IonButton>
+                  <IonButton
+                    color="primary"
+                    onClick={handleCreateLiga}
+                  >
+                    Crear Liga
+                  </IonButton>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+      )}
 
-        <div className="modal-footer">
-          <IonButton expand="block" onClick={handleCreateLiga}>
-            Crear Liga
-          </IonButton>
+      {/* Modal personalizado para editar liga */}
+      {isEditModalOpen && (
+        <div className="ligas-modal-overlay" onClick={() => setIsEditModalOpen(false)}>
+          <div className="ligas-modal-container" onClick={(e) => e.stopPropagation()}>
+            <div className="ligas-modal-header">
+              <h2>Editar Liga</h2>
+              <button 
+                className="ligas-modal-close"
+                onClick={() => setIsEditModalOpen(false)}
+              >
+                <IonIcon icon={closeOutline} />
+              </button>
+            </div>
+            
+            <div className="ligas-modal-content">
+              <div className="ligas-form-container">
+                <IonItem>
+                  <IonLabel position="stacked">Nombre de la Liga *</IonLabel>
+                  <IonInput
+                    value={formData.nombre}
+                    onIonInput={(e) => setFormData({ ...formData, nombre: e.detail.value! })}
+                    placeholder="Ej: Liga de Primavera 2024"
+                  />
+                </IonItem>
+
+                <IonGrid>
+                  <IonRow>
+                    <IonCol size="12" sizeMd="6">
+                      <IonItem>
+                        <IonLabel position="stacked">Club *</IonLabel>
+                        <IonSelect
+                          value={formData.id_club}
+                          onIonChange={(e) => setFormData({ ...formData, id_club: e.detail.value })}
+                          placeholder="Selecciona un club"
+                        >
+                          {clubes.map((club) => (
+                            <IonSelectOption key={club.id} value={club.id}>
+                              {club.nombre}
+                            </IonSelectOption>
+                          ))}
+                        </IonSelect>
+                      </IonItem>
+                    </IonCol>
+                    
+                    <IonCol size="12" sizeMd="6">
+                      <IonItem>
+                        <IonLabel position="stacked">Categoría *</IonLabel>
+                        <IonSelect
+                          value={formData.categoria}
+                          onIonChange={(e) => setFormData({ ...formData, categoria: e.detail.value })}
+                          placeholder="Selecciona una categoría"
+                        >
+                          <IonSelectOption value="masculina">Masculina</IonSelectOption>
+                          <IonSelectOption value="femenina">Femenina</IonSelectOption>
+                          <IonSelectOption value="mixta">Mixta</IonSelectOption>
+                          <IonSelectOption value="veteranos">Veteranos</IonSelectOption>
+                          <IonSelectOption value="junior">Junior</IonSelectOption>
+                        </IonSelect>
+                      </IonItem>
+                    </IonCol>
+                  </IonRow>
+
+                  <IonRow>
+                    <IonCol size="12" sizeMd="6">
+                      <IonItem>
+                        <IonLabel position="stacked">Fecha de Inicio *</IonLabel>
+                        <IonDatetime
+                          value={formData.fecha_inicio}
+                          onIonChange={(e) => setFormData({ ...formData, fecha_inicio: e.detail.value as string })}
+                          presentation="date"
+                        />
+                      </IonItem>
+                    </IonCol>
+                    
+                    <IonCol size="12" sizeMd="6">
+                      <IonItem>
+                        <IonLabel position="stacked">Fecha de Fin *</IonLabel>
+                        <IonDatetime
+                          value={formData.fecha_fin}
+                          onIonChange={(e) => setFormData({ ...formData, fecha_fin: e.detail.value as string })}
+                          presentation="date"
+                        />
+                      </IonItem>
+                    </IonCol>
+                  </IonRow>
+
+                  <IonRow>
+                    <IonCol size="12" sizeMd="6">
+                      <IonItem>
+                        <IonLabel position="stacked">Nivel *</IonLabel>
+                        <IonSelect
+                          value={formData.nivel}
+                          onIonChange={(e) => setFormData({ ...formData, nivel: e.detail.value })}
+                          placeholder="Selecciona un nivel"
+                        >
+                          <IonSelectOption value="principiante">Principiante</IonSelectOption>
+                          <IonSelectOption value="intermedio">Intermedio</IonSelectOption>
+                          <IonSelectOption value="avanzado">Avanzado</IonSelectOption>
+                          <IonSelectOption value="profesional">Profesional</IonSelectOption>
+                        </IonSelect>
+                      </IonItem>
+                    </IonCol>
+                    
+                    <IonCol size="12" sizeMd="6">
+                      <IonItem>
+                        <IonLabel position="stacked">Estado</IonLabel>
+                        <IonSelect
+                          value={formData.estado}
+                          onIonChange={(e) => setFormData({ ...formData, estado: e.detail.value })}
+                        >
+                          <IonSelectOption value="inscripciones_abiertas">Inscripciones Abiertas</IonSelectOption>
+                          <IonSelectOption value="en_curso">En Curso</IonSelectOption>
+                          <IonSelectOption value="finalizada">Finalizada</IonSelectOption>
+                          <IonSelectOption value="suspendida">Suspendida</IonSelectOption>
+                        </IonSelect>
+                      </IonItem>
+                    </IonCol>
+                  </IonRow>
+
+                  <IonRow>
+                    <IonCol size="12" sizeMd="6">
+                      <IonItem>
+                        <IonLabel position="stacked">Precio de Inscripción (€)</IonLabel>
+                        <IonInput
+                          type="number"
+                          value={formData.precio_inscripcion}
+                          onIonInput={(e) => setFormData({ ...formData, precio_inscripcion: e.detail.value! })}
+                          placeholder="0.00"
+                        />
+                      </IonItem>
+                    </IonCol>
+                    
+                    <IonCol size="12" sizeMd="6">
+                      <IonItem>
+                        <IonLabel position="stacked">Máximo de Parejas</IonLabel>
+                        <IonInput
+                          type="number"
+                          value={formData.max_parejas}
+                          onIonInput={(e) => setFormData({ ...formData, max_parejas: e.detail.value! })}
+                          placeholder="Ej: 16"
+                        />
+                      </IonItem>
+                    </IonCol>
+                  </IonRow>
+
+                  <IonRow>
+                    <IonCol size="12">
+                      <IonItem>
+                        <IonLabel position="stacked">Descripción</IonLabel>
+                        <IonTextarea
+                          value={formData.descripcion}
+                          onIonInput={(e) => setFormData({ ...formData, descripcion: e.detail.value! })}
+                          placeholder="Descripción de la liga..."
+                          rows={3}
+                        />
+                      </IonItem>
+                    </IonCol>
+                  </IonRow>
+
+                  <IonRow>
+                    <IonCol size="12">
+                      <IonItem>
+                        <IonLabel position="stacked">Premio</IonLabel>
+                        <IonTextarea
+                          value={formData.premio}
+                          onIonInput={(e) => setFormData({ ...formData, premio: e.detail.value! })}
+                          placeholder="Descripción del premio..."
+                          rows={2}
+                        />
+                      </IonItem>
+                    </IonCol>
+                  </IonRow>
+                </IonGrid>
+
+                <div className="ligas-form-actions">
+                  <IonButton
+                    fill="clear"
+                    color="medium"
+                    onClick={() => setIsEditModalOpen(false)}
+                  >
+                    Cancelar
+                  </IonButton>
+                  <IonButton
+                    color="primary"
+                    onClick={handleUpdateLiga}
+                  >
+                    Actualizar Liga
+                  </IonButton>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </IonModal>
-
-      {/* Modal para editar liga */}
-      <IonModal isOpen={isEditModalOpen} onDidDismiss={() => setIsEditModalOpen(false)}>
-        <div className="modal-header">
-          <h2>Editar Liga</h2>
-          <IonButton fill="clear" onClick={() => setIsEditModalOpen(false)}>
-            Cancelar
-          </IonButton>
-        </div>
-
-        <div className="modal-content">
-          <IonItem>
-            <IonLabel position="stacked">Nombre de la Liga *</IonLabel>
-            <IonInput
-              value={formData.nombre}
-              onIonInput={(e) => setFormData({ ...formData, nombre: e.detail.value! })}
-              placeholder="Ej: Liga de Primavera 2024"
-            />
-          </IonItem>
-
-          <IonItem>
-            <IonLabel position="stacked">Club *</IonLabel>
-            <IonSelect
-              value={formData.id_club}
-              onIonChange={(e) => setFormData({ ...formData, id_club: e.detail.value })}
-              placeholder="Selecciona un club"
-            >
-              {clubes.map((club) => (
-                <IonSelectOption key={club.id} value={club.id}>
-                  {club.nombre}
-                </IonSelectOption>
-              ))}
-            </IonSelect>
-          </IonItem>
-
-          <IonItem>
-            <IonLabel position="stacked">Fecha de Inicio *</IonLabel>
-            <IonDatetime
-              value={formData.fecha_inicio}
-              onIonChange={(e) => setFormData({ ...formData, fecha_inicio: e.detail.value as string })}
-              presentation="date"
-            />
-          </IonItem>
-
-          <IonItem>
-            <IonLabel position="stacked">Fecha de Fin *</IonLabel>
-            <IonDatetime
-              value={formData.fecha_fin}
-              onIonChange={(e) => setFormData({ ...formData, fecha_fin: e.detail.value as string })}
-              presentation="date"
-            />
-          </IonItem>
-
-          <IonItem>
-            <IonLabel position="stacked">Categoría *</IonLabel>
-            <IonSelect
-              value={formData.categoria}
-              onIonChange={(e) => setFormData({ ...formData, categoria: e.detail.value })}
-              placeholder="Selecciona una categoría"
-            >
-              <IonSelectOption value="masculina">Masculina</IonSelectOption>
-              <IonSelectOption value="femenina">Femenina</IonSelectOption>
-              <IonSelectOption value="mixta">Mixta</IonSelectOption>
-              <IonSelectOption value="veteranos">Veteranos</IonSelectOption>
-              <IonSelectOption value="junior">Junior</IonSelectOption>
-            </IonSelect>
-          </IonItem>
-
-          <IonItem>
-            <IonLabel position="stacked">Nivel *</IonLabel>
-            <IonSelect
-              value={formData.nivel}
-              onIonChange={(e) => setFormData({ ...formData, nivel: e.detail.value })}
-              placeholder="Selecciona un nivel"
-            >
-              <IonSelectOption value="principiante">Principiante</IonSelectOption>
-              <IonSelectOption value="intermedio">Intermedio</IonSelectOption>
-              <IonSelectOption value="avanzado">Avanzado</IonSelectOption>
-              <IonSelectOption value="profesional">Profesional</IonSelectOption>
-            </IonSelect>
-          </IonItem>
-
-          <IonItem>
-            <IonLabel position="stacked">Precio de Inscripción</IonLabel>
-            <IonInput
-              type="number"
-              value={formData.precio_inscripcion}
-              onIonInput={(e) => setFormData({ ...formData, precio_inscripcion: e.detail.value! })}
-              placeholder="0.00"
-            />
-          </IonItem>
-
-          <IonItem>
-            <IonLabel position="stacked">Estado</IonLabel>
-            <IonSelect
-              value={formData.estado}
-              onIonChange={(e) => setFormData({ ...formData, estado: e.detail.value })}
-            >
-              <IonSelectOption value="inscripciones_abiertas">Inscripciones Abiertas</IonSelectOption>
-              <IonSelectOption value="en_curso">En Curso</IonSelectOption>
-              <IonSelectOption value="finalizada">Finalizada</IonSelectOption>
-              <IonSelectOption value="suspendida">Suspendida</IonSelectOption>
-            </IonSelect>
-          </IonItem>
-
-          <IonItem>
-            <IonLabel position="stacked">Máximo de Parejas</IonLabel>
-            <IonInput
-              type="number"
-              value={formData.max_parejas}
-              onIonInput={(e) => setFormData({ ...formData, max_parejas: e.detail.value! })}
-              placeholder="Ej: 16"
-            />
-          </IonItem>
-
-          <IonItem>
-            <IonLabel position="stacked">Descripción</IonLabel>
-            <IonTextarea
-              value={formData.descripcion}
-              onIonInput={(e) => setFormData({ ...formData, descripcion: e.detail.value! })}
-              placeholder="Descripción de la liga..."
-              rows={3}
-            />
-          </IonItem>
-
-          <IonItem>
-            <IonLabel position="stacked">Premio</IonLabel>
-            <IonTextarea
-              value={formData.premio}
-              onIonInput={(e) => setFormData({ ...formData, premio: e.detail.value! })}
-              placeholder="Descripción del premio..."
-              rows={2}
-            />
-          </IonItem>
-        </div>
-
-        <div className="modal-footer">
-          <IonButton 
-            expand="block" 
-            onClick={handleUpdateLiga}
-            className="create-button"
-          >
-            Actualizar Liga
-          </IonButton>
-        </div>
-      </IonModal>
+      )}
 
       {/* Alert para confirmar eliminación */}
       <IonAlert

@@ -1,551 +1,873 @@
-/* Ligas.css - Diseño elegante y profesional COMPACTO */
+/* ===== LIGAS CSS - CORRECCIONES FINALES ===== */
 
-/* Asegurar que no hay fondos conflictivos */
-body, ion-app, ion-router-outlet, ion-content {
-  background: transparent !important;
-}
-
-/* Eliminar scrolls innecesarios */
-html, body {
-  overflow-x: hidden;
-}
-
-ion-content {
-  --overflow-x: hidden;
-  --overflow-y: auto;
-  --padding-top: 0;
-  --padding-bottom: 0;
-  --padding-start: 0;
-  --padding-end: 0;
-}
-
+/* Contenedor principal */
 .ligas-container {
-  padding: 1.5rem;
-  background: var(--ion-background-color);
+  min-height: 100vh;
+  background: var(--fondo-aplicacion);
+  padding: 0;
   margin: 0;
-  box-sizing: border-box;
 }
 
-/* Header elegante ALINEADO A LA IZQUIERDA */
+.ligas-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  position: relative;
+}
+
+/* Asegurar márgenes consistentes */
+@media (min-width: 1400px) {
+  .ligas-content {
+    padding: 2rem 2rem;
+  }
+}
+
+/* Header de página */
 .page-header {
-  margin-bottom: 2rem;
-  text-align: left; /* CAMBIADO: de center a left */
-  padding: 1rem 0;
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 0;
 }
 
 .page-header h1 {
-  margin: 0 0 0.5rem 0;
-  font-size: 2.2rem; /* REDUCIDO: de 2.5rem a 2.2rem */
+  font-size: 2.5rem;
   font-weight: 700;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
+  margin: 0 0 0.5rem 0;
   position: relative;
-  display: inline-block; /* AGREGADO: para que la línea se ajuste al texto */
+  display: inline-block;
 }
 
 .page-header h1::after {
   content: '';
   position: absolute;
-  bottom: -8px; /* AJUSTADO: posición de la línea */
-  left: 0; /* CAMBIADO: de center a left */
-  transform: none; /* ELIMINADO: translateX(-50%) */
-  width: 60px;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
   height: 4px;
-  background: linear-gradient(90deg, var(--ion-color-primary), #a160fb);
+  background: linear-gradient(90deg, var(--color-primario), var(--color-secundario));
   border-radius: 2px;
 }
 
 .page-header p {
-  color: var(--ion-color-medium);
-  margin: 0.5rem 0 0 0; /* AJUSTADO */
-  font-size: 1rem;
+  color: var(--texto-secundario);
+  margin: 1rem 0 0 0;
+  font-size: 1.1rem;
   font-weight: 400;
 }
 
-/* Cards de ligas COMPACTAS */
-.liga-card-compact {
-  height: 100%;
-  border-radius: 12px; /* REDUCIDO: de 16px a 12px */
+/* Grid de ligas - 2 columnas */
+.ligas-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Cards de ligas */
+.liga-card {
+  background: var(--fondo-card);
+  border-radius: 12px;
+  box-shadow: var(--sombra-card);
+  border: 1px solid var(--borde-principal);
   overflow: hidden;
-  box-shadow: var(--card-shadow);
-  border: 1px solid rgba(161, 96, 251, 0.1);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: var(--color-panel, #ffffff);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-.liga-card-compact:hover {
-  transform: translateY(-4px); /* REDUCIDO: de -8px a -4px */
-  box-shadow: 0 8px 25px rgba(161, 96, 251, 0.12); /* REDUCIDO */
-  border-color: rgba(161, 96, 251, 0.3);
+.liga-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(97, 41, 240, 0.15);
+  border-color: var(--color-primario);
 }
 
-/* Header del card COMPACTO */
+/* Imagen de la liga */
+.liga-image {
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
+}
+
+.liga-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.liga-card:hover .liga-image img {
+  transform: scale(1.05);
+}
+
+/* Header del card */
+.liga-card ion-card-header {
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
+  flex-shrink: 0;
+}
+
 .card-header-content {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 0.75rem; /* REDUCIDO: de 1rem a 0.75rem */
-  margin-bottom: 1rem; /* REDUCIDO: de 1.5rem a 1rem */
+  gap: 1rem;
 }
 
 .card-header-content ion-card-title {
   flex: 1;
-  font-size: 1.2rem; /* REDUCIDO: de 1.3rem a 1.2rem */
+  font-size: 1.3rem;
   font-weight: 600;
   line-height: 1.3;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
+  margin: 0;
 }
 
-/* NUEVO: Header de card más compacto */
-.liga-card-compact ion-card-header {
-  padding: 1rem 1rem 0 1rem; /* REDUCIDO padding bottom */
+/* Contenido del card */
+.liga-card ion-card-content {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-.liga-card-compact ion-card-content {
-  padding: 0 1rem 1rem 1rem; /* AJUSTADO: sin padding top */
+/* ===== INFO DE LA LIGA - MEJORADA Y ORGANIZADA ===== */
+.liga-info {
+  margin: 1rem 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-/* Info de la liga COMPACTA */
-.liga-info-compact {
-  margin: 0.75rem 0; /* REDUCIDO: de 1.5rem a 0.75rem */
+/* Información básica en columna única - igual formato */
+.liga-info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
 }
 
-.info-row-compact {
+.info-row {
   display: flex;
   align-items: center;
-  gap: 0.75rem; /* REDUCIDO */
-  margin-bottom: 0.75rem; /* REDUCIDO */
-  font-size: 0.9rem; /* REDUCIDO */
-  color: var(--ion-color-medium);
-  padding: 0.5rem; /* REDUCIDO */
-  border-radius: 6px; /* REDUCIDO */
-  transition: all 0.2s ease;
-}
-
-.info-row-compact:hover {
-  background: rgba(161, 96, 251, 0.05);
-  color: var(--color-icono-usuarios);
-}
-
-.info-row-compact ion-icon {
-  color: var(--ion-color-primary);
-  font-size: 1.1rem; /* REDUCIDO */
-  transition: transform 0.2s ease;
-}
-
-/* NUEVO: Grid de información compacto */
-.info-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.5rem;
-  margin: 0.75rem 0;
-}
-
-.info-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  justify-content: flex-start;
+  gap: 0.6rem;
   font-size: 0.85rem;
-  color: var(--ion-color-medium);
-  padding: 0.4rem;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-}
-
-.info-item:hover {
-  background: rgba(161, 96, 251, 0.05);
-  color: var(--color-icono-usuarios);
-}
-
-.info-item ion-icon {
-  color: var(--ion-color-primary);
-  font-size: 1rem;
-}
-
-/* Premio compacto */
-.premio-compact {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin: 0.75rem 0;
-  padding: 0.5rem;
-  background: rgba(255, 198, 47, 0.1);
+  color: var(--texto-secundario);
+  padding: 0.6rem 0.8rem;
   border-radius: 8px;
-  border: 1px solid rgba(255, 198, 47, 0.2);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--color-icono-marcador);
+  background: var(--fondo-aplicacion);
+  border: 1px solid var(--borde-principal);
+  text-align: left;
+  transition: all 0.2s ease;
+  min-height: 40px;
 }
 
-.premio-compact ion-icon {
-  color: var(--color-icono-marcador);
-  font-size: 1rem;
+.info-row:hover {
+  background: var(--hover-card);
+  border-color: var(--color-primario);
+  color: var(--texto-principal);
+  transform: translateY(-1px);
 }
 
-/* Precio destacado COMPACTO */
+.info-row ion-icon {
+  color: var(--color-primario);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  min-width: 18px;
+}
+
+.info-row:hover ion-icon {
+  transform: scale(1.1);
+}
+
+.info-row span {
+  text-align: left;
+  flex: 1;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* Fila especial para chips (nivel dentro de la grid) */
+.info-row.with-chip {
+  justify-content: space-between;
+}
+
+.info-row.with-chip ion-chip {
+  margin: 0;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.6rem;
+  height: auto;
+  min-height: 20px;
+}
+
+/* ELIMINAR SECCIÓN ESPECIAL - USAR MISMA ESTRUCTURA PARA TODO */
+
+/* Precio destacado */
 .precio {
   font-weight: 700;
-  font-size: 0.95rem; /* REDUCIDO */
-  color: var(--color-icono-estadisticas);
-  background: rgba(40, 199, 111, 0.1);
-  padding: 0.2rem 0.6rem; /* REDUCIDO */
-  border-radius: 16px; /* REDUCIDO */
-  border: 1px solid rgba(40, 199, 111, 0.2);
+  font-size: 1rem;
+  color: var(--color-secundario);
+  background: rgba(5, 150, 105, 0.1);
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  border: 1px solid rgba(5, 150, 105, 0.2);
+  display: inline-block;
 }
 
-/* Descripción COMPACTA */
-.descripcion-compact {
-  margin: 0.75rem 0; /* REDUCIDO */
-  font-size: 0.85rem; /* REDUCIDO */
-  color: var(--ion-color-medium);
-  line-height: 1.4; /* REDUCIDO */
+/* Descripción */
+.descripcion {
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  color: var(--texto-secundario);
+  line-height: 1.5;
+  padding: 1rem;
+  background: var(--fondo-aplicacion);
+  border-radius: 8px;
+  border-left: 3px solid var(--color-primario);
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* REDUCIDO: de 3 a 2 líneas */
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  padding: 0.75rem; /* REDUCIDO */
-  background: var(--color-panel, #ffffff);
-  border-radius: 6px; /* REDUCIDO */
-  border-left: 3px solid var(--ion-border-color, rgba(0, 0, 0, 0.1));
+  text-align: left;
 }
 
-/* Acciones del card COMPACTAS */
-.card-actions-compact {
+/* ===== BOTONES SIN BORDES - SOLO TEXTO E ICONOS ===== */
+.card-actions {
   display: flex;
-  gap: 0.5rem; /* REDUCIDO */
+  gap: 0.5rem;
   flex-wrap: wrap;
-  margin-top: 1rem; /* REDUCIDO */
-  padding-top: 1rem; /* REDUCIDO */
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--borde-principal);
 }
 
-.card-actions-compact ion-button {
-  --border-radius: 6px; /* REDUCIDO */
-  font-weight: 500;
-  font-size: 0.8rem; /* REDUCIDO */
-  --padding-start: 0.75rem; /* REDUCIDO */
-  --padding-end: 0.75rem; /* REDUCIDO */
+.card-actions ion-button {
+  --border-radius: 8px;
+  --background: transparent;
+  font-weight: 600;
+  font-size: 0.8rem;
+  --padding-start: 0.5rem;
+  --padding-end: 0.5rem;
+  flex: 1;
+  min-width: max-content;
+  height: 36px;
   transition: all 0.2s ease;
+  border: none !important;
+  box-shadow: none !important;
 }
 
-.card-actions-compact ion-button:hover {
+/* BOTÓN VER DETALLES - PRIMARIO */
+.card-actions ion-button[routerLink] {
+  --color: var(--color-primario);
+}
+
+.card-actions ion-button[routerLink]:hover {
+  --color: var(--color-primario);
   transform: translateY(-1px);
+  opacity: 0.8;
+}
+
+/* BOTÓN EDITAR - AMARILLO */
+.card-actions ion-button[color="medium"] {
+  --color: #f39c12;
+}
+
+.card-actions ion-button[color="medium"]:hover {
+  --color: #f39c12;
+  transform: translateY(-1px);
+  opacity: 0.8;
+}
+
+/* BOTÓN ELIMINAR - ROJO */
+.card-actions ion-button[color="danger"] {
+  --color: #e74c3c;
+}
+
+.card-actions ion-button[color="danger"]:hover {
+  --color: #e74c3c;
+  transform: translateY(-1px);
+  opacity: 0.8;
+}
+
+/* Quitar todos los bordes y fondos */
+.card-actions ion-button:hover {
+  --background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 /* Estado vacío */
 .empty-state {
   text-align: center;
-  padding: 3rem 2rem; /* REDUCIDO */
-  background: var(--color-panel, #ffffff);
-  border-radius: 16px;
-  box-shadow: var(--card-shadow);
-  border: 2px dashed rgba(161, 96, 251, 0.2);
-  margin: 2rem 0;
+  padding: 4rem 2rem;
+  background: var(--fondo-card);
+  border-radius: 12px;
+  box-shadow: var(--sombra-card);
+  border: 2px dashed var(--borde-principal);
+  margin: 2rem auto;
+  max-width: 500px;
 }
 
 .empty-icon {
-  font-size: 4rem; /* REDUCIDO */
-  color: var(--ion-color-medium);
-  margin-bottom: 1.5rem; /* REDUCIDO */
+  font-size: 5rem;
+  color: var(--texto-secundario);
+  margin-bottom: 2rem;
   opacity: 0.6;
 }
 
 .empty-state h2 {
-  color: var(--ion-color-medium);
-  margin: 1rem 0; /* REDUCIDO */
-  font-size: 1.3rem; /* REDUCIDO */
+  color: var(--texto-principal);
+  margin: 1.5rem 0 1rem 0;
+  font-size: 1.5rem;
   font-weight: 600;
 }
 
 .empty-state p {
-  color: var(--ion-color-medium);
-  margin-bottom: 1.5rem; /* REDUCIDO */
-  font-size: 0.95rem; /* REDUCIDO */
-  opacity: 0.8;
+  color: var(--texto-secundario);
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  line-height: 1.6;
   max-width: 400px;
   margin-left: auto;
   margin-right: auto;
-  line-height: 1.5;
 }
 
-/* Modal mejorado */
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 2rem;
-  background: linear-gradient(135deg, var(--color-icono-usuarios), var(--ion-color-primary));
-  color: white;
-}
-
-.modal-header h2 {
-  margin: 0;
-  font-weight: 600;
-  font-size: 1.4rem;
-}
-
-.modal-header ion-button {
-  --color: white;
-  --background: rgba(255, 255, 255, 0.2);
-  --border-radius: 8px;
-}
-
-.modal-content {
-  padding: 2rem;
-  max-height: 70vh;
-  overflow-y: auto;
-  background: #fafbff;
-}
-
-.modal-content ion-item {
-  --background: var(--color-panel, #ffffff);
-  --border-radius: 8px;
-  margin-bottom: 1rem;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.modal-footer {
-  padding: 2rem;
-  background: #fafbff;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-/* Sección de puntuación del modal */
-.scoring-section {
-  margin-top: 2rem;
-  padding: 1.5rem;
-  background: linear-gradient(135deg, 
-    rgba(161, 96, 251, 0.05), 
-    rgba(104, 144, 252, 0.03));
-  border-radius: 12px;
-  border: 2px solid rgba(161, 96, 251, 0.2);
-  position: relative;
-}
-
-.scoring-section::before {
-  content: '⚽';
-  position: absolute;
-  top: 1rem;
-  right: 1.5rem;
-  font-size: 1.5rem;
-  opacity: 0.6;
-}
-
-.scoring-section h3 {
-  margin: 0 0 1.5rem 0;
-  color: var(--color-icono-usuarios);
-  font-size: 1.2rem;
-  font-weight: 600;
-}
-
-.scoring-section ion-item {
-  --background: rgba(255, 255, 255, 0.7);
-  --border-radius: 8px;
-  margin-bottom: 1rem;
-  border: 1px solid rgba(161, 96, 251, 0.1);
-}
-
-/* FAB - posición fija */
+/* FAB flotante */
 .ligas-fab {
   position: fixed !important;
-  bottom: 24px !important;
-  right: 24px !important;
+  bottom: 2rem !important;
+  right: 2rem !important;
   z-index: 1000 !important;
 }
 
 .ligas-fab ion-fab-button {
-  --background: linear-gradient(135deg, var(--color-icono-usuarios), var(--ion-color-primary));
-  --color: white;
-  --box-shadow: 0 8px 25px rgba(161, 96, 251, 0.4);
-  --border-radius: 16px;
-  width: 56px;
-  height: 56px;
-  transition: all 0.3s ease;
+  --background: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
+  --color: var(--color-primario-contraste);
+  --box-shadow: 0 12px 30px rgba(97, 41, 240, 0.4);
+  --border-radius: 20px;
+  width: 64px;
+  height: 64px;
 }
 
 .ligas-fab ion-fab-button:hover {
-  transform: scale(1.1);
-  --box-shadow: 0 12px 30px rgba(161, 96, 251, 0.5);
+  transform: scale(1.1) rotate(90deg);
+  --box-shadow: 0 16px 40px rgba(97, 41, 240, 0.5);
 }
 
-/* Chips de nivel mejorados */
+.ligas-fab ion-fab-button ion-icon {
+  font-size: 1.5rem;
+}
+
+/* Chips mejorados */
 ion-chip {
-  --background: rgba(161, 96, 251, 0.1);
-  --color: var(--color-icono-usuarios);
-  border: 1px solid rgba(161, 96, 251, 0.2);
-  font-weight: 500;
-  transition: all 0.2s ease;
+  --background: rgba(97, 41, 240, 0.1);
+  --color: var(--color-primario);
+  border: 1px solid rgba(97, 41, 240, 0.2);
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
 }
 
 ion-chip:hover {
-  --background: rgba(161, 96, 251, 0.15);
+  --background: rgba(97, 41, 240, 0.15);
   transform: translateY(-1px);
 }
 
-/* Estados de chips específicos para ligas */
 ion-chip[color="success"] {
-  --background: rgba(40, 199, 111, 0.1);
-  --color: var(--color-icono-estadisticas);
-  border-color: rgba(40, 199, 111, 0.2);
+  --background: rgba(5, 150, 105, 0.1);
+  --color: var(--color-secundario);
+  border-color: rgba(5, 150, 105, 0.2);
 }
 
 ion-chip[color="warning"] {
   --background: rgba(255, 198, 47, 0.1);
-  --color: var(--color-icono-marcador);
+  --color: #ffc62f;
   border-color: rgba(255, 198, 47, 0.2);
-}
-
-ion-chip[color="danger"] {
-  --background: rgba(244, 67, 54, 0.1);
-  --color: var(--ion-color-danger);
-  border-color: rgba(244, 67, 54, 0.2);
 }
 
 ion-chip[color="medium"] {
   --background: rgba(146, 158, 171, 0.1);
-  --color: var(--ion-color-medium);
+  --color: var(--texto-secundario);
   border-color: rgba(146, 158, 171, 0.2);
 }
 
-/* Responsive COMPACTO */
-@media (max-width: 768px) {
-  .ligas-container {
-    padding: 1rem;
-    background: var(--ion-background-color, #ffffff);
+ion-chip[color="danger"] {
+  --background: rgba(255, 107, 107, 0.1);
+  --color: #ff6b6b;
+  border-color: rgba(255, 107, 107, 0.2);
+}
+
+/* ===== MODAL PERSONALIZADO ===== */
+.ligas-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  padding-top: 5rem;
+}
+
+.ligas-modal-container {
+  background: var(--fondo-card);
+  border-radius: 16px;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15), 0 10px 40px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 800px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--borde-principal);
+  margin: 1rem;
+}
+
+/* Header del modal */
+.ligas-modal-header {
+  background: var(--fondo-card);
+  border-bottom: 1px solid var(--borde-principal);
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.ligas-modal-header h2 {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--texto-principal);
+}
+
+.ligas-modal-close {
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--texto-secundario);
+  cursor: pointer;
+}
+
+.ligas-modal-close:hover {
+  background: var(--hover-card);
+  color: var(--texto-principal);
+}
+
+/* Contenido del modal */
+.ligas-modal-content {
+  background: var(--fondo-card);
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: calc(85vh - 120px);
+}
+
+.ligas-form-container {
+  padding: 1.5rem;
+  background: var(--fondo-card);
+}
+
+/* ===== CAMPOS SIN BORDES INTERNOS ===== */
+.ligas-form-container ion-item {
+  --background: transparent !important;
+  --border-radius: 8px;
+  --color: var(--texto-principal);
+  --padding-start: 0 !important;
+  --padding-end: 0 !important;
+  --min-height: 56px;
+  --border-width: 0 !important;
+  --border-color: transparent !important;
+  --inner-border-width: 0 !important;
+  --highlight-color-focused: transparent !important;
+  --highlight-color-valid: transparent !important;
+  --highlight-color-invalid: transparent !important;
+  margin-bottom: 1rem;
+  border: 1px solid var(--borde-input) !important;
+  background: var(--fondo-input) !important;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  transition: none !important;
+  animation: none !important;
+}
+
+/* ELIMINAR BORDES INTERNOS DE IONIC */
+.ligas-form-container ion-item::part(native) {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.ligas-form-container ion-item .item-native {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* SIN HOVER NI ESTADOS */
+.ligas-form-container ion-item:hover,
+.ligas-form-container ion-item:focus,
+.ligas-form-container ion-item:active {
+  background: var(--fondo-input) !important;
+  border: 1px solid var(--borde-input) !important;
+  transform: none !important;
+  box-shadow: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+/* FOCUS LIMPIO */
+.ligas-form-container ion-item:focus-within {
+  border: 1px solid var(--color-primario) !important;
+  box-shadow: 0 0 0 3px rgba(97, 41, 240, 0.1);
+  transition: none !important;
+}
+
+/* Labels sin animaciones */
+.ligas-form-container ion-label {
+  font-weight: 600;
+  color: var(--texto-principal);
+  margin-bottom: 0.5rem;
+  transition: none !important;
+  animation: none !important;
+}
+
+/* INPUTS SIN BORDES */
+.ligas-form-container ion-input,
+.ligas-form-container ion-textarea,
+.ligas-form-container ion-select {
+  --color: var(--texto-principal);
+  --placeholder-color: var(--texto-placeholder);
+  --background: transparent !important;
+  --border-width: 0 !important;
+  --border-color: transparent !important;
+  border: none !important;
+  background: transparent !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+/* ELIMINAR BORDES DE PSEUDO-ELEMENTOS */
+.ligas-form-container ion-input::part(native),
+.ligas-form-container ion-textarea::part(native),
+.ligas-form-container ion-select::part(native) {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  transition: none !important;
+}
+
+/* ===== SIN HOVER EN CAMPOS Y CALENDARIO - PATRÓN DE RESERVAS ===== */
+.ligas-form-container ion-input:hover,
+.ligas-form-container ion-textarea:hover,
+.ligas-form-container ion-select:hover {
+  background: transparent !important;
+  border: none !important;
+  transform: none !important;
+  box-shadow: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+/* ELIMINAR HOVER DEL CALENDARIO - IGUAL QUE EN RESERVAS */
+.ligas-modal-container ion-datetime:hover,
+.ligas-modal-container ion-datetime-button:hover,
+.ligas-form-container ion-datetime:hover,
+.ligas-form-container ion-datetime-button:hover {
+  background: transparent !important;
+  border: none !important;
+  transform: none !important;
+  box-shadow: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+/* ELIMINAR COMPLETAMENTE CUALQUIER VERDE/HOVER EN CALENDARIO */
+.ligas-modal-container .calendar-day:hover,
+.ligas-form-container .calendar-day:hover {
+  background-color: var(--ion-text-color-step-50) !important;
+  border: none !important;
+}
+
+.ligas-modal-container .calendar-day:focus,
+.ligas-modal-container .calendar-day:active,
+.ligas-modal-container .calendar-day:focus-visible,
+.ligas-modal-container .calendar-day:active:not(.calendar-day-active),
+.ligas-modal-container .calendar-day:hover:active,
+.ligas-form-container .calendar-day:focus,
+.ligas-form-container .calendar-day:active,
+.ligas-form-container .calendar-day:focus-visible,
+.ligas-form-container .calendar-day:active:not(.calendar-day-active),
+.ligas-form-container .calendar-day:hover:active {
+  background-color: var(--ion-text-color-step-100) !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  color: var(--ion-text-color) !important;
+}
+
+/* Grid del formulario */
+.ligas-form-container ion-grid {
+  padding: 0;
+  margin: 0;
+}
+
+.ligas-form-container ion-row {
+  margin: 0;
+}
+
+.ligas-form-container ion-col {
+  padding: 0 0.5rem;
+}
+
+.ligas-form-container ion-col:first-child {
+  padding-left: 0;
+}
+
+.ligas-form-container ion-col:last-child {
+  padding-right: 0;
+}
+
+/* Acciones del formulario */
+.ligas-form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--borde-principal);
+}
+
+.ligas-form-actions ion-button {
+  --border-radius: 8px;
+  font-weight: 600;
+  height: 44px;
+  min-width: 120px;
+}
+
+.ligas-form-actions ion-button[fill="clear"] {
+  --color: var(--texto-secundario);
+  --background: transparent;
+}
+
+.ligas-form-actions ion-button[color="primary"] {
+  --background: var(--color-primario);
+  --color: var(--color-primario-contraste);
+}
+
+/* ELIMINAR TODAS LAS ANIMACIONES GLOBALMENTE */
+.ligas-container *,
+.ligas-modal-container *,
+.ligas-form-container * {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Solo mantener animaciones esenciales de cards */
+.liga-card {
+  transition: all 0.2s ease;
+}
+
+.liga-card:hover {
+  transition: all 0.2s ease;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+  .ligas-content {
+    padding: 1.5rem 1rem;
+    max-width: 1200px;
   }
   
-  .ion-palette-dark .ligas-container {
-    background: var(--color-fondo, #121212);
+  .ligas-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+  
+  .liga-info-grid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  
+  .page-header h1 {
+    font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .ligas-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .liga-info-grid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .ligas-content {
+    padding: 1rem 0.75rem;
+  }
+  
+  .ligas-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
   
   .page-header {
-    padding: 0.75rem 0; /* REDUCIDO */
-    margin-bottom: 1.5rem; /* REDUCIDO */
+    margin-bottom: 2rem;
   }
   
   .page-header h1 {
-    font-size: 1.8rem; /* REDUCIDO */
+    font-size: 2rem;
   }
   
-  .info-grid {
-    grid-template-columns: 1fr; /* Una columna en móvil */
+  .page-header h1::after {
+    width: 80px;
   }
   
-  .card-actions-compact {
-    flex-direction: column;
-  }
-  
-  .card-actions-compact ion-button {
-    width: 100%;
-    margin: 0;
-  }
-  
-  .modal-content,
-  .modal-footer {
-    padding: 1.5rem;
-  }
-  
-  .scoring-section {
+  .liga-card ion-card-header,
+  .liga-card ion-card-content {
     padding: 1rem;
   }
   
+  .card-actions {
+    flex-direction: column;
+  }
+  
+  .card-actions ion-button {
+    width: 100%;
+    margin: 0.25rem 0;
+  }
+  
+  .ligas-fab {
+    bottom: 1.5rem !important;
+    right: 1.5rem !important;
+  }
+  
+  .ligas-fab ion-fab-button {
+    width: 56px;
+    height: 56px;
+  }
+  
+  /* Modal responsive */
+  .ligas-modal-overlay {
+    padding: 0.5rem;
+    padding-top: 3rem;
+  }
+  
+  .ligas-modal-container {
+    max-height: 92vh;
+    margin: 0.5rem;
+  }
+  
+  .ligas-modal-header {
+    padding: 1rem;
+  }
+  
+  .ligas-modal-header h2 {
+    font-size: 1.3rem;
+  }
+  
+  .ligas-form-container {
+    padding: 1rem;
+  }
+  
+  .ligas-form-container ion-col {
+    padding: 0 0.25rem;
+  }
+  
+  .ligas-form-actions {
+    flex-direction: column-reverse;
+    gap: 0.75rem;
+  }
+  
+  .ligas-form-actions ion-button {
+    width: 100%;
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .ligas-content {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .page-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .page-header h1::after {
+    width: 60px;
+    height: 3px;
+  }
+  
+  .liga-image {
+    height: 160px;
+  }
+  
+  .card-header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .info-row {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.6rem;
+  }
+  
   .empty-state {
-    padding: 2rem 1rem;
+    padding: 2.5rem 1rem;
   }
   
   .empty-icon {
-    font-size: 3rem; /* REDUCIDO */
-  }
-}
-
-@media (max-width: 576px) {
-  .page-header h1 {
-    font-size: 1.6rem; /* REDUCIDO para móviles pequeños */
+    font-size: 3.5rem;
   }
   
-  .liga-card-compact ion-card-header,
-  .liga-card-compact ion-card-content {
-    padding: 0.75rem; /* REDUCIDO en móviles pequeños */
+  .empty-state h2 {
+    font-size: 1.25rem;
   }
   
-  .info-item {
-    font-size: 0.8rem; /* REDUCIDO */
-    padding: 0.3rem; /* REDUCIDO */
+  /* Modal en móviles pequeños */
+  .ligas-modal-overlay {
+    padding: 0.25rem;
+    padding-top: 2rem;
   }
   
-  .card-actions-compact ion-button {
-    font-size: 0.75rem; /* REDUCIDO */
+  .ligas-modal-container {
+    margin: 0.25rem;
+    border-radius: 12px;
+  }
+  
+  .ligas-modal-header {
+    padding: 0.75rem;
+  }
+  
+  .ligas-modal-header h2 {
+    font-size: 1.2rem;
+  }
+  
+  .ligas-form-container {
+    padding: 0.75rem;
   }
 }
-
-/* Tema oscuro */
-.ion-palette-dark body,
-.ion-palette-dark ion-app, 
-.ion-palette-dark ion-router-outlet, 
-.ion-palette-dark ion-content {
-  background: transparent !important;
-}
-
-.ion-palette-dark .ligas-container {
-  background: var(--color-fondo, #121212);
-}
-
-.ion-palette-dark .liga-card-compact {
-  background: var(--color-panel);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-.ion-palette-dark .liga-card-compact:hover {
-  border-color: rgba(161, 96, 251, 0.4);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-}
-
-.ion-palette-dark .info-row-compact:hover,
-.ion-palette-dark .info-item:hover {
-  background: rgba(161, 96, 251, 0.1);
-}
-
-.ion-palette-dark .descripcion-compact,
-.ion-palette-dark .premio-compact,
-.ion-palette-dark .scoring-section {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-.ion-palette-dark .empty-state {
-  background: var(--color-panel);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-.ion-palette-dark .modal-content,
-.ion-palette-dark .modal-footer {
-  background: var(--color-secundario);
-}
-
-.ion-palette-dark .modal-content ion-item,
-.ion-palette-dark .scoring-section ion-item {
-  --background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-/* Animaciones sutiles REDUCIDAS */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px); /* REDUCIDO: de 20px a 10px */
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.liga-card-compact {
-  animation: fadeInUp 0.4s ease-out; /* REDUCIDO: de 0.5s a 0.4s */
-}
-
-.liga-card-compact:nth-child(1) { animation-delay: 0.05s; } /* REDUCIDO */
-.liga-card-compact:nth-child(2) { animation-delay: 0.1s; } /* REDUCIDO */
-.liga-card-compact:nth-child(3) { animation-delay: 0.15s; } /* REDUCIDO */
-.liga-card-compact:nth-child(4) { animation-delay: 0.2s; } /* REDUCIDO */
-.liga-card-compact:nth-child(5) { animation-delay: 0.25s; } /* REDUCIDO */
-.liga-card-compact:nth-child(6) { animation-delay: 0.3s; } /* REDUCIDO */

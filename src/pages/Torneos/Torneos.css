@@ -1,4 +1,4 @@
-/* ===== TORNEOS CSS - SIN BORDES INTERNOS NI ANIMACIONES ===== */
+/* ===== TORNEOS CSS - CORRECCIONES FINALES ===== */
 
 /* Contenedor principal */
 .torneos-container {
@@ -13,6 +13,13 @@
   margin: 0 auto;
   padding: 2rem 1.5rem;
   position: relative;
+}
+
+/* Asegurar márgenes consistentes */
+@media (min-width: 1400px) {
+  .torneos-content {
+    padding: 2rem 2rem;
+  }
 }
 
 /* Header de página */
@@ -50,10 +57,10 @@
   font-weight: 400;
 }
 
-/* Grid de torneos */
+/* Grid de torneos - 3 columnas */
 .torneos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
@@ -124,39 +131,65 @@
   flex-direction: column;
 }
 
-/* Info del torneo */
+/* ===== INFO DEL TORNEO - MEJORADA Y ORGANIZADA ===== */
 .torneo-info {
   margin: 1rem 0;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Información organizada en grid para mejor presentación */
+.torneo-info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
 }
 
 .info-row {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.75rem;
-  font-size: 0.9rem;
+  justify-content: flex-start;
+  gap: 0.6rem;
+  font-size: 0.85rem;
   color: var(--texto-secundario);
-  padding: 0.5rem 0.75rem;
+  padding: 0.6rem 0.8rem;
   border-radius: 8px;
-  border-left: 3px solid transparent;
+  background: var(--fondo-aplicacion);
+  border: 1px solid var(--borde-principal);
+  text-align: left;
+  transition: all 0.2s ease;
+  min-height: 40px;
 }
 
 .info-row:hover {
   background: var(--hover-card);
-  border-left-color: var(--color-primario);
+  border-color: var(--color-primario);
   color: var(--texto-principal);
+  transform: translateY(-1px);
 }
 
 .info-row ion-icon {
   color: var(--color-primario);
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   flex-shrink: 0;
+  min-width: 18px;
 }
 
 .info-row:hover ion-icon {
   transform: scale(1.1);
 }
+
+.info-row span {
+  text-align: left;
+  flex: 1;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* ELIMINAR SECCIÓN ESPECIAL - USAR MISMA ESTRUCTURA PARA TODO */
 
 /* Precio destacado */
 .precio {
@@ -184,9 +217,10 @@
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  text-align: left;
 }
 
-/* Acciones del card */
+/* ===== BOTONES SIN BORDES - SOLO TEXTO E ICONOS ===== */
 .card-actions {
   display: flex;
   gap: 0.5rem;
@@ -198,16 +232,57 @@
 
 .card-actions ion-button {
   --border-radius: 8px;
-  font-weight: 500;
-  font-size: 0.85rem;
-  --padding-start: 1rem;
-  --padding-end: 1rem;
+  --background: transparent;
+  font-weight: 600;
+  font-size: 0.8rem;
+  --padding-start: 0.5rem;
+  --padding-end: 0.5rem;
   flex: 1;
   min-width: max-content;
+  height: 36px;
+  transition: all 0.2s ease;
+  border: none !important;
+  box-shadow: none !important;
 }
 
+/* BOTÓN VER DETALLES - PRIMARIO */
+.card-actions ion-button[routerLink] {
+  --color: var(--color-primario);
+}
+
+.card-actions ion-button[routerLink]:hover {
+  --color: var(--color-primario);
+  transform: translateY(-1px);
+  opacity: 0.8;
+}
+
+/* BOTÓN EDITAR - AMARILLO */
+.card-actions ion-button[color="medium"] {
+  --color: #f39c12;
+}
+
+.card-actions ion-button[color="medium"]:hover {
+  --color: #f39c12;
+  transform: translateY(-1px);
+  opacity: 0.8;
+}
+
+/* BOTÓN ELIMINAR - ROJO */
+.card-actions ion-button[color="danger"] {
+  --color: #e74c3c;
+}
+
+.card-actions ion-button[color="danger"]:hover {
+  --color: #e74c3c;
+  transform: translateY(-1px);
+  opacity: 0.8;
+}
+
+/* Quitar todos los bordes y fondos */
 .card-actions ion-button:hover {
-  transform: translateY(-2px);
+  --background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 /* Estado vacío */
@@ -393,9 +468,9 @@ ion-chip[color="danger"] {
   background: var(--fondo-card);
 }
 
-/* ===== CAMPOS SIN BORDES INTERNOS NI ANIMACIONES ===== */
+/* ===== CAMPOS CON BORDE ÚNICO ===== */
 .torneos-form-container ion-item {
-  --background: transparent !important;
+  --background: var(--fondo-input) !important;
   --border-radius: 8px;
   --color: var(--texto-principal);
   --padding-start: 0 !important;
@@ -459,36 +534,56 @@ ion-chip[color="danger"] {
   animation: none !important;
 }
 
-/* INPUTS SIN BORDES */
+/* INPUTS Y SELECTS SIN BORDES INTERNOS - SOLO EL DEL CONTENEDOR */
 .torneos-form-container ion-input,
 .torneos-form-container ion-textarea,
-.torneos-form-container ion-select {
+.torneos-form-container ion-select,
+.torneos-form-container ion-datetime {
   --color: var(--texto-principal);
   --placeholder-color: var(--texto-placeholder);
   --background: transparent !important;
   --border-width: 0 !important;
   --border-color: transparent !important;
+  --inner-border-width: 0 !important;
   border: none !important;
   background: transparent !important;
   transition: none !important;
   animation: none !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
-/* ELIMINAR BORDES DE PSEUDO-ELEMENTOS */
+/* ELIMINAR BORDES DE PSEUDO-ELEMENTOS - SOLO USAR EL DEL CONTENEDOR */
 .torneos-form-container ion-input::part(native),
 .torneos-form-container ion-textarea::part(native),
-.torneos-form-container ion-select::part(native) {
+.torneos-form-container ion-select::part(native),
+.torneos-form-container ion-select::part(container),
+.torneos-form-container ion-select::part(text),
+.torneos-form-container ion-select::part(icon),
+.torneos-form-container ion-datetime::part(native) {
   border: none !important;
   background: transparent !important;
   box-shadow: none !important;
   outline: none !important;
   transition: none !important;
+  animation: none !important;
 }
 
-/* SIN HOVER EN CAMPOS */
+/* ===== SIN HOVER EN CAMPOS Y CALENDARIO - PATRÓN DE RESERVAS ===== */
 .torneos-form-container ion-input:hover,
 .torneos-form-container ion-textarea:hover,
-.torneos-form-container ion-select:hover,
+.torneos-form-container ion-select:hover {
+  background: transparent !important;
+  border: none !important;
+  transform: none !important;
+  box-shadow: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+/* ELIMINAR HOVER DEL CALENDARIO - IGUAL QUE EN RESERVAS */
+.torneos-modal-container ion-datetime:hover,
+.torneos-modal-container ion-datetime-button:hover,
 .torneos-form-container ion-datetime:hover,
 .torneos-form-container ion-datetime-button:hover {
   background: transparent !important;
@@ -497,6 +592,30 @@ ion-chip[color="danger"] {
   box-shadow: none !important;
   transition: none !important;
   animation: none !important;
+}
+
+/* ELIMINAR COMPLETAMENTE CUALQUIER VERDE/HOVER EN CALENDARIO */
+.torneos-modal-container .calendar-day:hover,
+.torneos-form-container .calendar-day:hover {
+  background-color: var(--ion-text-color-step-50) !important;
+  border: none !important;
+}
+
+.torneos-modal-container .calendar-day:focus,
+.torneos-modal-container .calendar-day:active,
+.torneos-modal-container .calendar-day:focus-visible,
+.torneos-modal-container .calendar-day:active:not(.calendar-day-active),
+.torneos-modal-container .calendar-day:hover:active,
+.torneos-form-container .calendar-day:focus,
+.torneos-form-container .calendar-day:active,
+.torneos-form-container .calendar-day:focus-visible,
+.torneos-form-container .calendar-day:active:not(.calendar-day-active),
+.torneos-form-container .calendar-day:hover:active {
+  background-color: var(--ion-text-color-step-100) !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  color: var(--ion-text-color) !important;
 }
 
 /* Grid del formulario */
@@ -567,18 +686,32 @@ ion-chip[color="danger"] {
 }
 
 /* Responsive design */
-@media (max-width: 1024px) {
+@media (max-width: 1400px) {
   .torneos-content {
     padding: 1.5rem 1rem;
   }
   
   .torneos-grid {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.25rem;
   }
   
   .page-header h1 {
     font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .torneos-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .torneos-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
   }
 }
 

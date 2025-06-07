@@ -31,7 +31,8 @@ import {
   eyeOutline,
   createOutline,
   trashOutline,
-  closeOutline
+  closeOutline,
+  peopleOutline
 } from 'ionicons/icons';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -308,22 +309,32 @@ const Torneos: React.FC = () => {
 
                 <IonCardContent>
                   <div className="torneo-info">
-                    <div className="info-row">
-                      <IonIcon icon={calendarOutline} />
-                      <span>{formatDate(torneo.fecha_inicio)} - {formatDate(torneo.fecha_fin)}</span>
-                    </div>
-                    
-                    <div className="info-row">
-                      <IonIcon icon={trophyOutline} />
-                      <span>{torneo.tipo}</span>
-                    </div>
-
-                    {torneo.precio_inscripcion && (
+                    {/* Toda la información con el mismo formato */}
+                    <div className="torneo-info-grid">
                       <div className="info-row">
-                        <IonIcon icon={locationOutline} />
-                        <span className="precio">{formatPrecio(torneo.precio_inscripcion)}</span>
+                        <IonIcon icon={calendarOutline} />
+                        <span>{formatDate(torneo.fecha_inicio)} - {formatDate(torneo.fecha_fin)}</span>
                       </div>
-                    )}
+                      
+                      <div className="info-row">
+                        <IonIcon icon={trophyOutline} />
+                        <span>{torneo.tipo}</span>
+                      </div>
+
+                      {torneo.precio_inscripcion && (
+                        <div className="info-row">
+                          <IonIcon icon={locationOutline} />
+                          <span>{formatPrecio(torneo.precio_inscripcion)}</span>
+                        </div>
+                      )}
+
+                      {torneo.max_parejas && (
+                        <div className="info-row">
+                          <IonIcon icon={peopleOutline} />
+                          <span>Máx. {torneo.max_parejas} parejas</span>
+                        </div>
+                      )}
+                    </div>
 
                     {torneo.descripcion && (
                       <p className="descripcion">{torneo.descripcion}</p>
