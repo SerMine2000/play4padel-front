@@ -48,7 +48,9 @@ const Torneos: React.FC = () => {
   const [torneos, setTorneos] = useState<Torneo[]>([]);
   const [loading, setLoading] = useState(true);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedTorneo, setSelectedTorneo] = useState<Torneo | null>(null);
+  const [editingTorneo, setEditingTorneo] = useState<Torneo | null>(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
@@ -131,6 +133,74 @@ const Torneos: React.FC = () => {
     } catch (error) {
       console.error('Error al crear torneo:', error);
       setToastMessage('Error al crear el torneo');
+      setShowToast(true);
+    }
+  };
+
+  const handleEditTorneo = (torneo: Torneo) => {
+    setEditingTorneo(torneo);
+    setFormData({
+      nombre: torneo.nombre || '',
+      id_club: torneo.id_club?.toString() || '',
+      fecha_inicio: torneo.fecha_inicio || '',
+      fecha_fin: torneo.fecha_fin || '',
+      tipo: torneo.tipo || '',
+      descripcion: torneo.descripcion || '',
+      precio_inscripcion: torneo.precio_inscripcion?.toString() || '',
+      max_parejas: torneo.max_parejas?.toString() || ''
+    });
+    setIsEditModalOpen(true);
+  };
+
+  const handleUpdateTorneo = async () => {
+    try {
+      if (!editingTorneo) return;
+      
+      if (!formData.nombre || !formData.id_club || !formData.fecha_inicio || !formData.fecha_fin || !formData.tipo) {
+        setToastMessage('Por favor completa todos los campos obligatorios');
+        setShowToast(true);
+        return;
+      }
+
+      const torneoData = {
+        ...formData,
+        id_club: parseInt(formData.id_club),
+        precio_inscripcion: parseFloat(formData.precio_inscripcion) || 0,
+        max_parejas: formData.max_parejas ? parseInt(formData.max_parejas) : undefined,
+      };
+
+      const response = await ApiService.put(`/torneos/${editingTorneo.id}`, torneoData);
+      
+      if (response) {
+        setToastMessage('Torneo actualizado exitosamente');
+        setShowToast(true);
+        setIsEditModalOpen(false);
+        setEditingTorneo(null);
+        resetForm();
+        loadTorneos();
+      }
+    } catch (error) {
+      console.error('Error al actualizar torneo:', error);
+      setToastMessage('Error al actualizar el torneo');
+      setShowToast(true);
+    }
+  };
+
+  const handleDeleteTorneo = async () => {
+    try {
+      if (torneoToDelete) {
+        const response = await ApiService.delete(`/torneos/${torneoToDelete.id}`);
+        if (response) {
+          setToastMessage('Torneo eliminado exitosamente');
+          setShowToast(true);
+          setShowDeleteAlert(false);
+          setTorneoToDelete(null);
+          loadTorneos();
+        }
+      }
+    } catch (error) {
+      console.error('Error al eliminar torneo:', error);
+      setToastMessage('Error al eliminar el torneo');
       setShowToast(true);
     }
   };
@@ -278,7 +348,12 @@ const Torneos: React.FC = () => {
                       
                       {canManage && (
                         <>
-                          <IonButton fill="clear" size="small" color="medium">
+                          <IonButton 
+                            fill="clear" 
+                            size="small" 
+                            color="medium"
+                            onClick={() => handleEditTorneo(torneo)}
+                          >
                             <IonIcon icon={createOutline} slot="start" />
                             Editar
                           </IonButton>
@@ -417,6 +492,109 @@ const Torneos: React.FC = () => {
         </div>
       </IonModal>
 
+      {/* Modal para editar torneo */}
+      <IonModal isOpen={isEditModalOpen} onDidDismiss={() => setIsEditModalOpen(false)}>
+        <div className="modal-header">
+          <h2>Editar Torneo</h2>
+          <IonButton fill="clear" onClick={() => setIsEditModalOpen(false)}>
+            Cancelar
+          </IonButton>
+        </div>
+
+        <div className="modal-content">
+          <IonItem>
+            <IonLabel position="stacked">Nombre del Torneo *</IonLabel>
+            <IonInput
+              value={formData.nombre}
+              onIonInput={(e) => setFormData({ ...formData, nombre: e.detail.value! })}
+              placeholder="Ej: Torneo de Verano 2024"
+            />
+          </IonItem>
+
+          <IonItem>
+            <IonLabel position="stacked">Club *</IonLabel>
+            <IonSelect
+              value={formData.id_club}
+              onIonChange={(e) => setFormData({ ...formData, id_club: e.detail.value })}
+              placeholder="Selecciona un club"
+            >
+              {clubes.map((club) => (
+                <IonSelectOption key={club.id} value={club.id}>
+                  {club.nombre}
+                </IonSelectOption>
+              ))}
+            </IonSelect>
+          </IonItem>
+
+          <IonItem>
+            <IonLabel position="stacked">Fecha de Inicio *</IonLabel>
+            <IonDatetime
+              value={formData.fecha_inicio}
+              onIonChange={(e) => setFormData({ ...formData, fecha_inicio: e.detail.value as string })}
+              presentation="date"
+            />
+          </IonItem>
+
+          <IonItem>
+            <IonLabel position="stacked">Fecha de Fin *</IonLabel>
+            <IonDatetime
+              value={formData.fecha_fin}
+              onIonChange={(e) => setFormData({ ...formData, fecha_fin: e.detail.value as string })}
+              presentation="date"
+            />
+          </IonItem>
+
+          <IonItem>
+            <IonLabel position="stacked">Tipo de Torneo *</IonLabel>
+            <IonSelect
+              value={formData.tipo}
+              onIonChange={(e) => setFormData({ ...formData, tipo: e.detail.value })}
+              placeholder="Selecciona un tipo"
+            >
+              <IonSelectOption value="eliminacion_directa">Eliminación Directa</IonSelectOption>
+              <IonSelectOption value="round_robin">Round Robin</IonSelectOption>
+              <IonSelectOption value="mixto">Mixto</IonSelectOption>
+            </IonSelect>
+          </IonItem>
+
+          <IonItem>
+            <IonLabel position="stacked">Descripción</IonLabel>
+            <IonTextarea
+              value={formData.descripcion}
+              onIonInput={(e) => setFormData({ ...formData, descripcion: e.detail.value! })}
+              placeholder="Descripción del torneo..."
+              rows={3}
+            />
+          </IonItem>
+
+          <IonItem>
+            <IonLabel position="stacked">Precio de Inscripción</IonLabel>
+            <IonInput
+              type="number"
+              value={formData.precio_inscripcion}
+              onIonInput={(e) => setFormData({ ...formData, precio_inscripcion: e.detail.value! })}
+              placeholder="0.00"
+            />
+          </IonItem>
+
+          <IonItem>
+            <IonLabel position="stacked">Máximo de Parejas</IonLabel>
+            <IonInput
+              type="number"
+              value={formData.max_parejas}
+              onIonInput={(e) => setFormData({ ...formData, max_parejas: e.detail.value! })}
+              placeholder="Ej: 16"
+            />
+          </IonItem>
+        </div>
+
+        <div className="modal-footer">
+          <IonButton expand="block" onClick={handleUpdateTorneo}>
+            Actualizar Torneo
+          </IonButton>
+        </div>
+      </IonModal>
+
       {/* Alert para confirmar eliminación */}
       <IonAlert
         isOpen={showDeleteAlert}
@@ -431,11 +609,7 @@ const Torneos: React.FC = () => {
           {
             text: 'Eliminar',
             role: 'destructive',
-            handler: () => {
-              // Aquí iría la lógica de eliminación
-              setToastMessage('Función de eliminación no implementada aún');
-              setShowToast(true);
-            }
+            handler: handleDeleteTorneo
           }
         ]}
       />

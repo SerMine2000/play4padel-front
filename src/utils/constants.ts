@@ -1,7 +1,7 @@
 // src/utils/constants.ts
 
-export const API_URL = 'https://backend-1-uvqp.onrender.com';
-// export const API_URL = 'http://localhost:5000';
+// export const API_URL = 'https://backend-1-uvqp.onrender.com';
+export const API_URL = 'http://localhost:5000';
 
 export const API_ENDPOINTS = {
   LOGIN: '/login',
