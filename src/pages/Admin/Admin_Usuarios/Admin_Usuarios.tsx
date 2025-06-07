@@ -493,33 +493,49 @@ const AdminManageUsers: React.FC = () => {
                             </div>
                           </IonLabel>
                         
-                          <div className="acciones-usuario" slot="end" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.3rem' }}>
-                            <div style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap' }}>
-                              <IonChip color={getRoleColor(userItem.id_rol)}>
+                          <div className="acciones-usuario" slot="end">
+                            <div>
+                              <IonButton 
+                                fill="clear" 
+                                size="small" 
+                                onClick={() => handleEditUser(userItem)}
+                                data-tooltip="Editar"
+                              >
+                                <IonIcon icon={createOutline} />
+                              </IonButton>
+                              <IonButton 
+                                fill="clear" 
+                                size="small" 
+                                onClick={() => handleChangeRole(userItem)}
+                                data-tooltip="Cambiar rol"
+                              >
+                                <IonIcon icon={shieldCheckmarkOutline} />
+                              </IonButton>
+                              <IonButton 
+                                fill="clear" 
+                                size="small"
+                                onClick={() => handleToggleStatus(userItem)}
+                                data-tooltip={userItem.activo ? 'Desactivar' : 'Activar'}
+                              >
+                                <IonIcon icon={userItem.activo ? banOutline : checkmarkCircleOutline} />
+                              </IonButton>
+                              <IonButton 
+                                fill="clear" 
+                                size="small" 
+                                color="danger" 
+                                onClick={() => handleDelete(userItem)}
+                                data-tooltip="Eliminar"
+                              >
+                                <IonIcon icon={trashOutline} />
+                              </IonButton>
+                            </div>
+                            <div>
+                              <IonChip data-type="role">
                                 {userItem.rol?.nombre || getRoleName(userItem.id_rol)}
                               </IonChip>
                               <IonChip color={userItem.activo ? 'success' : 'danger'}>
                                 {userItem.activo ? 'Activo' : 'Inactivo'}
                               </IonChip>
-                            </div>
-                            <div style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap' }}>
-                              <IonButton fill="clear" size="small" onClick={() => handleEditUser(userItem)}>
-                                <IonIcon icon={createOutline} slot="start" />
-                              </IonButton>
-                              <IonButton fill="clear" size="small" onClick={() => handleChangeRole(userItem)}>
-                                <IonIcon icon={shieldCheckmarkOutline} slot="start" />
-                              </IonButton>
-                              <IonButton 
-                                fill="clear" 
-                                size="small"
-                                color={userItem.activo ? 'warning' : 'success'} 
-                                onClick={() => handleToggleStatus(userItem)}
-                              >
-                                <IonIcon icon={userItem.activo ? banOutline : checkmarkCircleOutline} slot="start" />
-                              </IonButton>
-                              <IonButton fill="clear" size="small" color="danger" onClick={() => handleDelete(userItem)}>
-                                <IonIcon icon={trashOutline} slot="start" />
-                              </IonButton>
                             </div>
                           </div>
                         </IonItem>

@@ -18,6 +18,21 @@
   background-color: var(--ion-background-color);
 }
 
+/* Fondo específico para la página de gestión de usuarios */
+.manage-users-page {
+  --background: var(--fondo-aplicacion) !important;
+  background: var(--fondo-aplicacion) !important;
+  background-color: var(--fondo-aplicacion) !important;
+  background-image: none !important;
+}
+
+.manage-users-page ion-content {
+  --background: var(--fondo-aplicacion) !important;
+  background: var(--fondo-aplicacion) !important;
+  background-color: var(--fondo-aplicacion) !important;
+  background-image: none !important;
+}
+
 /* Ajustes en avatar */
 .avatar-gestion-usuarios {
   width: 60px !important;

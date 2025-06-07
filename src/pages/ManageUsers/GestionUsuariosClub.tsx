@@ -241,7 +241,7 @@ const GestionUsuariosClub: React.FC = () => {
   
 
   return (
-    <IonPage>
+    <IonPage className="manage-users-page">
       <IonContent>
         <IonRefresher slot="fixed" onIonRefresh={e => manejarActualizacion(e)}>
           <IonRefresherContent />

@@ -82,9 +82,14 @@
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
-  background: var(--color-panel, rgba(0, 0, 0, 0.05));
+  background: transparent;
   border-radius: 8px;
   border: 1px solid var(--ion-border-color, rgba(0, 0, 0, 0.1));
+  transition: background-color 0.2s ease;
+}
+
+.status-item:hover {
+  background: var(--color-panel, rgba(0, 0, 0, 0.03));
 }
 
 .status-item ion-icon {
@@ -337,8 +342,12 @@ ion-card ion-item ion-label p {
 }
 
 .ion-palette-dark .status-item {
-  background: var(--color-secundario, rgba(255, 255, 255, 0.05));
+  background: transparent;
   border-color: var(--ion-border-color, rgba(255, 255, 255, 0.1));
+}
+
+.ion-palette-dark .status-item:hover {
+  background: var(--color-secundario, rgba(255, 255, 255, 0.05));
 }
 
 .ion-palette-dark .status-item span {
