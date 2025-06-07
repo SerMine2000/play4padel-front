@@ -61,7 +61,7 @@ import usersService, { User, UserFormData } from '../../../services/admin/user.s
 import clubsService from '../../../services/admin/club.service';
 import './Admin_Usuarios.css';
 
-const AdminManageAllUsers: React.FC = () => {
+const AdminManageUsers: React.FC = () => {
   const { user } = useAuth();
   const [users, setUsers] = useState<User[]>([]);
   const [clubs, setClubs] = useState<any[]>([]);
@@ -450,82 +450,80 @@ const AdminManageAllUsers: React.FC = () => {
                     ) : (
                       <IonList>
                         {filteredUsers.map(userItem => (
-                          <IonItemSliding key={userItem.id}>
-                            <IonItem>
-                              <IonAvatar slot="start" style={{ 
-                                backgroundColor: getColorParaAvatar(userItem.id), 
-                                display: 'flex', 
-                                alignItems: 'center', 
-                                justifyContent: 'center', 
-                                fontWeight: 'bold', 
-                                color: 'white' 
-                              }}>
-                                {userItem.avatar_url ? 
-                                  <img src={userItem.avatar_url} alt={userItem.nombre} /> :
-                                  <span>{userItem.nombre.charAt(0).toUpperCase()}</span>
-                                }
-                              </IonAvatar>
-
-                              <IonLabel>
-                                <div className="user-info">
-                                  <h2>{userItem.nombre} {userItem.apellidos}</h2>
-                                  <div className="user-details">
-                                    <div className="detail-row">
-                                      <IonIcon icon={mailOutline} />
-                                      <span>{userItem.email}</span>
-                                    </div>
-                                    {userItem.telefono && (
-                                      <div className="detail-row">
-                                        <IonIcon icon={callOutline} />
-                                        <span>{userItem.telefono}</span>
-                                      </div>
-                                    )}
-                                    {userItem.id_club_socio && (
-                                      <div className="detail-row">
-                                        <IonIcon icon={businessOutline} />
-                                        <span>{getClubName(userItem.id_club_socio)}</span>
-                                      </div>
-                                    )}
-                                    <div className="user-stats">
-                                      <span>Registrado: {formatDate(userItem.fecha_registro)}</span>
-                                      <span>Última conexión: {formatLastConnection(userItem.ultima_conexion)}</span>
-                                    </div>
-                                  </div>
+                          <IonItem key={userItem.id} lines="full">
+                          <IonAvatar slot="start" style={{ 
+                            backgroundColor: getColorParaAvatar(userItem.id), 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center', 
+                            fontWeight: 'bold', 
+                            color: 'white' 
+                          }}>
+                            {userItem.avatar_url ? 
+                              <img src={userItem.avatar_url} alt={userItem.nombre} /> :
+                              <span>{userItem.nombre.charAt(0).toUpperCase()}</span>
+                            }
+                          </IonAvatar>
+                        
+                          <IonLabel>
+                            <div className="user-info">
+                              <h2>{userItem.nombre} {userItem.apellidos}</h2>
+                              <div className="user-details">
+                                <div className="detail-row">
+                                  <IonIcon icon={mailOutline} />
+                                  <span>{userItem.email}</span>
                                 </div>
-                              </IonLabel>
-
-                              <div className="user-badges" slot="end">
-                                <IonChip color={getRoleColor(userItem.id_rol)}>
-                                  {userItem.rol?.nombre || getRoleName(userItem.id_rol)}
-                                </IonChip>
-                                <IonChip color={userItem.activo ? 'success' : 'danger'}>
-                                  {userItem.activo ? 'Activo' : 'Inactivo'}
-                                </IonChip>
+                                {userItem.telefono && (
+                                  <div className="detail-row">
+                                    <IonIcon icon={callOutline} />
+                                    <span>{userItem.telefono}</span>
+                                  </div>
+                                )}
+                                {userItem.id_club_socio && (
+                                  <div className="detail-row">
+                                    <IonIcon icon={businessOutline} />
+                                    <span>{getClubName(userItem.id_club_socio)}</span>
+                                  </div>
+                                )}
+                                <div className="user-stats">
+                                  <span>Registrado: {formatDate(userItem.fecha_registro)}</span>
+                                  <span>Última conexión: {formatLastConnection(userItem.ultima_conexion)}</span>
+                                </div>
                               </div>
-                            </IonItem>
-
-                            <IonItemOptions side="end">
-                              <IonItemOption color="secondary" onClick={() => handleEditUser(userItem)}>
-                                <IonIcon icon={createOutline} />
-                                Editar
-                              </IonItemOption>
-                              <IonItemOption color="primary" onClick={() => handleChangeRole(userItem)}>
-                                <IonIcon icon={shieldCheckmarkOutline} />
-                                Rol
-                              </IonItemOption>
-                              <IonItemOption 
+                            </div>
+                          </IonLabel>
+                        
+                          <div className="acciones-usuario" slot="end" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.3rem' }}>
+                            <div style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap' }}>
+                              <IonChip color={getRoleColor(userItem.id_rol)}>
+                                {userItem.rol?.nombre || getRoleName(userItem.id_rol)}
+                              </IonChip>
+                              <IonChip color={userItem.activo ? 'success' : 'danger'}>
+                                {userItem.activo ? 'Activo' : 'Inactivo'}
+                              </IonChip>
+                            </div>
+                            <div style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap' }}>
+                              <IonButton fill="clear" size="small" onClick={() => handleEditUser(userItem)}>
+                                <IonIcon icon={createOutline} slot="start" />
+                              </IonButton>
+                              <IonButton fill="clear" size="small" onClick={() => handleChangeRole(userItem)}>
+                                <IonIcon icon={shieldCheckmarkOutline} slot="start" />
+                              </IonButton>
+                              <IonButton 
+                                fill="clear" 
+                                size="small"
                                 color={userItem.activo ? 'warning' : 'success'} 
                                 onClick={() => handleToggleStatus(userItem)}
                               >
-                                <IonIcon icon={userItem.activo ? banOutline : checkmarkCircleOutline} />
-                                {userItem.activo ? 'Desactivar' : 'Activar'}
-                              </IonItemOption>
-                              <IonItemOption color="danger" onClick={() => handleDelete(userItem)}>
-                                <IonIcon icon={trashOutline} />
-                                Eliminar
-                              </IonItemOption>
-                            </IonItemOptions>
-                          </IonItemSliding>
+                                <IonIcon icon={userItem.activo ? banOutline : checkmarkCircleOutline} slot="start" />
+                              </IonButton>
+                              <IonButton fill="clear" size="small" color="danger" onClick={() => handleDelete(userItem)}>
+                                <IonIcon icon={trashOutline} slot="start" />
+                              </IonButton>
+                            </div>
+                          </div>
+                        </IonItem>
+                        
                         ))}
                       </IonList>
                     )}
@@ -844,4 +842,4 @@ const AdminManageAllUsers: React.FC = () => {
   );
 };
 
-export default AdminManageAllUsers;
+export default AdminManageUsers;

@@ -1,4 +1,3 @@
-/* variables.css - Sistema de colores reorganizado con variables lógicas en castellano */
 @import '@ionic/react/css/palettes/dark.class.css';
 
 /* ===== MODO CLARO (por defecto) ===== */
@@ -6,7 +5,7 @@
   /* COLORES PRINCIPALES */
   --color-primario: #6129f0;
   --color-primario-contraste: #ffffff;
-  --color-secundario: #00FF66;
+  --color-secundario: #059669;
   
   /* FONDOS PRINCIPALES */
   --fondo-aplicacion: #f2f5ff;
@@ -27,19 +26,19 @@
   --sombra-card: 0 4px 12px rgba(0, 0, 0, 0.08);
   
   /* ICONOS CON COLORES ESPECÍFICOS */
-  --icono-inicio: #00FF66;
-  --icono-pistas: #00FF66;
+  --icono-inicio: #059669;
+  --icono-pistas: #059669;
   --icono-calendario: #a160fb;
   --icono-usuarios: #a160fb;
   --icono-marcador: #ffc62f;
-  --icono-estadisticas: #00FF66;
+  --icono-estadisticas: #059669;
   --icono-torneos: #ff6b6b;
   --icono-configuracion: #64b5f6;
   
   /* ESTADOS INTERACTIVOS */
   --hover-panel: rgba(255, 255, 255, 0.1);
   --hover-card: rgba(97, 41, 240, 0.05);
-  --active-item: rgba(0, 255, 102, 0.15);
+  --active-item: rgba(5, 150, 105, 0.15);
   
   /* VARIABLES IONIC COMPATIBLES */
   --ion-color-primary: var(--color-primario);
@@ -52,9 +51,9 @@
 /* ===== MODO OSCURO (.ion-palette-dark en <html>) ===== */
 .ion-palette-dark {
   /* COLORES PRINCIPALES */
-  --color-primario: #00FF66;
+  --color-primario: #059669;
   --color-primario-contraste: #ffffff;
-  --color-secundario: #33ff77;
+  --color-secundario: #059669;
   
   /* FONDOS PRINCIPALES */
   --fondo-aplicacion: #0a0a0a; /* Muy oscuro */
@@ -75,19 +74,19 @@
   --sombra-card: 0 4px 20px rgba(0, 0, 0, 0.4);
   
   /* ICONOS - Más brillantes para modo oscuro */
-  --icono-inicio: #33ff77;
-  --icono-pistas: #33ff77;
+  --icono-inicio: #059669;
+  --icono-pistas: #059669;
   --icono-calendario: #c490ff;
   --icono-usuarios: #caa9ff;
   --icono-marcador: #ffe066;
-  --icono-estadisticas: #33ff77;
+  --icono-estadisticas: #059669;
   --icono-torneos: #ff8a80;
   --icono-configuracion: #81c784;
   
   /* ESTADOS INTERACTIVOS */
   --hover-panel: rgba(255, 255, 255, 0.08);
-  --hover-card: rgba(0, 255, 102, 0.1);
-  --active-item: rgba(0, 255, 102, 0.2);
+  --hover-card: rgba(5, 150, 105, 0.1);
+  --active-item: rgba(5, 150, 105, 0.2);
   
   /* VARIABLES IONIC COMPATIBLES */
   --ion-color-primary: var(--color-primario);
@@ -131,7 +130,6 @@ ion-card:hover {
   box-shadow: var(--sombra-card);
   transform: translateY(-2px);
 }
-
 /* TEXTOS GLOBALES */
 h1, h2, h3, h4, h5, h6,
 p, span, div, ion-label, ion-text {
@@ -155,7 +153,7 @@ ion-textarea:focus-within,
 ion-select:focus-within {
   --border-color: var(--color-primario);
   border-color: var(--color-primario);
-  box-shadow: 0 0 0 3px rgba(var(--color-primario), 0.1);
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
 }
 
 /* ITEMS Y LISTAS */
@@ -181,7 +179,7 @@ ion-button {
 
 ion-button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(var(--color-primario), 0.3);
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
 }
 
 /* HEADERS GLOBALES */
