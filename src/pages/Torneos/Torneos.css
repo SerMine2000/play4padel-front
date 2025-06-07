@@ -1,43 +1,32 @@
-/* Torneos.css - Diseño profesional y consistente */
+/* ===== TORNEOS CSS - SIN BORDES INTERNOS NI ANIMACIONES ===== */
 
-/* Asegurar que no hay fondos conflictivos */
-body, ion-app, ion-router-outlet, ion-content {
-  background: transparent !important;
-}
-
-/* Eliminar scrolls innecesarios */
-html, body {
-  overflow-x: hidden;
-}
-
-ion-content {
-  --overflow-x: hidden;
-  --overflow-y: auto;
-  --padding-top: 0;
-  --padding-bottom: 0;
-  --padding-start: 0;
-  --padding-end: 0;
-}
-
+/* Contenedor principal */
 .torneos-container {
-  padding: 32px 40px; /* CORREGIDO: mismo padding que otras páginas */
-  background: var(--ion-background-color);
+  min-height: 100vh;
+  background: var(--fondo-aplicacion);
+  padding: 0;
   margin: 0;
-  box-sizing: border-box;
 }
 
-/* Header igual que otras páginas */
+.torneos-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  position: relative;
+}
+
+/* Header de página */
 .page-header {
-  margin-bottom: 2rem;
-  text-align: left;
-  padding: 1rem 0;
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 0;
 }
 
 .page-header h1 {
-  margin: 0 0 0.5rem 0;
-  font-size: 2.2rem;
+  font-size: 2.5rem;
   font-weight: 700;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
+  margin: 0 0 0.5rem 0;
   position: relative;
   display: inline-block;
 }
@@ -46,35 +35,45 @@ ion-content {
   content: '';
   position: absolute;
   bottom: -8px;
-  left: 0;
-  width: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
   height: 4px;
-  background: linear-gradient(90deg, var(--ion-color-primary), #a160fb);
+  background: linear-gradient(90deg, var(--color-primario), var(--color-secundario));
   border-radius: 2px;
 }
 
 .page-header p {
-  color: var(--ion-color-medium);
-  margin: 0.5rem 0 0 0;
-  font-size: 1rem;
+  color: var(--texto-secundario);
+  margin: 1rem 0 0 0;
+  font-size: 1.1rem;
   font-weight: 400;
+}
+
+/* Grid de torneos */
+.torneos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 /* Cards de torneos */
 .torneo-card {
-  height: 100%;
-  border-radius: 16px;
+  background: var(--fondo-card);
+  border-radius: 12px;
+  box-shadow: var(--sombra-card);
+  border: 1px solid var(--borde-principal);
   overflow: hidden;
-  box-shadow: var(--card-shadow);
-  border: 1px solid rgba(161, 96, 251, 0.1);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: var(--color-panel, #ffffff);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .torneo-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(161, 96, 251, 0.12);
-  border-color: rgba(161, 96, 251, 0.3);
+  box-shadow: 0 12px 40px rgba(97, 41, 240, 0.15);
+  border-color: var(--color-primario);
 }
 
 /* Imagen del torneo */
@@ -82,24 +81,13 @@ ion-content {
   height: 200px;
   overflow: hidden;
   position: relative;
-  background: linear-gradient(45deg, var(--color-icono-usuarios), var(--ion-color-primary));
-}
-
-.torneo-image::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 50%;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.3));
+  background: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
 }
 
 .torneo-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
 }
 
 .torneo-card:hover .torneo-image img {
@@ -107,33 +95,39 @@ ion-content {
 }
 
 /* Header del card */
+.torneo-card ion-card-header {
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
+  flex-shrink: 0;
+}
+
 .card-header-content {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 1rem;
-  margin-bottom: 1rem;
 }
 
 .card-header-content ion-card-title {
   flex: 1;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: 600;
   line-height: 1.3;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
+  margin: 0;
 }
 
-.torneo-card ion-card-header {
-  padding: 1rem 1rem 0 1rem;
-}
-
+/* Contenido del card */
 .torneo-card ion-card-content {
-  padding: 0 1rem 1rem 1rem;
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Info del torneo */
 .torneo-info {
-  margin: 0.75rem 0;
+  margin: 1rem 0;
+  flex: 1;
 }
 
 .info-row {
@@ -142,21 +136,22 @@ ion-content {
   gap: 0.75rem;
   margin-bottom: 0.75rem;
   font-size: 0.9rem;
-  color: var(--ion-color-medium);
-  padding: 0.5rem;
-  border-radius: 6px;
-  transition: all 0.2s ease;
+  color: var(--texto-secundario);
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  border-left: 3px solid transparent;
 }
 
 .info-row:hover {
-  background: rgba(161, 96, 251, 0.05);
-  color: var(--color-icono-usuarios);
+  background: var(--hover-card);
+  border-left-color: var(--color-primario);
+  color: var(--texto-principal);
 }
 
 .info-row ion-icon {
-  color: var(--ion-color-primary);
-  font-size: 1.1rem;
-  transition: transform 0.2s ease;
+  color: var(--color-primario);
+  font-size: 1.2rem;
+  flex-shrink: 0;
 }
 
 .info-row:hover ion-icon {
@@ -166,28 +161,29 @@ ion-content {
 /* Precio destacado */
 .precio {
   font-weight: 700;
-  font-size: 0.95rem;
-  color: var(--color-icono-estadisticas);
-  background: rgba(40, 199, 111, 0.1);
-  padding: 0.2rem 0.6rem;
-  border-radius: 16px;
-  border: 1px solid rgba(40, 199, 111, 0.2);
+  font-size: 1rem;
+  color: var(--color-secundario);
+  background: rgba(5, 150, 105, 0.1);
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  border: 1px solid rgba(5, 150, 105, 0.2);
+  display: inline-block;
 }
 
 /* Descripción */
 .descripcion {
-  margin: 0.75rem 0;
-  font-size: 0.85rem;
-  color: var(--ion-color-medium);
-  line-height: 1.4;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  color: var(--texto-secundario);
+  line-height: 1.5;
+  padding: 1rem;
+  background: var(--fondo-aplicacion);
+  border-radius: 8px;
+  border-left: 3px solid var(--color-primario);
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  padding: 0.75rem;
-  background: var(--color-panel, #ffffff);
-  border-radius: 6px;
-  border-left: 3px solid var(--ion-border-color, rgba(0, 0, 0, 0.1));
 }
 
 /* Acciones del card */
@@ -195,176 +191,422 @@ ion-content {
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
-  margin-top: 1rem;
+  margin-top: auto;
   padding-top: 1rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-top: 1px solid var(--borde-principal);
 }
 
 .card-actions ion-button {
-  --border-radius: 6px;
+  --border-radius: 8px;
   font-weight: 500;
-  font-size: 0.8rem;
-  --padding-start: 0.75rem;
-  --padding-end: 0.75rem;
-  transition: all 0.2s ease;
+  font-size: 0.85rem;
+  --padding-start: 1rem;
+  --padding-end: 1rem;
+  flex: 1;
+  min-width: max-content;
 }
 
 .card-actions ion-button:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
 /* Estado vacío */
 .empty-state {
   text-align: center;
-  padding: 3rem 2rem;
-  background: var(--color-panel, #ffffff);
-  border-radius: 16px;
-  box-shadow: var(--card-shadow);
-  border: 2px dashed rgba(161, 96, 251, 0.2);
-  margin: 2rem 0;
+  padding: 4rem 2rem;
+  background: var(--fondo-card);
+  border-radius: 12px;
+  box-shadow: var(--sombra-card);
+  border: 2px dashed var(--borde-principal);
+  margin: 2rem auto;
+  max-width: 500px;
 }
 
 .empty-icon {
-  font-size: 4rem;
-  color: var(--ion-color-medium);
-  margin-bottom: 1.5rem;
+  font-size: 5rem;
+  color: var(--texto-secundario);
+  margin-bottom: 2rem;
   opacity: 0.6;
 }
 
 .empty-state h2 {
-  color: var(--ion-color-medium);
-  margin: 1rem 0;
-  font-size: 1.3rem;
+  color: var(--texto-principal);
+  margin: 1.5rem 0 1rem 0;
+  font-size: 1.5rem;
   font-weight: 600;
 }
 
 .empty-state p {
-  color: var(--ion-color-medium);
-  margin-bottom: 1.5rem;
-  font-size: 0.95rem;
-  opacity: 0.8;
+  color: var(--texto-secundario);
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  line-height: 1.6;
   max-width: 400px;
   margin-left: auto;
   margin-right: auto;
-  line-height: 1.5;
 }
 
-/* Modal mejorado */
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 2rem;
-  background: linear-gradient(135deg, var(--color-icono-usuarios), var(--ion-color-primary));
-  color: white;
-}
-
-.modal-header h2 {
-  margin: 0;
-  font-weight: 600;
-  font-size: 1.4rem;
-}
-
-.modal-header ion-button {
-  --color: white;
-  --background: rgba(255, 255, 255, 0.2);
-  --border-radius: 8px;
-}
-
-.modal-content {
-  padding: 2rem;
-  max-height: 70vh;
-  overflow-y: auto;
-  background: #fafbff;
-}
-
-.modal-content ion-item {
-  --background: var(--color-panel, #ffffff);
-  --border-radius: 8px;
-  margin-bottom: 1rem;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.modal-footer {
-  padding: 2rem;
-  background: #fafbff;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-/* FAB - posición fija */
+/* FAB flotante */
 .torneos-fab {
   position: fixed !important;
-  bottom: 24px !important;
-  right: 24px !important;
+  bottom: 2rem !important;
+  right: 2rem !important;
   z-index: 1000 !important;
 }
 
 .torneos-fab ion-fab-button {
-  --background: linear-gradient(135deg, var(--color-icono-usuarios), var(--ion-color-primary));
-  --color: white;
-  --box-shadow: 0 8px 25px rgba(161, 96, 251, 0.4);
-  --border-radius: 16px;
-  width: 56px;
-  height: 56px;
-  transition: all 0.3s ease;
+  --background: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
+  --color: var(--color-primario-contraste);
+  --box-shadow: 0 12px 30px rgba(97, 41, 240, 0.4);
+  --border-radius: 20px;
+  width: 64px;
+  height: 64px;
 }
 
 .torneos-fab ion-fab-button:hover {
-  transform: scale(1.1);
-  --box-shadow: 0 12px 30px rgba(161, 96, 251, 0.5);
+  transform: scale(1.1) rotate(90deg);
+  --box-shadow: 0 16px 40px rgba(97, 41, 240, 0.5);
+}
+
+.torneos-fab ion-fab-button ion-icon {
+  font-size: 1.5rem;
 }
 
 /* Chips mejorados */
 ion-chip {
-  --background: rgba(161, 96, 251, 0.1);
-  --color: var(--color-icono-usuarios);
-  border: 1px solid rgba(161, 96, 251, 0.2);
-  font-weight: 500;
-  transition: all 0.2s ease;
+  --background: rgba(97, 41, 240, 0.1);
+  --color: var(--color-primario);
+  border: 1px solid rgba(97, 41, 240, 0.2);
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
 }
 
 ion-chip:hover {
-  --background: rgba(161, 96, 251, 0.15);
+  --background: rgba(97, 41, 240, 0.15);
   transform: translateY(-1px);
 }
 
-/* Estados de chips específicos */
 ion-chip[color="success"] {
-  --background: rgba(40, 199, 111, 0.1);
-  --color: var(--color-icono-estadisticas);
-  border-color: rgba(40, 199, 111, 0.2);
+  --background: rgba(5, 150, 105, 0.1);
+  --color: var(--color-secundario);
+  border-color: rgba(5, 150, 105, 0.2);
 }
 
 ion-chip[color="warning"] {
   --background: rgba(255, 198, 47, 0.1);
-  --color: var(--color-icono-marcador);
+  --color: #ffc62f;
   border-color: rgba(255, 198, 47, 0.2);
 }
 
 ion-chip[color="medium"] {
   --background: rgba(146, 158, 171, 0.1);
-  --color: var(--ion-color-medium);
+  --color: var(--texto-secundario);
   border-color: rgba(146, 158, 171, 0.2);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .torneos-container {
-    padding: 20px 24px;
-    background: var(--ion-background-color, #ffffff);
+ion-chip[color="danger"] {
+  --background: rgba(255, 107, 107, 0.1);
+  --color: #ff6b6b;
+  border-color: rgba(255, 107, 107, 0.2);
+}
+
+/* ===== MODAL PERSONALIZADO ===== */
+.torneos-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  padding-top: 5rem;
+}
+
+.torneos-modal-container {
+  background: var(--fondo-card);
+  border-radius: 16px;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15), 0 10px 40px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 800px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--borde-principal);
+  margin: 1rem;
+}
+
+/* Header del modal */
+.torneos-modal-header {
+  background: var(--fondo-card);
+  border-bottom: 1px solid var(--borde-principal);
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.torneos-modal-header h2 {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--texto-principal);
+}
+
+.torneos-modal-close {
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--texto-secundario);
+  cursor: pointer;
+}
+
+.torneos-modal-close:hover {
+  background: var(--hover-card);
+  color: var(--texto-principal);
+}
+
+/* Contenido del modal */
+.torneos-modal-content {
+  background: var(--fondo-card);
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: calc(85vh - 120px);
+}
+
+.torneos-form-container {
+  padding: 1.5rem;
+  background: var(--fondo-card);
+}
+
+/* ===== CAMPOS SIN BORDES INTERNOS NI ANIMACIONES ===== */
+.torneos-form-container ion-item {
+  --background: transparent !important;
+  --border-radius: 8px;
+  --color: var(--texto-principal);
+  --padding-start: 0 !important;
+  --padding-end: 0 !important;
+  --min-height: 56px;
+  --border-width: 0 !important;
+  --border-color: transparent !important;
+  --inner-border-width: 0 !important;
+  --highlight-color-focused: transparent !important;
+  --highlight-color-valid: transparent !important;
+  --highlight-color-invalid: transparent !important;
+  margin-bottom: 1rem;
+  border: 1px solid var(--borde-input) !important;
+  background: var(--fondo-input) !important;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  transition: none !important;
+  animation: none !important;
+}
+
+/* ELIMINAR BORDES INTERNOS DE IONIC */
+.torneos-form-container ion-item::part(native) {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.torneos-form-container ion-item .item-native {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* SIN HOVER NI ESTADOS */
+.torneos-form-container ion-item:hover,
+.torneos-form-container ion-item:focus,
+.torneos-form-container ion-item:active {
+  background: var(--fondo-input) !important;
+  border: 1px solid var(--borde-input) !important;
+  transform: none !important;
+  box-shadow: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+/* FOCUS LIMPIO */
+.torneos-form-container ion-item:focus-within {
+  border: 1px solid var(--color-primario) !important;
+  box-shadow: 0 0 0 3px rgba(97, 41, 240, 0.1);
+  transition: none !important;
+}
+
+/* Labels sin animaciones */
+.torneos-form-container ion-label {
+  font-weight: 600;
+  color: var(--texto-principal);
+  margin-bottom: 0.5rem;
+  transition: none !important;
+  animation: none !important;
+}
+
+/* INPUTS SIN BORDES */
+.torneos-form-container ion-input,
+.torneos-form-container ion-textarea,
+.torneos-form-container ion-select {
+  --color: var(--texto-principal);
+  --placeholder-color: var(--texto-placeholder);
+  --background: transparent !important;
+  --border-width: 0 !important;
+  --border-color: transparent !important;
+  border: none !important;
+  background: transparent !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+/* ELIMINAR BORDES DE PSEUDO-ELEMENTOS */
+.torneos-form-container ion-input::part(native),
+.torneos-form-container ion-textarea::part(native),
+.torneos-form-container ion-select::part(native) {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  transition: none !important;
+}
+
+/* SIN HOVER EN CAMPOS */
+.torneos-form-container ion-input:hover,
+.torneos-form-container ion-textarea:hover,
+.torneos-form-container ion-select:hover,
+.torneos-form-container ion-datetime:hover,
+.torneos-form-container ion-datetime-button:hover {
+  background: transparent !important;
+  border: none !important;
+  transform: none !important;
+  box-shadow: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Grid del formulario */
+.torneos-form-container ion-grid {
+  padding: 0;
+  margin: 0;
+}
+
+.torneos-form-container ion-row {
+  margin: 0;
+}
+
+.torneos-form-container ion-col {
+  padding: 0 0.5rem;
+}
+
+.torneos-form-container ion-col:first-child {
+  padding-left: 0;
+}
+
+.torneos-form-container ion-col:last-child {
+  padding-right: 0;
+}
+
+/* Acciones del formulario */
+.torneos-form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--borde-principal);
+}
+
+.torneos-form-actions ion-button {
+  --border-radius: 8px;
+  font-weight: 600;
+  height: 44px;
+  min-width: 120px;
+}
+
+.torneos-form-actions ion-button[fill="clear"] {
+  --color: var(--texto-secundario);
+  --background: transparent;
+}
+
+.torneos-form-actions ion-button[color="primary"] {
+  --background: var(--color-primario);
+  --color: var(--color-primario-contraste);
+}
+
+/* ELIMINAR TODAS LAS ANIMACIONES GLOBALMENTE */
+.torneos-container *,
+.torneos-modal-container *,
+.torneos-form-container * {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Solo mantener animaciones esenciales de cards */
+.torneo-card {
+  transition: all 0.2s ease;
+}
+
+.torneo-card:hover {
+  transition: all 0.2s ease;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .torneos-content {
+    padding: 1.5rem 1rem;
   }
   
-  .ion-palette-dark .torneos-container {
-    background: var(--color-fondo, #121212);
-  }
-  
-  .page-header {
-    padding: 0.75rem 0;
-    margin-bottom: 1.5rem;
+  .torneos-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.25rem;
   }
   
   .page-header h1 {
-    font-size: 1.8rem;
+    font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .torneos-content {
+    padding: 1rem 0.75rem;
+  }
+  
+  .torneos-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .page-header {
+    margin-bottom: 2rem;
+  }
+  
+  .page-header h1 {
+    font-size: 2rem;
+  }
+  
+  .page-header h1::after {
+    width: 80px;
+  }
+  
+  .torneo-card ion-card-header,
+  .torneo-card ion-card-content {
+    padding: 1rem;
   }
   
   .card-actions {
@@ -373,112 +615,118 @@ ion-chip[color="medium"] {
   
   .card-actions ion-button {
     width: 100%;
-    margin: 0;
+    margin: 0.25rem 0;
   }
   
-  .modal-content,
-  .modal-footer {
-    padding: 1.5rem;
+  .torneos-fab {
+    bottom: 1.5rem !important;
+    right: 1.5rem !important;
   }
   
-  .empty-state {
-    padding: 2rem 1rem;
+  .torneos-fab ion-fab-button {
+    width: 56px;
+    height: 56px;
   }
   
-  .empty-icon {
-    font-size: 3rem;
+  /* Modal responsive */
+  .torneos-modal-overlay {
+    padding: 0.5rem;
+    padding-top: 3rem;
+  }
+  
+  .torneos-modal-container {
+    max-height: 92vh;
+    margin: 0.5rem;
+  }
+  
+  .torneos-modal-header {
+    padding: 1rem;
+  }
+  
+  .torneos-modal-header h2 {
+    font-size: 1.3rem;
+  }
+  
+  .torneos-form-container {
+    padding: 1rem;
+  }
+  
+  .torneos-form-container ion-col {
+    padding: 0 0.25rem;
+  }
+  
+  .torneos-form-actions {
+    flex-direction: column-reverse;
+    gap: 0.75rem;
+  }
+  
+  .torneos-form-actions ion-button {
+    width: 100%;
+    min-width: auto;
   }
 }
 
-@media (max-width: 576px) {
-  .torneos-container {
-    padding: 16px 20px;
+@media (max-width: 480px) {
+  .torneos-content {
+    padding: 0.75rem 0.5rem;
   }
   
   .page-header h1 {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
   }
   
-  .torneo-card ion-card-header,
-  .torneo-card ion-card-content {
-    padding: 0.75rem;
+  .page-header h1::after {
+    width: 60px;
+    height: 3px;
+  }
+  
+  .torneo-image {
+    height: 160px;
+  }
+  
+  .card-header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
   }
   
   .info-row {
-    font-size: 0.8rem;
-    padding: 0.3rem;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.6rem;
   }
   
-  .card-actions ion-button {
-    font-size: 0.75rem;
+  .empty-state {
+    padding: 2.5rem 1rem;
+  }
+  
+  .empty-icon {
+    font-size: 3.5rem;
+  }
+  
+  .empty-state h2 {
+    font-size: 1.25rem;
+  }
+  
+  /* Modal en móviles pequeños */
+  .torneos-modal-overlay {
+    padding: 0.25rem;
+    padding-top: 2rem;
+  }
+  
+  .torneos-modal-container {
+    margin: 0.25rem;
+    border-radius: 12px;
+  }
+  
+  .torneos-modal-header {
+    padding: 0.75rem;
+  }
+  
+  .torneos-modal-header h2 {
+    font-size: 1.2rem;
+  }
+  
+  .torneos-form-container {
+    padding: 0.75rem;
   }
 }
-
-/* Tema oscuro */
-.ion-palette-dark body,
-.ion-palette-dark ion-app, 
-.ion-palette-dark ion-router-outlet, 
-.ion-palette-dark ion-content {
-  background: transparent !important;
-}
-
-.ion-palette-dark .torneos-container {
-  background: var(--color-fondo, #121212);
-}
-
-.ion-palette-dark .torneo-card {
-  background: var(--color-panel);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-.ion-palette-dark .torneo-card:hover {
-  border-color: rgba(161, 96, 251, 0.4);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-}
-
-.ion-palette-dark .info-row:hover {
-  background: rgba(161, 96, 251, 0.1);
-}
-
-.ion-palette-dark .descripcion {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-.ion-palette-dark .empty-state {
-  background: var(--color-panel);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-.ion-palette-dark .modal-content,
-.ion-palette-dark .modal-footer {
-  background: var(--color-secundario);
-}
-
-.ion-palette-dark .modal-content ion-item {
-  --background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-/* Animaciones sutiles */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.torneo-card {
-  animation: fadeInUp 0.4s ease-out;
-}
-
-.torneo-card:nth-child(1) { animation-delay: 0.05s; }
-.torneo-card:nth-child(2) { animation-delay: 0.1s; }
-.torneo-card:nth-child(3) { animation-delay: 0.15s; }
-.torneo-card:nth-child(4) { animation-delay: 0.2s; }
-.torneo-card:nth-child(5) { animation-delay: 0.25s; }
-.torneo-card:nth-child(6) { animation-delay: 0.3s; }

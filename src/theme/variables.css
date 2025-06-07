@@ -10,14 +10,14 @@
   /* FONDOS PRINCIPALES */
   --fondo-aplicacion: #f2f5ff;
   --fondo-contenido: #ffffff;
-  --fondo-panel-navegacion: #2D0A31; /* Morado para barra lateral y header */
+  --fondo-panel-navegacion: #2D0A31;
   --fondo-card: #ffffff;
   --fondo-input: #ffffff;
   
   /* TEXTOS */
   --texto-principal: #000000;
   --texto-secundario: #666666;
-  --texto-panel-navegacion: #ffffff; /* Texto blanco en paneles morados */
+  --texto-panel-navegacion: #ffffff;
   --texto-placeholder: #999999;
   
   /* BORDES Y SOMBRAS */
@@ -25,7 +25,7 @@
   --borde-input: rgba(0, 0, 0, 0.15);
   --sombra-card: 0 4px 12px rgba(0, 0, 0, 0.08);
   
-  /* ICONOS CON COLORES ESPECÍFICOS */
+  /* ICONOS CON COLORES ESPECÍFICOS - ORIGINALES */
   --icono-inicio: #059669;
   --icono-pistas: #059669;
   --icono-calendario: #a160fb;
@@ -48,19 +48,19 @@
   --ion-border-color: var(--borde-principal);
 }
 
-/* ===== MODO OSCURO (.ion-palette-dark en <html>) ===== */
+/* ===== MODO OSCURO - FONDOS MENOS OSCUROS ===== */
 .ion-palette-dark {
   /* COLORES PRINCIPALES */
-  --color-primario: #059669;
+  --color-primario: #6129f0;
   --color-primario-contraste: #ffffff;
   --color-secundario: #059669;
   
-  /* FONDOS PRINCIPALES */
-  --fondo-aplicacion: #0a0a0a; /* Muy oscuro */
-  --fondo-contenido: #121212; /* Oscuro principal */
-  --fondo-panel-navegacion: #1a1a1a; /* Oscuro para navegación */
-  --fondo-card: #1e1e1e; /* Ligeramente más claro que el contenido */
-  --fondo-input: #252525; /* Más claro para inputs */
+  /* FONDOS PRINCIPALES - MENOS OSCUROS QUE ANTES */
+  --fondo-aplicacion: #1a1a1a; /* Menos oscuro que #0a0a0a */
+  --fondo-contenido: #2a2a2a; /* Menos oscuro que #121212 */
+  --fondo-panel-navegacion: #2D0A31; /* Mantener original */
+  --fondo-card: #2e2e2e; /* Menos oscuro que #1e1e1e */
+  --fondo-input: #3a3a3a; /* Menos oscuro que #252525 */
   
   /* TEXTOS */
   --texto-principal: #ffffff;
@@ -73,15 +73,15 @@
   --borde-input: rgba(255, 255, 255, 0.15);
   --sombra-card: 0 4px 20px rgba(0, 0, 0, 0.4);
   
-  /* ICONOS - Más brillantes para modo oscuro */
+  /* ICONOS - MANTENER COLORES ORIGINALES COMO EN MODO CLARO */
   --icono-inicio: #059669;
   --icono-pistas: #059669;
-  --icono-calendario: #c490ff;
-  --icono-usuarios: #caa9ff;
-  --icono-marcador: #ffe066;
+  --icono-calendario: #a160fb;
+  --icono-usuarios: #a160fb;
+  --icono-marcador: #ffc62f;
   --icono-estadisticas: #059669;
-  --icono-torneos: #ff8a80;
-  --icono-configuracion: #81c784;
+  --icono-torneos: #ff6b6b;
+  --icono-configuracion: #64b5f6;
   
   /* ESTADOS INTERACTIVOS */
   --hover-panel: rgba(255, 255, 255, 0.08);
@@ -153,7 +153,7 @@ ion-textarea:focus-within,
 ion-select:focus-within {
   --border-color: var(--color-primario);
   border-color: var(--color-primario);
-  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+  box-shadow: 0 0 0 3px rgba(97, 41, 240, 0.1);
 }
 
 /* ITEMS Y LISTAS */
@@ -179,7 +179,7 @@ ion-button {
 
 ion-button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+  box-shadow: 0 4px 12px rgba(97, 41, 240, 0.3);
 }
 
 /* HEADERS GLOBALES */

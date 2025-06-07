@@ -1,0 +1,692 @@
+/* ===== CUSTOM MODAL - SIN FONDO VERDE, USANDO FONDOS APROPIADOS ===== */
+
+/* OVERLAY DEL MODAL */
+.custom-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.custom-modal-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* CONTENEDOR DEL MODAL */
+.custom-modal {
+  background: var(--fondo-card);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 8px 24px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  transform: scale(0.95) translateY(20px);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid var(--borde-principal);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.custom-modal-overlay.show .custom-modal {
+  transform: scale(1) translateY(0);
+}
+
+/* TAMAÑOS DEL MODAL - MÁS ANCHOS */
+.modal-small {
+  max-width: 500px; /* Aumentado de 400px */
+}
+
+.modal-medium {
+  max-width: 750px; /* Aumentado de 600px */
+}
+
+.modal-large {
+  max-width: 1000px; /* Aumentado de 800px */
+}
+
+.modal-fullscreen {
+  max-width: 95vw;
+  max-height: 95vh;
+}
+
+/* HEADER DEL MODAL - ELEGANTE Y PROFESIONAL */
+.modal-header {
+  background: var(--fondo-card);
+  color: var(--texto-principal);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--borde-principal);
+  flex-shrink: 0;
+  min-height: 60px;
+  position: relative;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: var(--texto-principal);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.modal-header .close-button {
+  --background: transparent;
+  --color: var(--texto-secundario);
+  --border-radius: 12px;
+  --padding-start: 0.75rem;
+  --padding-end: 0.75rem;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 40px;
+  height: 40px;
+  border: 1px solid var(--borde-principal);
+  backdrop-filter: blur(10px);
+}
+
+.modal-header .close-button:hover {
+  --background: var(--hover-card);
+  --color: var(--texto-principal);
+  transform: translateY(-1px);
+}
+
+.modal-header .close-button ion-icon {
+  font-size: 1.1rem;
+}
+
+/* CONTENIDO DEL MODAL - LAYOUT HORIZONTAL RESPONSIVE */
+.modal-content {
+  padding: 1.5rem;
+  overflow-y: auto;
+  background: var(--fondo-card);
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+/* GRID RESPONSIVE PARA CAMPOS */
+.modal-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+.modal-form-grid .form-item-full {
+  grid-column: 1 / -1;
+}
+
+.modal-form-grid .form-item-half {
+  grid-column: span 1;
+}
+
+/* SCROLLBAR PERSONALIZADA */
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: var(--fondo-aplicacion);
+  border-radius: 3px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: var(--borde-principal);
+  border-radius: 3px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: var(--texto-secundario);
+}
+
+/* ELEMENTOS DENTRO DEL CONTENIDO */
+.modal-content ion-item {
+  --background: var(--fondo-input);
+  --border-radius: 12px;
+  margin-bottom: 1.25rem;
+  border: 1.5px solid var(--borde-input);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --color: var(--texto-principal);
+  --padding-start: 1.25rem;
+  --padding-end: 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-content ion-item:focus-within {
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 4px rgba(97, 41, 240, 0.15);
+  transform: translateY(-1px);
+}
+
+.modal-content ion-label {
+  font-weight: 500;
+  color: var(--texto-principal);
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+}
+
+/* INPUTS Y CONTROLES */
+.modal-content ion-input,
+.modal-content ion-textarea {
+  --color: var(--texto-principal);
+  --placeholder-color: var(--texto-placeholder);
+  --background: transparent;
+}
+
+.modal-content ion-select {
+  --color: var(--texto-principal);
+  --placeholder-color: var(--texto-placeholder);
+  --background: transparent;
+}
+
+/* DATETIME PICKER */
+.modal-content ion-datetime {
+  --background: var(--fondo-input);
+  --color: var(--texto-principal);
+  border: 1px solid var(--borde-input);
+  border-radius: 8px;
+  padding: 0.5rem;
+}
+
+/* FOOTER DEL MODAL - PROFESIONAL */
+.modal-footer {
+  padding: 1.25rem 1.5rem;
+  background: var(--fondo-card);
+  border-top: 1px solid var(--borde-principal);
+  flex-shrink: 0;
+  min-height: 70px;
+  backdrop-filter: blur(10px);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.modal-actions .cancel-button {
+  --color: var(--texto-secundario);
+  --border-color: var(--borde-principal);
+  --background: transparent;
+  --border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 44px;
+  min-width: 100px;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
+.modal-actions .cancel-button:hover {
+  --color: var(--texto-principal);
+  --border-color: var(--color-primario);
+  --background: var(--hover-card);
+  transform: translateY(-1px);
+}
+
+.modal-actions .submit-button {
+  --background: var(--color-primario);
+  --color: var(--color-primario-contraste);
+  --border-radius: 12px;
+  font-weight: 700;
+  min-width: 140px;
+  height: 44px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-actions .submit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(97, 41, 240, 0.4), 0 3px 10px rgba(97, 41, 240, 0.2);
+}
+
+.modal-actions .submit-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.modal-actions .submit-button:hover::before {
+  left: 100%;
+}
+
+/* VARIANTES DE COLOR PARA EL BOTÓN DE ENVÍO */
+.submit-button[color="secondary"] {
+  --background: var(--color-secundario);
+}
+
+.submit-button[color="danger"] {
+  --background: #ff6b6b;
+}
+
+.submit-button[color="warning"] {
+  --background: #ffc62f;
+  --color: #000000;
+}
+
+/* RESPONSIVE DESIGN */
+
+/* Tablets y pantallas medianas */
+@media (max-width: 1024px) {
+  .modal-form-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  
+  .modal-content {
+    padding: 1.25rem;
+  }
+  
+  .modal-large {
+    max-width: 90vw;
+  }
+  
+  .custom-modal {
+    border-radius: 16px;
+  }
+}
+
+/* Pantallas pequeñas - Layout vertical */
+@media (max-width: 768px) {
+  .custom-modal-overlay {
+    padding: 0.5rem;
+  }
+  
+  .custom-modal {
+    max-height: 95vh;
+  }
+  
+  .modal-small,
+  .modal-medium,
+  .modal-large {
+    max-width: 95vw; /* Usar casi todo el ancho en móviles */
+  }
+  
+  /* CAMBIAR A LAYOUT VERTICAL EN MÓVILES */
+  .modal-form-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .modal-form-grid .form-item-full,
+  .modal-form-grid .form-item-half {
+    grid-column: 1;
+  }
+  
+  .modal-header,
+  .modal-content,
+  .modal-footer {
+    padding: 0.5rem; /* Más compacto en móviles */
+  }
+  
+  .modal-header h2 {
+    font-size: 1rem; /* Más pequeño en móviles */
+  }
+  
+  .modal-header .close-button {
+    min-width: 28px;
+    height: 28px;
+  }
+  
+  .modal-actions {
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+  }
+  
+  .modal-actions .cancel-button,
+  .modal-actions .submit-button {
+    width: 100%;
+    min-width: auto;
+    height: 32px; /* Más pequeño en móviles */
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-modal-overlay {
+    padding: 0.25rem;
+  }
+  
+  .modal-header,
+  .modal-content,
+  .modal-footer {
+    padding: 0.5rem; /* Muy compacto en móviles pequeños */
+  }
+  
+  .modal-header h2 {
+    font-size: 0.95rem; /* Aún más pequeño */
+  }
+  
+  .modal-header .close-button {
+    min-width: 26px;
+    height: 26px;
+  }
+  
+  .modal-content ion-item {
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* TEMA OSCURO - FONDOS APROPIADOS SIN VERDES */
+.ion-palette-dark .custom-modal-overlay {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(6px);
+}
+
+.ion-palette-dark .custom-modal {
+  background: var(--fondo-card);
+  border-color: var(--borde-principal);
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.8), 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.ion-palette-dark .modal-header {
+  background: var(--fondo-card);
+  border-bottom-color: var(--borde-principal);
+  color: var(--texto-principal);
+}
+
+.ion-palette-dark .modal-content {
+  background: var(--fondo-card);
+  color: var(--texto-principal);
+}
+
+.ion-palette-dark .modal-footer {
+  background: var(--fondo-card);
+  border-top-color: var(--borde-principal);
+}
+
+.ion-palette-dark .modal-content::-webkit-scrollbar-track {
+  background: var(--fondo-aplicacion);
+}
+
+.ion-palette-dark .modal-content::-webkit-scrollbar-thumb {
+  background: var(--borde-principal);
+}
+
+.ion-palette-dark .modal-content::-webkit-scrollbar-thumb:hover {
+  background: var(--texto-secundario);
+}
+
+/* ANIMACIONES SUAVES */
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ANIMACIÓN MÓVIL */
+@media (max-width: 768px) {
+  .custom-modal {
+    animation: modalSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* DESKTOP */
+@media (min-width: 769px) {
+  .custom-modal {
+    animation: modalFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* ACCESIBILIDAD */
+.custom-modal:focus {
+  outline: none;
+}
+
+.modal-header .close-button:focus {
+  outline: 2px solid var(--color-primario);
+  outline-offset: 2px;
+}
+
+.modal-actions .cancel-button:focus,
+.modal-actions .submit-button:focus {
+  outline: 2px solid var(--color-primario);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .custom-modal-overlay,
+  .custom-modal,
+  .modal-header .close-button,
+  .modal-actions .cancel-button,
+  .modal-actions .submit-button {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ESTADOS DE CARGA */
+.modal-loading {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.modal-loading .submit-button {
+  --background: var(--borde-principal);
+  --color: var(--texto-secundario);
+}
+
+/* UTILIDADES PARA FORMULARIOS */
+.modal-content .section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--texto-principal);
+  margin: 1.25rem 0 0.75rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--borde-principal);
+  grid-column: 1 / -1;
+}
+
+.modal-content .section-title:first-child {
+  margin-top: 0;
+}
+
+.modal-content .help-text {
+  font-size: 0.8rem;
+  color: var(--texto-secundario);
+  margin-top: 0.25rem;
+  line-height: 1.4;
+}
+
+.modal-content .error-text {
+  font-size: 0.8rem;
+  color: #ff6b6b;
+  margin-top: 0.25rem;
+  line-height: 1.4;
+}
+
+/* PERSONALIZACIÓN ESPECÍFICA PARA TORNEOS */
+.torneos-modal .modal-form-grid {
+  grid-template-columns: 1fr 1fr;
+}
+
+.torneos-modal .nombre-field,
+.torneos-modal .descripcion-field {
+  grid-column: 1 / -1;
+}
+
+.torneos-modal .club-field,
+.torneos-modal .tipo-field {
+  grid-column: span 1;
+}
+
+.torneos-modal .fecha-inicio-field,
+.torneos-modal .fecha-fin-field {
+  grid-column: span 1;
+}
+
+.torneos-modal .precio-field,
+.torneos-modal .parejas-field {
+  grid-column: span 1;
+}
+
+/* RESPONSIVE ESPECÍFICO PARA FORMULARIO DE TORNEOS */
+@media (max-width: 768px) {
+  .torneos-modal .modal-form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .torneos-modal .nombre-field,
+  .torneos-modal .descripcion-field,
+  .torneos-modal .club-field,
+  .torneos-modal .tipo-field,
+  .torneos-modal .fecha-inicio-field,
+  .torneos-modal .fecha-fin-field,
+  .torneos-modal .precio-field,
+  .torneos-modal .parejas-field {
+    grid-column: 1;
+  }
+}
+
+/* ===== CORRECCIONES CRÍTICAS PARA IONIC COMPONENTS ===== */
+
+/* IONIC SELECT - CORREGIR DROPDOWNS EN TODOS LOS TEMAS */
+ion-select-popover ion-list {
+  background: var(--fondo-card) !important;
+}
+
+ion-select-popover ion-item {
+  --background: var(--fondo-card) !important;
+  --color: var(--texto-principal) !important;
+  background: var(--fondo-card) !important;
+  color: var(--texto-principal) !important;
+}
+
+ion-select-popover ion-item ion-label {
+  color: var(--texto-principal) !important;
+}
+
+ion-select-popover ion-radio {
+  --color: var(--color-primario) !important;
+  --color-checked: var(--color-primario) !important;
+}
+
+/* IONIC DATETIME - CORREGIR PICKER */
+ion-datetime-button {
+  --background: var(--fondo-input) !important;
+  --color: var(--texto-principal) !important;
+}
+
+ion-popover.datetime-popover {
+  --background: var(--fondo-card) !important;
+  --color: var(--texto-principal) !important;
+}
+
+ion-datetime {
+  --background: var(--fondo-card) !important;
+  --color: var(--texto-principal) !important;
+}
+
+/* IONIC ALERT - CORREGIR DIALOGS */
+ion-alert {
+  --background: var(--fondo-card) !important;
+  --color: var(--texto-principal) !important;
+}
+
+ion-alert .alert-wrapper {
+  background: var(--fondo-card) !important;
+  color: var(--texto-principal) !important;
+}
+
+/* CORRECCIONES ESPECÍFICAS PARA MODALES */
+.modal-content ion-select,
+.custom-modal ion-select {
+  --background: transparent !important;
+  --color: var(--texto-principal) !important;
+  background: transparent !important;
+  color: var(--texto-principal) !important;
+}
+
+.modal-content ion-select::part(container),
+.custom-modal ion-select::part(container) {
+  background: var(--fondo-input) !important;
+  color: var(--texto-principal) !important;
+}
+
+.modal-content ion-select::part(text),
+.custom-modal ion-select::part(text) {
+  color: var(--texto-principal) !important;
+}
+
+.modal-content ion-select::part(icon),
+.custom-modal ion-select::part(icon) {
+  color: var(--texto-secundario) !important;
+}
+
+.modal-content ion-datetime,
+.custom-modal ion-datetime {
+  --background: transparent !important;
+  --color: var(--texto-principal) !important;
+  background: transparent !important;
+  color: var(--texto-principal) !important;
+}
+
+/* TEMA OSCURO ESPECÍFICO */
+.ion-palette-dark ion-select-popover ion-list,
+.ion-palette-dark ion-select-popover ion-item {
+  background: var(--fondo-card) !important;
+  color: var(--texto-principal) !important;
+}
+
+.ion-palette-dark ion-datetime,
+.ion-palette-dark ion-datetime-button {
+  --background: var(--fondo-input) !important;
+  --color: var(--texto-principal) !important;
+}
+
+.ion-palette-dark ion-popover.datetime-popover {
+  --background: var(--fondo-card) !important;
+}
+
+/* ASEGURAR QUE TODOS LOS OVERLAYS USEN VARIABLES CORRECTAS */
+ion-popover,
+ion-modal,
+ion-action-sheet,
+ion-alert,
+ion-loading,
+ion-toast {
+  --ion-background-color: var(--fondo-card) !important;
+  --ion-text-color: var(--texto-principal) !important;
+  --ion-border-color: var(--borde-principal) !important;
+}

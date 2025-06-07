@@ -1,5 +1,3 @@
-/* Profile.css - Rediseñado con variables lógicas y contrastes perfectos */
-
 /* ===== CONTENEDOR PRINCIPAL ===== */
 .profile-page-content {
   --background: var(--fondo-aplicacion);
@@ -386,14 +384,14 @@ ion-button.primary-button::part(native) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #00c853, #00e676);
-  color: white;
-  box-shadow: 0 4px 15px rgba(0, 200, 83, 0.3);
+  background: var(--color-secundario);
+  color: var(--color-primario-contraste);
+  box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
 }
 
 ion-button.primary-button:hover::part(native) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 200, 83, 0.4);
+  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
 }
 
 /* === BOTÓN SECUNDARIO === */
@@ -423,14 +421,14 @@ ion-button.secondary-button::part(native) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #00c853, #00e676);
-  color: white;
-  box-shadow: 0 4px 15px rgba(0, 200, 83, 0.3);
+  background: var(--color-secundario);
+  color: var(--color-primario-contraste);
+  box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
 }
 
 ion-button.secondary-button:hover::part(native) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 200, 83, 0.4);
+  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
 }
 
 /* === BOTÓN SUCCESS === */
@@ -460,14 +458,14 @@ ion-button.success-button::part(native) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #00c853, #00e676);
-  color: white;
-  box-shadow: 0 4px 15px rgba(0, 200, 83, 0.3);
+  background: var(--color-secundario);
+  color: var(--color-primario-contraste);
+  box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
 }
 
 ion-button.success-button:hover::part(native) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 200, 83, 0.4);
+  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
 }
 
 /* === BOTÓN CANCELAR === */
