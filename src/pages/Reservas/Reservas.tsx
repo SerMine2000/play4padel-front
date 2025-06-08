@@ -126,7 +126,7 @@ const Reservas: React.FC = () => {
     }
   }, [franjasSeleccionadas]);
   
-  // ✅ Función para calcular el precio total (SOLO UNA HORA)
+  // Función para calcular el precio total basado en la duración
   const calcularPrecioTotal = () => {
     if (!pistaDatos || franjasSeleccionadas.length === 0) {
       setPrecioTotal(0);
@@ -134,13 +134,18 @@ const Reservas: React.FC = () => {
       return;
     }
     
-    // Obtener el precio base de la pista (siempre será solo 1 franja)
-    const precioPista = pistaDatos.precio_hora;
+    // El precio_hora de la pista representa el precio por 1.5 horas (90 minutos)
+    // Calculamos proporcionalmente según el número de franjas de 30 minutos
+    const precioBase = pistaDatos.precio_hora; // Precio por 90 minutos
+    const precioPor30Min = precioBase / 3; // Dividimos entre 3 porque 90 min = 3 * 30 min
+    const numeroFranjas = franjasSeleccionadas.length;
+    const precioCalculado = precioPor30Min * numeroFranjas;
     
-    console.log(`Calculando precio: ${precioPista}€ × 1 franja = ${precioPista}€`);
+    console.log(`Calculando precio: ${precioBase}€ base ÷ 3 = ${precioPor30Min.toFixed(2)}€ por 30 min`);
+    console.log(`${numeroFranjas} franjas × ${precioPor30Min.toFixed(2)}€ = ${precioCalculado.toFixed(2)}€`);
     
-    setPrecioTotal(precioPista);
-    setTarifaTotal(precioPista);
+    setPrecioTotal(precioCalculado);
+    setTarifaTotal(precioCalculado);
   };
   
   // Función para consolidar franjas horarias en rangos continuos
@@ -223,7 +228,7 @@ const Reservas: React.FC = () => {
     }
   };
   
-  // Función para generar franjas horarias fijas de 90 minutos
+  // Función para generar franjas horarias de 30 minutos
   const generarFranjasFijas = (horaApertura: string, horaCierre: string): FranjaHoraria[] => {
     const franjas: FranjaHoraria[] = [];
     
@@ -231,14 +236,14 @@ const Reservas: React.FC = () => {
     let horaActual = new Date(`2000-01-01T${horaApertura}`);
     const horaFin = new Date(`2000-01-01T${horaCierre}`);
     
-    // La duración de cada franja en milisegundos (90 minutos = 5400000 ms)
-    const duracionFranja = 90 * 60 * 1000;
+    // La duración de cada franja en milisegundos (30 minutos = 1800000 ms)
+    const duracionFranja = 30 * 60 * 1000;
     
-    // Generar franjas fijas de 90 minutos
+    // Generar franjas de 30 minutos
     while (horaActual.getTime() + duracionFranja <= horaFin.getTime()) {
       const inicio = horaActual.toISOString().substr(11, 5);
       
-      // Avanzar 90 minutos para el fin de esta franja
+      // Avanzar 30 minutos para el fin de esta franja
       const finDate = new Date(horaActual.getTime() + duracionFranja);
       const fin = finDate.toISOString().substr(11, 5);
       
@@ -283,33 +288,66 @@ const Reservas: React.FC = () => {
     });
   };
   
-  // ✅ Función para seleccionar/deseleccionar franjas horarias (SOLO UNA A LA VEZ)
-  const toggleFranjaHoraria = (franja: FranjaHoraria) => {
-    // Primero desseleccionar todas las franjas
-    const nuevasHorasDisponibles = horasDisponibles.map(f => ({
-      ...f,
-      seleccionada: false
-    }));
+  // Función para verificar si las franjas seleccionadas son consecutivas
+  const sonFranjasConsecutivas = (franjas: FranjaHoraria[]): boolean => {
+    if (franjas.length <= 1) return true;
     
-    // Luego seleccionar solo la franja clickeada (si no estaba ya seleccionada)
-    const franjaActual = nuevasHorasDisponibles.find(f => 
+    // Ordenar franjas por hora de inicio
+    const franjasOrdenadas = [...franjas].sort((a, b) => a.inicio.localeCompare(b.inicio));
+    
+    // Verificar que cada franja termine donde empieza la siguiente
+    for (let i = 0; i < franjasOrdenadas.length - 1; i++) {
+      if (franjasOrdenadas[i].fin !== franjasOrdenadas[i + 1].inicio) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  // Función para seleccionar/deseleccionar franjas horarias (máximo 3 franjas de 30 min = 1.5h)
+  const toggleFranjaHoraria = (franja: FranjaHoraria) => {
+    const nuevasHorasDisponibles = [...horasDisponibles];
+    const franjaIndex = nuevasHorasDisponibles.findIndex(f => 
       f.inicio === franja.inicio && f.fin === franja.fin
     );
     
-    if (franjaActual) {
-      // Si la franja ya estaba seleccionada, la deseleccionamos
-      // Si no estaba seleccionada, la seleccionamos
-      franjaActual.seleccionada = !franja.seleccionada;
+    if (franjaIndex === -1) return;
+    
+    const franjaActual = nuevasHorasDisponibles[franjaIndex];
+    
+    // Si la franja ya está seleccionada, la deseleccionamos
+    if (franjaActual.seleccionada) {
+      franjaActual.seleccionada = false;
+    } else {
+      // Si no está seleccionada, verificamos si podemos añadirla
+      const franjasYaSeleccionadas = nuevasHorasDisponibles.filter(f => f.seleccionada);
+      
+      // Verificar límite máximo (3 franjas = 90 minutos)
+      if (franjasYaSeleccionadas.length >= 3) {
+        mostrarMensaje('Máximo 1.5 horas de reserva permitidas', 'warning');
+        return;
+      }
+      
+      // Crear array temporal con la nueva selección
+      const franjasConNueva = [...franjasYaSeleccionadas, franjaActual];
+      
+      // Verificar que las franjas sean consecutivas
+      if (!sonFranjasConsecutivas(franjasConNueva)) {
+        mostrarMensaje('Las franjas horarias deben ser consecutivas', 'warning');
+        return;
+      }
+      
+      franjaActual.seleccionada = true;
     }
     
     setHorasDisponibles(nuevasHorasDisponibles);
     
-    // Actualizar franjas seleccionadas (solo una o ninguna)
+    // Actualizar franjas seleccionadas
     const nuevasFranjasSeleccionadas = nuevasHorasDisponibles.filter(f => f.seleccionada);
     setFranjasSeleccionadas(nuevasFranjasSeleccionadas);
   };
   
-  // ✅ Función para realizar la reserva (SIMPLIFICADA PARA UNA SOLA FRANJA)
+  // Función para realizar la reserva con múltiples franjas
   const realizarReserva = async () => {
     if (!user) {
       mostrarMensaje('Debes iniciar sesión para reservar', 'warning');
@@ -324,16 +362,19 @@ const Reservas: React.FC = () => {
     try {
       setCargando(true);
       
-      // Solo una franja seleccionada
-      const franja = franjasSeleccionadas[0];
+      // Ordenar franjas por hora de inicio
+      const franjasOrdenadas = [...franjasSeleccionadas].sort((a, b) => a.inicio.localeCompare(b.inicio));
+      
+      // La hora de inicio es la primera franja y la hora de fin es la última franja
+      const horaInicio = franjasOrdenadas[0].inicio;
+      const horaFin = franjasOrdenadas[franjasOrdenadas.length - 1].fin;
       
       const reservaData = {
         id_usuario: user.id,
         id_pista: pistaSeleccionada,
         fecha: formatearFecha(fechaSeleccionada),
-        hora_inicio: formatearHoraAPI(franja.inicio),
-        hora_fin: formatearHoraAPI(franja.fin),
-        precio_total: pistaDatos.precio_hora,
+        hora_inicio: formatearHoraAPI(horaInicio),
+        hora_fin: formatearHoraAPI(horaFin),
         estado: 'pendiente',
         notas: notas || ''
       };
@@ -347,7 +388,7 @@ const Reservas: React.FC = () => {
         return;
       }
 
-      let precioFinal = pistaDatos.precio_hora;
+      let precioFinal = precioTotal;
       
       try {
         const reservaCompleta = await apiService.get(`/reservas/${idReserva}`);
@@ -355,7 +396,7 @@ const Reservas: React.FC = () => {
           precioFinal = reservaCompleta.precio_total;
         }
       } catch (error) {
-        console.warn("Error al obtener datos de la reserva, usando precio de pista como fallback:", error);
+        console.warn("Error al obtener datos de la reserva, usando precio calculado como fallback:", error);
       }
       
       navigate('/pay', {
@@ -363,8 +404,8 @@ const Reservas: React.FC = () => {
           reserva_id: idReserva,
           id_pista: pistaSeleccionada,
           fecha: formatearFecha(fechaSeleccionada),
-          hora_inicio: formatearHoraAPI(franja.inicio),
-          hora_fin: formatearHoraAPI(franja.fin),
+          hora_inicio: formatearHoraAPI(horaInicio),
+          hora_fin: formatearHoraAPI(horaFin),
           precio: precioFinal
         }
       });
@@ -530,7 +571,10 @@ const Reservas: React.FC = () => {
                         {/* Horarios disponibles (aparecen al lado cuando se selecciona fecha) */}
                         {fechaSeleccionada && (
                           <div className="contenedor-horarios-lateral">
-                            <h4 className="titulo-horarios">Horarios</h4>
+                            <h4 className="titulo-horarios">Horarios disponibles</h4>
+                            <p className="info-horarios">
+                              Selecciona franjas de 30 min consecutivas (máx. 1.5h)
+                            </p>
                             {horasDisponibles.length === 0 ? (
                               <p className="mensaje-sin-horarios">No hay horarios disponibles para esta fecha</p>
                             ) : (
@@ -607,7 +651,9 @@ const Reservas: React.FC = () => {
                       {/* Precio */}
                       <div className="seccion-precio">
                         <div className="linea-precio">
-                          <span className="concepto-precio">Subtotal (1 hora)</span>
+                          <span className="concepto-precio">
+                            Subtotal ({franjasSeleccionadas.length * 30} min)
+                          </span>
                           <span className="cantidad-precio">{precioTotal.toFixed(2)}€</span>
                         </div>
                         <div className="linea-total">

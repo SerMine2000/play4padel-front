@@ -287,7 +287,7 @@ const Pay: React.FC = () => {
                   </div>
                   <div className="summary-row">
                     <span className="summary-label">Total a pagar</span>
-                    <span className="summary-value summary-total">{precio}€</span>
+                    <span className="summary-value summary-total">{precio.toFixed(2)}€</span>
                   </div>
                 </div>
 
@@ -342,7 +342,7 @@ const Pay: React.FC = () => {
                     ) : (
                       <>
                         <IonIcon icon={checkmarkCircleOutline} className="payment-icon-small" />
-                        Pagar {precio}€
+                        Pagar {precio.toFixed(2)}€
                       </>
                     )}
                   </button>
