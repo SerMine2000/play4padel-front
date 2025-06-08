@@ -114,6 +114,7 @@ export interface CardsResumenProps {
   nivel: string | number;
   victorias: string | number;
   torneos: string | number;
+  isClubDashboard?: boolean;
 }
 
 // Interfaces para Torneos
