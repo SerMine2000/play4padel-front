@@ -1,10 +1,10 @@
 // src/pages/ManageCourts.tsx
 import React, { useState, useEffect, useRef } from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonBackButton, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, 
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, 
   IonCardTitle, IonCardContent, IonItem, IonInput, IonToggle, IonButton, IonIcon, IonList,
-  IonLoading, IonToast, IonText, IonModal, IonChip, IonFab, IonFabButton, IonAlert, IonActionSheet } from '@ionic/react';
+  IonLoading, IonToast, IonText, IonModal, IonChip, IonFab, IonFabButton, IonAlert, IonActionSheet, IonBackdrop } from '@ionic/react';
 import { addCircleOutline, createOutline, buildOutline, trashOutline, closeCircleOutline, checkmarkCircleOutline, tennisballOutline, 
-  cameraOutline, imagesOutline, linkOutline, cloudUploadOutline } from 'ionicons/icons';
+  cameraOutline, imagesOutline, linkOutline, cloudUploadOutline, closeOutline } from 'ionicons/icons';
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from 'react-router-dom';
 import apiService from "../../services/api.service";
@@ -17,14 +17,17 @@ import './ManageCourts.css';
 
 const getStatusColor = (estado: string): string => {
   switch (estado.toLowerCase()) {
+    case 'disponible':
+      return 'success';
+    case 'mantenimiento':
+      return 'warning';
+    case 'cerrada':
+    case 'cerrado':
+      return 'danger';
     case 'activo':
       return 'success';
     case 'inactivo':
       return 'medium';
-    case 'mantenimiento':
-      return 'warning';
-    case 'cerrado':
-      return 'danger';
     default:
       return 'primary';
   }
@@ -622,17 +625,29 @@ const ManageCourts: React.FC = () => {
                     </IonList>
                   )}
 
-                  {/* MODAL PARA IMAGEN AMPLIADA */}
-                  <IonModal isOpen={!!imagenSeleccionada} onDidDismiss={() => setImagenSeleccionada(null)}>
-                    <IonContent >
-                    <div className="envoltorio-imagen-modal">
-                      <button className="icono-cerrar" onClick={() => setImagenSeleccionada(null)}>
-                        ✕
-                      </button>
-                      <img src={imagenSeleccionada!} alt="Vista ampliada" />
+                  {/* Vista previa de imagen - Exactamente como Profile */}
+                  {imagenSeleccionada && (
+                    <div className="avatar-preview-overlay" onClick={() => setImagenSeleccionada(null)}>
+                      <IonBackdrop 
+                        visible={!!imagenSeleccionada} 
+                        tappable={true}
+                        onIonBackdropTap={() => setImagenSeleccionada(null)}
+                      />
+                      <div className="avatar-preview-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="preview-close-button" onClick={() => setImagenSeleccionada(null)}>
+                          <IonIcon icon={closeOutline} />
+                        </div>
+                        
+                        <div className="avatar-preview-content">
+                          <img
+                            src={imagenSeleccionada}
+                            alt="Vista ampliada de la pista"
+                            className="preview-image-large"
+                          />
+                        </div>
+                      </div>
                     </div>
-                    </IonContent>
-                  </IonModal>
+                  )}
                 </IonCardContent>
               </IonCard>
 
@@ -952,13 +967,6 @@ const ManageCourts: React.FC = () => {
               icon: imagesOutline,
               handler: () => {
                 handleSelectFromGallery();
-              }
-            },
-            {
-              text: 'Introducir URL',
-              icon: linkOutline,
-              handler: () => {
-                handleShowUrlInput();
               }
             },
             {
