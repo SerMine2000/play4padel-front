@@ -45,15 +45,20 @@ const MarcadorPantalla: React.FC = () => {
 
   // Obtener el estado actual del marcador desde el servidor
   const fetchEstado = async () => {
-    const res = await axios.get('/marcador');
-    setEstado({
-      puntos: res.data.puntos,
-      juegos: res.data.juegos,
-      sets: res.data.sets,
-      tie_break: res.data.tie_break,
-      terminado: res.data.terminado,
-      bola_de_oro: res.data.bola_de_oro
-    });
+    try {
+      const res = await axios.get('/marcador');
+      setEstado({
+        puntos: res.data.puntos,
+        juegos: res.data.juegos,
+        sets: res.data.sets,
+        tie_break: res.data.tie_break,
+        terminado: res.data.terminado,
+        bola_de_oro: res.data.bola_de_oro
+      });
+    } catch (error) {
+      console.log('No se pudo conectar con el backend del marcador, usando configuración local');
+      // Si no se puede conectar al backend, mantener el estado actual (para torneos)
+    }
   }
   
 

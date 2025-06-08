@@ -162,6 +162,7 @@ const AppContent: React.FC = () => {
             <Route path="/manage-courts" element={<PrivateRoute element={<MainLayout><ManageCourts /></MainLayout>} />} />
             <Route path="/marcador-control" element={<PrivateRoute element={<MarcadorControl />} />} />
             <Route path="/marcador-pantalla" element={<PrivateRoute element={<MarcadorPantalla />} />} />
+            <Route path="/club/marcador" element={<MarcadorPantalla />} />
             <Route path="/marcador" element={<PrivateRoute element={<Estructura><MarcadorControl /></Estructura>} />} />
             <Route path="/solicitar-club" element={<PrivateRoute element={<MainLayout><SolicitarClub /></MainLayout>} />} />
 
