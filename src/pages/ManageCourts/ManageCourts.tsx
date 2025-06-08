@@ -652,14 +652,14 @@ const ManageCourts: React.FC = () => {
         
         {/* Modal para añadir o editar pista */}
         <IonModal className="modal-pista-profesional" isOpen={showModal} onDidDismiss={() => setShowModal(false)}>
-          <IonHeader className="modal-header">
-            <IonToolbar>
-              <IonTitle className="modal-title">
-                <IonIcon icon={editingPista ? createOutline : addCircleOutline} className="modal-icon" />
+          <IonHeader className="modal-header-compact">
+            <IonToolbar className="modal-toolbar-compact">
+              <IonTitle className="modal-title-compact">
+                <IonIcon icon={editingPista ? createOutline : addCircleOutline} className="modal-icon-compact" />
                 {editingPista ? 'Editar Pista' : 'Nueva Pista'}
               </IonTitle>
-              <IonButtons slot="end">
-                <IonButton fill="clear" onClick={() => setShowModal(false)} className="modal-close-btn">
+              <IonButtons slot="end" className="modal-buttons-compact">
+                <IonButton fill="clear" onClick={() => setShowModal(false)} className="modal-close-btn-compact">
                   ✕
                 </IonButton>
               </IonButtons>
