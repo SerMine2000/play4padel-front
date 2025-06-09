@@ -113,7 +113,6 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
         { label: 'Administrar Usuarios', path: '/manage-users', icon: peopleOutline },
         { label: 'Calendario', path: '/calendar', icon: calendarOutline },
         { label: 'Marcador', path: '/marcador', icon: stopwatchOutline },
-        { label: 'Estadísticas', path: '/estadisticas', icon: statsChartOutline },
         { label: 'Torneos', path: '/torneos', icon: trophyOutline },
         { label: 'Ligas', path: '/ligas', icon: trophyOutline }
       ];
