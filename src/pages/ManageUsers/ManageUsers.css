@@ -18,6 +18,32 @@
   background-color: var(--ion-background-color);
 }
 
+/* ===== CONTENEDOR PRINCIPAL - IGUAL QUE MANAGE COURTS ===== */
+.manage-users-container {
+  min-height: 100vh;
+  background: var(--fondo-aplicacion);
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  /* Ocultar barra de scroll en diferentes navegadores */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer/Edge */
+}
+
+/* Ocultar barra de scroll en Webkit (Chrome, Safari) */
+.manage-users-container::-webkit-scrollbar {
+  display: none;
+}
+
+.manage-users-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  position: relative;
+  padding-bottom: 2rem;
+}
+
 /* Fondo específico para la página de gestión de usuarios */
 .manage-users-page {
   --background: var(--fondo-aplicacion) !important;

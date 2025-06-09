@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   IonContent,
-  IonPage,
   IonRefresher,
   IonRefresherContent,
   IonGrid,
@@ -13,7 +12,6 @@ import {
   IonCardContent,
   IonSearchbar,
   IonItem,
-  IonAvatar,
   IonLabel,
   IonChip,
   IonButton,
@@ -246,8 +244,8 @@ const GestionUsuariosClub: React.FC = () => {
   
 
   return (
-    <IonPage className="manage-users-page">
-      <IonContent>
+    <div className="manage-users-container">
+      <div className="manage-users-content">
         <IonRefresher slot="fixed" onIonRefresh={e => manejarActualizacion(e)}>
           <IonRefresherContent />
         </IonRefresher>
@@ -471,9 +469,8 @@ const GestionUsuariosClub: React.FC = () => {
             </div>
           </IonContent>
         </IonModal>
-
-      </IonContent>
-    </IonPage>
+      </div>
+    </div>
   );
 };
 
