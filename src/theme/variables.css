@@ -103,6 +103,9 @@ body, ion-app {
   transition: background-color 0.3s ease, color 0.3s ease;
   min-height: 100vh;
   height: 100%;
+  /* Tipografía personalizada - Nunito: fuente redondeada y moderna */
+  font-family: 'Nunito', 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 16px; /* Tamaño base aumentado (por defecto suele ser 14px) */
 }
 
 html, body {
@@ -135,6 +138,26 @@ h1, h2, h3, h4, h5, h6,
 p, span, div, ion-label, ion-text {
   color: var(--texto-principal);
   transition: color 0.3s ease;
+}
+
+/* Tamaños de texto mejorados */
+p, span, div, ion-label, ion-text, ion-button {
+  font-size: 16px; /* Texto base más grande */
+}
+
+ion-item ion-label {
+  font-size: 16px; /* Labels de items más grandes */
+}
+
+/* Ajuste para móviles */
+@media (max-width: 768px) {
+  body, ion-app {
+    font-size: 15px; /* Ligeramente menor en móvil pero aún grande */
+  }
+  
+  p, span, div, ion-label, ion-text, ion-button {
+    font-size: 15px;
+  }
 }
 
 /* INPUTS GLOBALES */
