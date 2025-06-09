@@ -813,12 +813,12 @@ if (!idClub) {
       <div className="lista-mes-container">
         {reservasDelMes.map((dia) => (
           <div key={dia.fecha} className="dia-reservas-section">
+            <IonChip color="primary" className="contador-reservas">
+              {dia.reservas.length} {dia.reservas.length === 1 ? 'reserva' : 'reservas'}
+            </IonChip>
             <div className="dia-header">
               <div className="fecha-info">
                 <h3>{dia.fechaFormateada}</h3>
-                <IonChip color="primary" className="contador-reservas">
-                  {dia.reservas.length} {dia.reservas.length === 1 ? 'reserva' : 'reservas'}
-                </IonChip>
               </div>
             </div>
 

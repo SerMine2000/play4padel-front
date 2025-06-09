@@ -643,11 +643,14 @@ ion-segment-button:hover::part(native)::before {
 }
 
 .contador-reservas {
+  position: absolute;
+  top: 0;
+  right: 0;
   font-size: 12px;
   font-weight: 700 !important;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-left: auto;
+  z-index: 10;
 }
 
 .reservas-dia-grid {
