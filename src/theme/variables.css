@@ -39,6 +39,11 @@
   --hover-panel: rgba(255, 255, 255, 0.1);
   --hover-card: rgba(97, 41, 240, 0.05);
   --active-item: rgba(5, 150, 105, 0.15);
+  --sombra-hover: 0 12px 30px rgba(0, 0, 0, 0.15);
+  
+  /* FONDOS ESPECÍFICOS */
+  --fondo-precio: rgba(97, 41, 240, 0.1);
+  --borde-precio: rgba(97, 41, 240, 0.2);
   
   /* VARIABLES IONIC COMPATIBLES */
   --ion-color-primary: var(--color-primario);
@@ -87,6 +92,11 @@
   --hover-panel: rgba(255, 255, 255, 0.08);
   --hover-card: rgba(5, 150, 105, 0.1);
   --active-item: rgba(5, 150, 105, 0.2);
+  --sombra-hover: 0 12px 30px rgba(0, 0, 0, 0.4);
+  
+  /* FONDOS ESPECÍFICOS */
+  --fondo-precio: rgba(97, 41, 240, 0.15);
+  --borde-precio: rgba(97, 41, 240, 0.3);
   
   /* VARIABLES IONIC COMPATIBLES */
   --ion-color-primary: var(--color-primario);

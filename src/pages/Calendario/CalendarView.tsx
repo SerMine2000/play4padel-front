@@ -711,7 +711,6 @@ if (!idClub) {
           <IonIcon icon={tennisballOutline} size="large" color="medium" />
           <p>No hay reservas para este día</p>
           <IonText color="medium">
-            <small>{formatearFechaMostrar(diaSeleccionado)}</small>
           </IonText>
         </div>
       );
@@ -724,41 +723,34 @@ if (!idClub) {
             <IonIcon icon={tennisballOutline} />
             {reservasDelDia.length} {reservasDelDia.length === 1 ? 'Reserva' : 'Reservas'}
           </h4>
-          <IonText color="medium">
-            <small>{formatearFechaMostrar(diaSeleccionado)}</small>
-          </IonText>
         </div>
         
         <div className="reservas-grid">
           {reservasDelDia.map((reserva) => (
             <div key={reserva.id} className="reserva-card" onClick={() => handleClickReserva(reserva)}>
               <div className="reserva-card-header">
-                <div className="reserva-info-principal">
+                <div className="reserva-usuario-info">
                   <h3>{reserva.nombre_usuario}</h3>
-                  <IonChip className={`estado-chip estado-${reserva.estado.toLowerCase()}`} color={getColorEstadoReserva(reserva.estado)}>
-                    {reserva.estado.toUpperCase()}
-                  </IonChip>
-                </div>
-              </div>
-              
-              <div className="reserva-card-body">
-                <div className="reserva-detail">
-                  <IonIcon icon={timeOutline} />
-                  <span>{formatearHora(reserva.hora_inicio)} - {formatearHora(reserva.hora_fin)}</span>
-                </div>
-                
-                {reserva.pista_numero && (
-                  <div className="reserva-detail">
-                    <IonIcon icon={tennisballOutline} />
-                    <span>Pista {reserva.pista_numero}</span>
-                    {reserva.pista_tipo && <small>({reserva.pista_tipo})</small>}
+                  <div className="reserva-info-compact">
+                    <span className="reserva-horario">
+                      <IonIcon icon={timeOutline} />
+                      {formatearHora(reserva.hora_inicio)} - {formatearHora(reserva.hora_fin)}
+                    </span>
+                    {reserva.pista_numero && (
+                      <span className="reserva-pista">
+                        <IonIcon icon={tennisballOutline} />
+                        Pista {reserva.pista_numero}
+                      </span>
+                    )}
+                    <span className="reserva-precio">
+                      <IonIcon icon={cashOutline} />
+                      {reserva.precio_total.toFixed(2)}€
+                    </span>
                   </div>
-                )}
-                
-                <div className="reserva-detail precio">
-                  <IonIcon icon={cashOutline} />
-                  <span className="precio-amount">{reserva.precio_total.toFixed(2)}€</span>
                 </div>
+                <IonChip className={`estado-chip estado-${reserva.estado.toLowerCase()}`} color={getColorEstadoReserva(reserva.estado)}>
+                  {reserva.estado.toUpperCase()}
+                </IonChip>
               </div>
               
               <div className="reserva-card-footer">
@@ -865,16 +857,16 @@ if (!idClub) {
   return (
     <IonPage>
       <IonContent className="calendar-view">
-
-        {/* Segmento para cambiar entre vista calendario y lista */}
-        <IonSegment value={vistaActual} onIonChange={e => cambiarVista(e.detail.value as 'calendario' | 'lista')}>
-          <IonSegmentButton value="calendario">
-            <IonLabel style={{ background : "transparent" }}>CALENDARIO</IonLabel>
-          </IonSegmentButton>
-          <IonSegmentButton value="lista">
-            <IonLabel style={{ background : "transparent" }}>LISTA</IonLabel>
-          </IonSegmentButton>
-        </IonSegment>
+        <div className="calendar-container">
+          {/* Segmento para cambiar entre vista calendario y lista */}
+          <IonSegment value={vistaActual} onIonChange={e => cambiarVista(e.detail.value as 'calendario' | 'lista')}>
+            <IonSegmentButton value="calendario">
+              <IonLabel>CALENDARIO</IonLabel>
+            </IonSegmentButton>
+            <IonSegmentButton value="lista">
+              <IonLabel>LISTA</IonLabel>
+            </IonSegmentButton>
+          </IonSegment>
 
         {vistaActual === 'calendario' && (
           <div className="contenido-calendario">
@@ -1073,7 +1065,7 @@ if (!idClub) {
           ]}
         />
 
-
+        </div>
       </IonContent>
     </IonPage>
   );

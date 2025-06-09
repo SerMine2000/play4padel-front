@@ -280,8 +280,8 @@
   background: transparent !important;
 }
 
-/* Tabs - Centrado y adaptativo */
-ion-segment {
+/* Tabs - Centrado y adaptativo - SOLO PARA LIGAS */
+.liga-detalle-container ion-segment {
   margin-bottom: 2rem;
   --background: var(--fondo-card);
   border-radius: 12px;
@@ -297,7 +297,7 @@ ion-segment {
   justify-content: center;
 }
 
-ion-segment-button {
+.liga-detalle-container ion-segment-button {
   --background: transparent;
   --background-checked: var(--color-primario);
   --color: var(--texto-secundario);
@@ -314,7 +314,7 @@ ion-segment-button {
   white-space: nowrap;
 }
 
-ion-segment-button ion-label {
+.liga-detalle-container ion-segment-button ion-label {
   font-size: 1rem;
   font-weight: 600;
   white-space: nowrap;
@@ -323,13 +323,13 @@ ion-segment-button ion-label {
   overflow: visible;
 }
 
-ion-segment-button:hover:not(.segment-button-checked) {
+.liga-detalle-container ion-segment-button:hover:not(.segment-button-checked) {
   --background: var(--hover-card);
   --color: var(--color-primario);
   transform: translateY(-1px);
 }
 
-ion-segment-button.segment-button-checked {
+.liga-detalle-container ion-segment-button.segment-button-checked {
   box-shadow: 0 4px 12px rgba(97, 41, 240, 0.25);
   transform: translateY(-1px);
 }
