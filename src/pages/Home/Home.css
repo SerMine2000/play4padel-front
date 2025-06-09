@@ -1,15 +1,62 @@
 /* Home.css - Actualizado con nuevo sistema de variables lógicas */
 
+/* ===== CONTENEDOR PRINCIPAL COMO MANAGE-COURTS ===== */
+.home-container {
+  min-height: 100vh;
+  background: var(--fondo-aplicacion);
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  /* Ocultar barra de scroll en diferentes navegadores */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer/Edge */
+}
+
+/* Ocultar barra de scroll en Webkit (Chrome, Safari) */
+.home-container::-webkit-scrollbar {
+  display: none;
+}
+
+.home-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 0.01rem;
+  position: relative;
+  padding-bottom: 4rem;
+}
+
 .dashboard-contenido {
-  padding: var(--margenPaginaDesktop, 32px 40px);
+  padding: 0;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  background: var(--fondo-aplicacion);
   color: var(--texto-principal);
-  height: 100vh;
-  overflow: hidden;
+  min-height: auto;
+  overflow: visible;
   box-sizing: border-box;
+}
+
+/* Márgenes responsive para desktop */
+@media (min-width: 992px) {
+  .dashboard-contenido.desktop {
+    margin: 0 -1.5rem;
+    padding: 0 0.75rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .dashboard-contenido.desktop {
+    margin: 0 -2.5rem;
+    padding: 0 0.5rem;
+  }
+}
+
+@media (min-width: 1400px) {
+  .dashboard-contenido.desktop {
+    margin: 0 -3.5rem;
+    padding: 0 0.25rem;
+  }
 }
 
 /* Bienvenida Dashboard */
@@ -24,6 +71,24 @@
   font-weight: 700;
   margin: 0 0 8px 0;
   color: var(--texto-principal);
+  position: relative;
+  padding-bottom: 12px;
+}
+
+.titulo-dashboard::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 60px;
+  height: 3px;
+  background: var(--color-primario);
+  border-radius: 3px;
+}
+
+/* Modo oscuro - línea verde */
+.ion-palette-dark .titulo-dashboard::after {
+  background: var(--color-secundario);
 }
 
 .descripcion-dashboard {
@@ -65,7 +130,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--color-primario), var(--color-acento));
+  background: var(--color-acento-dashboard);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -96,11 +161,8 @@
   line-height: 1.1;
 }
 
-.card-valor:not(:has(emoji)):not([data-has-emoji="true"]) {
-  background: linear-gradient(135deg, var(--texto-principal), var(--color-primario));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.card-valor {
+  color: var(--texto-principal);
 }
 
 /* Para valores que contienen emojis */
@@ -125,11 +187,12 @@
   background: var(--fondo-card);
   border-radius: 16px;
   box-shadow: var(--sombra-card);
-  padding: 22px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   border: 1px solid var(--borde-principal);
   min-height: 0;
+  max-height: 400px;
   overflow: hidden;
 }
 
@@ -152,7 +215,7 @@
   bottom: 0;
   width: 40px;
   height: 3px;
-  background: var(--color-primario);
+  background: var(--color-acento-dashboard);
   border-radius: 3px;
 }
 
@@ -188,6 +251,7 @@
   margin-right: -12px;
   padding-right: 12px;
   min-height: 0;
+  max-height: 300px;
 }
 
 /* Estilos del scrollbar */
@@ -200,12 +264,13 @@
 }
 
 .reservas-list::-webkit-scrollbar-thumb {
-  background: var(--color-primario);
+  background: var(--color-scroll-principal);
   border-radius: 3px;
   opacity: 0.5;
 }
 
 .reservas-list::-webkit-scrollbar-thumb:hover {
+  background: var(--color-scroll-hover);
   opacity: 0.8;
 }
 
@@ -218,7 +283,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-left: 3px solid var(--color-primario);
+  border-left: 3px solid var(--color-acento-dashboard);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   border: 1px solid var(--borde-principal);
 }
@@ -274,7 +339,7 @@
 }
 
 .btn-cambiar-club {
-  background: var(--color-primario);
+  background: var(--color-acento-dashboard);
   color: var(--color-primario-contraste);
   border: none;
   border-radius: 8px;
@@ -290,17 +355,18 @@
 .btn-cambiar-club:hover {
   opacity: 0.9;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(var(--color-primario), 0.3);
+  box-shadow: var(--sombra-hover);
 }
 
 /* Grid de pistas en 2 columnas */
 .estado-pistas-grid-2col {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  gap: 10px;
   flex: 1;
   overflow-y: auto;
   min-height: 0;
+  max-height: 280px;
   padding-right: 8px;
   margin-right: -8px;
 }
@@ -315,12 +381,13 @@
 }
 
 .estado-pistas-grid-2col::-webkit-scrollbar-thumb {
-  background: var(--color-primario);
+  background: var(--color-scroll-principal);
   border-radius: 3px;
   opacity: 0.5;
 }
 
 .estado-pistas-grid-2col::-webkit-scrollbar-thumb:hover {
+  background: var(--color-scroll-hover);
   opacity: 0.8;
 }
 
@@ -330,12 +397,14 @@
   justify-content: space-between;
   align-items: center;
   background: var(--fondo-aplicacion);
-  padding: 16px 20px;
+  padding: 22px 24px;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border: 1px solid var(--borde-principal);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  min-height: 60px;
+  min-height: 72px;
+  max-height: 82px;
+  height: 72px;
 }
 
 .estado-pista-row:hover {
@@ -395,7 +464,7 @@
 }
 
 .club-selector-button {
-  background: var(--color-primario);
+  background: var(--color-acento-dashboard);
   color: var(--color-primario-contraste);
   border: none;
   border-radius: 8px;
@@ -414,7 +483,7 @@
 .club-selector-button:hover {
   opacity: 0.9;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(var(--color-primario), 0.3);
+  box-shadow: var(--sombra-hover);
 }
 
 .club-dropdown-content {
@@ -448,7 +517,7 @@
 }
 
 .club-dropdown-item:hover {
-  background: var(--color-primario);
+  background: var(--color-acento-dashboard);
   color: var(--color-primario-contraste);
 }
 
@@ -464,25 +533,29 @@
 
 /* RESPONSIVE STYLES MEJORADOS */
 @media (max-width: 992px) {
+  .home-content {
+    padding: 1.5rem 0.01rem;
+    padding-bottom: 3rem;
+  }
+  
   .cards-resumen-grid {
     grid-template-columns: repeat(2, 1fr);
   }
   
   .estado-pistas-grid-2col {
     grid-template-columns: 1fr;
-    gap: 12px;
-  }
-  
-  .dashboard-contenido {
-    padding: var(--margenPaginaTablet, 24px 32px);
+    gap: 8px;
   }
 }
 
 @media (max-width: 768px) {
+  .home-content {
+    padding: 1rem 0.01rem;
+    padding-bottom: 3rem;
+  }
+  
   .dashboard-contenido {
-    padding: var(--margenPaginaMobile, 20px 24px);
     gap: 16px;
-    height: 100vh;
   }
   
   .titulo-dashboard {
@@ -496,7 +569,8 @@
   }
   
   .proximas-reservas, .estado-pistas {
-    padding: 18px;
+    padding: 16px;
+    max-height: 320px;
   }
   
   .estado-pistas-header {
@@ -519,12 +593,14 @@
   
   .estado-pistas-grid-2col {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 8px;
   }
   
   .estado-pista-row {
-    padding: 12px 16px;
-    min-height: 50px;
+    padding: 20px 22px;
+    min-height: 68px;
+    max-height: 76px;
+    height: 68px;
   }
   
   .pista-nombre {
@@ -538,9 +614,9 @@
 }
 
 @media (max-width: 576px) {
-  .dashboard-contenido {
-    padding: var(--margenPaginaMobileSmall, 16px 20px);
-    height: 100vh;
+  .home-content {
+    padding: 0.75rem 0.01rem;
+    padding-bottom: 2.5rem;
   }
   
   .cards-resumen-grid {
@@ -562,7 +638,8 @@
   }
   
   .proximas-reservas, .estado-pistas {
-    padding: 16px;
+    padding: 14px;
+    max-height: 280px;
   }
   
   .proximas-reservas h2, .estado-pistas h2 {
@@ -582,8 +659,10 @@
   }
   
   .estado-pista-row {
-    padding: 10px 14px;
-    min-height: 40px;
+    padding: 18px 20px;
+    min-height: 64px;
+    max-height: 70px;
+    height: 64px;
   }
   
   .pista-nombre {
@@ -646,6 +725,6 @@
 }
 
 .ion-palette-dark .club-dropdown-item:hover {
-  background: var(--color-primario);
+  background: var(--color-acento-dashboard);
   color: var(--color-primario-contraste);
 }

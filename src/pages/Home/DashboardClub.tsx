@@ -5,12 +5,10 @@ import CardsResumen from './CardsResumen';
 import './Home.css';
 import { useAuth } from '../../context/AuthContext';
 import BienvenidaDashboard from './BienvenidaDashboard';
-import { useTheme } from '../../context/ThemeContext';
 import axios from 'axios';
 
 const DashboardClub: React.FC = () => {
   const { user } = useAuth();
-  const { theme } = useTheme();
   const [esMobile, setEsMobile] = useState(window.innerWidth <= 768);
   const [clubStats, setClubStats] = useState({
     totalPistas: '-' as string | number,
@@ -152,21 +150,24 @@ const DashboardClub: React.FC = () => {
   }, [user]);
 
   return (
-    <div
-      className={`dashboard-contenido ${esMobile ? 'mobile' : 'desktop'}`}
-      style={{ backgroundColor: 'var(--ion-background-color)' }}
-    >
-      <BienvenidaDashboard />
-      <CardsResumen
-        partidosJugados={clubStats.miembrosClub}
-        nivel={clubStats.totalReservas}
-        victorias={clubStats.totalPistas}
-        torneos={clubStats.ingresosMes}
-        isClubDashboard={true}
-      />
-      <div className="reservas-y-pistas">
-        <ProximasReservas />
-        <EstadoPistas />
+    <div className="home-container">
+      <div className="home-content">
+        <div
+          className={`dashboard-contenido ${esMobile ? 'mobile' : 'desktop'}`}
+        >
+          <BienvenidaDashboard />
+          <CardsResumen
+            partidosJugados={clubStats.miembrosClub}
+            nivel={clubStats.totalReservas}
+            victorias={clubStats.totalPistas}
+            torneos={clubStats.ingresosMes}
+            isClubDashboard={true}
+          />
+          <div className="reservas-y-pistas">
+            <ProximasReservas />
+            <EstadoPistas />
+          </div>
+        </div>
       </div>
     </div>
   );

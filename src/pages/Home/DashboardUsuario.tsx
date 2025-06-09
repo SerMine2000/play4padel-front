@@ -5,12 +5,10 @@ import CardsResumen from './CardsResumen';
 import './Home.css';
 import { useAuth } from '../../context/AuthContext';
 import BienvenidaDashboard from './BienvenidaDashboard';
-import { useTheme } from '../../context/ThemeContext';
 import axios from 'axios';
 
 const DashboardUsuario: React.FC = () => {
   const { user } = useAuth();
-  const { theme } = useTheme();
   const [esMobile, setEsMobile] = useState(window.innerWidth <= 768);
   const [userStats, setUserStats] = useState({
     reservasActivas: '-' as string | number,
@@ -123,21 +121,24 @@ const DashboardUsuario: React.FC = () => {
   }, [user]);
 
   return (
-    <div
-      className={`dashboard-contenido ${esMobile ? 'mobile' : 'desktop'}`}
-      style={{ backgroundColor: 'var(--ion-background-color)' }}
-    >
-      <BienvenidaDashboard />
-      <CardsResumen
-        partidosJugados={userStats.reservasActivas}
-        nivel={userStats.partidosJugados}
-        victorias={userStats.ultimaReserva}
-        torneos={userStats.frecuenciaSemanal}
-        isClubDashboard={false}
-      />
-      <div className="reservas-y-pistas">
-        <ProximasReservas />
-        <EstadoPistas />
+    <div className="home-container">
+      <div className="home-content">
+        <div
+          className={`dashboard-contenido ${esMobile ? 'mobile' : 'desktop'}`}
+        >
+          <BienvenidaDashboard />
+          <CardsResumen
+            partidosJugados={userStats.reservasActivas}
+            nivel={userStats.partidosJugados}
+            victorias={userStats.ultimaReserva}
+            torneos={userStats.frecuenciaSemanal}
+            isClubDashboard={false}
+          />
+          <div className="reservas-y-pistas">
+            <ProximasReservas />
+            <EstadoPistas />
+          </div>
+        </div>
       </div>
     </div>
   );

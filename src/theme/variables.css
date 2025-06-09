@@ -45,6 +45,12 @@
   --fondo-precio: rgba(97, 41, 240, 0.1);
   --borde-precio: rgba(97, 41, 240, 0.2);
   
+  /* SCROLLBAR Y ELEMENTOS DASHBOARD */
+  --color-scroll-principal: var(--color-primario);
+  --color-scroll-hover: #4c1abd;
+  --color-acento-dashboard: var(--color-primario);
+  --gradiente-dashboard: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
+  
   /* VARIABLES IONIC COMPATIBLES */
   --ion-color-primary: var(--color-primario);
   --ion-color-primary-contrast: var(--color-primario-contraste);
@@ -97,6 +103,12 @@
   /* FONDOS ESPECÍFICOS */
   --fondo-precio: rgba(97, 41, 240, 0.15);
   --borde-precio: rgba(97, 41, 240, 0.3);
+  
+  /* SCROLLBAR Y ELEMENTOS DASHBOARD */
+  --color-scroll-principal: var(--color-secundario);
+  --color-scroll-hover: #047857;
+  --color-acento-dashboard: var(--color-secundario);
+  --gradiente-dashboard: linear-gradient(135deg, var(--color-secundario), var(--color-primario));
   
   /* VARIABLES IONIC COMPATIBLES */
   --ion-color-primary: var(--color-primario);
