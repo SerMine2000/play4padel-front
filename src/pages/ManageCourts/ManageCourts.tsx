@@ -1,8 +1,9 @@
 // src/pages/ManageCourts.tsx
 import React, { useState, useEffect, useRef } from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, 
+import { IonGrid, IonRow, IonCol, IonCard, IonCardHeader, 
   IonCardTitle, IonCardContent, IonItem, IonInput, IonToggle, IonButton, IonIcon, IonList,
-  IonLoading, IonToast, IonText, IonModal, IonChip, IonFab, IonFabButton, IonAlert, IonActionSheet, IonBackdrop } from '@ionic/react';
+  IonLoading, IonToast, IonText, IonModal, IonChip, IonFab, IonFabButton, IonAlert, IonActionSheet, IonBackdrop,
+  IonHeader, IonToolbar, IonTitle, IonButtons, IonContent } from '@ionic/react';
 import { addCircleOutline, createOutline, buildOutline, trashOutline, closeCircleOutline, checkmarkCircleOutline, tennisballOutline, 
   cameraOutline, imagesOutline, linkOutline, cloudUploadOutline, closeOutline } from 'ionicons/icons';
 import { useAuth } from "../../context/AuthContext";
@@ -437,8 +438,8 @@ const ManageCourts: React.FC = () => {
 
 
   return (
-    <IonPage>
-      <IonContent className="contenedor-gestion-pistas">
+    <div className="manage-courts-container">
+      <div className="manage-courts-content">
         {/* Mostrar estado de carga inicial */}
         {loading && !clubData && (
           <IonGrid>
@@ -658,7 +659,7 @@ const ManageCourts: React.FC = () => {
         
         {/* FAB para añadir pista - solo mostrar si hay datos del club */}
         {!loading && clubData && (
-          <IonFab vertical="bottom" horizontal="end" slot="fixed">
+          <IonFab vertical="bottom" horizontal="end" slot="fixed" className="manage-courts-fab">
             <IonFabButton onClick={openCreateModal}>
               <IonIcon icon={addCircleOutline} />
             </IonFabButton>
@@ -975,8 +976,8 @@ const ManageCourts: React.FC = () => {
             }
           ]}
         />
-      </IonContent>
-    </IonPage>
+      </div>
+    </div>
   );
 };
 

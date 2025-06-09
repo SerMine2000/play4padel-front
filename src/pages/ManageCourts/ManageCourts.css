@@ -1,6 +1,39 @@
-/* .contenedor-gestion-pistas {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}  */
+/* Contenedor principal - igual que torneos */
+.manage-courts-container {
+  min-height: 100vh;
+  background: var(--fondo-aplicacion);
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  /* Ocultar barra de scroll en diferentes navegadores */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer/Edge */
+}
+
+/* Ocultar barra de scroll en Webkit (Chrome, Safari) */
+.manage-courts-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Asegurar que body/html no tengan scroll visible */
+body, html {
+  overflow-x: hidden !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+body::-webkit-scrollbar, html::-webkit-scrollbar {
+  display: none !important;
+}
+
+.manage-courts-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  position: relative;
+  padding-bottom: 2rem; /* Espacio para FAB - igual que torneos y ligas */
+}
 
 .sin-pistas {
   text-align: center;
@@ -1198,4 +1231,60 @@
   --color: #d1d5db !important;
   background: #4b5563 !important;
   color: #d1d5db !important;
+}
+
+/* ===== FAB FLOTANTE - ESTILO CONSISTENTE CON TORNEOS Y LIGAS ===== */
+.manage-courts-fab {
+  position: fixed !important;
+  bottom: 2rem !important;
+  right: 2rem !important;
+  z-index: 1000 !important;
+}
+
+.manage-courts-fab ion-fab-button {
+  --border-radius: 20px;
+  width: 64px;
+  height: 64px;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Modo claro - morado */
+:root .manage-courts-fab ion-fab-button {
+  --background: var(--color-primario);
+  --color: var(--color-primario-contraste);
+  --box-shadow: 0 12px 30px rgba(97, 41, 240, 0.4);
+}
+
+:root .manage-courts-fab ion-fab-button:hover {
+  transform: scale(1.1);
+  --box-shadow: 0 16px 40px rgba(97, 41, 240, 0.5);
+}
+
+/* Modo oscuro - verde */
+.ion-palette-dark .manage-courts-fab ion-fab-button {
+  --background: var(--color-secundario);
+  --color: var(--color-primario-contraste);
+  --box-shadow: 0 12px 30px rgba(5, 150, 105, 0.4);
+}
+
+.ion-palette-dark .manage-courts-fab ion-fab-button:hover {
+  transform: scale(1.1);
+  --box-shadow: 0 16px 40px rgba(5, 150, 105, 0.5);
+}
+
+.manage-courts-fab ion-fab-button ion-icon {
+  font-size: 1.5rem;
+}
+
+/* Responsive para FAB */
+@media (max-width: 768px) {
+  .manage-courts-fab {
+    bottom: 1.5rem !important;
+    right: 1.5rem !important;
+  }
+  
+  .manage-courts-fab ion-fab-button {
+    width: 56px;
+    height: 56px;
+  }
 }

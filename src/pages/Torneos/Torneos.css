@@ -6,6 +6,27 @@
   background: var(--fondo-aplicacion);
   padding: 0;
   margin: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  /* Ocultar barra de scroll en diferentes navegadores */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer/Edge */
+}
+
+/* Ocultar barra de scroll en Webkit (Chrome, Safari) */
+.torneos-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Asegurar que body/html no tengan scroll visible */
+body, html {
+  overflow-x: hidden !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+body::-webkit-scrollbar, html::-webkit-scrollbar {
+  display: none !important;
 }
 
 .torneos-content {
@@ -330,17 +351,34 @@
 }
 
 .torneos-fab ion-fab-button {
-  --background: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
-  --color: var(--color-primario-contraste);
-  --box-shadow: 0 12px 30px rgba(97, 41, 240, 0.4);
   --border-radius: 20px;
   width: 64px;
   height: 64px;
+  transition: all 0.3s ease-in-out;
 }
 
-.torneos-fab ion-fab-button:hover {
+/* Modo claro - morado */
+:root .torneos-fab ion-fab-button {
+  --background: var(--color-primario);
+  --color: var(--color-primario-contraste);
+  --box-shadow: 0 12px 30px rgba(97, 41, 240, 0.4);
+}
+
+:root .torneos-fab ion-fab-button:hover {
   transform: scale(1.1) rotate(90deg);
   --box-shadow: 0 16px 40px rgba(97, 41, 240, 0.5);
+}
+
+/* Modo oscuro - verde */
+.ion-palette-dark .torneos-fab ion-fab-button {
+  --background: var(--color-secundario);
+  --color: var(--color-primario-contraste);
+  --box-shadow: 0 12px 30px rgba(5, 150, 105, 0.4);
+}
+
+.ion-palette-dark .torneos-fab ion-fab-button:hover {
+  transform: scale(1.1) rotate(90deg);
+  --box-shadow: 0 16px 40px rgba(5, 150, 105, 0.5);
 }
 
 .torneos-fab ion-fab-button ion-icon {
