@@ -58,6 +58,7 @@ const CalendarView: React.FC = () => {
   const [reservaToCancel, setReservaToCancel] = useState<number | null>(null);
 
   const contentRef = useRef<HTMLIonContentElement>(null);
+  const panelReservasRef = useRef<HTMLDivElement>(null);
 
   // Cargar datos iniciales
   useEffect(() => {
@@ -455,6 +456,17 @@ if (!idClub) {
 
     // Luego cargar las reservas para ese día
     cargarReservasDia(dia.fecha);
+
+    // Hacer scroll automático hacia el panel de reservas
+    setTimeout(() => {
+      if (panelReservasRef.current && contentRef.current) {
+        const panelElement = panelReservasRef.current;
+        const rect = panelElement.getBoundingClientRect();
+        const offset = rect.top + window.pageYOffset - 100; // 100px de margen superior
+        
+        contentRef.current.scrollToPoint(0, offset, 800); // 800ms de duración
+      }
+    }, 100); // Pequeño delay para asegurar que el estado se haya actualizado
   };
 
   // Manejar clic en reserva para ver detalles
@@ -856,7 +868,7 @@ if (!idClub) {
 
   return (
     <IonPage>
-      <IonContent className="calendar-view">
+      <IonContent className="calendar-view" ref={contentRef}>
         <div className="calendar-container">
           {/* Segmento para cambiar entre vista calendario y lista */}
           <IonSegment value={vistaActual} onIonChange={e => cambiarVista(e.detail.value as 'calendario' | 'lista')}>
@@ -895,7 +907,7 @@ if (!idClub) {
             </IonGrid>
 
             {/* Panel de reservas del día seleccionado */}
-            <div className="panel-reservas">
+            <div className="panel-reservas" ref={panelReservasRef}>
               {diaSeleccionado && (
                 <h3 className="fecha-seleccionada">
                   {formatearFechaMostrar(diaSeleccionado)}
