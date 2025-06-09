@@ -47,24 +47,35 @@ const DashboardUsuario: React.FC = () => {
         const reservasUsuario = todasReservas.filter((r: any) => r.id_usuario === user.id);
         const reservasActivas = reservasUsuario.filter((r: any) => r.estado === 'confirmada').length;
 
-        // Calcular última reserva
+        // Calcular última reserva (basado en la fecha programada, no en cuándo se creó)
         let ultimaReserva = 'Nunca';
         if (reservasUsuario.length > 0) {
-          const reservasOrdenadas = reservasUsuario.sort((a: any, b: any) => 
-            new Date(b.fecha_reserva).getTime() - new Date(a.fecha_reserva).getTime()
-          );
-          const fechaUltimaReserva = new Date(reservasOrdenadas[0].fecha_reserva);
-          const ahora = new Date();
-          const diferenciaDias = Math.floor((ahora.getTime() - fechaUltimaReserva.getTime()) / (1000 * 60 * 60 * 24));
-          
-          if (diferenciaDias === 0) {
-            ultimaReserva = 'Hoy';
-          } else if (diferenciaDias === 1) {
-            ultimaReserva = 'Ayer';
-          } else if (diferenciaDias < 7) {
-            ultimaReserva = `Hace ${diferenciaDias} días`;
-          } else {
-            ultimaReserva = `Hace ${Math.floor(diferenciaDias / 7)} sem`;
+          // Filtrar solo reservas pasadas (ya jugadas) y ordenar por fecha programada
+          const reservasPasadas = reservasUsuario.filter((r: any) => {
+            const fechaReserva = new Date(r.fecha);
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0); // Solo comparar fechas, no horas
+            return fechaReserva < hoy;
+          });
+
+          if (reservasPasadas.length > 0) {
+            const reservasOrdenadas = reservasPasadas.sort((a: any, b: any) => 
+              new Date(b.fecha).getTime() - new Date(a.fecha).getTime()
+            );
+            const fechaUltimaReserva = new Date(reservasOrdenadas[0].fecha);
+            const ahora = new Date();
+            ahora.setHours(0, 0, 0, 0);
+            const diferenciaDias = Math.floor((ahora.getTime() - fechaUltimaReserva.getTime()) / (1000 * 60 * 60 * 24));
+            
+            if (diferenciaDias === 0) {
+              ultimaReserva = 'Hoy';
+            } else if (diferenciaDias === 1) {
+              ultimaReserva = 'Ayer';
+            } else if (diferenciaDias < 7) {
+              ultimaReserva = `Hace ${diferenciaDias} días`;
+            } else {
+              ultimaReserva = `Hace ${Math.floor(diferenciaDias / 7)} sem`;
+            }
           }
         }
 
