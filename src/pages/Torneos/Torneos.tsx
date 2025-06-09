@@ -32,7 +32,11 @@ import {
   createOutline,
   trashOutline,
   closeOutline,
-  peopleOutline
+  peopleOutline,
+  informationCircleOutline,
+  checkmarkCircleOutline,
+  documentsOutline,
+  cashOutline
 } from 'ionicons/icons';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -394,12 +398,15 @@ const Torneos: React.FC = () => {
         <div className="torneos-modal-overlay" onClick={() => setIsCreateModalOpen(false)}>
           <div className="torneos-modal-container" onClick={(e) => e.stopPropagation()}>
             <div className="torneos-modal-header">
-              <h2>Crear Nuevo Torneo</h2>
+              <h2>
+                <IonIcon icon={trophyOutline} className="torneos-modal-icon" />
+                Crear Nuevo Torneo
+              </h2>
               <button 
                 className="torneos-modal-close"
                 onClick={() => setIsCreateModalOpen(false)}
               >
-                <IonIcon icon={closeOutline} />
+                ×
               </button>
             </div>
             

@@ -243,6 +243,14 @@
   flex: 1;
 }
 
+/* Contenedor de chips de estado */
+.status-chips {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
 /* Chip de estado en el header */
 .status-chip {
   --background: var(--color-primario) !important;
@@ -261,6 +269,16 @@
   box-shadow: 0 4px 12px rgba(97, 41, 240, 0.3);
 }
 
+/* Chip específico para cuadro generado */
+.status-chip:has(ion-icon[icon="play-outline"]) {
+  --background: var(--color-exito) !important;
+  --color: #ffffff !important;
+}
+
+.status-chip:has(ion-icon[icon="play-outline"]):hover {
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
 /* Modo oscuro - usar verde */
 .torneo-detalle-container.dark .status-chip {
   --background: var(--color-secundario) !important;
@@ -271,82 +289,20 @@
   box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
 }
 
-/* Header bottom section con chips */
+.torneo-detalle-container.dark .status-chip:has(ion-icon[icon="play-outline"]) {
+  --background: var(--color-exito) !important;
+  --color: #ffffff !important;
+}
+
+/* Header bottom section simplificado */
 .header-bottom {
   padding: 1.5rem 2rem;
   background: var(--fondo-card);
-}
-
-.header-info {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.info-chip {
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem;
-  background: var(--fondo-aplicacion);
-  border-radius: 12px;
-  border: 1px solid var(--borde-principal);
-  transition: all 0.2s ease;
-}
-
-.info-chip:hover {
-  background: var(--hover-card);
-  border-color: var(--color-primario);
-  transform: translateY(-1px);
-}
-
-.info-chip ion-icon {
-  color: var(--color-primario);
-  font-size: 1.3rem;
-  flex-shrink: 0;
-}
-
-.info-chip-content h3 {
-  margin: 0 0 0.25rem 0;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--texto-secundario);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.info-chip-content p {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--texto-principal);
-  line-height: 1.3;
-}
-
-.torneo-status {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 
-.torneo-status ion-chip {
-  --background: rgba(5, 150, 105, 0.1);
-  --color: var(--color-secundario);
-  border: 1px solid rgba(5, 150, 105, 0.2);
-  font-weight: 600;
-  font-size: 0.85rem;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  transition: all 0.2s ease;
-}
-
-.torneo-status ion-chip:hover {
-  transform: translateY(-1px);
-  --background: rgba(5, 150, 105, 0.15);
-}
 
 /* Botones de acción en el header */
 .header-actions {
@@ -368,49 +324,55 @@
   min-height: 40px;
 }
 
-.header-actions ion-button[fill="outline"] {
-  --color: var(--color-primario);
-  --border-color: var(--color-primario);
-  --background: transparent;
-  border: 2px solid var(--color-primario);
-}
-
-.header-actions ion-button[fill="outline"]:hover {
-  --background: var(--color-primario);
-  --color: var(--color-primario-contraste);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(97, 41, 240, 0.3);
-}
-
-.header-actions ion-button:not([fill="outline"]) {
+.header-actions ion-button {
   --background: var(--color-primario);
   --color: var(--color-primario-contraste);
 }
 
-.header-actions ion-button:not([fill="outline"]):hover {
+/* Quitar el sobrefondo rectangular de los botones */
+.header-actions ion-button.md.button.button-solid.ion-activatable.ion-focusable {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.header-actions ion-button::before {
+  display: none !important;
+}
+
+.header-actions ion-button.button-solid {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Mantener solo el button-native::after */
+.header-actions ion-button .button-native {
+  background: var(--color-primario) !important;
+  border-radius: 20px !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.header-actions ion-button .button-native::before {
+  display: none !important;
+}
+
+.header-actions ion-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(97, 41, 240, 0.4);
 }
 
 /* Modo oscuro - colores verde */
-.torneo-detalle-container.dark .header-actions ion-button[fill="outline"] {
-  --color: var(--color-secundario);
-  --border-color: var(--color-secundario);
-  border-color: var(--color-secundario);
-}
-
-.torneo-detalle-container.dark .header-actions ion-button[fill="outline"]:hover {
-  --background: var(--color-secundario);
-  --color: #ffffff;
-  box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
-}
-
-.torneo-detalle-container.dark .header-actions ion-button:not([fill="outline"]) {
+.torneo-detalle-container.dark .header-actions ion-button {
   --background: var(--color-secundario);
   --color: #ffffff;
 }
 
-.torneo-detalle-container.dark .header-actions ion-button:not([fill="outline"]):hover {
+.torneo-detalle-container.dark .header-actions ion-button .button-native {
+  background: var(--color-secundario) !important;
+}
+
+.torneo-detalle-container.dark .header-actions ion-button:hover {
   box-shadow: 0 4px 15px rgba(5, 150, 105, 0.4);
 }
 
@@ -422,13 +384,13 @@
   padding: 8px;
   box-shadow: var(--sombra-card);
   border: 1px solid var(--borde-principal);
-  width: fit-content;
-  max-width: calc(100% - 2rem);
-  margin-left: auto;
-  margin-right: auto;
+  width: fit-content;              /* Clave: se ajusta al contenido */
+  max-width: calc(100% - 2rem);    /* Máximo ancho responsivo */
+  margin-left: auto;               /* Centrado horizontal */
+  margin-right: auto;              /* Centrado horizontal */
   margin-bottom: 2rem;
   display: flex;
-  justify-content: center;
+  justify-content: center;         /* Centra los botones internos */
 }
 
 .torneo-detalle-container ion-segment-button {
@@ -442,25 +404,55 @@
   min-height: 56px;
   padding: 0 1.5rem;
   margin: 0 4px;
-  flex: 0 0 auto;
-  width: auto;
-  min-width: fit-content;
-  white-space: nowrap;
+  flex: 0 0 auto;                  /* No crece ni se encoge */
+  width: auto;                     /* Ancho automático */
+  min-width: fit-content;          /* Mínimo ancho según contenido */
+  white-space: nowrap;             /* Evita cortar palabras */
+  display: flex;                   /* Flexbox para centrado */
+  align-items: center;             /* Centrado vertical */
+  justify-content: center;         /* Centrado horizontal */
 }
 
 .torneo-detalle-container ion-segment-button ion-label {
   font-size: 1rem;
   font-weight: 600;
-  white-space: nowrap;
+  white-space: nowrap;             /* Evita cortar palabras */
   letter-spacing: 0.3px;
-  text-overflow: clip;
-  overflow: visible;
+  text-overflow: clip;             /* No corta el texto */
+  overflow: visible;               /* Permite ver todo el texto */
+  display: flex;                   /* Flexbox para centrado perfecto */
+  align-items: center;             /* Centrado vertical del texto */
+  justify-content: center;         /* Centrado horizontal del texto */
+  text-align: center;              /* Alineación central del texto */
+  line-height: 1.2;                /* Altura de línea controlada */
+}
+
+/* Quitar hover de los segment buttons */
+.torneo-detalle-container ion-segment-button.md.in-segment.segment-button-has-label.segment-button-has-label-only:hover {
+  --background: transparent !important;
+  --color: var(--texto-secundario) !important;
+  transform: none !important;
+  transition: none !important;
+  box-shadow: none !important;
+}
+
+.torneo-detalle-container ion-segment-button.md.in-segment.segment-button-has-label.segment-button-has-label-only.segment-button-checked:hover {
+  --background: var(--color-primario) !important;
+  --color: var(--color-primario-contraste) !important;
+  transform: none !important;
+  box-shadow: 0 4px 12px rgba(97, 41, 240, 0.25) !important;
 }
 
 .torneo-detalle-container ion-segment-button:hover:not(.segment-button-checked) {
-  --background: var(--hover-card);
-  --color: var(--color-primario);
-  transform: translateY(-1px);
+  --background: transparent !important;
+  --color: var(--texto-secundario) !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Desactivar completamente las transiciones hover */
+.torneo-detalle-container ion-segment-button:hover {
+  transition: none !important;
 }
 
 .torneo-detalle-container ion-segment-button.segment-button-checked {
@@ -474,8 +466,23 @@
   --color-checked: #ffffff;
 }
 
+/* Quitar hover en modo oscuro también */
+.torneo-detalle-container.dark ion-segment-button.md.in-segment.segment-button-has-label.segment-button-has-label-only:hover {
+  --background: transparent !important;
+  --color: var(--texto-secundario) !important;
+  transform: none !important;
+}
+
+.torneo-detalle-container.dark ion-segment-button.md.in-segment.segment-button-has-label.segment-button-has-label-only.segment-button-checked:hover {
+  --background: var(--color-secundario) !important;
+  --color: #ffffff !important;
+  transform: none !important;
+}
+
 .torneo-detalle-container.dark ion-segment-button:hover:not(.segment-button-checked) {
-  --color: var(--color-secundario);
+  --background: transparent !important;
+  --color: var(--texto-secundario) !important;
+  transform: none !important;
 }
 
 .torneo-detalle-container.dark ion-segment-button.segment-button-checked {
@@ -676,32 +683,49 @@
   --background: rgba(5, 150, 105, 0.1);
 }
 
-/* Cards de parejas */
+/* Cards de parejas - Rediseño profesional */
 .pareja-card {
   background: var(--fondo-card);
-  border-radius: 12px;
+  border-radius: 16px;
   box-shadow: var(--sombra-card);
   border: 1px solid var(--borde-principal);
   overflow: hidden;
-  transition: all 0.2s ease;
-  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+  margin-bottom: 2rem;
   height: 100%;
+  position: relative;
+}
+
+.pareja-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-primario) 0%, var(--color-secundario) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .pareja-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(97, 41, 240, 0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(97, 41, 240, 0.2);
   border-color: var(--color-primario);
+}
+
+.pareja-card:hover::before {
+  opacity: 1;
 }
 
 /* Modo oscuro para pareja card */
 .torneo-detalle-container.dark .pareja-card:hover {
-  box-shadow: 0 12px 40px rgba(5, 150, 105, 0.15);
+  box-shadow: 0 16px 48px rgba(5, 150, 105, 0.2);
   border-color: var(--color-secundario);
 }
 
 .pareja-card ion-card-content {
-  padding: 1.5rem;
+  padding: 2rem;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -711,72 +735,158 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--borde-principal);
 }
 
 .pareja-header ion-badge {
-  font-weight: 600;
-  font-size: 0.8rem;
+  --background: var(--color-primario);
+  --color: var(--color-primario-contraste);
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
 }
 
 .pareja-header ion-chip {
+  --background: rgba(5, 150, 105, 0.1);
+  --color: var(--color-secundario);
+  border: 1px solid rgba(5, 150, 105, 0.2);
   font-weight: 600;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
+  padding: 0.4rem 1rem;
+  border-radius: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
 .jugadores {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
   flex: 1;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .jugador {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem;
+  gap: 1rem;
+  padding: 1rem;
   background: var(--fondo-aplicacion);
-  border-radius: 8px;
-  transition: all 0.2s ease;
+  border-radius: 12px;
+  transition: all 0.3s ease;
   border: 1px solid var(--borde-principal);
+  position: relative;
+  overflow: hidden;
+}
+
+.jugador::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(97, 41, 240, 0.03) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .jugador:hover {
   background: var(--hover-card);
-  transform: translateX(2px);
+  transform: translateX(4px);
   border-color: var(--color-primario);
+  box-shadow: 0 4px 15px rgba(97, 41, 240, 0.1);
+}
+
+.jugador:hover::before {
+  opacity: 1;
 }
 
 /* Modo oscuro para jugador */
 .torneo-detalle-container.dark .jugador:hover {
   border-color: var(--color-secundario);
+  box-shadow: 0 4px 15px rgba(5, 150, 105, 0.1);
 }
 
-.torneo-detalle-container.dark .jugador ion-avatar {
+.torneo-detalle-container.dark .jugador::before {
+  background: linear-gradient(135deg, rgba(5, 150, 105, 0.03) 0%, transparent 50%);
+}
+
+.jugador-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 3px solid var(--color-primario);
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+  background: var(--fondo-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.jugador:hover .jugador-avatar {
+  transform: scale(1.05);
+  border-color: var(--color-secundario);
+  box-shadow: 0 4px 12px rgba(97, 41, 240, 0.2);
+}
+
+.torneo-detalle-container.dark .jugador-avatar {
   border-color: var(--color-secundario);
 }
 
-.torneo-detalle-container.dark .jugador ion-icon {
-  color: var(--color-secundario);
+.torneo-detalle-container.dark .jugador:hover .jugador-avatar {
+  border-color: var(--color-primario);
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
 }
 
-.jugador ion-avatar {
-  width: 36px;
-  height: 36px;
-  border: 2px solid var(--color-primario);
+.jugador-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  transition: opacity 0.3s ease;
 }
 
-.jugador ion-icon {
-  font-size: 1.2rem;
+.jugador-avatar img[style*="display: none"] + ion-icon,
+.jugador-avatar:has(img[style*="display: none"]) ion-icon {
+  display: flex !important;
+}
+
+.jugador-avatar ion-icon {
+  font-size: 1.5rem;
   color: var(--color-primario);
 }
 
-.jugador span {
-  font-weight: 500;
+.torneo-detalle-container.dark .jugador-avatar ion-icon {
+  color: var(--color-secundario);
+}
+
+.jugador-info {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.jugador-nombre {
+  font-weight: 600;
   color: var(--texto-principal);
-  font-size: 0.9rem;
+  font-size: 1rem;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.3;
+}
+
+.jugador-email {
+  color: var(--texto-secundario);
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin: 0;
 }
 
 .fecha-inscripcion {
@@ -1092,7 +1202,7 @@
     margin-bottom: 0;
   }
   
-  .status-chip {
+  .status-chips {
     align-self: flex-start;
   }
   
@@ -1100,44 +1210,36 @@
     padding: 1rem 1.5rem 1.5rem 1.5rem;
   }
   
-  .header-info {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-  }
-  
-  .info-chip {
-    padding: 0.75rem;
-  }
-  
   .info-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
   
-  .info-item {
-    flex-direction: column;
-    text-align: center;
-    gap: 0.75rem;
-    padding: 1.25rem;
-  }
   
-  ion-segment {
+  .torneo-detalle-container ion-segment {
     padding: 6px;
     max-width: calc(100% - 1rem);
     width: fit-content;
   }
   
-  ion-segment-button {
+  .torneo-detalle-container ion-segment-button {
     min-height: 48px;
     padding: 0 1rem;
     margin: 0 2px;
     flex: 0 0 auto;
     width: auto;
     min-width: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
-  ion-segment-button ion-label {
+  .torneo-detalle-container ion-segment-button ion-label {
     font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
   
   .partido-equipos {
@@ -1160,11 +1262,6 @@
     width: 100%;
   }
   
-  .torneo-status {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1rem;
-  }
   
   .admin-actions {
     position: fixed;
@@ -1207,46 +1304,88 @@
     padding: 0.75rem 1rem 1rem 1rem;
   }
   
-  .info-chip {
-    padding: 0.75rem;
-    flex-direction: column;
-    text-align: center;
-    gap: 0.5rem;
-  }
-  
-  .info-chip ion-icon {
-    font-size: 1.5rem;
-  }
-  
   .info-item {
     padding: 1rem;
   }
   
-  ion-segment {
+  .torneo-detalle-container ion-segment {
     padding: 4px;
     max-width: calc(100% - 0.5rem);
     width: fit-content;
-    overflow-x: auto;
+    overflow-x: auto;                /* Scroll horizontal si es necesario */
     overflow-y: hidden;
   }
   
-  ion-segment-button {
+  .torneo-detalle-container ion-segment-button {
     min-height: 44px;
     padding: 0 0.75rem;
     margin: 0 1px;
     flex: 0 0 auto;
     width: auto;
     min-width: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
-  ion-segment-button ion-label {
+  .torneo-detalle-container ion-segment-button ion-label {
     font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
   
   .jugador,
   .equipo {
     padding: 0.75rem;
     font-size: 0.85rem;
+  }
+
+  .pareja-card {
+    margin-bottom: 1.5rem;
+  }
+
+  .pareja-card ion-card-content {
+    padding: 1.5rem;
+  }
+
+  .jugador {
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .jugador-avatar {
+    width: 40px;
+    height: 40px;
+    border-width: 2px;
+  }
+
+  .jugador-avatar ion-icon {
+    font-size: 1.3rem;
+  }
+
+  .jugador-nombre {
+    font-size: 0.9rem;
+  }
+
+  .jugador-email {
+    font-size: 0.8rem;
+  }
+
+  .pareja-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .pareja-header ion-badge {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .pareja-header ion-chip {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.8rem;
   }
   
   .empty-state {
@@ -1309,4 +1448,516 @@ ion-list {
 
 ion-content {
   --background: var(--fondo-aplicacion);
+}
+
+/* ===== MODAL PROFESIONAL DE INSCRIPCIÓN ===== */
+.modal-inscripcion {
+  --width: 95vw;
+  --max-width: 600px;
+  --height: auto;
+  --max-height: 85vh;
+  --border-radius: 16px;
+  --box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  --backdrop-opacity: 0.6;
+}
+
+.modal-inscripcion::part(content) {
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--fondo-card);
+}
+
+/* ===== NUEVOS ESTILOS PROFESIONALES PARA MODAL HEADER ===== */
+.modal-header-profesional {
+  background: var(--fondo-panel-navegacion) \!important;
+  border-bottom: 1px solid var(--borde-principal) \!important;
+  height: 60px \!important;
+  min-height: 60px \!important;
+  padding: 0 20px \!important;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header-profesional h2 {
+  font-size: 1.2rem \!important;
+  font-weight: 600 \!important;
+  color: var(--texto-panel-navegacion) \!important;
+  display: flex \!important;
+  align-items: center \!important;
+  gap: 12px \!important;
+  margin: 0 \!important;
+  line-height: 1.3 \!important;
+  height: 44px \!important;
+}
+
+.modal-inscripcion-icon {
+  font-size: 1.3rem \!important;
+  color: var(--color-secundario) \!important;
+  flex-shrink: 0 \!important;
+  width: 22px \!important;
+  height: 22px \!important;
+}
+
+.modal-header-profesional ion-button {
+  --color: var(--texto-panel-navegacion) \!important;
+  --background: transparent \!important;
+  font-size: 1.2rem \!important;
+  font-weight: bold \!important;
+  width: 40px \!important;
+  height: 40px \!important;
+  border-radius: 50% \!important;
+  transition: all 0.3s ease \!important;
+  border: none \!important;
+  --padding-start: 0 \!important;
+  --padding-end: 0 \!important;
+}
+
+.modal-header-profesional ion-button:hover {
+  --background: rgba(255, 255, 255, 0.1) \!important;
+  transform: scale(1.05) \!important;
+}
+
+/* ===== SECCIONES DEL FORMULARIO ===== */
+.inscripcion-form-section {
+  background: var(--fondo-card);
+  border: 1px solid var(--borde-principal);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--sombra-card);
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.4s ease-out;
+  animation-fill-mode: both;
+}
+
+.inscripcion-form-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.inscripcion-section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 20px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--texto-principal);
+  border-bottom: 2px solid var(--color-primario);
+  padding-bottom: 8px;
+}
+
+.inscripcion-section-title ion-icon {
+  font-size: 1.3rem;
+  color: var(--color-primario);
+}
+
+/* ===== CONTENIDO MEJORADO ===== */
+.modal-content-profesional {
+  background: var(--fondo-card) \!important;
+  color: var(--texto-principal) \!important;
+  padding: 24px;
+  max-height: calc(85vh - 60px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primario) var(--fondo-input);
+}
+
+.modal-content-profesional::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content-profesional::-webkit-scrollbar-track {
+  background: var(--fondo-input);
+  border-radius: 3px;
+}
+
+.modal-content-profesional::-webkit-scrollbar-thumb {
+  background: var(--color-primario);
+  border-radius: 3px;
+}
+
+.modal-content-profesional::-webkit-scrollbar-thumb:hover {
+  background: var(--color-secundario);
+}
+
+/* ===== CAMPOS MEJORADOS ===== */
+.modal-content-profesional ion-item {
+  --background: var(--fondo-input) \!important;
+  --border-radius: 12px;
+  --color: var(--texto-principal);
+  --padding-start: 16px \!important;
+  --padding-end: 16px \!important;
+  --min-height: 56px;
+  --border-width: 0 \!important;
+  --border-color: transparent \!important;
+  --inner-border-width: 0 \!important;
+  --highlight-color-focused: transparent \!important;
+  --highlight-color-valid: transparent \!important;
+  --highlight-color-invalid: transparent \!important;
+  margin-bottom: 1rem;
+  border: 2px solid var(--borde-input) \!important;
+  background: var(--fondo-input) \!important;
+  border-radius: 12px;
+  padding: 12px 16px;
+  transition: all 0.3s ease \!important;
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-content-profesional ion-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(97, 41, 240, 0.03) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.modal-content-profesional ion-item:hover {
+  background: var(--hover-card) \!important;
+  border-color: var(--color-primario) \!important;
+  transform: translateY(-1px) \!important;
+  box-shadow: 0 4px 12px rgba(97, 41, 240, 0.15) \!important;
+}
+
+.modal-content-profesional ion-item:hover::before {
+  opacity: 1;
+}
+
+.modal-content-profesional ion-item:focus-within {
+  border: 2px solid var(--color-primario) \!important;
+  box-shadow: 0 0 0 3px rgba(97, 41, 240, 0.15);
+  background: var(--fondo-card) \!important;
+  transform: translateY(-1px) \!important;
+}
+
+.modal-content-profesional ion-label {
+  font-weight: 600;
+  color: var(--texto-principal);
+  font-size: 0.9rem;
+  position: relative;
+  z-index: 1;
+}
+
+.modal-content-profesional ion-select,
+.modal-content-profesional ion-input {
+  --color: var(--texto-principal);
+  --placeholder-color: var(--texto-placeholder);
+  --background: transparent \!important;
+  --border-width: 0 \!important;
+  --border-color: transparent \!important;
+  --inner-border-width: 0 \!important;
+  border: none \!important;
+  background: transparent \!important;
+  box-shadow: none \!important;
+  outline: none \!important;
+  position: relative;
+  z-index: 1;
+  font-size: 1rem;
+}
+
+/* ===== PIE DEL MODAL MEJORADO ===== */
+.modal-footer-profesional {
+  padding: 20px 24px;
+  background: var(--fondo-card);
+  border-top: 1px solid var(--borde-principal);
+  display: flex;
+  gap: 12px;
+}
+
+.modal-footer-profesional ion-button {
+  flex: 1;
+  height: 48px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  --border-radius: 12px;
+}
+
+.inscripcion-submit-btn {
+  --background: var(--color-primario) \!important;
+  --color: var(--color-primario-contraste) \!important;
+  background: var(--color-primario) \!important;
+  color: var(--color-primario-contraste) \!important;
+  box-shadow: 0 4px 15px rgba(97, 41, 240, 0.3);
+}
+
+.inscripcion-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(97, 41, 240, 0.4);
+  --background: var(--color-secundario) \!important;
+}
+
+.inscripcion-cancel-btn {
+  --background: transparent \!important;
+  --color: var(--texto-secundario) \!important;
+  background: transparent \!important;
+  color: var(--texto-secundario) \!important;
+  border: 2px solid var(--borde-principal);
+}
+
+.inscripcion-cancel-btn:hover {
+  --background: var(--hover-card) \!important;
+  --color: var(--texto-principal) \!important;
+  border-color: var(--color-primario);
+  transform: translateY(-1px);
+}
+
+/* ===== ANIMACIONES ===== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.inscripcion-form-section:nth-child(1) { animation-delay: 0.1s; }
+.inscripcion-form-section:nth-child(2) { animation-delay: 0.2s; }
+
+/* ===== RESPONSIVE DESIGN PARA MODAL ===== */
+@media (max-width: 768px) {
+  .modal-inscripcion {
+    --max-width: 95vw;
+    --max-height: 90vh;
+  }
+  
+  .modal-content-profesional {
+    padding: 16px;
+    max-height: calc(90vh - 60px);
+  }
+  
+  .inscripcion-form-section {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .modal-footer-profesional {
+    flex-direction: column;
+  }
+  
+  .inscripcion-section-title {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-inscripcion {
+    --max-width: 100vw;
+    --max-height: 100vh;
+    --border-radius: 0;
+  }
+  
+  .modal-content-profesional {
+    padding: 12px;
+    max-height: calc(100vh - 60px);
+  }
+  
+  .inscripcion-form-section {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .modal-content-profesional ion-item {
+    padding: 10px 12px;
+    --min-height: 48px;
+  }
+  
+  .modal-footer-profesional ion-button {
+    height: 44px;
+    font-size: 0.9rem;
+  }
+}
+
+/* ===== MODAL PROFESIONAL DE REGISTRAR RESULTADO ===== */
+.modal-resultado {
+  --width: 95vw;
+  --max-width: 600px;
+  --height: auto;
+  --max-height: 85vh;
+  --border-radius: 16px;
+  --box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  --backdrop-opacity: 0.6;
+}
+
+.modal-resultado::part(content) {
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--fondo-card);
+}
+
+.modal-resultado-icon {
+  font-size: 1.3rem \!important;
+  color: var(--color-secundario) \!important;
+  flex-shrink: 0 \!important;
+  width: 22px \!important;
+  height: 22px \!important;
+}
+
+/* ===== SECCIONES DEL FORMULARIO DE RESULTADO ===== */
+.resultado-form-section {
+  background: var(--fondo-card);
+  border: 1px solid var(--borde-principal);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--sombra-card);
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.4s ease-out;
+  animation-fill-mode: both;
+}
+
+.resultado-form-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.resultado-section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 20px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--texto-principal);
+  border-bottom: 2px solid var(--color-primario);
+  padding-bottom: 8px;
+}
+
+.resultado-section-title ion-icon {
+  font-size: 1.3rem;
+  color: var(--color-primario);
+}
+
+.resultado-info-note {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--color-info-claro) 0%, var(--color-info) 100%);
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.resultado-info-note ion-icon {
+  color: var(--color-info);
+  font-size: 1.2rem;
+}
+
+.resultado-info-note small {
+  color: var(--color-info);
+  font-weight: 500;
+}
+
+/* ===== BOTONES DEL MODAL DE RESULTADO ===== */
+.resultado-submit-btn {
+  --background: var(--color-primario) \!important;
+  --color: var(--color-primario-contraste) \!important;
+  background: var(--color-primario) \!important;
+  color: var(--color-primario-contraste) \!important;
+  box-shadow: 0 4px 15px rgba(97, 41, 240, 0.3);
+}
+
+.resultado-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(97, 41, 240, 0.4);
+  --background: var(--color-secundario) \!important;
+}
+
+.resultado-cancel-btn {
+  --background: transparent \!important;
+  --color: var(--texto-secundario) \!important;
+  background: transparent \!important;
+  color: var(--texto-secundario) \!important;
+  border: 2px solid var(--borde-principal);
+}
+
+.resultado-cancel-btn:hover {
+  --background: var(--hover-card) \!important;
+  --color: var(--texto-principal) \!important;
+  border-color: var(--color-primario);
+  transform: translateY(-1px);
+}
+
+/* ===== INFORMACIÓN DEL PARTIDO MEJORADA ===== */
+.resultado-form-section .partido-info {
+  background: var(--fondo-aplicacion);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 0;
+  border: 1px solid var(--borde-secundario);
+}
+
+.resultado-form-section .partido-info h4 {
+  margin: 0 0 0.5rem 0;
+  color: var(--color-primario);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.resultado-form-section .partido-info p {
+  margin: 0 0 0.5rem 0;
+  color: var(--texto-secundario);
+  font-size: 0.95rem;
+}
+
+/* ===== ANIMACIONES PARA RESULTADO ===== */
+.resultado-form-section:nth-child(1) { animation-delay: 0.1s; }
+.resultado-form-section:nth-child(2) { animation-delay: 0.2s; }
+
+/* ===== RESPONSIVE DESIGN PARA MODAL RESULTADO ===== */
+@media (max-width: 768px) {
+  .modal-resultado {
+    --max-width: 95vw;
+    --max-height: 90vh;
+  }
+  
+  .resultado-form-section {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .resultado-section-title {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-resultado {
+    --max-width: 100vw;
+    --max-height: 100vh;
+    --border-radius: 0;
+  }
+  
+  .resultado-form-section {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+}
+
+/* ===== MODO OSCURO ESPECÍFICO ===== */
+.ion-palette-dark .inscripcion-form-section,
+.ion-palette-dark .resultado-form-section {
+  background: var(--fondo-card);
+  border-color: var(--borde-principal);
+}
+
+.ion-palette-dark .modal-content-profesional ion-item {
+  background: var(--fondo-input) \!important;
+  border-color: var(--borde-input);
+}
+
+.ion-palette-dark .modal-content-profesional ion-item:hover {
+  background: var(--hover-card) \!important;
+  border-color: var(--color-primario);
 }

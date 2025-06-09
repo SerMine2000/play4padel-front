@@ -25,9 +25,14 @@ import {
   IonText,
   IonModal,
   IonCheckbox,
-  IonBadge
+  IonBadge,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonSpinner
 } from '@ionic/react';
-import { personAddOutline, personRemoveOutline } from 'ionicons/icons';
+import { personAddOutline, personRemoveOutline, peopleOutline, informationCircleOutline, checkmarkCircleOutline, closeCircleOutline } from 'ionicons/icons';
 import { useAuth } from '../../context/AuthContext';
 import apiService from '../../services/api.service';
 import Avatar from '../../components/Avatar';
@@ -324,72 +329,146 @@ const GestionUsuariosClub: React.FC = () => {
           color={colorToast}
         />
 
-        <IonModal isOpen={mostrarModalAñadirSocios} onDidDismiss={() => setMostrarModalAñadirSocios(false)}>
-          <IonContent className="ion-padding">
-            <h2>Añadir socios</h2>
-            {usuarios.length === 0 ? (
-              <IonText>Cargando usuarios...</IonText>
-            ) : (
-              <>
-                <p>Selecciona los usuarios que deseas añadir como socios del club.</p>
-                <IonList>
-                  {
-                    usuarios
-                      .filter(usuario =>
+        <IonModal className="modal-añadir-socios" isOpen={mostrarModalAñadirSocios} onDidDismiss={() => setMostrarModalAñadirSocios(false)}>
+          <IonHeader className="modal-socios-header-compact">
+            <IonToolbar className="modal-socios-toolbar-compact">
+              <IonTitle className="modal-socios-title-compact">
+                <IonIcon icon={peopleOutline} className="modal-socios-icon-compact" />
+                Añadir Socios
+              </IonTitle>
+              <IonButtons slot="end" className="modal-socios-buttons-compact">
+                <IonButton 
+                  fill="clear" 
+                  className="modal-socios-close-btn-compact"
+                  onClick={() => {
+                    setUsuariosSeleccionados([]);
+                    setMostrarModalAñadirSocios(false);
+                  }}
+                >
+                  ×
+                </IonButton>
+              </IonButtons>
+            </IonToolbar>
+          </IonHeader>
+
+          <IonContent className="modal-socios-content">
+            <div className="modal-socios-container">
+              {/* Información del proceso */}
+              <div className="socios-info-section">
+                <h3 className="socios-section-title">
+                  <IonIcon icon={informationCircleOutline} />
+                  Información
+                </h3>
+                <p className="socios-description">
+                  Selecciona los usuarios que deseas añadir como socios del club. Solo aparecen usuarios que no son administradores ni socios actuales.
+                </p>
+              </div>
+
+              {/* Lista de usuarios disponibles */}
+              <div className="socios-users-section">
+                <h3 className="socios-section-title">
+                  <IonIcon icon={peopleOutline} />
+                  Usuarios Disponibles
+                </h3>
+                
+                {usuarios.length === 0 ? (
+                  <div className="socios-loading">
+                    <IonSpinner name="crescent" />
+                    <IonText>Cargando usuarios...</IonText>
+                  </div>
+                ) : (
+                  <>
+                    {(() => {
+                      const usuariosDisponibles = usuarios.filter(usuario =>
                         usuario.id_rol === 5 &&
                         !esUsuarioMiembro(usuario.id) &&
                         !esUsuarioAdmin(usuario.id)
-                    )
-                      .sort((a, b) => {
-                        const aDeshabilitado = esUsuarioMiembro(a.id) || esUsuarioAdmin(a.id);
-                        const bDeshabilitado = esUsuarioMiembro(b.id) || esUsuarioAdmin(b.id);
-                        return aDeshabilitado === bDeshabilitado ? 0 : aDeshabilitado ? 1 : -1;
-                      })
-                      .map(usuario => {
-                        const deshabilitado = esUsuarioMiembro(usuario.id) || esUsuarioAdmin(usuario.id);
-                        const seleccionado = usuariosSeleccionados.includes(usuario.id);
+                      );
+                      
+                      if (usuariosDisponibles.length === 0) {
                         return (
-                          <IonItem key={usuario.id} disabled={deshabilitado} style={deshabilitado ? { opacity: 0.5 } : {}}>
-                            <IonLabel>
-                              {usuario.nombre} {usuario.apellidos} ({usuario.email})
-                            </IonLabel>
-                            <IonCheckbox
-                              checked={seleccionado}
-                              disabled={deshabilitado}
-                              onIonChange={e => {
-                                const marcado = e.detail.checked;
-                                setUsuariosSeleccionados(prev =>
-                                  marcado
-                                    ? [...prev, usuario.id]
-                                    : prev.filter(id => id !== usuario.id)
-                                );
-                              }}
-                              slot="end"
-                            />
-                          </IonItem>
+                          <div className="socios-empty">
+                            <IonIcon icon={peopleOutline} />
+                            <p>No hay usuarios disponibles para añadir como socios</p>
+                          </div>
                         );
-                      })
-                  }
-                </IonList>
+                      }
+                      
+                      return (
+                        <IonList className="socios-users-list">
+                          {usuariosDisponibles
+                            .sort((a, b) => {
+                              const aDeshabilitado = esUsuarioMiembro(a.id) || esUsuarioAdmin(a.id);
+                              const bDeshabilitado = esUsuarioMiembro(b.id) || esUsuarioAdmin(b.id);
+                              return aDeshabilitado === bDeshabilitado ? 0 : aDeshabilitado ? 1 : -1;
+                            })
+                            .map(usuario => {
+                              const deshabilitado = esUsuarioMiembro(usuario.id) || esUsuarioAdmin(usuario.id);
+                              const seleccionado = usuariosSeleccionados.includes(usuario.id);
+                              return (
+                                <IonItem 
+                                  key={usuario.id} 
+                                  className={`socios-user-item ${deshabilitado ? 'disabled' : ''}`}
+                                  disabled={deshabilitado}
+                                >
+                                  <IonLabel className="socios-user-label">
+                                    {usuario.nombre} {usuario.apellidos} ({usuario.email})
+                                  </IonLabel>
+                                  <IonCheckbox
+                                    className="socios-user-checkbox"
+                                    checked={seleccionado}
+                                    disabled={deshabilitado}
+                                    onIonChange={e => {
+                                      const marcado = e.detail.checked;
+                                      setUsuariosSeleccionados(prev =>
+                                        marcado
+                                          ? [...prev, usuario.id]
+                                          : prev.filter(id => id !== usuario.id)
+                                      );
+                                    }}
+                                    slot="end"
+                                  />
+                                </IonItem>
+                              );
+                            })
+                          }
+                        </IonList>
+                      );
+                    })()} 
+                  </>
+                )}
+              </div>
 
-                <IonButton expand="block" onClick={async () => {
-                  for (const id of usuariosSeleccionados) {
-                    await añadirComoMiembro(id);
-                  }
-                  setUsuariosSeleccionados([]);
-                  await cargarUsuarios();
-                  setMostrarModalAñadirSocios(false);
-                }}>
-                  Añadir seleccionados
-                </IonButton>
-                <IonButton expand="block" fill="clear" onClick={() => {
-                  setUsuariosSeleccionados([]);
-                  setMostrarModalAñadirSocios(false);
-                }}>
+              {/* Acciones */}
+              <div className="modal-socios-actions">
+                <IonButton 
+                  fill="outline" 
+                  className="socios-action-btn socios-cancel-btn"
+                  onClick={() => {
+                    setUsuariosSeleccionados([]);
+                    setMostrarModalAñadirSocios(false);
+                  }}
+                >
+                  <IonIcon slot="start" icon={closeCircleOutline} />
                   Cancelar
                 </IonButton>
-              </>
-            )}
+                <IonButton
+                  className="socios-action-btn socios-add-btn"
+                  disabled={usuariosSeleccionados.length === 0}
+                  onClick={async () => {
+                    for (const id of usuariosSeleccionados) {
+                      await añadirComoMiembro(id);
+                    }
+                    setUsuariosSeleccionados([]);
+                    await cargarUsuarios();
+                    setMostrarModalAñadirSocios(false);
+                  }}
+                >
+                  <IonIcon slot="start" icon={checkmarkCircleOutline} />
+                  Añadir {usuariosSeleccionados.length > 0 ? `(${usuariosSeleccionados.length})` : 'Seleccionados'}
+                </IonButton>
+              </div>
+            </div>
           </IonContent>
         </IonModal>
 

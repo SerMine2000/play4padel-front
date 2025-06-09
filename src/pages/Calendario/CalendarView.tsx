@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonBackButton, IonGrid,
-  IonRow, IonCol, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonItem, IonLabel, IonList,
+  IonRow, IonCol, IonLabel, IonList,
   IonIcon, IonLoading, IonToast, IonChip, IonButton, IonModal, IonSegment, IonSegmentButton, IonText,
   IonItemDivider, IonSpinner, IonRefresher, IonRefresherContent, IonAlert } from '@ionic/react';
 import {arrowBack, calendarOutline, timeOutline, personOutline, cashOutline, tennisballOutline,
@@ -932,110 +932,118 @@ if (!idClub) {
 
         {/* Modal de detalle de reserva */}
         <IonModal className="modal-detalle-reserva" isOpen={mostrarDetalleReserva} onDidDismiss={() => setMostrarDetalleReserva(false)}>
-          <IonHeader>
-            <IonToolbar color="primary">
-              <IonButtons slot="end">
-                <IonButton onClick={() => setMostrarDetalleReserva(false)}>
-                  Cerrar
+          <IonHeader className="modal-reserva-header-compact">
+            <IonToolbar className="modal-reserva-toolbar-compact">
+              <IonTitle className="modal-reserva-title-compact">
+                <IonIcon icon={calendarOutline} className="modal-reserva-icon-compact" />
+                Detalle de Reserva
+              </IonTitle>
+              <IonButtons slot="end" className="modal-reserva-buttons-compact">
+                <IonButton 
+                  fill="clear" 
+                  className="modal-reserva-close-btn-compact"
+                  onClick={() => setMostrarDetalleReserva(false)}
+                >
+                  ×
                 </IonButton>
               </IonButtons>
-              <IonTitle>Detalle de Reserva</IonTitle>
             </IonToolbar>
           </IonHeader>
 
-          <IonContent>
+          <IonContent className="modal-reserva-content">
             {reservaSeleccionada && (
-              <IonCard>
-                <IonCardHeader>
-                  <IonCardTitle>Reserva #{reservaSeleccionada.id}</IonCardTitle>
-                </IonCardHeader>
+              <div className="modal-reserva-container">
+                {/* Información del cliente */}
+                <div className="reserva-info-section">
+                  <h3 className="reserva-section-title">
+                    <IonIcon icon={personOutline} />
+                    Información del Cliente
+                  </h3>
+                  <div className="reserva-info-grid">
+                    <div className="reserva-info-field">
+                      <IonIcon icon={personOutline} className="reserva-field-icon" />
+                      <div className="reserva-field-content">
+                        <p className="reserva-field-label">Cliente</p>
+                        <p className="reserva-field-value">{reservaSeleccionada.nombre_usuario}</p>
+                      </div>
+                    </div>
+                    <div className="reserva-info-field">
+                      <IonIcon icon={calendarOutline} className="reserva-field-icon" />
+                      <div className="reserva-field-content">
+                        <p className="reserva-field-label">Estado</p>
+                        <IonChip 
+                          color={getColorEstadoReserva(reservaSeleccionada.estado)} 
+                          className="reserva-estado-chip"
+                        >
+                          {reservaSeleccionada.estado}
+                        </IonChip>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-                <IonCardContent>
-                  <IonGrid>
-                    <IonRow>
-                      <IonCol size="12">
-                        <IonItem lines="none">
-                          <IonIcon icon={personOutline} slot="start" color="primary" />
-                          <IonLabel>
-                            <h2>Cliente</h2>
-                            <p>{reservaSeleccionada.nombre_usuario}</p>
-                          </IonLabel>
-                        </IonItem>
-                      </IonCol>
+                {/* Información de la reserva */}
+                <div className="reserva-info-section">
+                  <h3 className="reserva-section-title">
+                    <IonIcon icon={calendarOutline} />
+                    Detalles de la Reserva
+                  </h3>
+                  <div className="reserva-info-grid">
+                    <div className="reserva-info-field">
+                      <IonIcon icon={calendarOutline} className="reserva-field-icon" />
+                      <div className="reserva-field-content">
+                        <p className="reserva-field-label">Fecha</p>
+                        <p className="reserva-field-value">{new Date(reservaSeleccionada.fecha).toLocaleDateString('es-ES')}</p>
+                      </div>
+                    </div>
+                    <div className="reserva-info-field">
+                      <IonIcon icon={timeOutline} className="reserva-field-icon" />
+                      <div className="reserva-field-content">
+                        <p className="reserva-field-label">Horario</p>
+                        <p className="reserva-field-value">{formatearHora(reservaSeleccionada.hora_inicio)} - {formatearHora(reservaSeleccionada.hora_fin)}</p>
+                      </div>
+                    </div>
+                    <div className="reserva-info-field">
+                      <IonIcon icon={tennisballOutline} className="reserva-field-icon" />
+                      <div className="reserva-field-content">
+                        <p className="reserva-field-label">Pista</p>
+                        <p className="reserva-field-value">
+                          {reservaSeleccionada.pista_numero
+                            ? `Pista ${reservaSeleccionada.pista_numero} - ${reservaSeleccionada.pista_tipo}`
+                            : `ID: ${reservaSeleccionada.id_pista}`}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="reserva-info-field">
+                      <IonIcon icon={cashOutline} className="reserva-field-icon" />
+                      <div className="reserva-field-content">
+                        <p className="reserva-field-label">Precio Total</p>
+                        <p className="reserva-field-value">{reservaSeleccionada.precio_total.toFixed(2)}€</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-                      <IonCol size="12">
-                        <IonItem lines="none">
-                          <IonIcon icon={calendarOutline} slot="start" color="primary" />
-                          <IonLabel>
-                            <h2>Fecha</h2>
-                            <p>{new Date(reservaSeleccionada.fecha).toLocaleDateString('es-ES')}</p>
-                          </IonLabel>
-                        </IonItem>
-                      </IonCol>
-
-                      <IonCol size="12">
-                        <IonItem lines="none">
-                          <IonIcon icon={timeOutline} slot="start" color="primary" />
-                          <IonLabel>
-                            <h2>Horario</h2>
-                            <p>{formatearHora(reservaSeleccionada.hora_inicio)} - {formatearHora(reservaSeleccionada.hora_fin)}</p>
-                          </IonLabel>
-                        </IonItem>
-                      </IonCol>
-
-                      <IonCol size="12">
-                        <IonItem lines="none">
-                          <IonIcon icon={tennisballOutline} slot="start" color="success" />
-                          <IonLabel>
-                            <h2>Pista</h2>
-                            <p>
-                              {reservaSeleccionada.pista_numero
-                                ? `Pista ${reservaSeleccionada.pista_numero} - ${reservaSeleccionada.pista_tipo}`
-                                : `ID: ${reservaSeleccionada.id_pista}`}
-                            </p>
-                          </IonLabel>
-                        </IonItem>
-                      </IonCol>
-
-                      <IonCol size="12">
-                        <IonItem lines="none">
-                          <IonIcon icon={cashOutline} slot="start" color="success" />
-                          <IonLabel>
-                            <h2>Precio</h2>
-                            <p>{reservaSeleccionada.precio_total.toFixed(2)}€</p>
-                          </IonLabel>
-                        </IonItem>
-                      </IonCol>
-
-                      <IonCol size="12">
-                        <IonItem lines="none">
-                          <IonLabel>
-                            <h2>Estado</h2>
-                          </IonLabel>
-                          <IonChip color={getColorEstadoReserva(reservaSeleccionada.estado)} slot="end">
-                            {reservaSeleccionada.estado}
-                          </IonChip>
-                        </IonItem>
-                      </IonCol>
-                    </IonRow>
-
-                    {reservaSeleccionada.estado !== 'cancelada' && (
-                      <IonRow>
-                        <IonCol size="12">
-                          <IonButton
-                            expand="block"
-                            color="danger"
-                            onClick={() => cancelarReserva(reservaSeleccionada.id)}
-                          >
-                            <IonIcon slot="start" icon={closeCircleOutline} />
-                            Cancelar Reserva
-                          </IonButton>
-                        </IonCol>
-                      </IonRow>
-                    )}
-                  </IonGrid>
-                </IonCardContent>
-              </IonCard>
+                {/* Acciones */}
+                <div className="modal-reserva-actions">
+                  <IonButton 
+                    fill="outline" 
+                    className="reserva-action-btn reserva-close-btn"
+                    onClick={() => setMostrarDetalleReserva(false)}
+                  >
+                    Cerrar
+                  </IonButton>
+                  {reservaSeleccionada.estado !== 'cancelada' && (
+                    <IonButton
+                      className="reserva-action-btn reserva-cancel-btn"
+                      onClick={() => cancelarReserva(reservaSeleccionada.id)}
+                    >
+                      <IonIcon slot="start" icon={closeCircleOutline} />
+                      Cancelar Reserva
+                    </IonButton>
+                  )}
+                </div>
+              </div>
             )}
           </IonContent>
         </IonModal>
