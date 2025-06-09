@@ -233,7 +233,7 @@ const LigaDetalle: React.FC = () => {
         return;
       }
 
-      const response = await ApiService.put(`/partidos/${selectedPartido?.id}/resultado`, {
+      const response = await ApiService.put(`/ligas/partidos/${selectedPartido?.id}/resultado`, {
         resultado: resultData.resultado,
         ganador: resultData.empate ? null : parseInt(resultData.ganador),
         empate: resultData.empate,
@@ -715,11 +715,11 @@ const LigaDetalle: React.FC = () => {
                       
                       <div className="partido-equipos">
                         <div className="equipo">
-                          <span>Equipo {partido.id_equipo1}</span>
+                          <span>{partido.nombre_equipo1 || `Equipo ${partido.id_equipo1}`}</span>
                         </div>
                         <span className="vs">VS</span>
                         <div className="equipo">
-                          <span>Equipo {partido.id_equipo2}</span>
+                          <span>{partido.nombre_equipo2 || `Equipo ${partido.id_equipo2}`}</span>
                         </div>
                       </div>
                       
@@ -899,7 +899,7 @@ const LigaDetalle: React.FC = () => {
             <>
               <div className="partido-info">
                 <h3>Partido #{selectedPartido.id}</h3>
-                <p>Equipo {selectedPartido.id_equipo1} vs Equipo {selectedPartido.id_equipo2}</p>
+                <p>{partidos.find(p => p.id === selectedPartido.id)?.nombre_equipo1 || `Equipo ${selectedPartido.id_equipo1}`} vs {partidos.find(p => p.id === selectedPartido.id)?.nombre_equipo2 || `Equipo ${selectedPartido.id_equipo2}`}</p>
               </div>
 
               <IonItem>
@@ -932,10 +932,10 @@ const LigaDetalle: React.FC = () => {
                     placeholder="Selecciona el ganador"
                   >
                     <IonSelectOption value={selectedPartido.id_equipo1}>
-                      Equipo {selectedPartido.id_equipo1}
+                      {partidos.find(p => p.id === selectedPartido.id)?.nombre_equipo1 || `Equipo ${selectedPartido.id_equipo1}`}
                     </IonSelectOption>
                     <IonSelectOption value={selectedPartido.id_equipo2}>
-                      Equipo {selectedPartido.id_equipo2}
+                      {partidos.find(p => p.id === selectedPartido.id)?.nombre_equipo2 || `Equipo ${selectedPartido.id_equipo2}`}
                     </IonSelectOption>
                   </IonSelect>
                 </IonItem>
@@ -945,7 +945,7 @@ const LigaDetalle: React.FC = () => {
                 <h4>Puntos Bonus (Opcional)</h4>
                 
                 <IonItem>
-                  <IonLabel>Equipo {selectedPartido.id_equipo1}</IonLabel>
+                  <IonLabel>{partidos.find(p => p.id === selectedPartido.id)?.nombre_equipo1 || `Equipo ${selectedPartido.id_equipo1}`}</IonLabel>
                   <IonRange
                     min={0}
                     max={5}
@@ -956,7 +956,7 @@ const LigaDetalle: React.FC = () => {
                 </IonItem>
 
                 <IonItem>
-                  <IonLabel>Equipo {selectedPartido.id_equipo2}</IonLabel>
+                  <IonLabel>{partidos.find(p => p.id === selectedPartido.id)?.nombre_equipo2 || `Equipo ${selectedPartido.id_equipo2}`}</IonLabel>
                   <IonRange
                     min={0}
                     max={5}

@@ -63,6 +63,24 @@ export class TorneosService {
   static async crearConsolacion(torneoId: number, rondaOrigen: string) {
     return await ApiService.post(API_ENDPOINTS.CREAR_CONSOLACION(torneoId, rondaOrigen), {});
   }
+
+  // Registrar resultado de partido de torneo
+  static async registrarResultadoTorneo(
+    partidoId: number, 
+    resultData: { resultado: string; ganador: number }
+  ) {
+    return await ApiService.put(`/torneos/partidos/${partidoId}/resultado`, resultData);
+  }
+
+  // Obtener estado del torneo
+  static async getEstadoTorneo(torneoId: number) {
+    return await ApiService.get(`/torneos/${torneoId}/estado`);
+  }
+
+  // Obtener bracket del torneo
+  static async getBracketTorneo(torneoId: number) {
+    return await ApiService.get(`/torneos/${torneoId}/bracket`);
+  }
 }
 
 export default TorneosService;

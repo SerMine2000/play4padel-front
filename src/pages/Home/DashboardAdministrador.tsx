@@ -201,7 +201,7 @@ const DashboardAdministrador: React.FC = () => {
                         <span>Usuarios Activos: {estadisticas.activeUsers}</span>
                       </div>
                       <div className="status-item">
-                        <IonIcon name="tennisball-outline" color="warning" />
+                        <IonIcon icon={checkmarkCircleOutline} color="warning" />
                         <span>Total Pistas: {estadisticas.totalPistas}</span>
                       </div>
                       <div className="status-item">

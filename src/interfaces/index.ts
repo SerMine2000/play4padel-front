@@ -198,7 +198,11 @@ export interface Partido {
   estado: string;
   resultado?: string;
   fecha_partido?: string;
+  fecha?: string;
+  hora_inicio?: string;
   pista_id?: number;
   equipo1?: ParejaTorneo | ParejasLiga;
   equipo2?: ParejaTorneo | ParejasLiga;
+  nombre_equipo1?: string;
+  nombre_equipo2?: string;
 }

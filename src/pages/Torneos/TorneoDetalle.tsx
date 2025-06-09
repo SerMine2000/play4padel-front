@@ -10,6 +10,7 @@ import {
   IonItem,
   IonLabel,
   IonModal,
+  IonInput,
   IonSelect,
   IonSelectOption,
   IonToast,
@@ -34,12 +35,18 @@ import {
   playOutline,
   personOutline,
   checkmarkCircleOutline,
-  closeCircleOutline
+  closeCircleOutline,
+  createOutline,
+  ribbonOutline,
+  arrowForwardOutline,
+  gitBranchOutline,
+  flashOutline
 } from 'ionicons/icons';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { Torneo, ParejaTorneo, Partido, User } from '../../interfaces';
 import ApiService from '../../services/api.service';
+import TorneosService from '../../services/torneos.service';
 import './TorneoDetalle.css';
 
 const TorneoDetalle: React.FC = () => {
@@ -55,15 +62,25 @@ const TorneoDetalle: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState('info');
   const [isInscriptionModalOpen, setIsInscriptionModalOpen] = useState(false);
+  const [isResultModalOpen, setIsResultModalOpen] = useState(false);
+  const [selectedPartido, setSelectedPartido] = useState<Partido | null>(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [showGenerateFixtureAlert, setShowGenerateFixtureAlert] = useState(false);
+  const [bracketData, setBracketData] = useState<any>(null);
+  const [estadoTorneo, setEstadoTorneo] = useState<any>(null);
 
   // Formulario de inscripción
   const [inscriptionData, setInscriptionData] = useState({
     jugador1_id: '',
     jugador2_id: '',
     categoria: ''
+  });
+
+  // Formulario de resultado de torneo
+  const [resultData, setResultData] = useState({
+    resultado: '',
+    ganador: ''
   });
 
   const userRole = (user?.role || '').toUpperCase();
@@ -82,7 +99,9 @@ const TorneoDetalle: React.FC = () => {
         loadTorneo(),
         loadParejas(),
         loadPartidos(),
-        loadUsuarios()
+        loadUsuarios(),
+        loadBracketData(),
+        loadEstadoTorneo()
       ]);
     } catch (error) {
       console.error('Error al cargar datos del torneo:', error);
@@ -118,6 +137,28 @@ const TorneoDetalle: React.FC = () => {
     const response = await ApiService.get('/users/basic');
     if (response && Array.isArray(response)) {
       setUsuarios(response);
+    }
+  };
+
+  const loadBracketData = async () => {
+    try {
+      const response = await TorneosService.getBracketTorneo(parseInt(id!));
+      if (response) {
+        setBracketData(response);
+      }
+    } catch (error) {
+      console.error('Error al cargar bracket:', error);
+    }
+  };
+
+  const loadEstadoTorneo = async () => {
+    try {
+      const response = await TorneosService.getEstadoTorneo(parseInt(id!));
+      if (response) {
+        setEstadoTorneo(response);
+      }
+    } catch (error) {
+      console.error('Error al cargar estado del torneo:', error);
     }
   };
 
@@ -163,10 +204,78 @@ const TorneoDetalle: React.FC = () => {
         setShowToast(true);
         setShowGenerateFixtureAlert(false);
         loadPartidos();
+        loadBracketData();
+        loadEstadoTorneo();
       }
     } catch (error) {
       console.error('Error al generar fixture:', error);
       setToastMessage('Error al generar el cuadro');
+      setShowToast(true);
+    }
+  };
+
+  const handleRegistrarResultadoTorneo = async () => {
+    try {
+      if (!resultData.resultado || !resultData.ganador) {
+        setToastMessage('Por favor ingresa el resultado y selecciona el ganador');
+        setShowToast(true);
+        return;
+      }
+
+      const response = await TorneosService.registrarResultadoTorneo(
+        selectedPartido?.id!,
+        {
+          resultado: resultData.resultado,
+          ganador: parseInt(resultData.ganador)
+        }
+      );
+
+      if (response) {
+        setToastMessage('Resultado registrado exitosamente');
+        setShowToast(true);
+        setIsResultModalOpen(false);
+        resetResultForm();
+        loadPartidos();
+        loadBracketData();
+        loadEstadoTorneo();
+      }
+    } catch (error) {
+      console.error('Error al registrar resultado:', error);
+      setToastMessage('Error al registrar el resultado');
+      setShowToast(true);
+    }
+  };
+
+  const handleAvanzarRonda = async (rondaActual: string) => {
+    try {
+      const response = await ApiService.post(`/torneos/${id}/rondas/${rondaActual}/avanzar`, {});
+      if (response) {
+        setToastMessage(`Avanzado a ${response.ronda_siguiente} exitosamente`);
+        setShowToast(true);
+        loadPartidos();
+        loadBracketData();
+        loadEstadoTorneo();
+      }
+    } catch (error) {
+      console.error('Error al avanzar ronda:', error);
+      setToastMessage('Error al avanzar de ronda. Verifica que todos los partidos estén finalizados');
+      setShowToast(true);
+    }
+  };
+
+  const handleCrearConsolacion = async (rondaOrigen: string) => {
+    try {
+      const response = await ApiService.post(`/torneos/${id}/rondas/${rondaOrigen}/consolacion`, {});
+      if (response) {
+        setToastMessage('Cuadro de consolación creado exitosamente');
+        setShowToast(true);
+        loadPartidos();
+        loadBracketData();
+        loadEstadoTorneo();
+      }
+    } catch (error) {
+      console.error('Error al crear consolación:', error);
+      setToastMessage('Error al crear el cuadro de consolación');
       setShowToast(true);
     }
   };
@@ -177,6 +286,14 @@ const TorneoDetalle: React.FC = () => {
       jugador2_id: '',
       categoria: ''
     });
+  };
+
+  const resetResultForm = () => {
+    setResultData({
+      resultado: '',
+      ganador: ''
+    });
+    setSelectedPartido(null);
   };
 
   // Función para formatear precio/premio
@@ -350,8 +467,11 @@ const TorneoDetalle: React.FC = () => {
         <IonSegmentButton value="parejas">
           <IonLabel>Parejas ({parejas.length})</IonLabel>
         </IonSegmentButton>
+        <IonSegmentButton value="bracket">
+          <IonLabel>Bracket</IonLabel>
+        </IonSegmentButton>
         <IonSegmentButton value="fixture">
-          <IonLabel>Cuadro ({partidos.length})</IonLabel>
+          <IonLabel>Partidos ({partidos.length})</IonLabel>
         </IonSegmentButton>
       </IonSegment>
 
@@ -463,6 +583,91 @@ const TorneoDetalle: React.FC = () => {
           </div>
         )}
 
+        {selectedTab === 'bracket' && (
+          <div className="bracket-tab">
+            {!bracketData || Object.keys(bracketData.bracket || {}).length === 0 ? (
+              <IonCard className="empty-state">
+                <IonCardContent>
+                  <IonIcon icon={gitBranchOutline} />
+                  <h2>No hay bracket disponible</h2>
+                  <p>El bracket aparecerá cuando se genere el cuadro del torneo.</p>
+                </IonCardContent>
+              </IonCard>
+            ) : (
+              <div className="bracket-container">
+                {Object.entries(bracketData.bracket).map(([ronda, partidosRonda]: [string, any]) => (
+                  <IonCard key={ronda} className="ronda-card">
+                    <IonCardHeader>
+                      <IonCardTitle>
+                        <IonIcon icon={ribbonOutline} />
+                        {ronda.toUpperCase()}
+                        
+                        {canManage && (
+                          <div className="ronda-actions">
+                            {estadoTorneo && estadoTorneo.rondas && estadoTorneo.rondas[ronda] && 
+                             estadoTorneo.rondas[ronda].pendientes === 0 && 
+                             estadoTorneo.rondas[ronda].finalizados > 0 && 
+                             ronda !== 'final' && ronda !== 'consolacion' && (
+                              <IonButton 
+                                size="small" 
+                                fill="outline" 
+                                onClick={() => handleAvanzarRonda(ronda)}
+                              >
+                                <IonIcon icon={arrowForwardOutline} slot="start" />
+                                Avanzar
+                              </IonButton>
+                            )}
+                            
+                            {ronda === 'principal' && estadoTorneo && estadoTorneo.rondas && 
+                             estadoTorneo.rondas[ronda] && estadoTorneo.rondas[ronda].finalizados > 0 && (
+                              <IonButton 
+                                size="small" 
+                                fill="outline" 
+                                color="secondary"
+                                onClick={() => handleCrearConsolacion(ronda)}
+                              >
+                                <IonIcon icon={gitBranchOutline} slot="start" />
+                                Consolación
+                              </IonButton>
+                            )}
+                          </div>
+                        )}
+                      </IonCardTitle>
+                    </IonCardHeader>
+                    <IonCardContent>
+                      <div className="partidos-ronda">
+                        {partidosRonda.map((partido: any, index: number) => (
+                          <div key={partido.id} className="bracket-match">
+                            <div className="match-teams">
+                              <div className={`team ${partido.resultado && partido.resultado.includes(partido.equipo1?.id) ? 'winner' : ''}`}>
+                                <span>{partido.equipo1 ? `Pareja ${partido.equipo1.id}` : 'TBD'}</span>
+                              </div>
+                              <div className="vs-bracket">VS</div>
+                              <div className={`team ${partido.resultado && partido.resultado.includes(partido.equipo2?.id) ? 'winner' : ''}`}>
+                                <span>{partido.equipo2 ? `Pareja ${partido.equipo2.id}` : 'TBD'}</span>
+                              </div>
+                            </div>
+                            
+                            <div className="match-info">
+                              <IonChip color={getPartidoEstadoColor(partido.estado)}>
+                                {partido.estado}
+                              </IonChip>
+                              
+                              {partido.estado === 'finalizado' && partido.notas && (
+                                <small className="resultado-sets">{partido.notas}</small>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </IonCardContent>
+                  </IonCard>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         {selectedTab === 'fixture' && (
           <div className="fixture-tab">
             {partidos.length === 0 ? (
@@ -503,7 +708,23 @@ const TorneoDetalle: React.FC = () => {
                       
                       {partido.resultado && (
                         <div className="resultado">
-                          <strong>Resultado: {partido.resultado}</strong>
+                          <strong>Resultado registrado</strong>
+                        </div>
+                      )}
+
+                      {canManage && partido.estado === 'programado' && (
+                        <div className="partido-actions">
+                          <IonButton 
+                            fill="clear" 
+                            size="small"
+                            onClick={() => {
+                              setSelectedPartido(partido);
+                              setIsResultModalOpen(true);
+                            }}
+                          >
+                            <IonIcon icon={createOutline} slot="start" />
+                            Registrar Resultado
+                          </IonButton>
                         </div>
                       )}
                     </IonCardContent>
@@ -574,6 +795,65 @@ const TorneoDetalle: React.FC = () => {
           <IonButton expand="block" onClick={handleInscribirPareja}>
             <IonIcon icon={checkmarkCircleOutline} slot="start" />
             <IonLabel>Inscribir Pareja</IonLabel>
+          </IonButton>
+        </div>
+      </IonModal>
+
+      {/* Modal para registrar resultado de torneo */}
+      <IonModal isOpen={isResultModalOpen} onDidDismiss={() => setIsResultModalOpen(false)}>
+        <div className="modal-header">
+          <h2>Registrar Resultado</h2>
+          <IonButton fill="clear" onClick={() => setIsResultModalOpen(false)}>
+            Cancelar
+          </IonButton>
+        </div>
+
+        <div className="modal-content">
+          {selectedPartido && (
+            <>
+              <div className="partido-info">
+                <h3>Partido #{selectedPartido.id}</h3>
+                <p>Pareja {selectedPartido.id_equipo1} vs Pareja {selectedPartido.id_equipo2}</p>
+                {selectedPartido.ronda && <IonChip color="tertiary">{selectedPartido.ronda}</IonChip>}
+              </div>
+
+              <IonItem>
+                <IonLabel position="stacked">Resultado (sets) *</IonLabel>
+                <IonInput
+                  value={resultData.resultado}
+                  onIonInput={(e: any) => setResultData({ ...resultData, resultado: e.detail.value! })}
+                  placeholder="Ej: 6-4, 6-2"
+                />
+              </IonItem>
+
+              <IonItem>
+                <IonLabel position="stacked">Ganador *</IonLabel>
+                <IonSelect
+                  value={resultData.ganador}
+                  onIonChange={(e) => setResultData({ ...resultData, ganador: e.detail.value })}
+                  placeholder="Selecciona el ganador"
+                >
+                  <IonSelectOption value={selectedPartido.id_equipo1}>
+                    Pareja {selectedPartido.id_equipo1}
+                  </IonSelectOption>
+                  <IonSelectOption value={selectedPartido.id_equipo2}>
+                    Pareja {selectedPartido.id_equipo2}
+                  </IonSelectOption>
+                </IonSelect>
+              </IonItem>
+
+              <div className="torneo-info">
+                <IonIcon icon={flashOutline} />
+                <small>Este resultado actualizará automáticamente el bracket del torneo</small>
+              </div>
+            </>
+          )}
+        </div>
+
+        <div className="modal-footer">
+          <IonButton expand="block" onClick={handleRegistrarResultadoTorneo}>
+            <IonIcon icon={checkmarkCircleOutline} slot="start" />
+            <IonLabel>Registrar Resultado</IonLabel>
           </IonButton>
         </div>
       </IonModal>
