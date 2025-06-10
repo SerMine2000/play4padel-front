@@ -268,11 +268,11 @@ body::-webkit-scrollbar, html::-webkit-scrollbar {
 
 /* BOTÓN VER DETALLES - PRIMARIO */
 .card-actions ion-button[routerLink] {
-  --color: var(--color-primario);
+  --color: var(--texto-principal);
 }
 
 .card-actions ion-button[routerLink]:hover {
-  --color: var(--color-primario);
+  --color: var(--texto-principal);
   transform: translateY(-1px);
   opacity: 0.8;
 }

@@ -427,49 +427,6 @@ const LigaDetalle: React.FC = () => {
         </div>
         
         <div className="header-bottom">
-          <div className="header-info">
-            <div className="info-chip">
-              <IonIcon icon={ribbonOutline} />
-              <div className="info-chip-content">
-                <h3>Categoría</h3>
-                <p>{liga.categoria}</p>
-              </div>
-            </div>
-            
-            <div className="info-chip">
-              <IonIcon icon={calendarOutline} />
-              <div className="info-chip-content">
-                <h3>Fecha de Inicio</h3>
-                <p>{formatDate(liga.fecha_inicio)}</p>
-              </div>
-            </div>
-            
-            <div className="info-chip">
-              <IonIcon icon={statsChartOutline} />
-              <div className="info-chip-content">
-                <h3>Nivel</h3>
-                <p>{liga.nivel}</p>
-              </div>
-            </div>
-            
-            <div className="info-chip">
-              <IonIcon icon={peopleOutline} />
-              <div className="info-chip-content">
-                <h3>Parejas Inscritas</h3>
-                <p>{parejas.length} / {liga.max_parejas}</p>
-              </div>
-            </div>
-            
-            {liga.precio_inscripcion > 0 && (
-              <div className="info-chip">
-                <IonIcon icon={cashOutline} />
-                <div className="info-chip-content">
-                  <h3>Precio</h3>
-                  <p>€{liga.precio_inscripcion}</p>
-                </div>
-              </div>
-            )}
-          </div>
           
           <div className="liga-status">
             <div className="status-chips">
