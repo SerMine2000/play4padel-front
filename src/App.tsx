@@ -164,10 +164,10 @@ const AppContent: React.FC = () => {
             <Route path="/marcador" element={<PrivateRoute element={<Estructura><MarcadorControl /></Estructura>} />} />
             <Route path="/solicitar-club" element={<PrivateRoute element={<MainLayout><SolicitarClub /></MainLayout>} />} />
 
-            {/* Rutas específicas del Administrador Supremo que mantienen el prefijo /admin/ */}
+            {/* Ruta de solicitudes de club (movida de /admin/solicitudes-club) */}
             <Route 
-              path="/admin/solicitudes-club" 
-              element={<RoleRoute roles={['ADMIN']} element={<MainLayout><AdminSolicitudesClub /></MainLayout>} />} 
+              path="/solicitudes-club" 
+              element={<RoleRoute roles={['ADMIN']} element={<MainLayout><ManageClubs /></MainLayout>} />} 
             />
 
             {/* Rutas de Torneos */}
@@ -188,6 +188,7 @@ const AppContent: React.FC = () => {
             <Route path="/admin/dashboard" element={<Navigate to="/home" />} />
             <Route path="/admin/manage-clubs" element={<Navigate to="/manage-clubs" />} />
             <Route path="/admin/manage-all-users" element={<Navigate to="/manage-users" />} />
+            <Route path="/admin/solicitudes-club" element={<Navigate to="/solicitudes-club" />} />
           </Routes>
         </IonRouterOutlet>
       </BrowserRouter>

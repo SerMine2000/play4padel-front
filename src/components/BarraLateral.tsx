@@ -4,10 +4,12 @@ import { IonItem, IonIcon, IonLabel, IonList, IonButton } from '@ionic/react';
 import {
   logOutOutline, homeOutline, calendarOutline, tennisballOutline,
   peopleOutline, stopwatchOutline, trophyOutline,
-  settingsOutline, menuOutline, closeOutline, businessOutline
+  settingsOutline, menuOutline, closeOutline, businessOutline,
+  logoAndroid, logoApple
 } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
 import { useLocation, useNavigate } from 'react-router-dom';
+import ToggleTheme from '../pages/ToggleTheme';
 import './BarraLateral.css';
 
 const ROLES = {
@@ -215,6 +217,29 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
               </div>
             );
           })}
+        </div>
+
+        {/* ToggleTheme alineado a la izquierda */}
+        <div className="theme-toggle-left">
+          <ToggleTheme />
+        </div>
+        
+        {/* Botones de plataforma centrados */}
+        <div className="sidebar-bottom-buttons">
+          <IonButton 
+            className="platform-button android-button"
+            fill="clear"
+            size="small"
+          >
+            <IonIcon icon={logoAndroid} />
+          </IonButton>
+          <IonButton 
+            className="platform-button ios-button"
+            fill="clear"
+            size="small"
+          >
+            <IonIcon icon={logoApple} />
+          </IonButton>
         </div>
       </div>
 

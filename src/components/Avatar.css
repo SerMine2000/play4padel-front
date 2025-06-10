@@ -11,7 +11,6 @@
   user-select: none;
   text-align: center;
   line-height: 1;
-  border: 2px solid var(--color-primario);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
@@ -28,7 +27,6 @@
 /* Estilos específicos para el header */
 .avatar-header {
   border-radius: 50%;
-  border: 2px solid var(--color-primario);
   transition: all 0.2s ease;
 }
 
@@ -39,13 +37,11 @@
 /* Estilos para el preview del avatar */
 .avatar-preview {
   border-radius: 50%;
-  border: 3px solid var(--color-primario);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 /* Modo oscuro específico */
 .ion-palette-dark .avatar-generado {
-  border-color: var(--color-primario);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
@@ -54,7 +50,6 @@
 }
 
 .ion-palette-dark .avatar-header {
-  border-color: var(--color-primario);
 }
 
 .ion-palette-dark .avatar-header:hover {
@@ -62,6 +57,5 @@
 }
 
 .ion-palette-dark .avatar-preview {
-  border-color: var(--color-primario);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }

@@ -6,7 +6,8 @@
   --padding-top: 0;
   --padding-bottom: 0;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: none;
+  border-bottom: 1px solid var(--borde-principal);
 }
 
 ion-toolbar {
@@ -75,7 +76,6 @@ ion-toolbar {
   object-fit: cover;
   border-radius: 50%;
   display: block;
-  border: 2px solid var(--color-primario);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   transition: all 0.2s ease;
 }
@@ -96,7 +96,6 @@ ion-toolbar {
   font-size: 18px;
   background-color: var(--color-primario);
   color: var(--color-primario-contraste);
-  border: 2px solid var(--color-primario);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   transition: all 0.2s ease;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
@@ -115,7 +114,8 @@ ion-content {
 /* MEJORAS ESPECÍFICAS PARA MODO OSCURO */
 .ion-palette-dark .app-header {
   --background: var(--fondo-panel-navegacion);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: none;
+  border-bottom-color: var(--borde-principal);
 }
 
 .ion-palette-dark ion-toolbar {
@@ -126,7 +126,6 @@ ion-content {
 }
 
 .ion-palette-dark .profile-avatar-img {
-  border-color: var(--color-primario);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
@@ -137,7 +136,6 @@ ion-content {
 .ion-palette-dark .profile-avatar-initial {
   background-color: var(--color-primario);
   color: var(--color-primario-contraste);
-  border-color: var(--color-primario);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
@@ -157,7 +155,6 @@ ion-content {
   .profile-avatar-initial {
     width: 36px;
     height: 36px;
-    border-width: 2px;
   }
   
   .profile-avatar-initial {

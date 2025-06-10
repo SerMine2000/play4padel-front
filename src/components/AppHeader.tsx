@@ -3,7 +3,6 @@ import { IonHeader, IonToolbar, IonButtons, IonButton } from '@ionic/react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Avatar from './Avatar';
-import ToggleTheme from '../pages/ToggleTheme';
 import './AppHeader.css';
 
 const AppHeader: React.FC = () => {
@@ -17,10 +16,6 @@ const AppHeader: React.FC = () => {
   return (
     <IonHeader className="ion-no-border app-header">
       <IonToolbar>
-        <IonButtons slot="start">
-          <ToggleTheme />
-        </IonButtons>
-        
         <IonButtons slot="end">
           <IonButton
             fill="clear"

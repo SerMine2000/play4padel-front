@@ -2,6 +2,8 @@
 
 .barra-lateral {
   width: 250px;
+  min-width: 250px;
+  max-width: 250px;
   background-color: var(--fondo-panel-navegacion);
   color: var(--texto-panel-navegacion);
   height: 100vh;
@@ -10,9 +12,9 @@
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 9999;
+  z-index: 1000;
   transition: all 0.3s ease;
-  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
+  box-shadow: none;
   border-right: 1px solid var(--borde-principal);
   display: flex;
   flex-direction: column;
@@ -47,6 +49,88 @@
   gap: 4px;
   overflow-y: auto;
   flex-grow: 1;
+}
+
+/* TOGGLE THEME ALINEADO A LA IZQUIERDA */
+.theme-toggle-left {
+  padding: 12px 16px;
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.theme-toggle-left .toggle-theme-button {
+  --background: rgba(255, 255, 255, 0.1);
+  --background-hover: rgba(255, 255, 255, 0.15);
+  --background-activated: rgba(255, 255, 255, 0.2);
+  --border-radius: 16px;
+  --padding: 16px;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 20px;
+  width: 52px;
+  height: 52px;
+}
+
+.theme-toggle-left .toggle-theme-button:hover {
+  transform: scale(1.08);
+  --background: rgba(255, 255, 255, 0.15);
+  border-color: var(--color-primario);
+}
+
+/* CONTENEDOR PARA LOS BOTONES DE PLATAFORMA */
+.sidebar-bottom-buttons {
+  padding: 8px 16px 12px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+}
+
+/* ESTILOS PARA BOTONES DE PLATAFORMA */
+.platform-button {
+  --background: rgba(255, 255, 255, 0.08);
+  --background-hover: rgba(255, 255, 255, 0.12);
+  --background-activated: rgba(255, 255, 255, 0.16);
+  --border-radius: 12px;
+  --padding: 10px;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.platform-button ion-icon {
+  font-size: 10px;
+}
+
+.platform-button:hover {
+  transform: scale(1.05);
+  --background: rgba(255, 255, 255, 0.12);
+}
+
+.android-button ion-icon {
+  color: #a4c639;
+  font-size: 36px !important;
+}
+
+.ios-button ion-icon {
+  color: #ffffff;
+  font-size: 36px !important;
+}
+
+.android-button:hover {
+  border-color: #a4c639;
+}
+
+.ios-button:hover {
+  border-color: #ffffff;
 }
 
 .menu-item {
@@ -274,6 +358,8 @@
 @media (min-width: 769px) and (max-width: 1024px) {
   .barra-lateral {
     width: 220px;
+    min-width: 220px;
+    max-width: 220px;
   }
   
   .content-with-sidebar {
@@ -297,7 +383,7 @@
 /* MEJORAS ESPECÍFICAS PARA MODO OSCURO */
 .ion-palette-dark .barra-lateral {
   background-color: var(--fondo-panel-navegacion);
-  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.6);
+  box-shadow: none;
   border-right: 1px solid var(--borde-principal);
 }
 
@@ -327,4 +413,32 @@
 
 .ion-palette-dark .sidebar-overlay {
   background-color: rgba(0, 0, 0, 0.8);
+}
+
+.ion-palette-dark .sidebar-bottom-buttons {
+  border-top-color: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.ion-palette-dark .theme-toggle-left .toggle-theme-button {
+  --background: rgba(255, 255, 255, 0.05);
+  --background-hover: rgba(255, 255, 255, 0.1);
+  --background-activated: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.ion-palette-dark .theme-toggle-left .toggle-theme-button:hover {
+  --background: rgba(255, 255, 255, 0.1);
+  border-color: var(--color-primario);
+}
+
+.ion-palette-dark .platform-button {
+  --background: rgba(255, 255, 255, 0.03);
+  --background-hover: rgba(255, 255, 255, 0.08);
+  --background-activated: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.ion-palette-dark .platform-button:hover {
+  --background: rgba(255, 255, 255, 0.08);
 }

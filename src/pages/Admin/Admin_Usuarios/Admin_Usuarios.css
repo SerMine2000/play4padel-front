@@ -313,14 +313,12 @@ ion-item:hover {
 
 /* ==================== AVATARES ==================== */
 ion-avatar {
-  border: 3px solid var(--color-primario);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
 
 ion-item:hover ion-avatar {
   transform: scale(1.05);
-  border-color: var(--color-secundario);
 }
 
 /* ==================== ACCIONES DE USUARIO (REORGANIZADAS) ==================== */
@@ -352,6 +350,10 @@ ion-item:hover ion-avatar {
   margin: 0;
   transition: all 0.3s ease;
   position: relative;
+}
+
+.acciones-usuario ion-button ion-icon {
+  font-size: 1.4rem !important;
 }
 
 .acciones-usuario ion-button:hover {
@@ -588,6 +590,10 @@ ion-modal ion-select {
   .acciones-usuario ion-button {
     width: 36px;
     height: 36px;
+  }
+  
+  .acciones-usuario ion-button ion-icon {
+    font-size: 1.2rem !important;
   }
 }
 

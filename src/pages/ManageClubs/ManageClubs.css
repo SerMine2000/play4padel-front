@@ -1,18 +1,473 @@
 /* ManageClubs.css */
 .manage-clubs-container {
   padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .manage-clubs-header {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
 }
 
-.manage-clubs-header h2 {
-  color: var(--ion-color-primary);
-  margin-bottom: 10px;
+.manage-clubs-header h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--texto-principal);
+  margin: 0 0 0.5rem 0;
+  position: relative;
+  display: inline-block;
+}
+
+.manage-clubs-header h1::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 4px;
+  background: var(--color-detalle-boton);
+  border-radius: 2px;
 }
 
 .manage-clubs-header p {
   color: var(--ion-color-medium);
+  font-size: 1.1rem;
+}
+
+/* Grid de solicitudes - 2 columnas para mejor legibilidad */
+.solicitudes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 4rem;
+}
+
+/* Cards de solicitudes - copiado de torneos */
+.solicitud-card {
+  background: var(--fondo-card);
+  border-radius: 12px;
+  box-shadow: var(--sombra-card);
+  border: 1px solid var(--borde-principal);
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.solicitud-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(97, 41, 240, 0.15);
+  border-color: var(--color-primario);
+}
+
+/* Header del card - igual que torneos */
+.solicitud-card ion-card-header {
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
+  flex-shrink: 0;
+}
+
+.card-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.card-header-content ion-card-title {
+  flex: 1;
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--texto-principal);
+  margin: 0;
+}
+
+/* Contenido del card - igual que torneos */
+.solicitud-card ion-card-content {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Info de la solicitud - igual que torneos */
+.solicitud-info {
+  margin: 1rem 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.solicitud-info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--texto-secundario);
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  background: var(--fondo-aplicacion);
+  border: 1px solid var(--borde-principal);
+  text-align: left;
+  transition: all 0.2s ease;
+  min-height: 40px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.info-row:hover {
+  background: var(--hover-card);
+  border-color: var(--color-primario);
+  color: var(--texto-principal);
+  transform: translateY(-1px);
+}
+
+.info-row ion-icon {
+  color: var(--color-primario);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  min-width: 18px;
+}
+
+.info-row:hover ion-icon {
+  transform: scale(1.1);
+}
+
+.info-row span {
+  text-align: left;
+  flex: 1;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* Descripción - mismo estilo que info-row */
+.descripcion {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--texto-secundario);
+  line-height: 1.5;
+  padding: 0.6rem 0.8rem;
+  background: var(--fondo-aplicacion);
+  border-radius: 8px;
+  border: 1px solid var(--borde-principal);
+  transition: all 0.2s ease;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  text-align: left;
+  font-weight: 500;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.descripcion:hover {
+  background: var(--hover-card);
+  border-color: var(--color-primario);
+  color: var(--texto-principal);
+  transform: translateY(-1px);
+}
+
+/* Botones - igual que torneos */
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--borde-principal);
+}
+
+.card-actions ion-button {
+  --border-radius: 8px;
+  --background: transparent;
+  font-weight: 600;
+  font-size: 0.8rem;
+  --padding-start: 0.5rem;
+  --padding-end: 0.5rem;
+  flex: 1;
+  min-width: max-content;
+  height: 36px;
+  transition: all 0.2s ease;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Botón ver detalles - usar colores temáticos */
+.card-actions .detalle-button {
+  --color: var(--color-primario);
+}
+
+.card-actions .detalle-button:hover {
+  --color: var(--color-primario);
+  transform: translateY(-1px);
+  opacity: 0.8;
+}
+
+/* Modo oscuro - verde para botón ver detalles */
+.ion-palette-dark .card-actions .detalle-button {
+  --color: #10b981;
+}
+
+.ion-palette-dark .card-actions .detalle-button:hover {
+  --color: #10b981;
+  transform: translateY(-1px);
+  opacity: 0.8;
+}
+
+/* Botón aprobar - verde correcto siempre */
+.card-actions ion-button[color="success"] {
+  --color: #059669;
+}
+
+.card-actions ion-button[color="success"]:hover {
+  --color: #059669;
+  transform: translateY(-1px);
+  opacity: 0.8;
+}
+
+/* En modo oscuro también usar el mismo verde */
+.ion-palette-dark .card-actions ion-button[color="success"] {
+  --color: #059669;
+}
+
+.ion-palette-dark .card-actions ion-button[color="success"]:hover {
+  --color: #059669;
+  transform: translateY(-1px);
+  opacity: 0.8;
+}
+
+/* Botón rechazar - rojo */
+.card-actions ion-button[color="danger"] {
+  --color: #e74c3c;
+}
+
+.card-actions ion-button[color="danger"]:hover {
+  --color: #e74c3c;
+  transform: translateY(-1px);
+  opacity: 0.8;
+}
+
+/* Quitar todos los bordes y fondos */
+.card-actions ion-button:hover {
+  --background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.estado-chip {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+/* Mejorar el CSS de los badges en el segmento */
+ion-segment-button {
+  position: relative;
+}
+
+ion-segment-button ion-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 0.7rem;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Ajustar el badge cuando el segmento está activo */
+ion-segment-button.segment-button-checked ion-badge {
+  border-color: var(--ion-color-primary);
+}
+
+/* Mejorar el espaciado del label cuando hay badge */
+ion-segment-button ion-label {
+  padding-right: 24px;
+}
+
+/* Agrandar números en los badges */
+ion-segment-button ion-badge {
+  font-size: 0.8rem;
+  min-width: 20px;
+  height: 20px;
+  font-weight: 700;
+}
+
+/* Responsive design - ajustado para 2 columnas */
+@media (max-width: 1400px) {
+  .manage-clubs-container {
+    padding: 1.5rem 1rem;
+    padding-bottom: 5rem;
+  }
+  
+  .manage-clubs-header h1 {
+    font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .solicitudes-grid {
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .manage-clubs-container {
+    padding: 1rem 0.75rem;
+  }
+  
+  .solicitudes-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .manage-clubs-header {
+    margin-bottom: 2rem;
+  }
+  
+  .manage-clubs-header h1 {
+    font-size: 2rem;
+  }
+  
+  .solicitud-card ion-card-header,
+  .solicitud-card ion-card-content {
+    padding: 1rem;
+  }
+  
+  .card-actions {
+    flex-direction: column;
+  }
+  
+  .card-actions ion-button {
+    width: 100%;
+    margin: 0.25rem 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .manage-clubs-container {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .manage-clubs-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .card-header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .info-row {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.6rem;
+  }
+}
+
+/* Asegurar que todos los elementos usen las variables correctas */
+.solicitud-card ion-chip[color="warning"] {
+  --background: #ffc62f;
+  --color: #000000;
+}
+
+.solicitud-card ion-chip[color="success"] {
+  --background: var(--color-detalle-boton);
+  --color: var(--color-detalle-boton-contraste);
+}
+
+.solicitud-card ion-chip[color="danger"] {
+  --background: #ff6b6b;
+  --color: #ffffff;
+}
+
+/* Botones de acción */
+.action-button[fill="outline"] {
+  --color: var(--color-detalle-boton);
+  --border-color: var(--color-detalle-boton);
+}
+
+.action-button[fill="outline"]:hover {
+  --background: var(--color-detalle-boton-hover);
+}
+
+/* Títulos y headers en modales */
+.manage-clubs-container ion-header ion-toolbar {
+  --background: var(--color-detalle-boton);
+  --color: var(--color-detalle-boton-contraste);
+}
+
+.manage-clubs-container ion-modal ion-card-title {
+  color: var(--color-detalle-boton);
+}
+
+/* Segmentos */
+.manage-clubs-container ion-segment-button.segment-button-checked {
+  --color-checked: var(--color-detalle-boton-contraste);
+  --background-checked: var(--color-detalle-boton);
+  --indicator-color: var(--color-detalle-boton);
+}
+
+/* Badges en segmentos - usar el verde correcto en modo oscuro */
+.manage-clubs-container ion-segment-button.segment-button-checked ion-badge {
+  border-color: var(--color-detalle-boton);
+}
+
+/* Íconos de estado en chips dentro de modales */
+.manage-clubs-container ion-modal ion-chip[color="success"] {
+  --background: var(--color-detalle-boton);
+  --color: var(--color-detalle-boton-contraste);
+}
+
+/* Corregir el verde para modo oscuro - usar el verde correcto */
+.ion-palette-dark .manage-clubs-container .solicitud-card ion-chip[color="success"] {
+  --background: #10b981;
+  --color: #ffffff;
+}
+
+.ion-palette-dark .manage-clubs-container .action-button[fill="outline"] {
+  --color: #059669;
+  --border-color: #10b981;
+}
+
+.ion-palette-dark .manage-clubs-container ion-modal ion-chip[color="success"] {
+  --background: #059669;
+  --color: #ffffff;
+}
+
+/* También aplicar el verde correcto en modo claro para chips success */
+.manage-clubs-container .solicitud-card ion-chip[color="success"] {
+  --background: #059669;
+  --color: #ffffff;
+}
+
+/* Dark theme adjustments */
+@media (prefers-color-scheme: dark) {
+  .solicitud-card:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Clase específica para modo oscuro en Ionic */
+.ion-palette-dark .manage-clubs-container .solicitud-card:hover {
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
 }
