@@ -256,6 +256,19 @@ const Torneos: React.FC = () => {
     });
   };
 
+  const formatTipo = (tipo: string) => {
+    switch (tipo?.toLowerCase()) {
+      case 'eliminacion_directa':
+        return 'Eliminación Directa';
+      case 'round_robin':
+        return 'Round Robin';
+      case 'mixto':
+        return 'Mixto';
+      default:
+        return tipo?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || tipo;
+    }
+  };
+
   const getEstadoColor = (estado: string) => {
     switch (estado?.toLowerCase()) {
       case 'activo':
@@ -322,7 +335,7 @@ const Torneos: React.FC = () => {
                       
                       <div className="info-row">
                         <IonIcon icon={trophyOutline} />
-                        <span>{torneo.tipo}</span>
+                        <span>{formatTipo(torneo.tipo)}</span>
                       </div>
 
                       {torneo.precio_inscripcion && (

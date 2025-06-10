@@ -285,6 +285,14 @@ const Ligas: React.FC = () => {
     });
   };
 
+  const formatCategoria = (categoria: string) => {
+    return categoria?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || categoria;
+  };
+
+  const formatNivel = (nivel: string) => {
+    return nivel?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || nivel;
+  };
+
   const getEstadoColor = (estado: string) => {
     switch (estado?.toLowerCase()) {
       case 'inscripciones_abiertas':
@@ -382,7 +390,7 @@ const Ligas: React.FC = () => {
                       
                       <div className="info-row">
                         <IonIcon icon={ribbonOutline} />
-                        <span>{liga.categoria}</span>
+                        <span>{formatCategoria(liga.categoria)}</span>
                       </div>
                       
                       <div className="info-row with-chip">
@@ -391,7 +399,7 @@ const Ligas: React.FC = () => {
                           <span>Nivel:</span>
                         </div>
                         <IonChip color={getNivelColor(liga.nivel)}>
-                          {liga.nivel}
+                          {formatNivel(liga.nivel)}
                         </IonChip>
                       </div>
 
