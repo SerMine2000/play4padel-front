@@ -33,7 +33,6 @@ import {
   shuffleOutline
 } from 'ionicons/icons';
 import axios from 'axios';
-import MarcadorView from './MarcadorView';
 import './MarcadorView.css';
 
 /**
@@ -379,7 +378,46 @@ const MarcadorControl: React.FC = () => {
                     </div>
                   ) : (
                     <div className="marcador-preview">
-                      <MarcadorView estado={estado} />
+                      <div className="marcador-miniatura">
+                        <div className="scoreboard-mini">
+                          <div className="header-mini">{tituloPista}</div>
+                          
+                          <div className="score-table-mini">
+                            <div className="header-row-mini">
+                              <div className="header-spacer-mini"></div>
+                              <div className="header-cell-mini">SETS</div>
+                              <div className="header-cell-mini">JUEGOS</div>
+                              <div className="header-cell-mini">PUNTOS</div>
+                            </div>
+                            <div className="team-row-mini team-a-mini">
+                              <div className="team-name-mini">
+                                {nombreEquipoA}
+                                <div className={`serve-ball-visual-mini ${estado.saque === 'A' ? 'active' : ''}`}>
+                                  <img src="/favicon.png" alt="Pelota de pádel" className="ball-image-mini" />
+                                </div>
+                              </div>
+                              <div className="score-cell-mini">{estado.sets ? estado.sets.filter((set: { A: number, B: number }) => set.A > set.B).length : 0}</div>
+                              <div className="score-cell-mini">{estado.juegos.A}</div>
+                              <div className="score-cell-mini">{estado.tie_break ? estado.puntos.A : (estado.puntos.A === 0 ? '0' : estado.puntos.A === 1 ? '15' : estado.puntos.A === 2 ? '30' : estado.puntos.A === 3 ? '40' : estado.puntos.A === 4 ? 'AD' : estado.puntos.A)}</div>
+                            </div>
+                            <div className="team-row-mini team-b-mini">
+                              <div className="team-name-mini">
+                                {nombreEquipoB}
+                                <div className={`serve-ball-visual-mini ${estado.saque === 'B' ? 'active' : ''}`}>
+                                  <img src="/favicon.png" alt="Pelota de pádel" className="ball-image-mini" />
+                                </div>
+                              </div>
+                              <div className="score-cell-mini">{estado.sets ? estado.sets.filter((set: { A: number, B: number }) => set.B > set.A).length : 0}</div>
+                              <div className="score-cell-mini">{estado.juegos.B}</div>
+                              <div className="score-cell-mini">{estado.tie_break ? estado.puntos.B : (estado.puntos.B === 0 ? '0' : estado.puntos.B === 1 ? '15' : estado.puntos.B === 2 ? '30' : estado.puntos.B === 3 ? '40' : estado.puntos.B === 4 ? 'AD' : estado.puntos.B)}</div>
+                            </div>
+                          </div>
+                          {estado.tie_break && <div className="match-status-mini tie-break-mini">TIE BREAK</div>}
+                          {estado.terminado && <div className="match-status-mini terminado-mini">PARTIDO TERMINADO</div>}
+                          {estado.tie_break === false && estado.bola_de_oro && estado.puntos.A === 40 && estado.puntos.B === 40 &&
+                            <div className="match-status-mini bola-oro-mini">BOLA DE ORO</div>}
+                        </div>
+                      </div>
                     </div>
                   )}
                 </IonCardContent>

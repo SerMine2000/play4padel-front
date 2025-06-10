@@ -188,12 +188,214 @@
   overflow: hidden;
   background: var(--fondo-card);
   margin: 0;
-  padding: 1.5rem;
+  padding: 0;
   min-height: 300px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   text-align: center;
+}
+
+/* ===== MARCADOR MINIATURA - REPLICA DEL MARCADOR COMPLETO ===== */
+.marcador-miniatura {
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.scoreboard-mini {
+  width: 100%;
+  max-width: 500px;
+  height: 280px;
+  background: linear-gradient(145deg, #1E293B 0%, #0F172A 100%);
+  border-radius: 12px;
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  color: white;
+  overflow: hidden;
+  position: relative;
+}
+
+.header-mini {
+  background: linear-gradient(90deg, var(--color-primario), var(--color-secundario));
+  color: white;
+  text-align: center;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  border-bottom: 2px solid var(--color-secundario);
+}
+
+.score-table-mini {
+  flex: 1;
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.header-row-mini {
+  display: table-row;
+  height: 35px;
+  background: linear-gradient(90deg, #374151 0%, #4B5563 50%, #374151 100%);
+}
+
+.header-cell-mini {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.header-spacer-mini {
+  display: table-cell;
+  width: 40%;
+  background: linear-gradient(90deg, #374151 0%, #4B5563 100%);
+}
+
+.team-row-mini {
+  display: table-row;
+  height: calc(50% - 17.5px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.team-a-mini {
+  background: linear-gradient(90deg, 
+    rgba(97, 41, 240, 0.1) 0%, 
+    rgba(97, 41, 240, 0.05) 30%, 
+    transparent 100%);
+}
+
+.team-b-mini {
+  background: linear-gradient(90deg, 
+    rgba(5, 150, 105, 0.1) 0%, 
+    rgba(5, 150, 105, 0.05) 30%, 
+    transparent 100%);
+}
+
+.team-name-mini {
+  display: table-cell;
+  width: 40%;
+  vertical-align: middle;
+  padding: 0 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+}
+
+.team-a-mini .team-name-mini {
+  color: var(--marcador-primary);
+  text-shadow: 
+    0 0 10px var(--marcador-primary-shadow),
+    0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.team-b-mini .team-name-mini {
+  color: var(--color-secundario);
+  text-shadow: 
+    0 0 10px rgba(5, 150, 105, 0.8),
+    0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.serve-ball-visual-mini {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: all 0.5s ease;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.serve-ball-visual-mini.active {
+  opacity: 1 !important;
+  transform: translateY(-50%);
+}
+
+.ball-image-mini {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.score-cell-mini {
+  display: table-cell;
+  width: 20%;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  text-shadow: 
+    0 0 15px rgba(255, 255, 255, 0.5),
+    0 2px 4px rgba(0, 0, 0, 0.8);
+  position: relative;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+  transition: all 0.3s ease;
+}
+
+.match-status-mini {
+  text-align: center;
+  padding: 6px 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 4px 8px;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+.tie-break-mini {
+  color: #EF4444;
+  background: linear-gradient(135deg, 
+    rgba(239, 68, 68, 0.2) 0%, 
+    rgba(239, 68, 68, 0.1) 100%);
+  border: 1px solid #EF4444;
+  text-shadow: 0 0 8px rgba(239, 68, 68, 0.8);
+}
+
+.terminado-mini {
+  color: #10B981;
+  background: linear-gradient(135deg, 
+    rgba(16, 185, 129, 0.2) 0%, 
+    rgba(16, 185, 129, 0.1) 100%);
+  border: 1px solid #10B981;
+  text-shadow: 0 0 8px rgba(16, 185, 129, 0.8);
+}
+
+.bola-oro-mini {
+  color: #F59E0B !important;
+  background: linear-gradient(135deg, 
+    rgba(245, 158, 11, 0.3) 0%, 
+    rgba(245, 158, 11, 0.1) 100%);
+  border: 1px solid #F59E0B;
+  text-shadow: 0 0 10px rgba(245, 158, 11, 1);
+  font-size: 0.75rem;
 }
 
 /* ===== CONTROLES DE PUNTUACIÓN ===== */
@@ -1027,5 +1229,39 @@
   
   .time {
     font-size: 2rem;
+  }
+  
+  /* Marcador miniatura responsive */
+  .scoreboard-mini {
+    height: 250px;
+  }
+  
+  .header-mini {
+    font-size: 0.8rem;
+    padding: 6px 8px;
+  }
+  
+  .team-name-mini {
+    font-size: 0.8rem;
+    padding: 0 8px;
+  }
+  
+  .score-cell-mini {
+    font-size: 1.2rem;
+  }
+  
+  .header-cell-mini {
+    font-size: 0.6rem;
+  }
+  
+  .ball-image-mini {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .match-status-mini {
+    font-size: 0.7rem;
+    padding: 4px 6px;
+    margin: 3px 6px;
   }
 }
