@@ -34,7 +34,7 @@
   display: inline-block;
 }
 
-/* ✅ NUEVA línea morada debajo del título principal */
+/* ✅ NUEVA línea morada/verde debajo del título principal */
 .titulo-pagina::after {
   content: '';
   position: absolute;
@@ -42,7 +42,7 @@
   left: 0;
   width: 60px;
   height: 4px;
-  background: linear-gradient(90deg, var(--ion-color-primary), #a160fb);
+  background: linear-gradient(90deg, var(--color-primario), var(--color-secundario));
   border-radius: 2px;
 }
 
@@ -102,7 +102,7 @@
 .linea-morada {
   width: 60px; /* ✅ LÍNEA MÁS CORTA - no llega hasta el final */
   height: 3px;
-  background: var(--ion-color-primary);
+  background: var(--color-primario);
   border-radius: 2px;
   margin: 0;
 }
@@ -185,9 +185,9 @@
 }
 
 .club-seleccionado {
-  background: var(--ion-color-primary);
-  color: var(--ion-color-primary-contrast);
-  border-color: var(--ion-color-primary);
+  background: var(--color-primario);
+  color: var(--color-primario-contraste);
+  border-color: var(--color-primario);
   font-weight: 600;
 }
 
@@ -224,16 +224,16 @@
 
 /* ✅ SIN VERDE - usar blanco/gris según tema */
 .pista-seleccionada {
-  border-color: var(--ion-color-primary);
-  background: var(--color-panel); /* Blanco en claro, gris oscuro en oscuro */
+  border-color: var(--color-primario);
+  background: var(--fondo-card); /* Blanco en claro, gris oscuro en oscuro */
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(97, 41, 240, 0.2);
+  box-shadow: 0 4px 12px var(--sombra-card);
   border-width: 3px; /* Borde más grueso para indicar selección */
 }
 
 .ion-palette-dark .pista-seleccionada {
-  box-shadow: 0 4px 12px rgba(0, 255, 102, 0.2);
-  background: #2a2a2a; /* Gris más oscuro para modo oscuro */
+  box-shadow: 0 4px 12px var(--sombra-card);
+  background: var(--fondo-card); /* Usa la variable del sistema */
 }
 
 .info-pista-compacta {
@@ -267,7 +267,7 @@
 .precio-pista {
   font-size: 0.95rem;
   font-weight: 600;
-  color: var(--ion-color-primary);
+  color: var(--color-primario);
 }
 
 /* ========================================
@@ -316,17 +316,17 @@
 }
 
 .calendario-compacto:focus-within {
-  border-color: var(--ion-color-primary);
+  border-color: var(--color-primario);
 }
 
 /* ✅ Hacer que el ion-datetime ocupe todo el espacio */
 .calendario-compacto ion-datetime {
-  --ion-color-primary: var(--ion-color-primary);
-  --ion-color-primary-rgb: var(--ion-color-primary-rgb);
-  --ion-color-primary-contrast: var(--ion-color-primary-contrast);
-  --ion-color-primary-contrast-rgb: var(--ion-color-primary-contrast-rgb);
-  --ion-color-primary-shade: var(--ion-color-primary-shade);
-  --ion-color-primary-tint: var(--ion-color-primary-tint);
+  --ion-color-primary: var(--color-primario);
+  --ion-color-primary-rgb: var(--color-primario-rgb);
+  --ion-color-primary-contrast: var(--color-primario-contraste);
+  --ion-color-primary-contrast-rgb: var(--color-primario-contraste-rgb);
+  --ion-color-primary-shade: var(--color-primario-sombra);
+  --ion-color-primary-tint: var(--color-primario-tinte);
   
   width: 100% !important;
   max-width: 100% !important;
@@ -335,8 +335,8 @@
 /* Forzar colores del calendario según el tema (SIN VERDE) */
 .calendario-compacto .calendar-day.calendar-day-today,
 .calendario-compacto .calendar-day.calendar-day-active {
-  background-color: var(--ion-color-primary) !important;
-  color: var(--ion-color-primary-contrast) !important;
+  background-color: var(--color-primario) !important;
+  color: var(--color-primario-contraste) !important;
   border: none !important;
 }
 
@@ -367,8 +367,8 @@
 /* ✅ FORZAR que el día seleccionado mantenga su color principal */
 .calendario-compacto .calendar-day.calendar-day-active:active,
 .calendario-compacto .calendar-day.calendar-day-active:focus {
-  background-color: var(--ion-color-primary) !important;
-  color: var(--ion-color-primary-contrast) !important;
+  background-color: var(--color-primario) !important;
+  color: var(--color-primario-contraste) !important;
 }
 
 /* Horarios laterales */
@@ -394,7 +394,7 @@
   padding: 8px 12px;
   background-color: var(--ion-color-light);
   border-radius: 8px;
-  border-left: 3px solid var(--ion-color-primary);
+  border-left: 3px solid var(--color-primario);
   font-weight: 500;
   line-height: 1.4;
 }
@@ -463,15 +463,15 @@
 }
 
 .horario-seleccionado {
-  background: var(--ion-color-primary);
-  color: var(--ion-color-primary-contrast);
-  border-color: var(--ion-color-primary);
+  background: var(--color-primario);
+  color: var(--color-primario-contraste);
+  border-color: var(--color-primario);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(97, 41, 240, 0.3);
+  box-shadow: 0 4px 12px var(--sombra-card);
 }
 
 .ion-palette-dark .horario-seleccionado {
-  box-shadow: 0 4px 12px rgba(0, 255, 102, 0.3);
+  box-shadow: 0 4px 12px var(--sombra-card);
 }
 
 /* ========================================
@@ -572,7 +572,7 @@
 }
 
 .area-notas-pro:focus-within {
-  border-color: var(--ion-color-primary);
+  border-color: var(--color-primario);
 }
 
 /* ✅ QUITAR LÍNEAS BAJO CAMPOS que chocan con perímetro */
@@ -623,14 +623,14 @@
 .valor-total {
   font-size: 1.8rem;
   font-weight: 700;
-  color: var(--ion-color-primary);
+  color: var(--color-primario);
   letter-spacing: -0.5px;
 }
 
 /* ✅ Botón de confirmación con variables CSS corregidas */
 .boton-confirmar-pro {
-  --background: var(--ion-color-primary) !important;
-  --color: var(--ion-color-primary-contrast) !important;
+  --background: var(--color-primario) !important;
+  --color: var(--color-primario-contraste) !important;
   --border-radius: 12px;
   --padding-top: 16px;
   --padding-bottom: 16px;
@@ -642,13 +642,13 @@
   letter-spacing: 0.3px;
   height: auto;
   min-height: 52px;
-  box-shadow: 0 6px 20px rgba(97, 41, 240, 0.3);
+  box-shadow: var(--sombra-boton-primario);
   transition: all 0.3s ease;
   margin-top: 20px;
   
   /* ✅ Forzar colores específicos */
-  background: var(--ion-color-primary) !important;
-  color: var(--ion-color-primary-contrast) !important;
+  background: var(--color-primario) !important;
+  color: var(--color-primario-contraste) !important;
   border: none !important;
 }
 

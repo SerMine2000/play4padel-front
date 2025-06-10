@@ -1,60 +1,30 @@
-/* Configuracion.css - Actualizado con nuevo sistema de variables lógicas */
-
-/* Contenedor principal */
+/* ===== CONTENEDOR PRINCIPAL - IGUAL QUE MANAGE COURTS Y MANAGE USERS ===== */
 .configuracion-container {
-  padding: var(--margenPaginaDesktop, 32px 40px);
-  background: var(--fondo-aplicacion);
-  color: var(--texto-principal);
   min-height: 100vh;
-  box-sizing: border-box;
-  width: 100%;
+  background: var(--fondo-aplicacion);
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  /* Ocultar barra de scroll en diferentes navegadores */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer/Edge */
 }
 
-/* Header */
-.page-header {
-  margin-bottom: 2rem;
-  text-align: left;
-  padding: 1rem 0;
-  width: 100%;
+/* Ocultar barra de scroll en Webkit (Chrome, Safari) */
+.configuracion-container::-webkit-scrollbar {
+  display: none;
 }
 
-.page-header h1 {
-  margin: 0 0 0.5rem 0;
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: var(--texto-principal);
-  position: relative;
-  display: inline-block;
-}
-
-.page-header h1::after {
-  content: '';
-  position: absolute;
-  bottom: -8px;
-  left: 0;
-  width: 60px;
-  height: 4px;
-  background: linear-gradient(90deg, var(--color-primario), var(--color-secundario));
-  border-radius: 2px;
-}
-
-.page-header p {
-  color: var(--texto-secundario);
-  margin: 0.5rem 0 0 0;
-  font-size: 1rem;
-  font-weight: 400;
-}
-
-/* Contenido principal */
 .configuracion-content {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  width: 100%;
-  max-width: none;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  position: relative;
+  padding-bottom: 2rem;
 }
 
-/* Secciones individuales */
+/* ===== SECCIONES INDIVIDUALES ===== */
 .configuracion-section {
   background: var(--fondo-card);
   color: var(--texto-principal);
@@ -63,8 +33,7 @@
   border: 1px solid var(--borde-principal);
   overflow: hidden;
   transition: all 0.3s ease;
-  width: 100%;
-  max-width: none;
+  margin-bottom: 1.5rem;
 }
 
 .configuracion-section:hover {
@@ -72,7 +41,7 @@
   box-shadow: var(--sombra-card);
 }
 
-/* Headers de sección */
+/* ===== HEADERS DE SECCIÓN ===== */
 .section-header {
   background: var(--fondo-card);
   border-bottom: 1px solid var(--borde-principal);
@@ -102,7 +71,7 @@
   margin: 0;
 }
 
-/* Items de configuración */
+/* ===== ITEMS DE CONFIGURACIÓN ===== */
 .config-item {
   --background: transparent;
   --color: var(--texto-principal);
@@ -147,7 +116,7 @@
   font-size: 0.9rem;
 }
 
-/* Sección de Club */
+/* ===== SECCIÓN DE CLUB ===== */
 .subsection-title {
   margin-bottom: 1.5rem;
 }
@@ -162,7 +131,7 @@
   display: inline-block;
 }
 
-/* Lista de solicitudes */
+/* ===== LISTA DE SOLICITUDES ===== */
 .solicitudes-list {
   display: flex;
   flex-direction: column;
@@ -258,7 +227,7 @@
   font-weight: 600;
 }
 
-/* Botón nueva solicitud */
+/* ===== BOTONES ===== */
 .nuevo-club-btn {
   --border-color: var(--color-primario);
   --color: var(--color-primario);
@@ -267,7 +236,21 @@
   width: 100%;
 }
 
-/* Información del club */
+.solicitar-club-btn {
+  --background: var(--color-primario);
+  --color: var(--color-primario-contraste);
+  margin-top: 2rem;
+  font-weight: 600;
+  --border-radius: 8px;
+  width: 100%;
+}
+
+.solicitar-club-btn:disabled {
+  --background: var(--texto-secundario);
+  --color: var(--color-primario-contraste);
+}
+
+/* ===== INFORMACIÓN DEL CLUB ===== */
 .club-info {
   text-align: left;
   width: 100%;
@@ -317,21 +300,7 @@
   flex-shrink: 0;
 }
 
-.solicitar-club-btn {
-  --background: var(--color-primario);
-  --color: var(--color-primario-contraste);
-  margin-top: 2rem;
-  font-weight: 600;
-  --border-radius: 8px;
-  width: 100%;
-}
-
-.solicitar-club-btn:disabled {
-  --background: var(--texto-secundario);
-  --color: var(--color-primario-contraste);
-}
-
-/* Sección de peligro */
+/* ===== SECCIÓN DE PELIGRO ===== */
 .danger-section {
   border-color: rgba(220, 53, 69, 0.3);
 }
@@ -370,20 +339,10 @@
   width: 100%;
 }
 
-/* Responsive */
+/* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
-  .configuracion-container {
-    padding: var(--margenPaginaMobile, 20px 24px);
-    width: 100%;
-  }
-  
-  .page-header h1 {
-    font-size: 1.8rem;
-  }
-  
   .configuracion-content {
-    gap: 1.5rem;
-    width: 100%;
+    padding: 1.5rem 1rem;
   }
   
   .section-header {
@@ -418,18 +377,8 @@
 }
 
 @media (max-width: 576px) {
-  .configuracion-container {
-    padding: var(--margenPaginaMobileSmall, 16px 20px);
-    width: 100%;
-  }
-  
-  .page-header h1 {
-    font-size: 1.6rem;
-  }
-  
   .configuracion-content {
-    gap: 1.25rem;
-    width: 100%;
+    padding: 1rem 0.75rem;
   }
   
   .section-header {
@@ -484,7 +433,7 @@
   }
 }
 
-/* MODO OSCURO ESPECÍFICO */
+/* ===== MODO OSCURO ESPECÍFICO ===== */
 .ion-palette-dark .configuracion-container {
   background: var(--fondo-aplicacion);
 }

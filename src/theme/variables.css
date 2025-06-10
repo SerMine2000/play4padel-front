@@ -7,6 +7,12 @@
   --color-primario-contraste: #ffffff;
   --color-secundario: #059669;
   
+  /* SOMBRAS CON COLOR PRIMARIO */
+  --sombra-color-primario: rgba(97, 41, 240, 0.3);
+  --sombra-color-primario-hover: rgba(97, 41, 240, 0.4);
+  --sombra-boton-primario: 0 6px 20px rgba(97, 41, 240, 0.3);
+  --sombra-boton-primario-hover: 0 8px 25px rgba(97, 41, 240, 0.4);
+  
   /* FONDOS PRINCIPALES */
   --fondo-aplicacion: #f2f5ff;
   --fondo-contenido: #ffffff;
@@ -51,6 +57,14 @@
   --fondo-precio: rgba(97, 41, 240, 0.1);
   --borde-precio: rgba(97, 41, 240, 0.2);
   
+  /* VARIABLES ESPECIALES PARA RESERVAS - MORADO EN CLARO */
+  --color-reservas-principal: #6129f0; /* Morado en modo claro */
+  --color-reservas-contraste: #ffffff;
+  --color-reservas-sombra: rgba(97, 41, 240, 0.3);
+  --color-reservas-sombra-hover: rgba(97, 41, 240, 0.4);
+  --color-reservas-hover: rgba(97, 41, 240, 0.05);
+  --color-reservas-gradiente: linear-gradient(90deg, #6129f0, #a160fb);
+  
   /* SCROLLBAR Y ELEMENTOS DASHBOARD */
   --color-scroll-principal: var(--color-primario);
   --color-scroll-hover: #4c1abd;
@@ -71,6 +85,12 @@
   --color-primario: #6129f0;
   --color-primario-contraste: #ffffff;
   --color-secundario: #059669;
+  
+  /* SOMBRAS CON COLOR PRIMARIO (VERDE EN MODO OSCURO) */
+  --sombra-color-primario: rgba(0, 255, 102, 0.3);
+  --sombra-color-primario-hover: rgba(0, 255, 102, 0.4);
+  --sombra-boton-primario: 0 6px 20px rgba(0, 255, 102, 0.3);
+  --sombra-boton-primario-hover: 0 8px 25px rgba(0, 255, 102, 0.4);
   
   /* FONDOS PRINCIPALES - MENOS OSCUROS QUE ANTES */
   --fondo-aplicacion: #1a1a1a; /* Menos oscuro que #0a0a0a */
@@ -115,6 +135,14 @@
   /* FONDOS ESPECÍFICOS */
   --fondo-precio: rgba(97, 41, 240, 0.15);
   --borde-precio: rgba(97, 41, 240, 0.3);
+  
+  /* VARIABLES ESPECIALES PARA RESERVAS - VERDE EN OSCURO */
+  --color-reservas-principal: #00ff66; /* Verde en modo oscuro */
+  --color-reservas-contraste: #000000;
+  --color-reservas-sombra: rgba(0, 255, 102, 0.3);
+  --color-reservas-sombra-hover: rgba(0, 255, 102, 0.4);
+  --color-reservas-hover: rgba(0, 255, 102, 0.1);
+  --color-reservas-gradiente: linear-gradient(90deg, #00ff66, #059669);
   
   /* SCROLLBAR Y ELEMENTOS DASHBOARD */
   --color-scroll-principal: var(--color-secundario);
