@@ -415,8 +415,8 @@ const LigaDetalle: React.FC = () => {
           <div className="title-section">
             <h1>{liga.nombre}</h1>
             <div className="title-chips">
-              <IonChip className="status-chip">
-                <IonIcon icon={ribbonOutline} />
+              <IonChip className="status-chip chip-activo">
+                <IonIcon icon={ribbonOutline} className="icon-themed" />
                 <IonLabel>Liga Activa</IonLabel>
               </IonChip>
               <IonChip className="estado-chip" color={getEstadoColor(liga.estado)}>
@@ -440,8 +440,8 @@ const LigaDetalle: React.FC = () => {
             
             {canManage && (
               <div className="header-actions">
-                <IonButton onClick={() => setIsInscriptionModalOpen(true)}>
-                  <IonIcon icon={addOutline} slot="start" />
+                <IonButton onClick={() => setIsInscriptionModalOpen(true)} className="inscribir-button">
+                  <IonIcon icon={addOutline} slot="start" className="icon-themed" />
                   <IonLabel>Inscribir Pareja</IonLabel>
                 </IonButton>
                 
@@ -461,7 +461,7 @@ const LigaDetalle: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <IonSegment value={selectedTab} onIonChange={(e) => setSelectedTab(e.detail.value as string)}>
+      <IonSegment value={selectedTab} onIonChange={(e) => setSelectedTab(e.detail.value as string)} className="tabs-header">
         <IonSegmentButton value="info">
           <IonLabel>Información</IonLabel>
         </IonSegmentButton>

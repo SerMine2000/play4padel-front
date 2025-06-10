@@ -3,7 +3,7 @@ import React from 'react';
 import { IonItem, IonIcon, IonLabel, IonList, IonButton } from '@ionic/react';
 import {
   logOutOutline, homeOutline, calendarOutline, tennisballOutline,
-  peopleOutline, stopwatchOutline, statsChartOutline, trophyOutline,
+  peopleOutline, stopwatchOutline, trophyOutline,
   settingsOutline, menuOutline, closeOutline, businessOutline
 } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
@@ -98,8 +98,6 @@ const BarraLateral: React.FC<BarraLateralProps> = ({
         { label: 'Dashboard', path: '/home', icon: homeOutline },
         { label: 'Gestionar Clubes', path: '/manage-clubs', icon: businessOutline },
         { label: 'Gestionar Usuarios', path: '/manage-users', icon: peopleOutline },
-        { label: 'Reportes del Sistema', path: '/admin/system-reports', icon: statsChartOutline },
-        { label: 'Configuración Sistema', path: '/admin/system-config', icon: settingsOutline },
         { label: 'Calendario', path: '/calendar', icon: calendarOutline },
         { label: 'Torneos', path: '/torneos', icon: trophyOutline },
         { label: 'Ligas', path: '/ligas', icon: trophyOutline }

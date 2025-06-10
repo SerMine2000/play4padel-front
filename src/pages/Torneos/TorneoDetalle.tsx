@@ -393,8 +393,8 @@ const TorneoDetalle: React.FC = () => {
           <div className="title-section">
             <h1>{torneo.nombre}</h1>
             <div className="status-chips">
-              <IonChip className="status-chip">
-                <IonIcon icon={trophyOutline} />
+              <IonChip className="status-chip chip-activo">
+                <IonIcon icon={trophyOutline} className="icon-themed" />
                 <IonLabel>Torneo Activo</IonLabel>
               </IonChip>
               {partidos.length > 0 && (
@@ -410,8 +410,8 @@ const TorneoDetalle: React.FC = () => {
         <div className="header-bottom">
           {canManage && (
             <div className="header-actions">
-              <IonButton onClick={() => setIsInscriptionModalOpen(true)}>
-                <IonIcon icon={addOutline} slot="start" />
+              <IonButton onClick={() => setIsInscriptionModalOpen(true)} className="inscribir-button">
+                <IonIcon icon={addOutline} slot="start" className="icon-themed" />
                 <IonLabel>Inscribir Pareja</IonLabel>
               </IonButton>
               
@@ -430,7 +430,7 @@ const TorneoDetalle: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <IonSegment value={selectedTab} onIonChange={(e) => setSelectedTab(e.detail.value as string)}>
+      <IonSegment value={selectedTab} onIonChange={(e) => setSelectedTab(e.detail.value as string)} className="tabs-header">
         <IonSegmentButton value="info">
           <IonLabel>Información</IonLabel>
         </IonSegmentButton>

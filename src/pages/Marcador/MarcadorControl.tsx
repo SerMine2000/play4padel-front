@@ -1,32 +1,22 @@
 import {
-  IonPage, 
-  IonHeader, 
-  IonToolbar, 
-  IonTitle, 
-  IonContent,
   IonCard, 
   IonCardHeader, 
   IonCardTitle, 
   IonCardContent,
   IonButton, 
-  IonGrid, 
-  IonRow, 
-  IonCol, 
-  IonIcon, 
-  IonBackButton, 
-  IonButtons,
+  IonIcon,
   IonLoading,
   IonToast,
   IonText,
   IonSpinner,
-  IonItem,
   IonLabel,
   IonInput,
   IonToggle,
   IonSelect,
   IonSelectOption,
-  IonAccordion,
-  IonAccordionGroup
+  IonGrid,
+  IonRow,
+  IonCol
 } from '@ionic/react';
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -285,123 +275,160 @@ const MarcadorControl: React.FC = () => {
   }, []);
 
   return (
-    <IonPage>
-      <IonContent className="ion-padding">
-        <IonCard className="marcador-card">
-          <IonCardHeader>
-            <IonCardTitle>Marcador {tipoPista}</IonCardTitle>
-          </IonCardHeader>
-          <IonCardContent>
-            {/* Siempre muestra algún contenido, incluso durante la carga */}
-            {cargando && !estado ? (
-              <div className="cargando">
-                <IonSpinner name="circles" color="primary"/>
-                <IonText color="medium">Cargando marcador...</IonText>
-              </div>
-            ) : error ? (
-              <div className="error-mensaje">
-                <IonText color="danger">{error}</IonText>
-                <IonButton size="small" onClick={fetchMarcador}>
-                  <IonIcon slot="start" icon={refreshOutline} />
-                  Reintentar
-                </IonButton>
-              </div>
-            ) : (
-              <MarcadorView estado={estado} />
-            )}
+    <div className="marcador-control-page">
+      {/* Header principal */}
+      <div className="page-header">
+        <h1>Control de Marcador</h1>
+        <p>Gestiona el marcador en tiempo real para {tipoPista}</p>
+      </div>
+      
+      {/* Contenedor principal con grid responsive */}
+      <div className="marcador-control-container">
+        <IonGrid className="marcador-grid">
+          <IonRow>
+            {/* Vista previa del marcador - Columna izquierda */}
+            <IonCol size="12" sizeLg="6">
+              <IonCard className="preview-card">
+                <IonCardHeader className="preview-header">
+                  <IonCardTitle>Vista Previa del Marcador</IonCardTitle>
+                </IonCardHeader>
+                <IonCardContent className="preview-content">
+                  {/* Estado del marcador con mejor presentación */}
+                  {cargando && !estado ? (
+                    <div className="loading-state">
+                      <IonSpinner name="crescent" color="primary"/>
+                      <IonText className="loading-text">Cargando marcador...</IonText>
+                    </div>
+                  ) : error ? (
+                    <div className="error-state">
+                      <IonIcon icon={refreshOutline} className="error-icon" />
+                      <IonText className="error-text">{error}</IonText>
+                      <IonButton fill="outline" size="small" onClick={fetchMarcador} className="retry-button">
+                        <IonIcon slot="start" icon={refreshOutline} />
+                        Reintentar
+                      </IonButton>
+                    </div>
+                  ) : (
+                    <div className="marcador-preview">
+                      <MarcadorView estado={estado} />
+                    </div>
+                  )}
+                </IonCardContent>
+              </IonCard>
+            </IonCol>
             
-            {/* Controles para asignar puntos */}
-            <IonGrid className="ion-padding-top">
-              <IonRow>
-                <IonCol>
-                  <IonButton 
-                    expand="block" 
-                    color="primary" 
-                    size="large"
-                    disabled={!estado || estado.terminado} 
-                    onClick={() => anotarPunto("A")}
-                  >
-                    <IonIcon slot="start" icon={addOutline} />
-                    Punto {nombreEquipoA}
-                  </IonButton>
-                </IonCol>
-                <IonCol>
-                  <IonButton 
-                    expand="block" 
-                    color="danger" 
-                    size="large"
-                    disabled={!estado || estado.terminado}
-                    onClick={() => anotarPunto("B")}
-                  >
-                    <IonIcon slot="start" icon={addOutline} />
-                    Punto {nombreEquipoB}
-                  </IonButton>
-                </IonCol>
-              </IonRow>
-              
-              <IonRow className="ion-padding-top">
-                <IonCol>
-                  <IonButton expand="block" color="medium" onClick={reiniciar}>
-                    <IonIcon slot="start" icon={refreshOutline} />
-                    Reiniciar Partido
-                  </IonButton>
-                </IonCol>
-                <IonCol>
-                  <IonButton expand="block" color="success" onClick={abrirMarcador}>
-                    <IonIcon slot="start" icon={playOutline} />
-                    Mostrar en Pantalla
-                  </IonButton>
-                </IonCol>
-              </IonRow>
-            </IonGrid>
-            
-            {/* Controles adicionales y configuración */}
-            <IonAccordionGroup className="ion-margin-top">
-              <IonAccordion value="configuration">
-                <IonItem slot="header">
-                  <IonIcon icon={settingsOutline} slot="start" />
-                  <IonLabel>Configuración del marcador</IonLabel>
-                </IonItem>
-                
-                <div slot="content" className="ion-padding">
-                  <IonGrid>
-                    {/* Configuración de nombres de equipos */}
-                    <IonRow>
-                      <IonCol>
-                        <IonItem>
-                          <IonLabel position="stacked">Nombre Equipo A</IonLabel>
+            {/* Panel de controles principales - Columna derecha */}
+            <IonCol size="12" sizeLg="6">
+              <IonCard className="controls-card">
+                <IonCardHeader className="controls-header">
+                  <IonCardTitle>Controles de Puntuación</IonCardTitle>
+                </IonCardHeader>
+                <IonCardContent className="controls-content">
+                  {/* Botones de puntuación principales */}
+                  <div className="score-buttons-container">
+                    <div className="team-score-section">
+                      <div className="team-info">
+                        <h3 className="team-name-display">{nombreEquipoA}</h3>
+                        <div className="team-score-display">{estado?.puntos?.A || 0}</div>
+                      </div>
+                      <IonButton 
+                        className="score-button team-a-button"
+                        disabled={!estado || estado.terminado} 
+                        onClick={() => anotarPunto("A")}
+                      >
+                        <IonIcon slot="start" icon={addOutline} />
+                        +1 Punto
+                      </IonButton>
+                    </div>
+                    
+                    <div className="vs-divider">
+                      <span>VS</span>
+                    </div>
+                    
+                    <div className="team-score-section">
+                      <div className="team-info">
+                        <h3 className="team-name-display">{nombreEquipoB}</h3>
+                        <div className="team-score-display">{estado?.puntos?.B || 0}</div>
+                      </div>
+                      <IonButton 
+                        className="score-button team-b-button"
+                        disabled={!estado || estado.terminado}
+                        onClick={() => anotarPunto("B")}
+                      >
+                        <IonIcon slot="start" icon={addOutline} />
+                        +1 Punto
+                      </IonButton>
+                    </div>
+                  </div>
+                  
+                  {/* Controles de acción */}
+                  <div className="action-controls">
+                    <IonButton className="action-button reset-button" onClick={reiniciar}>
+                      <IonIcon slot="start" icon={refreshOutline} />
+                      Reiniciar
+                    </IonButton>
+                    <IonButton className="action-button display-button" onClick={abrirMarcador}>
+                      <IonIcon slot="start" icon={playOutline} />
+                      Mostrar Pantalla
+                    </IonButton>
+                  </div>
+                </IonCardContent>
+              </IonCard>
+            </IonCol>
+          </IonRow>
+          
+          {/* Segunda fila - Configuración */}
+          <IonRow>
+            <IonCol size="12" sizeLg="6">
+              <IonCard className="config-card">
+                <IonCardHeader className="config-header">
+                  <IonCardTitle>
+                    <IonIcon icon={settingsOutline} className="config-icon" />
+                    Configuración del Partido
+                  </IonCardTitle>
+                </IonCardHeader>
+                <IonCardContent className="config-content">
+                  <div className="config-grid">
+                    <div className="config-group">
+                      <h4 className="config-group-title">Equipos</h4>
+                      <div className="config-inputs">
+                        <div className="input-group">
+                          <IonLabel className="input-label">Nombre Equipo A</IonLabel>
                           <IonInput
+                            className="config-input"
                             value={nombreEquipoA}
                             onIonChange={e => setNombreEquipoA(e.detail.value as string)}
-                          ></IonInput>
-                        </IonItem>
-                      </IonCol>
-                      <IonCol>
-                        <IonItem>
-                          <IonLabel position="stacked">Nombre Equipo B</IonLabel>
+                            placeholder="Ej: Los Aces"
+                          />
+                        </div>
+                        <div className="input-group">
+                          <IonLabel className="input-label">Nombre Equipo B</IonLabel>
                           <IonInput
+                            className="config-input"
                             value={nombreEquipoB}
                             onIonChange={e => setNombreEquipoB(e.detail.value as string)}
-                          ></IonInput>
-                        </IonItem>
-                      </IonCol>
-                    </IonRow>
+                            placeholder="Ej: Los Raquetas"
+                          />
+                        </div>
+                      </div>
+                    </div>
                     
-                    {/* Configuración de pista y marcador */}
-                    <IonRow>
-                      <IonCol>
-                        <IonItem>
-                          <IonLabel position="stacked">Título del marcador</IonLabel>
+                    <div className="config-group">
+                      <h4 className="config-group-title">Pista</h4>
+                      <div className="config-inputs">
+                        <div className="input-group">
+                          <IonLabel className="input-label">Título del Marcador</IonLabel>
                           <IonInput
+                            className="config-input"
                             value={tituloPista}
                             onIonChange={e => setTituloPista(e.detail.value as string)}
-                          ></IonInput>
-                        </IonItem>
-                      </IonCol>
-                      <IonCol>
-                        <IonItem>
-                          <IonLabel position="stacked">Número/Tipo de Pista</IonLabel>
+                            placeholder="Ej: CENTER COURT"
+                          />
+                        </div>
+                        <div className="input-group">
+                          <IonLabel className="input-label">Tipo de Pista</IonLabel>
                           <IonSelect
+                            className="config-select"
                             value={tipoPista}
                             onIonChange={e => setTipoPista(e.detail.value)}
                           >
@@ -410,78 +437,90 @@ const MarcadorControl: React.FC = () => {
                             <IonSelectOption value="Pista 3">Pista 3</IonSelectOption>
                             <IonSelectOption value="Pista Central">Pista Central</IonSelectOption>
                           </IonSelect>
-                        </IonItem>
-                      </IonCol>
-                    </IonRow>
+                        </div>
+                      </div>
+                    </div>
                     
-                    {/* Botón para aplicar configuración */}
-                    <IonRow className="ion-margin-top">
-                      <IonCol>
-                        <IonButton color="primary" expand="block" onClick={actualizarConfiguracion}>
-                          <IonIcon slot="start" icon={createOutline} />
-                          Aplicar configuración
-                        </IonButton>
-                      </IonCol>
-                    </IonRow>
-                  </IonGrid>
-                </div>
-              </IonAccordion>
-              
-              <IonAccordion value="advanced">
-                <IonItem slot="header">
-                  <IonIcon icon={tennisballOutline} slot="start" />
-                  <IonLabel>Controles avanzados</IonLabel>
-                </IonItem>
-                
-                <div slot="content" className="ion-padding">
-                  <IonGrid>
-                    <IonRow>
-                      <IonCol>
-                        <IonItem>
-                          <IonLabel>Tie-Break</IonLabel>
-                          <IonToggle disabled={estado.terminado || !estado.tie_break && (estado.juegos.A !== 6 || estado.juegos.B !== 6)}
-                            checked={estado.tie_break} onIonChange={(e) => toggleTieBreak(e.detail.checked)}/>
-                        </IonItem>
-                        <IonItem>
-                          <IonLabel>Bola de oro</IonLabel>
-                          <IonToggle checked={estado.bola_de_oro} disabled={estado.terminado} onIonChange={(e) => toggleBolaDeOro(e.detail.checked)}/>
-                        </IonItem>
-                      </IonCol>
-                    </IonRow>
+                    <div className="config-actions">
+                      <IonButton className="apply-config-button" onClick={actualizarConfiguracion}>
+                        <IonIcon slot="start" icon={createOutline} />
+                        Aplicar Configuración
+                      </IonButton>
+                    </div>
+                  </div>
+                </IonCardContent>
+              </IonCard>
+            </IonCol>
+            
+            {/* Controles avanzados */}
+            <IonCol size="12" sizeLg="6">
+              <IonCard className="advanced-card">
+                <IonCardHeader className="advanced-header">
+                  <IonCardTitle>
+                    <IonIcon icon={tennisballOutline} className="advanced-icon" />
+                    Controles Avanzados
+                  </IonCardTitle>
+                </IonCardHeader>
+                <IonCardContent className="advanced-content">
+                  <div className="advanced-controls">
+                    <div className="toggle-group">
+                      <div className="toggle-item">
+                        <div className="toggle-info">
+                          <IonLabel className="toggle-label">Tie-Break</IonLabel>
+                          <IonText className="toggle-description">Activar modo tie-break</IonText>
+                        </div>
+                        <IonToggle 
+                          className="toggle-switch"
+                          disabled={estado.terminado || !estado.tie_break && (estado.juegos.A !== 6 || estado.juegos.B !== 6)}
+                          checked={estado.tie_break} 
+                          onIonChange={(e) => toggleTieBreak(e.detail.checked)}
+                        />
+                      </div>
+                      
+                      <div className="toggle-item">
+                        <div className="toggle-info">
+                          <IonLabel className="toggle-label">Bola de Oro</IonLabel>
+                          <IonText className="toggle-description">Punto decisivo especial</IonText>
+                        </div>
+                        <IonToggle 
+                          className="toggle-switch"
+                          checked={estado.bola_de_oro} 
+                          disabled={estado.terminado} 
+                          onIonChange={(e) => toggleBolaDeOro(e.detail.checked)}
+                        />
+                      </div>
+                    </div>
                     
-                    <IonRow className="ion-margin-top">
-                      <IonCol>
-                        <IonButton 
-                          expand="block" 
-                          color="warning"
-                          disabled={estado.terminado}
-                          onClick={finalizarPartido}
-                        >
-                          <IonIcon slot="start" icon={trophyOutline} />
-                          Finalizar partido
-                        </IonButton>
-                      </IonCol>
-                    </IonRow>
-                  </IonGrid>
-                </div>
-              </IonAccordion>
-            </IonAccordionGroup>
-          </IonCardContent>
-        </IonCard>
-        
-        {/* Loading y toast para notificaciones */}
-        <IonLoading isOpen={cargando && !estado} message="Cargando marcador..." />
-        
-        <IonToast
-          isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
-          message={toastMessage}
-          duration={2000}
-          position="bottom"
-          color={toastColor}
-        />
-      </IonContent>
-    </IonPage>
+                    <div className="advanced-actions">
+                      <IonButton 
+                        className="finish-button"
+                        disabled={estado.terminado}
+                        onClick={finalizarPartido}
+                      >
+                        <IonIcon slot="start" icon={trophyOutline} />
+                        Finalizar Partido
+                      </IonButton>
+                    </div>
+                  </div>
+                </IonCardContent>
+              </IonCard>
+            </IonCol>
+          </IonRow>
+        </IonGrid>
+      </div>
+      
+      {/* Loading y toast para notificaciones */}
+      <IonLoading isOpen={cargando && !estado} message="Cargando marcador..." />
+      
+      <IonToast
+        isOpen={showToast}
+        onDidDismiss={() => setShowToast(false)}
+        message={toastMessage}
+        duration={2000}
+        position="bottom"
+        color={toastColor}
+      />
+    </div>
   );
 };
 

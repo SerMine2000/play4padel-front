@@ -16,8 +16,6 @@ import Configuracion from './pages/Configuracion/Configuracion';
 import Pay from './pages/Pago/Pay';
 
 // Páginas del Administrador Supremo (solo para rutas que mantienen el prefijo /admin/)
-import AdminSystemReports from './pages/Admin/Admin_Ticket/Admin_Ticket';
-import AdminSystemConfig from './pages/Admin/Admin_Config/Admin_Config';
 import AdminSolicitudesClub from './pages/Admin/Admin_SolicitudesClub/Admin_SolicitudesClub';
 import SolicitarClub from './pages/SolicitarClub/SolicitarClub';
 
@@ -167,14 +165,6 @@ const AppContent: React.FC = () => {
             <Route path="/solicitar-club" element={<PrivateRoute element={<MainLayout><SolicitarClub /></MainLayout>} />} />
 
             {/* Rutas específicas del Administrador Supremo que mantienen el prefijo /admin/ */}
-            <Route 
-              path="/admin/system-reports" 
-              element={<RoleRoute roles={['ADMIN']} element={<MainLayout><AdminSystemReports /></MainLayout>} />} 
-            />
-            <Route 
-              path="/admin/system-config" 
-              element={<RoleRoute roles={['ADMIN']} element={<MainLayout><AdminSystemConfig /></MainLayout>} />} 
-            />
             <Route 
               path="/admin/solicitudes-club" 
               element={<RoleRoute roles={['ADMIN']} element={<MainLayout><AdminSolicitudesClub /></MainLayout>} />} 

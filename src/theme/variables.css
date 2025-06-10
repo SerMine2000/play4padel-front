@@ -65,6 +65,18 @@
   --color-reservas-hover: rgba(97, 41, 240, 0.05);
   --color-reservas-gradiente: linear-gradient(90deg, #6129f0, #a160fb);
   
+  /* VARIABLES PARA BOTONES DE DETALLES Y ELEMENTOS TEMÁTICOS */
+  --color-detalle-boton: #6129f0; /* Morado en modo claro */
+  --color-detalle-boton-contraste: #ffffff;
+  --color-detalle-boton-sombra: rgba(97, 41, 240, 0.2);
+  --color-detalle-boton-hover: rgba(97, 41, 240, 0.08);
+  --color-chip-activo: #6129f0;
+  --color-chip-activo-contraste: #ffffff;
+  --color-inscribir-boton: #6129f0;
+  --color-inscribir-boton-contraste: #ffffff;
+  --color-tabs-activo: #6129f0;
+  --color-tabs-contraste: #ffffff;
+  
   /* SCROLLBAR Y ELEMENTOS DASHBOARD */
   --color-scroll-principal: var(--color-primario);
   --color-scroll-hover: #4c1abd;
@@ -143,6 +155,18 @@
   --color-reservas-sombra-hover: rgba(0, 255, 102, 0.4);
   --color-reservas-hover: rgba(0, 255, 102, 0.1);
   --color-reservas-gradiente: linear-gradient(90deg, #00ff66, #059669);
+  
+  /* VARIABLES PARA BOTONES DE DETALLES Y ELEMENTOS TEMÁTICOS - VERDE EN OSCURO */
+  --color-detalle-boton: #00ff66; /* Verde en modo oscuro */
+  --color-detalle-boton-contraste: #000000;
+  --color-detalle-boton-sombra: rgba(0, 255, 102, 0.2);
+  --color-detalle-boton-hover: rgba(0, 255, 102, 0.1);
+  --color-chip-activo: #00ff66;
+  --color-chip-activo-contraste: #000000;
+  --color-inscribir-boton: #00ff66;
+  --color-inscribir-boton-contraste: #000000;
+  --color-tabs-activo: #00ff66;
+  --color-tabs-contraste: #000000;
   
   /* SCROLLBAR Y ELEMENTOS DASHBOARD */
   --color-scroll-principal: var(--color-secundario);
@@ -347,4 +371,66 @@ ion-popover ion-icon {
   ion-card {
     margin: 4px;
   }
+}
+
+/* ESTILOS ESPECÍFICOS PARA TORNEOS Y LIGAS */
+
+/* Botón de ver detalles */
+.detalle-button {
+  --background: var(--color-detalle-boton);
+  --color: var(--color-detalle-boton-contraste);
+  --border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.detalle-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--color-detalle-boton-sombra);
+  --background-hover: var(--color-detalle-boton-hover);
+}
+
+/* Chip de estado activo */
+.chip-activo {
+  --background: var(--color-chip-activo);
+  --color: var(--color-chip-activo-contraste);
+  font-weight: 600;
+}
+
+/* Botón de inscribir */
+.inscribir-button {
+  --background: var(--color-inscribir-boton);
+  --color: var(--color-inscribir-boton-contraste);
+  --border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.inscribir-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--color-detalle-boton-sombra);
+}
+
+/* Tabs de navegación */
+.tabs-header ion-segment-button {
+  --color: var(--texto-secundario);
+  --color-checked: var(--color-tabs-contraste);
+  --background-checked: var(--color-tabs-activo);
+  --indicator-color: var(--color-tabs-activo);
+  transition: all 0.3s ease;
+}
+
+.tabs-header ion-segment-button:hover {
+  --background-hover: var(--color-detalle-boton-hover);
+}
+
+/* Iconos temáticos */
+.icon-themed {
+  color: var(--color-detalle-boton);
+  transition: color 0.3s ease;
+}
+
+.icon-themed:hover {
+  color: var(--color-detalle-boton);
+  filter: brightness(1.1);
 }

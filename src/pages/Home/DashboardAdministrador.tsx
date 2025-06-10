@@ -246,10 +246,10 @@ const DashboardAdministrador: React.FC = () => {
                         expand="block" 
                         fill="solid" 
                         className="boton-accion-rapida boton-reportes"
-                        routerLink="/admin/system-reports"
+                        routerLink="/calendar"
                       >
-                        <IonIcon icon={statsChartOutline} slot="start" />
-                        Ver Reportes
+                        <IonIcon icon={calendarOutline} slot="start" />
+                        Calendario
                       </IonButton>
                     </div>
                   </IonCardContent>

@@ -346,8 +346,8 @@ const Torneos: React.FC = () => {
                   </div>
 
                   <div className="card-actions">
-                    <IonButton fill="clear" size="small" routerLink={`/torneos/${torneo.id}`}>
-                      <IonIcon icon={eyeOutline} slot="start" />
+                    <IonButton fill="clear" size="small" routerLink={`/torneos/${torneo.id}`} className="detalle-button">
+                      <IonIcon icon={eyeOutline} slot="start" className="icon-themed" />
                       Ver detalles
                     </IonButton>
                     
