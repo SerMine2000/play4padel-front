@@ -1,4 +1,4 @@
-/* ===== CUSTOM MODAL - SIN FONDO VERDE, USANDO FONDOS APROPIADOS ===== */
+/* ===== CUSTOM MODAL - FOLLOWING MANAGE-COURTS PATTERN ===== */
 
 /* OVERLAY DEL MODAL */
 .custom-modal-overlay {
@@ -13,7 +13,7 @@
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -62,47 +62,55 @@
   max-height: 95vh;
 }
 
-/* HEADER DEL MODAL - ELEGANTE Y PROFESIONAL */
+/* HEADER DEL MODAL - SIGUIENDO PATRÓN MANAGE-COURTS */
 .modal-header {
-  background: var(--fondo-card);
-  color: var(--texto-principal);
-  padding: 1.25rem 1.5rem;
+  background: var(--fondo-panel-navegacion) !important;
+  color: var(--texto-panel-navegacion) !important;
+  padding: 8px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid var(--borde-principal);
   flex-shrink: 0;
   min-height: 60px;
+  max-height: 60px;
   position: relative;
+  overflow: hidden;
 }
 
 .modal-header h2 {
   margin: 0;
-  font-weight: 700;
-  font-size: 1.4rem;
-  color: var(--texto-principal);
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: var(--texto-panel-navegacion) !important;
   line-height: 1.3;
   letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 44px;
 }
 
 .modal-header .close-button {
-  --background: transparent;
-  --color: var(--texto-secundario);
-  --border-radius: 12px;
-  --padding-start: 0.75rem;
-  --padding-end: 0.75rem;
-  font-weight: 500;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  min-width: 40px;
-  height: 40px;
-  border: 1px solid var(--borde-principal);
-  backdrop-filter: blur(10px);
+  --background: transparent !important;
+  --color: var(--texto-panel-navegacion) !important;
+  --border-radius: 50% !important;
+  --padding-start: 0 !important;
+  --padding-end: 0 !important;
+  --padding-top: 0 !important;
+  --padding-bottom: 0 !important;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  width: 40px !important;
+  height: 40px !important;
+  border: none;
+  font-size: 1.2rem;
+  margin: 0;
 }
 
 .modal-header .close-button:hover {
-  --background: var(--hover-card);
-  --color: var(--texto-principal);
-  transform: translateY(-1px);
+  --background: rgba(255, 255, 255, 0.1) !important;
+  transform: scale(1.05);
 }
 
 .modal-header .close-button ion-icon {
@@ -135,23 +143,23 @@
   grid-column: span 1;
 }
 
-/* SCROLLBAR PERSONALIZADA */
+/* SCROLLBAR PERSONALIZADA - SIGUIENDO PATRÓN MANAGE-COURTS */
 .modal-content::-webkit-scrollbar {
   width: 6px;
 }
 
 .modal-content::-webkit-scrollbar-track {
-  background: var(--fondo-aplicacion);
+  background: var(--fondo-input);
   border-radius: 3px;
 }
 
 .modal-content::-webkit-scrollbar-thumb {
-  background: var(--borde-principal);
+  background: var(--color-detalle-boton);
   border-radius: 3px;
 }
 
 .modal-content::-webkit-scrollbar-thumb:hover {
-  background: var(--texto-secundario);
+  background: var(--color-secundario);
 }
 
 /* ELEMENTOS DENTRO DEL CONTENIDO */
@@ -169,8 +177,8 @@
 }
 
 .modal-content ion-item:focus-within {
-  border-color: var(--color-primario);
-  box-shadow: 0 0 0 4px rgba(97, 41, 240, 0.15);
+  border-color: var(--color-detalle-boton);
+  box-shadow: 0 0 0 4px var(--color-detalle-boton-hover);
   transform: translateY(-1px);
 }
 
@@ -236,28 +244,31 @@
 
 .modal-actions .cancel-button:hover {
   --color: var(--texto-principal);
-  --border-color: var(--color-primario);
+  --border-color: var(--color-detalle-boton);
   --background: var(--hover-card);
   transform: translateY(-1px);
 }
 
 .modal-actions .submit-button {
-  --background: var(--color-primario);
-  --color: var(--color-primario-contraste);
+  --background: var(--color-detalle-boton) !important;
+  --color: var(--color-detalle-boton-contraste) !important;
   --border-radius: 12px;
-  font-weight: 700;
+  font-weight: 600;
   min-width: 140px;
-  height: 44px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-size: 0.95rem;
+  height: 48px;
+  transition: all 0.3s ease;
+  font-size: 1rem;
   letter-spacing: 0.02em;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 4px 15px var(--color-detalle-boton-sombra);
 }
 
 .modal-actions .submit-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(97, 41, 240, 0.4), 0 3px 10px rgba(97, 41, 240, 0.2);
+  box-shadow: 0 8px 25px var(--color-detalle-boton-sombra);
+  --background: var(--color-detalle-boton) !important;
+  filter: brightness(1.1);
 }
 
 .modal-actions .submit-button::before {
@@ -277,16 +288,18 @@
 
 /* VARIANTES DE COLOR PARA EL BOTÓN DE ENVÍO */
 .submit-button[color="secondary"] {
-  --background: var(--color-secundario);
+  --background: var(--color-secundario) !important;
+  --color: var(--color-primario-contraste) !important;
 }
 
 .submit-button[color="danger"] {
-  --background: #ff6b6b;
+  --background: #dc2626 !important;
+  --color: white !important;
 }
 
 .submit-button[color="warning"] {
-  --background: #ffc62f;
-  --color: #000000;
+  --background: #f59e0b !important;
+  --color: white !important;
 }
 
 /* RESPONSIVE DESIGN */
@@ -475,13 +488,13 @@
 }
 
 .modal-header .close-button:focus {
-  outline: 2px solid var(--color-primario);
+  outline: 2px solid var(--color-detalle-boton);
   outline-offset: 2px;
 }
 
 .modal-actions .cancel-button:focus,
 .modal-actions .submit-button:focus {
-  outline: 2px solid var(--color-primario);
+  outline: 2px solid var(--color-detalle-boton);
   outline-offset: 2px;
 }
 
@@ -598,8 +611,8 @@ ion-select-popover ion-item ion-label {
 }
 
 ion-select-popover ion-radio {
-  --color: var(--color-primario) !important;
-  --color-checked: var(--color-primario) !important;
+  --color: var(--color-detalle-boton) !important;
+  --color-checked: var(--color-detalle-boton) !important;
 }
 
 /* IONIC DATETIME - CORREGIR PICKER */

@@ -201,7 +201,7 @@
 /* ===== MODAL PROFESIONAL DE AÑADIR SOCIOS ===== */
 .modal-añadir-socios {
   --width: 95vw;
-  --max-width: 700px;
+  --max-width: 900px;
   --height: auto;
   --max-height: 85vh;
   --border-radius: 16px;
@@ -309,7 +309,7 @@
   max-height: calc(85vh - 60px);
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: var(--color-primario) var(--fondo-input);
+  scrollbar-color: var(--color-detalle-boton) var(--fondo-input);
 }
 
 .modal-socios-container::-webkit-scrollbar {
@@ -322,7 +322,7 @@
 }
 
 .modal-socios-container::-webkit-scrollbar-thumb {
-  background: var(--color-primario);
+  background: var(--color-detalle-boton);
   border-radius: 3px;
 }
 
@@ -413,7 +413,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(97, 41, 240, 0.03) 0%, transparent 50%);
+  background: linear-gradient(135deg, var(--color-detalle-boton-hover) 0%, transparent 50%);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -515,17 +515,17 @@
 }
 
 .socios-add-btn {
-  --background: var(--color-primario) !important;
-  --color: var(--color-primario-contraste) !important;
-  background: var(--color-primario) !important;
-  color: var(--color-primario-contraste) !important;
-  box-shadow: 0 4px 15px rgba(97, 41, 240, 0.3);
+  --background: var(--color-detalle-boton) !important;
+  --color: var(--color-detalle-boton-contraste) !important;
+  background: var(--color-detalle-boton) !important;
+  color: var(--color-detalle-boton-contraste) !important;
+  box-shadow: var(--color-detalle-boton-sombra);
 }
 
 .socios-add-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(97, 41, 240, 0.4);
-  --background: var(--color-secundario) !important;
+  box-shadow: var(--sombra-hover);
+  filter: brightness(1.1);
 }
 
 .socios-add-btn:disabled {
@@ -546,7 +546,7 @@
 .socios-cancel-btn:hover {
   --background: var(--hover-card) !important;
   --color: var(--texto-principal) !important;
-  border-color: var(--color-primario);
+  border-color: var(--color-detalle-boton);
   transform: translateY(-1px);
 }
 

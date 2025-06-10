@@ -385,7 +385,7 @@ ion-segment-button:hover::part(native)::before {
 }
 
 .lista-reservas-scroll::-webkit-scrollbar-thumb {
-  background: var(--color-primario);
+  background: var(--color-detalle-boton);
   border-radius: 3px;
 }
 
@@ -976,9 +976,9 @@ ion-segment-button:hover::part(native)::before {
 /* ===== MODAL PROFESIONAL DE DETALLE DE RESERVA ===== */
 .modal-detalle-reserva {
   --width: 95vw;
-  --max-width: 600px;
+  --max-width: 900px;
   --height: auto;
-  --max-height: 85vh;
+  --max-height: 90vh;
   --border-radius: 16px;
   --box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   --backdrop-opacity: 0.6;
@@ -1084,7 +1084,7 @@ ion-segment-button:hover::part(native)::before {
   max-height: calc(85vh - 60px);
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: var(--color-primario) var(--fondo-input);
+  scrollbar-color: var(--color-detalle-boton) var(--fondo-input);
 }
 
 .modal-reserva-container::-webkit-scrollbar {
@@ -1097,7 +1097,7 @@ ion-segment-button:hover::part(native)::before {
 }
 
 .modal-reserva-container::-webkit-scrollbar-thumb {
-  background: var(--color-primario);
+  background: var(--color-detalle-boton);
   border-radius: 3px;
 }
 
@@ -1129,13 +1129,13 @@ ion-segment-button:hover::part(native)::before {
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--texto-principal);
-  border-bottom: 2px solid var(--color-primario);
+  border-bottom: 2px solid var(--color-detalle-boton);
   padding-bottom: 8px;
 }
 
 .reserva-section-title ion-icon {
   font-size: 1.3rem;
-  color: var(--color-primario);
+  color: var(--color-detalle-boton);
 }
 
 /* ===== CAMPOS DE INFORMACIÓN ===== */
@@ -1158,12 +1158,12 @@ ion-segment-button:hover::part(native)::before {
 
 .reserva-info-field:hover {
   background: var(--hover-card);
-  border-color: var(--color-primario);
+  border-color: var(--color-detalle-boton);
 }
 
 .reserva-field-icon {
   font-size: 1.2rem;
-  color: var(--color-primario);
+  color: var(--color-detalle-boton);
   width: 20px;
   flex-shrink: 0;
 }
@@ -1246,7 +1246,7 @@ ion-segment-button:hover::part(native)::before {
 .reserva-close-btn:hover {
   --background: var(--hover-card) !important;
   --color: var(--texto-principal) !important;
-  border-color: var(--color-primario);
+  border-color: var(--color-detalle-boton);
   transform: translateY(-1px);
 }
 

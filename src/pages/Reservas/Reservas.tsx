@@ -565,6 +565,10 @@ const Reservas: React.FC = () => {
                             locale="es-ES"
                             firstDayOfWeek={1}
                             className="calendario-compacto"
+                            style={{
+                              '--ion-datetime-popover-ios-display': 'none',
+                              '--ion-datetime-popover-md-display': 'none'
+                            } as any}
                           />
                         </div>
                         
@@ -669,7 +673,6 @@ const Reservas: React.FC = () => {
                         disabled={!clubSeleccionado || !pistaSeleccionada || !fechaSeleccionada || franjasSeleccionadas.length === 0}
                         className="boton-confirmar-pro"
                         fill="solid"
-                        color="primary"
                       >
                         <IonIcon slot="start" icon={tennisballOutline} />
                         Reservar

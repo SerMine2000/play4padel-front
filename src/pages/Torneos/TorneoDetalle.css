@@ -192,8 +192,8 @@
 
 .torneo-header:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(97, 41, 240, 0.15);
-  border-color: var(--color-primario);
+  box-shadow: var(--sombra-hover);
+  border-color: var(--color-detalle-boton);
 }
 
 /* Modo oscuro para torneo header */
@@ -213,7 +213,7 @@
 
 .header-top ion-button {
   --background: transparent;
-  --color: var(--color-primario);
+  --color: var(--color-detalle-boton);
   --border-radius: 8px;
   border: 1px solid var(--borde-principal);
   transition: all 0.2s ease;
@@ -223,7 +223,7 @@
 .header-top ion-button:hover {
   transform: translateY(-1px);
   --background: var(--hover-card);
-  border-color: var(--color-primario);
+  border-color: var(--color-detalle-boton);
 }
 
 .title-section {
@@ -253,8 +253,8 @@
 
 /* Chip de estado en el header */
 .status-chip {
-  --background: var(--color-primario) !important;
-  --color: var(--color-primario-contraste) !important;
+  --background: var(--color-detalle-boton) !important;
+  --color: var(--color-detalle-boton-contraste) !important;
   border: none !important;
   font-weight: 600;
   font-size: 0.85rem;
@@ -266,7 +266,7 @@
 
 .status-chip:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(97, 41, 240, 0.3);
+  box-shadow: 0 4px 12px var(--color-detalle-boton-sombra);
 }
 
 /* Chip específico para cuadro generado */
@@ -279,14 +279,14 @@
   box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
 }
 
-/* Modo oscuro - usar verde */
-.torneo-detalle-container.dark .status-chip {
-  --background: var(--color-secundario) !important;
-  --color: #ffffff !important;
+/* Modo oscuro - usando variables consistentes */
+.ion-palette-dark .status-chip {
+  --background: var(--color-detalle-boton) !important;
+  --color: var(--color-detalle-boton-contraste) !important;
 }
 
-.torneo-detalle-container.dark .status-chip:hover {
-  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+.ion-palette-dark .status-chip:hover {
+  box-shadow: 0 4px 12px var(--color-detalle-boton-sombra);
 }
 
 .torneo-detalle-container.dark .status-chip:has(ion-icon[icon="play-outline"]) {
@@ -325,8 +325,8 @@
 }
 
 .header-actions ion-button {
-  --background: var(--color-primario);
-  --color: var(--color-primario-contraste);
+  --background: var(--color-detalle-boton);
+  --color: var(--color-detalle-boton-contraste);
 }
 
 /* Quitar el sobrefondo rectangular de los botones */
@@ -359,7 +359,7 @@
 
 .header-actions ion-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(97, 41, 240, 0.4);
+  box-shadow: var(--color-detalle-boton-sombra);
 }
 
 /* Modo oscuro - colores verde */
@@ -670,7 +670,7 @@
 }
 
 .admin-actions ion-button[fill="outline"]:hover {
-  --background: rgba(97, 41, 240, 0.1);
+  --background: var(--color-detalle-boton-hover);
 }
 
 /* Modo oscuro para admin actions */
@@ -1093,75 +1093,167 @@
   font-weight: 600;
 }
 
-/* Modal - Mejorado */
+/* Modal - Siguiendo Patrón Manage-Courts */
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2rem;
-  background: var(--fondo-card);
-  color: var(--texto-principal);
+  padding: 8px 20px;
+  background: var(--fondo-panel-navegacion) !important;
+  color: var(--texto-panel-navegacion) !important;
   border-bottom: 1px solid var(--borde-principal);
+  min-height: 60px;
+  max-height: 60px;
+  overflow: hidden;
 }
 
 .modal-header h2 {
   margin: 0;
   font-weight: 600;
-  font-size: 1.4rem;
-  color: var(--texto-principal);
+  font-size: 1.2rem;
+  color: var(--texto-panel-navegacion) !important;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 44px;
+  line-height: 1.3;
+}
+
+.modal-header ion-icon {
+  font-size: 1.3rem;
+  color: var(--color-secundario) !important;
+  flex-shrink: 0;
 }
 
 .modal-header ion-button {
-  --color: var(--texto-secundario);
-  --background: transparent;
-  --border-radius: 8px;
-  border: 1px solid var(--borde-principal);
-  font-weight: 600;
+  --color: var(--texto-panel-navegacion) !important;
+  --background: transparent !important;
+  --border-radius: 50% !important;
+  --padding-start: 0 !important;
+  --padding-end: 0 !important;
+  --padding-top: 0 !important;
+  --padding-bottom: 0 !important;
+  font-weight: bold;
+  width: 40px !important;
+  height: 40px !important;
+  border: none;
+  font-size: 1.2rem;
+  margin: 0;
+  transition: all 0.3s ease;
 }
 
 .modal-header ion-button:hover {
-  --background: var(--hover-card);
-  --color: var(--color-primario);
-}
-
-/* Modo oscuro para modal header button */
-.torneo-detalle-container.dark .modal-header ion-button:hover {
-  --color: var(--color-secundario);
+  --background: rgba(255, 255, 255, 0.1) !important;
+  transform: scale(1.05);
 }
 
 .modal-content {
-  padding: 2rem;
-  max-height: 70vh;
+  padding: 24px;
+  max-height: calc(90vh - 60px);
   overflow-y: auto;
-  background: var(--fondo-card);
+  background: var(--fondo-card) !important;
+  color: var(--texto-principal) !important;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-detalle-boton) var(--fondo-input);
+}
+
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: var(--fondo-input);
+  border-radius: 3px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: var(--color-detalle-boton);
+  border-radius: 3px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: var(--color-secundario);
 }
 
 .modal-content ion-item {
   --background: var(--fondo-input) !important;
-  --border-radius: 8px;
-  margin-bottom: 1rem;
-  border: 1px solid var(--borde-input) !important;
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
+  --color: var(--texto-principal) !important;
+  background: var(--fondo-input) !important;
+  color: var(--texto-principal) !important;
+  border: 2px solid var(--borde-input);
+  border-radius: 12px;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  transition: all 0.3s ease;
+  min-height: 48px;
+}
+
+.modal-content ion-item:focus-within {
+  border-color: var(--color-detalle-boton);
+  box-shadow: 0 0 0 3px var(--color-detalle-boton-hover);
+  transform: translateY(-1px);
 }
 
 .modal-content ion-label {
   font-weight: 600;
-  color: var(--texto-principal);
-  margin-bottom: 0.5rem;
+  color: var(--texto-principal) !important;
+  margin-bottom: 4px;
+  font-size: 0.9rem;
+}
+
+.modal-content ion-input,
+.modal-content ion-textarea,
+.modal-content ion-select {
+  --color: var(--texto-principal) !important;
+  --placeholder-color: var(--texto-placeholder) !important;
+  color: var(--texto-principal) !important;
 }
 
 .modal-footer {
-  padding: 2rem;
-  background: var(--fondo-card);
+  display: flex;
+  gap: 12px;
+  padding: 24px;
+  background: var(--fondo-card) !important;
   border-top: 1px solid var(--borde-principal);
+  justify-content: flex-end;
 }
 
 .modal-footer ion-button {
-  --border-radius: 8px;
+  --border-radius: 12px;
   font-weight: 600;
   min-height: 48px;
-  font-size: 0.95rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.modal-footer ion-button[color="primary"] {
+  --background: var(--color-detalle-boton) !important;
+  --color: var(--color-detalle-boton-contraste) !important;
+  background: var(--color-detalle-boton) !important;
+  color: var(--color-detalle-boton-contraste) !important;
+  box-shadow: 0 4px 15px var(--color-detalle-boton-sombra);
+}
+
+.modal-footer ion-button[color="primary"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px var(--color-detalle-boton-sombra);
+  filter: brightness(1.1);
+}
+
+.modal-footer ion-button[fill="clear"] {
+  --background: transparent !important;
+  --color: var(--texto-secundario) !important;
+  background: transparent !important;
+  color: var(--texto-secundario) !important;
+  border: 2px solid var(--borde-principal);
+}
+
+.modal-footer ion-button[fill="clear"]:hover {
+  --background: var(--hover-card) !important;
+  --color: var(--texto-principal) !important;
+  border-color: var(--color-detalle-boton);
+  transform: translateY(-1px);
 }
 
 /* Responsive */
@@ -1452,9 +1544,9 @@ ion-content {
 /* ===== MODAL PROFESIONAL DE INSCRIPCIÓN ===== */
 .modal-inscripcion {
   --width: 95vw;
-  --max-width: 600px;
+  --max-width: 900px;
   --height: auto;
-  --max-height: 85vh;
+  --max-height: 90vh;
   --border-radius: 16px;
   --box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   --backdrop-opacity: 0.6;
@@ -1543,7 +1635,7 @@ ion-content {
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--texto-principal);
-  border-bottom: 2px solid var(--color-primario);
+  border-bottom: 2px solid var(--color-detalle-boton);
   padding-bottom: 8px;
 }
 
@@ -1573,12 +1665,12 @@ ion-content {
 }
 
 .modal-content-profesional::-webkit-scrollbar-thumb {
-  background: var(--color-primario);
+  background: var(--color-detalle-boton);
   border-radius: 3px;
 }
 
 .modal-content-profesional::-webkit-scrollbar-thumb:hover {
-  background: var(--color-secundario);
+  background: var(--color-detalle-boton-hover);
 }
 
 /* ===== CAMPOS MEJORADOS ===== */
@@ -1781,9 +1873,9 @@ ion-content {
 /* ===== MODAL PROFESIONAL DE REGISTRAR RESULTADO ===== */
 .modal-resultado {
   --width: 95vw;
-  --max-width: 600px;
+  --max-width: 900px;
   --height: auto;
-  --max-height: 85vh;
+  --max-height: 90vh;
   --border-radius: 16px;
   --box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   --backdrop-opacity: 0.6;
@@ -1829,7 +1921,7 @@ ion-content {
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--texto-principal);
-  border-bottom: 2px solid var(--color-primario);
+  border-bottom: 2px solid var(--color-detalle-boton);
   padding-bottom: 8px;
 }
 

@@ -58,8 +58,8 @@
 
 .solicitud-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(97, 41, 240, 0.15);
-  border-color: var(--color-primario);
+  box-shadow: var(--sombra-hover);
+  border-color: var(--color-detalle-boton);
 }
 
 /* Header del card - igual que torneos */
@@ -130,7 +130,7 @@
 
 .info-row:hover {
   background: var(--hover-card);
-  border-color: var(--color-primario);
+  border-color: var(--color-detalle-boton);
   color: var(--texto-principal);
   transform: translateY(-1px);
 }
@@ -175,7 +175,7 @@
 
 .descripcion:hover {
   background: var(--hover-card);
-  border-color: var(--color-primario);
+  border-color: var(--color-detalle-boton);
   color: var(--texto-principal);
   transform: translateY(-1px);
 }
@@ -207,11 +207,11 @@
 
 /* Botón ver detalles - usar colores temáticos */
 .card-actions .detalle-button {
-  --color: var(--color-primario);
+  --color: var(--color-detalle-boton);
 }
 
 .card-actions .detalle-button:hover {
-  --color: var(--color-primario);
+  --color: var(--color-detalle-boton);
   transform: translateY(-1px);
   opacity: 0.8;
 }
@@ -347,7 +347,180 @@ ion-segment-button ion-badge {
   .manage-clubs-header h1 {
     font-size: 2rem;
   }
-  
+}
+
+/* ==================== MODALES - SIGUIENDO PATRÓN MANAGE-COURTS ==================== */
+/* Modal Header */
+ion-modal ion-header {
+  background: var(--fondo-panel-navegacion) !important;
+  border-bottom: 1px solid var(--borde-principal);
+  height: 60px;
+  min-height: 60px;
+}
+
+ion-modal ion-toolbar {
+  --background: var(--fondo-panel-navegacion) !important;
+  --color: var(--texto-panel-navegacion) !important;
+  --padding-start: 20px;
+  --padding-end: 20px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  --min-height: 60px;
+  height: 60px;
+  background: var(--fondo-panel-navegacion) !important;
+  color: var(--texto-panel-navegacion) !important;
+}
+
+ion-modal ion-title {
+  color: var(--texto-panel-navegacion) !important;
+  font-weight: 600;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 44px;
+  line-height: 1.3;
+}
+
+/* Modal Content */
+ion-modal ion-content {
+  --background: var(--fondo-card) !important;
+  --color: var(--texto-principal) !important;
+  background: var(--fondo-card) !important;
+  color: var(--texto-principal) !important;
+}
+
+/* Form Container */
+.modal-form-container {
+  padding: 24px;
+  max-height: calc(90vh - 60px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-detalle-boton) var(--fondo-input);
+}
+
+.modal-form-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-form-container::-webkit-scrollbar-track {
+  background: var(--fondo-input);
+  border-radius: 3px;
+}
+
+.modal-form-container::-webkit-scrollbar-thumb {
+  background: var(--color-detalle-boton);
+  border-radius: 3px;
+}
+
+.modal-form-container::-webkit-scrollbar-thumb:hover {
+  background: var(--color-secundario);
+}
+
+/* Form Items */
+ion-modal ion-item {
+  --background: var(--fondo-input) !important;
+  --color: var(--texto-principal) !important;
+  background: var(--fondo-input) !important;
+  color: var(--texto-principal) !important;
+  border: 2px solid var(--borde-input);
+  border-radius: 12px;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  transition: all 0.3s ease;
+  min-height: 48px;
+}
+
+ion-modal ion-item:focus-within {
+  border-color: var(--color-detalle-boton);
+  box-shadow: 0 0 0 3px var(--color-detalle-boton-hover);
+  transform: translateY(-1px);
+}
+
+ion-modal ion-input,
+ion-modal ion-textarea,
+ion-modal ion-select {
+  --color: var(--texto-principal) !important;
+  --placeholder-color: var(--texto-placeholder) !important;
+  color: var(--texto-principal) !important;
+}
+
+ion-modal ion-label {
+  font-weight: 600;
+  color: var(--texto-principal) !important;
+  margin-bottom: 4px;
+  font-size: 0.9rem;
+}
+
+/* Close Button */
+ion-modal ion-buttons ion-button {
+  --background: transparent !important;
+  --color: var(--texto-panel-navegacion) !important;
+  --border-radius: 50% !important;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  width: 40px !important;
+  height: 40px !important;
+  font-size: 1.2rem;
+}
+
+ion-modal ion-buttons ion-button:hover {
+  --background: rgba(255, 255, 255, 0.1) !important;
+  transform: scale(1.05);
+}
+
+/* Modal Footer Buttons */
+ion-modal .modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+  padding: 24px 0 0 0;
+  border-top: 1px solid var(--borde-principal);
+  justify-content: flex-end;
+}
+
+ion-modal .modal-actions ion-button {
+  --border-radius: 12px;
+  height: 48px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+/* Primary Button */
+ion-modal .modal-actions ion-button[color="primary"] {
+  --background: var(--color-detalle-boton) !important;
+  --color: var(--color-detalle-boton-contraste) !important;
+  background: var(--color-detalle-boton) !important;
+  color: var(--color-detalle-boton-contraste) !important;
+  box-shadow: 0 4px 15px var(--color-detalle-boton-sombra);
+}
+
+ion-modal .modal-actions ion-button[color="primary"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px var(--color-detalle-boton-sombra);
+  filter: brightness(1.1);
+}
+
+/* Secondary Button */
+ion-modal .modal-actions ion-button[fill="clear"] {
+  --background: transparent !important;
+  --color: var(--texto-secundario) !important;
+  background: transparent !important;
+  color: var(--texto-secundario) !important;
+  border: 2px solid var(--borde-principal);
+}
+
+ion-modal .modal-actions ion-button[fill="clear"]:hover {
+  --background: var(--hover-card) !important;
+  --color: var(--texto-principal) !important;
+  border-color: var(--color-detalle-boton);
+  transform: translateY(-1px);
+}
+
+/* Responsive design continuado */
+@media (max-width: 768px) {
   .solicitud-card ion-card-header,
   .solicitud-card ion-card-content {
     padding: 1rem;

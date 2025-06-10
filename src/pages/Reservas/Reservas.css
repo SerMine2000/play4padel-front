@@ -42,7 +42,7 @@
   left: 0;
   width: 60px;
   height: 4px;
-  background: linear-gradient(90deg, var(--color-primario), var(--color-secundario));
+  background: var(--color-detalle-boton);
   border-radius: 2px;
 }
 
@@ -77,10 +77,10 @@
 }
 
 .tarjeta-seleccion-completa {
-  background: var(--color-panel);
+  background: var(--fondo-card);
   border-radius: 16px;
-  box-shadow: var(--card-shadow);
-  border: 1px solid var(--ion-border-color);
+  box-shadow: var(--sombra-card);
+  border: 1px solid var(--borde-principal);
   overflow: hidden;
   transition: box-shadow 0.3s ease;
 }
@@ -88,21 +88,21 @@
 /* Encabezados profesionales con línea morada/verde MÁS CORTA */
 .encabezado-tarjeta-unificado {
   padding: 24px 28px 20px 28px;
-  background: var(--ion-background-color);
-  border-bottom: 1px solid var(--ion-border-color);
+  background: var(--fondo-card);
+  border-bottom: 1px solid var(--borde-principal);
 }
 
 .titulo-tarjeta-unificado {
   font-size: 1.4rem;
   font-weight: 600;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   margin: 0 0 12px 0;
 }
 
 .linea-morada {
   width: 60px; /* ✅ LÍNEA MÁS CORTA - no llega hasta el final */
   height: 3px;
-  background: var(--color-primario);
+  background: var(--color-detalle-boton);
   border-radius: 2px;
   margin: 0;
 }
@@ -125,10 +125,10 @@
 .subtitulo-seccion {
   font-size: 1.1rem;
   font-weight: 600;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   margin: 0;
   padding-bottom: 8px;
-  border-bottom: 1px solid var(--ion-border-color);
+  border-bottom: 1px solid var(--borde-principal);
 }
 
 /* ========================================
@@ -141,10 +141,10 @@
   gap: 8px;
   max-height: 200px;
   overflow-y: auto;
-  border: 2px solid var(--ion-border-color);
+  border: 2px solid var(--borde-principal);
   border-radius: 12px;
   padding: 8px;
-  background: var(--ion-background-color);
+  background: var(--fondo-input);
 }
 
 .lista-clubes-scrolleable::-webkit-scrollbar {
@@ -152,17 +152,17 @@
 }
 
 .lista-clubes-scrolleable::-webkit-scrollbar-track {
-  background: var(--ion-background-color);
+  background: var(--fondo-input);
   border-radius: 6px;
 }
 
 .lista-clubes-scrolleable::-webkit-scrollbar-thumb {
-  background: var(--ion-border-color);
+  background: var(--borde-principal);
   border-radius: 6px;
 }
 
 .lista-clubes-scrolleable::-webkit-scrollbar-thumb:hover {
-  background: var(--ion-text-color-step-200);
+  background: var(--texto-secundario);
 }
 
 .item-club {
@@ -170,24 +170,24 @@
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
-  background: var(--ion-background-color);
-  border: 1px solid var(--ion-border-color);
+  background: var(--fondo-card);
+  border: 1px solid var(--borde-principal);
   font-size: 0.95rem;
   font-weight: 500;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
 }
 
 /* ✅ HOVER NEUTRO SIN VERDE - solo sombra y borde */
 .club-disponible:hover {
-  border-color: var(--ion-text-color-step-200);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-color: var(--texto-secundario);
+  box-shadow: 0 2px 8px var(--sombra-card);
   transform: translateY(-1px);
 }
 
 .club-seleccionado {
-  background: var(--color-primario);
-  color: var(--color-primario-contraste);
-  border-color: var(--color-primario);
+  background: var(--color-detalle-boton);
+  color: var(--color-detalle-boton-contraste);
+  border-color: var(--color-detalle-boton);
   font-weight: 600;
 }
 
@@ -202,13 +202,13 @@
 }
 
 .tarjeta-pista-compacta {
-  border: 2px solid var(--ion-border-color);
+  border: 2px solid var(--borde-principal);
   border-radius: 12px;
   padding: 18px;
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
-  background: var(--ion-background-color);
+  background: var(--fondo-card);
   min-height: 90px;
   display: flex;
   align-items: center;
@@ -217,23 +217,18 @@
 
 /* ✅ HOVER NEUTRO SIN VERDE - solo sombra y borde */
 .pista-disponible:hover {
-  border-color: var(--ion-text-color-step-200);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: var(--texto-secundario);
+  box-shadow: 0 4px 12px var(--sombra-card);
   transform: translateY(-2px);
 }
 
 /* ✅ SIN VERDE - usar blanco/gris según tema */
 .pista-seleccionada {
-  border-color: var(--color-primario);
+  border-color: var(--color-detalle-boton);
   background: var(--fondo-card); /* Blanco en claro, gris oscuro en oscuro */
   transform: translateY(-2px);
   box-shadow: 0 4px 12px var(--sombra-card);
   border-width: 3px; /* Borde más grueso para indicar selección */
-}
-
-.ion-palette-dark .pista-seleccionada {
-  box-shadow: 0 4px 12px var(--sombra-card);
-  background: var(--fondo-card); /* Usa la variable del sistema */
 }
 
 .info-pista-compacta {
@@ -247,7 +242,7 @@
 .numero-pista {
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   line-height: 1;
 }
 
@@ -260,14 +255,14 @@
 
 .tipo-pista {
   font-size: 0.9rem;
-  color: var(--ion-text-color-step-400);
+  color: var(--texto-secundario);
   font-weight: 500;
 }
 
 .precio-pista {
   font-size: 0.95rem;
   font-weight: 600;
-  color: var(--color-primario);
+  color: var(--color-detalle-boton);
 }
 
 /* ========================================
@@ -297,17 +292,17 @@
 .titulo-calendario {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   margin: 0;
   padding-bottom: 8px;
-  border-bottom: 1px solid var(--ion-border-color);
+  border-bottom: 1px solid var(--borde-principal);
 }
 
 .calendario-compacto {
-  --background: var(--ion-background-color);
-  --color: var(--ion-text-color);
+  --background: var(--fondo-input);
+  --color: var(--texto-principal);
   
-  border: 2px solid var(--ion-border-color);
+  border: 2px solid var(--borde-principal);
   border-radius: 12px;
   padding: 12px; /* ✅ Padding reducido para mejor aprovechamiento */
   transition: border-color 0.2s ease;
@@ -316,17 +311,17 @@
 }
 
 .calendario-compacto:focus-within {
-  border-color: var(--color-primario);
+  border-color: var(--color-detalle-boton);
 }
 
 /* ✅ Hacer que el ion-datetime ocupe todo el espacio */
 .calendario-compacto ion-datetime {
-  --ion-color-primary: var(--color-primario);
-  --ion-color-primary-rgb: var(--color-primario-rgb);
-  --ion-color-primary-contrast: var(--color-primario-contraste);
-  --ion-color-primary-contrast-rgb: var(--color-primario-contraste-rgb);
-  --ion-color-primary-shade: var(--color-primario-sombra);
-  --ion-color-primary-tint: var(--color-primario-tinte);
+  --ion-color-primary: var(--color-detalle-boton);
+  --ion-color-primary-rgb: var(--color-detalle-boton-rgb);
+  --ion-color-primary-contrast: var(--color-detalle-boton-contraste);
+  --ion-color-primary-contrast-rgb: var(--color-detalle-boton-contraste-rgb);
+  --ion-color-primary-shade: var(--color-detalle-boton-sombra);
+  --ion-color-primary-tint: var(--color-detalle-boton-tinte);
   
   width: 100% !important;
   max-width: 100% !important;
@@ -335,14 +330,14 @@
 /* Forzar colores del calendario según el tema (SIN VERDE) */
 .calendario-compacto .calendar-day.calendar-day-today,
 .calendario-compacto .calendar-day.calendar-day-active {
-  background-color: var(--color-primario) !important;
-  color: var(--color-primario-contraste) !important;
+  background-color: var(--color-detalle-boton) !important;
+  color: var(--color-detalle-boton-contraste) !important;
   border: none !important;
 }
 
 /* ✅ HOVER NEUTRO EN CALENDARIO - solo fondo gris */
 .calendario-compacto .calendar-day:hover {
-  background-color: var(--ion-text-color-step-50) !important;
+  background-color: var(--hover-card) !important;
   border: none !important;
 }
 
@@ -357,18 +352,98 @@
 .calendario-compacto .calendar-day.calendar-day-active:active,
 .calendario-compacto .calendar-day:active,
 .calendario-compacto .calendar-day:hover:active {
-  background-color: var(--ion-text-color-step-100) !important;
+  background-color: var(--hover-card) !important;
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
-  color: var(--ion-text-color) !important;
+  color: var(--texto-principal) !important;
 }
 
 /* ✅ FORZAR que el día seleccionado mantenga su color principal */
 .calendario-compacto .calendar-day.calendar-day-active:active,
 .calendario-compacto .calendar-day.calendar-day-active:focus {
-  background-color: var(--color-primario) !important;
-  color: var(--color-primario-contraste) !important;
+  background-color: var(--color-detalle-boton) !important;
+  color: var(--color-detalle-boton-contraste) !important;
+}
+
+/* ✅ ESPECÍFICO: Día activo que también es hoy */
+.calendario-compacto button.calendar-day.calendar-day-active.calendar-day-today {
+  background-color: var(--color-detalle-boton) !important;
+  color: var(--color-detalle-boton-contraste) !important;
+  border: none !important;
+  box-shadow: 0 2px 8px var(--color-detalle-boton-sombra) !important;
+}
+
+/* ✅ ESPECÍFICO: Botón nativo del calendario */
+.calendario-compacto button.calendar-day.calendar-day-active.calendar-day-today::after,
+.calendario-compacto button.calendar-day.calendar-day-active::after,
+.calendario-compacto button.calendar-day.calendar-day-today::after {
+  background-color: var(--color-detalle-boton) !important;
+}
+
+/* ✅ ESPECÍFICO: Todos los pseudo-elementos del calendario */
+.calendario-compacto button.calendar-day::before,
+.calendario-compacto button.calendar-day::after {
+  background-color: transparent !important;
+}
+
+.calendario-compacto button.calendar-day.calendar-day-active::before,
+.calendario-compacto button.calendar-day.calendar-day-active::after,
+.calendario-compacto button.calendar-day.calendar-day-today::before,
+.calendario-compacto button.calendar-day.calendar-day-today::after {
+  background-color: var(--color-detalle-boton) !important;
+}
+
+/* ✅ ESPECÍFICO: Estados hover del calendario */
+.calendario-compacto button.calendar-day:hover:not(.calendar-day-active) {
+  background-color: var(--hover-card) !important;
+}
+
+.calendario-compacto button.calendar-day.calendar-day-active:hover {
+  background-color: var(--color-detalle-boton) !important;
+  color: var(--color-detalle-boton-contraste) !important;
+}
+
+/* ✅ ESPECÍFICO: Elemento button del calendario detectado en dev tools */
+.calendario-compacto button[class*="calendar-day"][class*="calendar-day-active"][class*="calendar-day-today"] {
+  background-color: var(--color-detalle-boton) !important;
+  color: var(--color-detalle-boton-contraste) !important;
+  border: none !important;
+  box-shadow: 0 2px 8px var(--color-detalle-boton-sombra) !important;
+}
+
+/* ✅ ESPECÍFICO: Span button-inner del botón de reservar */
+.boton-confirmar-pro .button-inner {
+  background-color: var(--color-detalle-boton) !important;
+  color: var(--color-detalle-boton-contraste) !important;
+}
+
+.boton-confirmar-pro span.button-inner {
+  background-color: var(--color-detalle-boton) !important;
+  color: var(--color-detalle-boton-contraste) !important;
+}
+
+/* ✅ MUY ESPECÍFICO: Forzar todos los elementos del botón de reservar */
+.boton-confirmar-pro,
+.boton-confirmar-pro ion-button,
+.boton-confirmar-pro .button-native,
+.boton-confirmar-pro .button-inner,
+.boton-confirmar-pro span.button-inner,
+.boton-confirmar-pro span.button-inner slot {
+  background-color: var(--color-detalle-boton) !important;
+  background: var(--color-detalle-boton) !important;
+  color: var(--color-detalle-boton-contraste) !important;
+}
+
+/* ✅ MUY ESPECÍFICO: Calendario con selectores exactos de dev tools */
+.calendario-compacto button.calendar-day.calendar-day-active.calendar-day-today,
+.calendario-compacto button[data-day][data-month][data-year].calendar-day.calendar-day-active.calendar-day-today,
+.calendario-compacto button[tabindex="-1"].calendar-day.calendar-day-active.calendar-day-today {
+  background-color: var(--color-detalle-boton) !important;
+  background: var(--color-detalle-boton) !important;
+  color: var(--color-detalle-boton-contraste) !important;
+  border: none !important;
+  box-shadow: 0 2px 8px var(--color-detalle-boton-sombra) !important;
 }
 
 /* Horarios laterales */
@@ -381,27 +456,27 @@
 .titulo-horarios {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   margin: 0;
   padding-bottom: 8px;
-  border-bottom: 1px solid var(--ion-border-color);
+  border-bottom: 1px solid var(--borde-principal);
 }
 
 .info-horarios {
   font-size: 0.85rem;
-  color: var(--ion-color-medium);
+  color: var(--texto-secundario);
   margin: 8px 0 16px 0;
   padding: 8px 12px;
-  background-color: var(--ion-color-light);
+  background-color: var(--fondo-precio);
   border-radius: 8px;
-  border-left: 3px solid var(--color-primario);
+  border-left: 3px solid var(--color-detalle-boton);
   font-weight: 500;
   line-height: 1.4;
 }
 
 .mensaje-sin-horarios {
   text-align: center;
-  color: var(--ion-text-color-step-400);
+  color: var(--texto-secundario);
   font-size: 0.9rem;
   font-style: italic;
   margin: 20px 0;
@@ -422,23 +497,23 @@
 }
 
 .grid-horarios-lateral::-webkit-scrollbar-track {
-  background: var(--ion-background-color);
+  background: var(--fondo-input);
   border-radius: 6px;
 }
 
 .grid-horarios-lateral::-webkit-scrollbar-thumb {
-  background: var(--ion-border-color);
+  background: var(--borde-principal);
   border-radius: 6px;
 }
 
 .grid-horarios-lateral::-webkit-scrollbar-thumb:hover {
-  background: var(--ion-text-color-step-200);
+  background: var(--texto-secundario);
 }
 
 /* ✅ Botones de horario optimizados para 2 columnas */
 .boton-horario-lateral {
-  background: var(--ion-background-color);
-  border: 2px solid var(--ion-border-color);
+  background: var(--fondo-card);
+  border: 2px solid var(--borde-principal);
   border-radius: 8px;
   padding: 10px 6px; /* ✅ Padding ajustado para 2 columnas */
   cursor: pointer;
@@ -448,7 +523,7 @@
   justify-content: center;
   min-height: 42px; /* ✅ Altura ajustada */
   font-family: inherit;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   font-size: 0.8rem; /* ✅ Tamaño de fuente optimizado */
   font-weight: 600;
   text-align: center;
@@ -457,20 +532,16 @@
 
 /* ✅ HOVER NEUTRO SIN VERDE - solo sombra y borde */
 .horario-disponible:hover {
-  border-color: var(--ion-text-color-step-200);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-color: var(--texto-secundario);
+  box-shadow: 0 2px 8px var(--sombra-card);
   transform: translateY(-1px);
 }
 
 .horario-seleccionado {
-  background: var(--color-primario);
-  color: var(--color-primario-contraste);
-  border-color: var(--color-primario);
+  background: var(--color-detalle-boton);
+  color: var(--color-detalle-boton-contraste);
+  border-color: var(--color-detalle-boton);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px var(--sombra-card);
-}
-
-.ion-palette-dark .horario-seleccionado {
   box-shadow: 0 4px 12px var(--sombra-card);
 }
 
@@ -485,10 +556,10 @@
 }
 
 .tarjeta-resumen {
-  background: var(--color-panel);
+  background: var(--fondo-card);
   border-radius: 16px;
-  box-shadow: var(--card-shadow);
-  border: 1px solid var(--ion-border-color);
+  box-shadow: var(--sombra-card);
+  border: 1px solid var(--borde-principal);
   overflow: hidden;
 }
 
@@ -503,7 +574,7 @@
 }
 
 .texto-vacio {
-  color: var(--ion-text-color-step-400);
+  color: var(--texto-secundario);
   font-size: 1rem;
   margin: 0;
   font-style: italic;
@@ -526,13 +597,13 @@
 
 .etiqueta-detalle {
   font-size: 0.9rem;
-  color: var(--ion-text-color-step-400);
+  color: var(--texto-secundario);
   font-weight: 500;
 }
 
 .valor-detalle {
   font-size: 0.9rem;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   font-weight: 600;
   text-align: right;
   max-width: 60%;
@@ -543,27 +614,27 @@
 .seccion-notas {
   margin: 24px 0;
   padding-top: 16px;
-  border-top: 1px solid var(--ion-border-color);
+  border-top: 1px solid var(--borde-principal);
 }
 
 .etiqueta-filtro {
   font-size: 0.95rem;
   font-weight: 600;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   margin: 0 0 8px 0;
   display: block;
 }
 
 .area-notas-pro {
-  --background: var(--ion-background-color);
-  --color: var(--ion-text-color);
-  --placeholder-color: var(--ion-text-color-step-400);
+  --background: var(--fondo-input);
+  --color: var(--texto-principal);
+  --placeholder-color: var(--texto-placeholder);
   --padding-start: 16px;
   --padding-end: 16px;
   --padding-top: 12px;
   --padding-bottom: 12px;
   
-  border: 2px solid var(--ion-border-color);
+  border: 2px solid var(--borde-input);
   border-radius: 10px;
   transition: border-color 0.2s ease;
   resize: vertical;
@@ -572,7 +643,7 @@
 }
 
 .area-notas-pro:focus-within {
-  border-color: var(--color-primario);
+  border-color: var(--color-detalle-boton);
 }
 
 /* ✅ QUITAR LÍNEAS BAJO CAMPOS que chocan con perímetro */
@@ -583,7 +654,7 @@
 /* Sección de precio */
 .seccion-precio {
   padding: 20px 0;
-  border-top: 1px solid var(--ion-border-color);
+  border-top: 1px solid var(--borde-principal);
   margin-top: 16px;
 }
 
@@ -596,12 +667,12 @@
 
 .concepto-precio {
   font-size: 0.9rem;
-  color: var(--ion-text-color-step-400);
+  color: var(--texto-secundario);
 }
 
 .cantidad-precio {
   font-size: 0.9rem;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   font-weight: 500;
 }
 
@@ -610,27 +681,27 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px 0;
-  border-top: 2px solid var(--ion-border-color);
+  border-top: 2px solid var(--borde-principal);
   margin-top: 8px;
 }
 
 .etiqueta-total {
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
 }
 
 .valor-total {
   font-size: 1.8rem;
   font-weight: 700;
-  color: var(--color-primario);
+  color: var(--color-detalle-boton);
   letter-spacing: -0.5px;
 }
 
 /* ✅ Botón de confirmación con variables CSS corregidas */
 .boton-confirmar-pro {
-  --background: var(--color-primario) !important;
-  --color: var(--color-primario-contraste) !important;
+  --background: var(--color-detalle-boton) !important;
+  --color: var(--color-detalle-boton-contraste) !important;
   --border-radius: 12px;
   --padding-top: 16px;
   --padding-bottom: 16px;
@@ -647,24 +718,30 @@
   margin-top: 20px;
   
   /* ✅ Forzar colores específicos */
-  background: var(--color-primario) !important;
-  color: var(--color-primario-contraste) !important;
+  background: var(--color-detalle-boton) !important;
+  color: var(--color-detalle-boton-contraste) !important;
   border: none !important;
 }
 
 /* ✅ Asegurar que el texto del botón siempre sea visible */
 .boton-confirmar-pro .button-native {
-  background: var(--ion-color-primary) !important;
-  color: var(--ion-color-primary-contrast) !important;
+  background: var(--color-detalle-boton) !important;
+  color: var(--color-detalle-boton-contraste) !important;
+}
+
+/* ✅ ESPECÍFICO: Botón nativo after pseudo-element */
+.boton-confirmar-pro button.button-native::after {
+  background: var(--color-detalle-boton) !important;
+  border: none !important;
 }
 
 .boton-confirmar-pro ion-icon {
-  color: var(--ion-color-primary-contrast) !important;
+  color: var(--color-detalle-boton-contraste) !important;
 }
 
 .boton-confirmar-pro:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(97, 41, 240, 0.4);
+  box-shadow: 0 8px 25px var(--sombra-boton-primario-hover);
 }
 
 .boton-confirmar-pro:disabled {
@@ -674,16 +751,6 @@
   color: var(--ion-color-medium-contrast) !important;
   box-shadow: none;
   opacity: 0.6;
-}
-
-.ion-palette-dark .boton-confirmar-pro {
-  box-shadow: 0 6px 20px rgba(0, 255, 102, 0.3);
-  background: var(--ion-color-primary) !important;
-  color: var(--ion-color-primary-contrast) !important;
-}
-
-.ion-palette-dark .boton-confirmar-pro:hover:not(:disabled) {
-  box-shadow: 0 8px 25px rgba(0, 255, 102, 0.4);
 }
 
 /* ========================================
@@ -876,16 +943,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--ion-background-color);
+  background: var(--fondo-aplicacion);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--ion-border-color);
+  background: var(--borde-principal);
   border-radius: 4px;
 }
 
 .grid-horarios-lateral::-webkit-scrollbar-thumb:hover,
 .lista-clubes-scrolleable::-webkit-scrollbar-thumb:hover,
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--ion-text-color-step-200);
+  background: var(--texto-secundario);
 }
