@@ -61,6 +61,7 @@
       color: #ff77ff;
       text-transform: uppercase;
       font-weight: bold;
+      position: relative;
     }
     
     .team-a .team-name {
@@ -69,6 +70,58 @@
     
     .team-b .team-name {
       background-color: #330033;
+    }
+    
+    .serve-ball-visual {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 60px;
+      opacity: 0;
+      transition: all 0.5s ease;
+      z-index: 10;
+      pointer-events: none;
+    }
+    
+    .serve-ball-visual.active {
+      opacity: 1 !important;
+      transform: translateY(-50%);
+    }
+    
+    .ball-image {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    
+    .ball-image-small {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    
+    @keyframes serve-pulse {
+      0%, 100% {
+        transform: translateY(-50%) scale(1);
+      }
+      50% {
+        transform: translateY(-50%) scale(1.1);
+      }
+    }
+    
+    @keyframes serve-bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(-50%) scale(1.1);
+      }
+      40% {
+        transform: translateY(-60%) scale(1.2);
+      }
+      60% {
+        transform: translateY(-55%) scale(1.15);
+      }
     }
     
     .score-cell {
@@ -85,10 +138,46 @@
     .footer {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       background-color: #333;
       padding: 10px 20px;
       font-size: 24px;
       border-top: 2px solid #fff;
+    }
+    
+    .serve-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Digital', monospace;
+      color: #ffff00;
+    }
+    
+    .serve-label {
+      font-size: 18px;
+      font-weight: bold;
+    }
+    
+    .serve-team {
+      font-size: 20px;
+      font-weight: bold;
+      color: #ff77ff;
+    }
+    
+    .serve-ball-icon {
+      font-size: 24px;
+    }
+    
+    @keyframes bounce-ball {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-5px);
+      }
+      60% {
+        transform: translateY(-2px);
+      }
     }
     
     .time {
@@ -146,14 +235,24 @@
       </div>
       
       <div class="team-row team-a">
-        <div class="team-name">EQUIPO A</div>
+        <div class="team-name">
+          EQUIPO A
+          <div class="serve-ball-visual" id="serve-ball-a">
+            <img src="/favicon.png" alt="Pelota de pádel" class="ball-image" />
+          </div>
+        </div>
         <div class="score-cell" id="puntos-a">0</div>
         <div class="score-cell" id="juegos-a">0</div>
         <div class="score-cell" id="set-a">0</div>
       </div>
       
       <div class="team-row team-b">
-        <div class="team-name">EQUIPO B</div>
+        <div class="team-name">
+          EQUIPO B
+          <div class="serve-ball-visual" id="serve-ball-b">
+            <img src="/favicon.png" alt="Pelota de pádel" class="ball-image" />
+          </div>
+        </div>
         <div class="score-cell" id="puntos-b">0</div>
         <div class="score-cell" id="juegos-b">0</div>
         <div class="score-cell" id="set-b">0</div>
@@ -165,6 +264,13 @@
     
     <div class="footer">
       <div class="temp">20°C</div>
+      <div class="serve-info">
+        <div class="serve-label">SAQUE:</div>
+        <div class="serve-team" id="serve-team">EQUIPO A</div>
+        <div class="serve-ball-icon">
+          <img src="/favicon.png" alt="Pelota de pádel" class="ball-image-small" />
+        </div>
+      </div>
       <div class="time" id="match-time">0:00</div>
     </div>
   </div>
@@ -192,6 +298,62 @@
     // Iniciar el temporizador al cargar la página
     startTimer();
     
+    // Inicializar indicador de saque por defecto (Equipo A) después de que la página cargue
+    window.addEventListener('load', function() {
+      const serveBallA = document.getElementById('serve-ball-a');
+      if (serveBallA) {
+        serveBallA.classList.add('active');
+        console.log('Bola inicial activada para equipo A');
+      } else {
+        console.error('No se encontró el elemento serve-ball-a');
+      }
+    });
+    
+    // Función para cargar el estado inicial del marcador
+    async function cargarEstadoInicial() {
+      try {
+        const response = await fetch('/marcador');
+        const data = await response.json();
+        actualizarMarcador(data);
+      } catch (error) {
+        console.log('No se pudo cargar el estado inicial del marcador:', error);
+      }
+    }
+    
+    // Cargar estado inicial al cargar la página
+    cargarEstadoInicial();
+    
+    // Función de test para verificar las bolas (disponible en consola)
+    window.testBalls = function() {
+      const serveBallA = document.getElementById('serve-ball-a');
+      const serveBallB = document.getElementById('serve-ball-b');
+      
+      console.log('=== TEST DE BOLAS ===');
+      console.log('serveBallA existe:', !!serveBallA);
+      console.log('serveBallB existe:', !!serveBallB);
+      
+      if (serveBallA) {
+        console.log('serveBallA clases:', serveBallA.className);
+        console.log('serveBallA estilo:', window.getComputedStyle(serveBallA).opacity);
+      }
+      
+      if (serveBallB) {
+        console.log('serveBallB clases:', serveBallB.className);
+        console.log('serveBallB estilo:', window.getComputedStyle(serveBallB).opacity);
+      }
+      
+      // Test manual: activar bola A
+      console.log('Activando bola A...');
+      serveBallA?.classList.add('active');
+      serveBallB?.classList.remove('active');
+      
+      setTimeout(() => {
+        console.log('Activando bola B...');
+        serveBallB?.classList.add('active');
+        serveBallA?.classList.remove('active');
+      }, 2000);
+    };
+    
     // Escuchar mensajes de la ventana de control
     window.addEventListener('message', function(event) {
       // Verificar origen del mensaje para seguridad
@@ -214,6 +376,7 @@
     
     // Función para actualizar el marcador con datos recibidos
     function actualizarMarcador(data) {
+      console.log('Actualizando marcador con datos:', data);
       if (!data) return;
       
       // Actualizar puntos con formato de tenis
@@ -235,6 +398,39 @@
         document.getElementById('set-b').textContent = setActual.B || '0';
       }
       
+      // Actualizar indicador de saque
+      const saque = data.saque || 'A'; // Usar A por defecto si no hay saque
+      console.log('Actualizando saque para equipo:', saque);
+      
+      const serveTeamElement = document.getElementById('serve-team');
+      const teamName = saque === 'A' ? 'EQUIPO A' : 'EQUIPO B';
+      serveTeamElement.textContent = teamName;
+      
+      // Actualizar bolas visuales de saque
+      const serveBallA = document.getElementById('serve-ball-a');
+      const serveBallB = document.getElementById('serve-ball-b');
+      
+      console.log('Elementos encontrados:', { serveBallA, serveBallB });
+      
+      if (serveBallA && serveBallB) {
+        // Primero remover la clase active de ambas
+        serveBallA.classList.remove('active');
+        serveBallB.classList.remove('active');
+        
+        // Luego añadir a la correcta
+        if (saque === 'A') {
+          serveBallA.classList.add('active');
+          console.log('Bola activada para equipo A');
+          console.log('Clases de serveBallA:', serveBallA.className);
+        } else {
+          serveBallB.classList.add('active');
+          console.log('Bola activada para equipo B');
+          console.log('Clases de serveBallB:', serveBallB.className);
+        }
+      } else {
+        console.error('No se encontraron los elementos de las bolas de saque');
+      }
+      
       // Mostrar/ocultar tie-break
       const tieBreakElement = document.getElementById('tie-break');
       if (data.tie_break) {
@@ -248,9 +444,16 @@
       if (data.terminado) {
         terminadoElement.style.display = 'block';
         // Detener el cronómetro si el partido ha terminado
-        clearInterval(timerInterval);
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
       } else {
         terminadoElement.style.display = 'none';
+        // Reiniciar el cronómetro si el partido vuelve a estar activo
+        if (!timerInterval) {
+          startTimer();
+        }
       }
     }
   </script>

@@ -8,6 +8,7 @@ interface Props {
     sets: Array<any>;
     tie_break: boolean;
     terminado: boolean;
+    saque?: string;
   };
   estilo?: 'simple' | 'completo';
 }
@@ -22,6 +23,7 @@ const MarcadorView: React.FC<Props> = ({ estado, estilo = 'simple' }) => {
   const puntos = estado && estado.puntos ? estado.puntos : { A: 0, B: 0 };
   const enTieBreak = estado && estado.tie_break ? estado.tie_break : false;
   const partidoTerminado = estado && estado.terminado ? estado.terminado : false;
+  const saque = estado && estado.saque ? estado.saque : 'A';
 
   // Si no hay datos de estado, mostrar un estado de carga
   if (!estado) {
@@ -63,6 +65,7 @@ const MarcadorView: React.FC<Props> = ({ estado, estilo = 'simple' }) => {
       <p><strong>Set actual:</strong> A {setActual.A} - B {setActual.B}</p>
       <p><strong>Juegos:</strong> A {juegos.A} - B {juegos.B}</p>
       <p><strong>Puntos:</strong> A {puntos.A} - B {puntos.B}</p>
+      <p><strong>Saque:</strong> Equipo {saque} <img src="/favicon.png" alt="Pelota" style={{width: '20px', height: '20px', marginLeft: '5px', borderRadius: '50%'}} /></p>
       {enTieBreak && <p><em>En tie-break</em></p>}
       {partidoTerminado && <p><strong>¡Partido Terminado!</strong></p>}
     </div>

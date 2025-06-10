@@ -13,7 +13,8 @@ const MarcadorPantalla: React.FC = () => {
     juegos: { A: 0, B: 0 },
     sets: [{ A: 0, B: 0 }],
     tie_break: false,
-    terminado: false
+    terminado: false,
+    saque: 'A'
   });
 
   // Configuración personalizada
@@ -53,7 +54,8 @@ const MarcadorPantalla: React.FC = () => {
         sets: res.data.sets,
         tie_break: res.data.tie_break,
         terminado: res.data.terminado,
-        bola_de_oro: res.data.bola_de_oro
+        bola_de_oro: res.data.bola_de_oro,
+        saque: res.data.saque || 'A'
       });
     } catch (error) {
       console.log('No se pudo conectar con el backend del marcador, usando configuración local');
@@ -75,7 +77,8 @@ const MarcadorPantalla: React.FC = () => {
               juegos: data.juegos || estado.juegos,
               sets: data.sets || estado.sets,
               tie_break: data.tie_break !== undefined ? data.tie_break : estado.tie_break,
-              terminado: data.terminado !== undefined ? data.terminado : estado.terminado
+              terminado: data.terminado !== undefined ? data.terminado : estado.terminado,
+              saque: data.saque || estado.saque || 'A'
             });
       
             if (data.config) {
@@ -177,13 +180,23 @@ const MarcadorPantalla: React.FC = () => {
             <div className="header-cell">PUNTOS</div>
           </div>
           <div className="team-row team-a">
-            <div className="team-name">{config.nombreEquipoA}</div>
+            <div className="team-name">
+              {config.nombreEquipoA}
+              <div className={`serve-ball-visual ${estado.saque === 'A' ? 'active' : ''}`}>
+                <img src="/favicon.png" alt="Pelota de pádel" className="ball-image" />
+              </div>
+            </div>
             <div className="score-cell">{contarSetsGanados('A')}</div>
             <div className="score-cell">{estado.juegos.A}</div>
             <div className="score-cell">{formatearPuntos(estado.puntos.A)}</div>
           </div>
           <div className="team-row team-b">
-            <div className="team-name">{config.nombreEquipoB}</div>
+            <div className="team-name">
+              {config.nombreEquipoB}
+              <div className={`serve-ball-visual ${estado.saque === 'B' ? 'active' : ''}`}>
+                <img src="/favicon.png" alt="Pelota de pádel" className="ball-image" />
+              </div>
+            </div>
             <div className="score-cell">{contarSetsGanados('B')}</div>
             <div className="score-cell">{estado.juegos.B}</div>
             <div className="score-cell">{formatearPuntos(estado.puntos.B)}</div>

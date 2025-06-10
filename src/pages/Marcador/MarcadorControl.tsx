@@ -28,7 +28,9 @@ import {
   settingsOutline,
   createOutline,
   trophyOutline,
-  arrowBack
+  arrowBack,
+  arrowUndo,
+  shuffleOutline
 } from 'ionicons/icons';
 import axios from 'axios';
 import MarcadorView from './MarcadorView';
@@ -79,9 +81,12 @@ const MarcadorControl: React.FC = () => {
           sets: res.data.sets || [{ A: 0, B: 0 }],
           tie_break: Boolean(res.data.tie_break),
           terminado: Boolean(res.data.terminado),
-          bola_de_oro: Boolean(res.data.bola_de_oro) // 
+          bola_de_oro: Boolean(res.data.bola_de_oro),
+          saque: res.data.saque || 'A' // Asegurar que el saque siempre esté presente
         };
         setEstado(estadoSeguro);
+        // También actualizar la ventana del marcador si está abierta
+        actualizarVentanaMarcador(estadoSeguro);
       }
     } catch (error) {
       console.error('Error al obtener datos del marcador:', error);
@@ -173,8 +178,15 @@ const MarcadorControl: React.FC = () => {
     };
     localStorage.setItem('marcador-config', JSON.stringify(config));
   
+    // Usar la ruta del componente React del marcador
     const url = `${window.location.origin}/club/marcador`;
+    console.log('Abriendo marcador en URL:', url);
     marcadorWindowRef.current = window.open(url, 'marcador', 'width=1280,height=720,menubar=no,toolbar=no,location=no,status=no');
+    
+    // Enviar datos iniciales después de un breve delay
+    setTimeout(() => {
+      actualizarVentanaMarcador(estado);
+    }, 1000);
   };
 
   /**
@@ -182,11 +194,22 @@ const MarcadorControl: React.FC = () => {
    */
   const actualizarVentanaMarcador = (datos: any) => {
     if (marcadorWindowRef.current && !marcadorWindowRef.current.closed) {
+      // Asegurar que todos los datos estén incluidos
+      const datosCompletos = {
+        puntos: datos.puntos || { A: 0, B: 0 },
+        juegos: datos.juegos || { A: 0, B: 0 },
+        sets: datos.sets || [{ A: 0, B: 0 }],
+        tie_break: Boolean(datos.tie_break),
+        terminado: Boolean(datos.terminado),
+        bola_de_oro: Boolean(datos.bola_de_oro),
+        saque: datos.saque || 'A'  // Asegurar que el saque siempre esté presente
+      };
+      
       // Enviar el estado del marcador y la configuración del partido
       marcadorWindowRef.current.postMessage({
         type: 'ACTUALIZAR_MARCADOR',
         data: {
-          ...datos,
+          ...datosCompletos,
           config: {
             nombreEquipoA,
             nombreEquipoB,
@@ -240,6 +263,52 @@ const MarcadorControl: React.FC = () => {
       fetchMarcador();
     } catch (err) {
       console.error("Error al finalizar partido:", err);
+    }
+  };
+
+  /**
+   * Retrocede un punto hacia atrás
+   */
+  const retrocederPunto = async () => {
+    try {
+      const res = await axios.post('/marcador/retroceder');
+      
+      if (res.data) {
+        setEstado(res.data);
+        actualizarVentanaMarcador(res.data);
+        mostrarToast('Punto retrocedido correctamente', 'success');
+      }
+    } catch (err: any) {
+      console.error('Error al retroceder punto:', err);
+      
+      if (err.response && err.response.data && err.response.data.error) {
+        mostrarToast(err.response.data.error, 'warning');
+      } else {
+        mostrarToast('Error al retroceder punto', 'danger');
+      }
+    }
+  };
+
+  /**
+   * Asigna el saque de forma aleatoria
+   */
+  const saqueAleatorio = async () => {
+    try {
+      const res = await axios.post('/marcador/saque-aleatorio');
+      
+      if (res.data && res.data.estado) {
+        setEstado(res.data.estado);
+        actualizarVentanaMarcador(res.data.estado);
+        mostrarToast(res.data.message || 'Saque asignado aleatoriamente', 'success');
+      }
+    } catch (err: any) {
+      console.error('Error al asignar saque aleatorio:', err);
+      
+      if (err.response && err.response.data && err.response.data.error) {
+        mostrarToast(err.response.data.error, 'danger');
+      } else {
+        mostrarToast('Error al asignar saque aleatorio', 'danger');
+      }
     }
   };
 
@@ -361,8 +430,22 @@ const MarcadorControl: React.FC = () => {
                     </div>
                   </div>
                   
+                  {/* Indicador de saque */}
+                  <div className="serve-indicator">
+                    <h4>Saque: <span className="serve-team">{estado?.saque === 'A' ? nombreEquipoA : nombreEquipoB}</span></h4>
+                    <div className="serve-visual">
+                      <div className={`serve-ball ${estado?.saque === 'A' ? 'team-a-serve' : 'team-b-serve'}`}>
+                        <img src="/favicon.png" alt="Pelota de pádel" style={{width: '40px', height: '40px', borderRadius: '50%'}} />
+                      </div>
+                    </div>
+                  </div>
+                  
                   {/* Controles de acción */}
                   <div className="action-controls">
+                    <IonButton className="action-button undo-button" onClick={retrocederPunto}>
+                      <IonIcon slot="start" icon={arrowUndo} />
+                      Retroceder
+                    </IonButton>
                     <IonButton className="action-button reset-button" onClick={reiniciar}>
                       <IonIcon slot="start" icon={refreshOutline} />
                       Reiniciar
@@ -492,6 +575,14 @@ const MarcadorControl: React.FC = () => {
                     </div>
                     
                     <div className="advanced-actions">
+                      <IonButton 
+                        className="random-serve-button"
+                        disabled={estado.terminado}
+                        onClick={saqueAleatorio}
+                      >
+                        <IonIcon slot="start" icon={shuffleOutline} />
+                        Saque Aleatorio
+                      </IonButton>
                       <IonButton 
                         className="finish-button"
                         disabled={estado.terminado}

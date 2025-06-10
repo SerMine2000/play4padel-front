@@ -268,10 +268,70 @@
   box-shadow: var(--sombra-card);
 }
 
+/* ===== INDICADOR DE SAQUE ===== */
+.serve-indicator {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: var(--fondo-card);
+  border: 1px solid var(--borde-principal);
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.serve-indicator:hover {
+  border-color: var(--marcador-primary);
+  box-shadow: var(--sombra-card);
+}
+
+.serve-indicator h4 {
+  margin: 0 0 10px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--texto-principal);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.serve-team {
+  color: var(--marcador-primary);
+  font-weight: 700;
+}
+
+.serve-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.serve-ball {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+  box-shadow: var(--sombra-card);
+  transition: all 0.3s ease;
+}
+
+.team-a-serve {
+  background: var(--marcador-primary);
+  color: var(--marcador-primary-contrast);
+}
+
+.team-b-serve {
+  background: var(--color-secundario);
+  color: white;
+}
+
+
 /* ===== CONTROLES DE ACCIÓN ===== */
 .action-controls {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 1rem;
 }
 
@@ -279,6 +339,16 @@
   --border-radius: 8px;
   font-weight: 600;
   transition: all 0.3s ease;
+}
+
+.undo-button {
+  --background: #F59E0B;
+  --color: white;
+}
+
+.undo-button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--sombra-card);
 }
 
 .reset-button {
@@ -437,9 +507,25 @@
 }
 
 .advanced-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   text-align: center;
   margin-top: auto;
   padding-top: 1rem;
+}
+
+.random-serve-button {
+  --background: #8B5CF6; /* Púrpura para saque aleatorio */
+  --color: white;
+  --border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.random-serve-button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--sombra-card);
 }
 
 .finish-button {
@@ -599,6 +685,38 @@
   letter-spacing: 2px;
   position: relative;
 }
+
+/* Estilos para las bolas de saque en la pantalla completa */
+.team-name .serve-ball-visual {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: all 0.5s ease;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.team-name .serve-ball-visual.active {
+  opacity: 1 !important;
+  transform: translateY(-50%);
+}
+
+.ball-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ball-image-small {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 
 .team-a .team-name {
   color: var(--marcador-primary);
@@ -796,8 +914,8 @@
   }
   
   .action-controls {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
   }
   
   .config-inputs {
