@@ -99,10 +99,10 @@
   --color-secundario: #059669;
   
   /* SOMBRAS CON COLOR PRIMARIO (VERDE EN MODO OSCURO) */
-  --sombra-color-primario: rgba(0, 255, 102, 0.3);
-  --sombra-color-primario-hover: rgba(0, 255, 102, 0.4);
-  --sombra-boton-primario: 0 6px 20px rgba(0, 255, 102, 0.3);
-  --sombra-boton-primario-hover: 0 8px 25px rgba(0, 255, 102, 0.4);
+  --sombra-color-primario: rgba(5, 150, 105, 0.3);
+  --sombra-color-primario-hover: rgba(5, 150, 105, 0.4);
+  --sombra-boton-primario: 0 6px 20px rgba(5, 150, 105, 0.3);
+  --sombra-boton-primario-hover: 0 8px 25px rgba(5, 150, 105, 0.4);
   
   /* FONDOS PRINCIPALES - MENOS OSCUROS QUE ANTES */
   --fondo-aplicacion: #1a1a1a; /* Menos oscuro que #0a0a0a */
@@ -149,24 +149,24 @@
   --borde-precio: rgba(97, 41, 240, 0.3);
   
   /* VARIABLES ESPECIALES PARA RESERVAS - VERDE EN OSCURO */
-  --color-reservas-principal: #00ff66; /* Verde en modo oscuro */
-  --color-reservas-contraste: #000000;
-  --color-reservas-sombra: rgba(0, 255, 102, 0.3);
-  --color-reservas-sombra-hover: rgba(0, 255, 102, 0.4);
-  --color-reservas-hover: rgba(0, 255, 102, 0.1);
-  --color-reservas-gradiente: linear-gradient(90deg, #00ff66, #059669);
+  --color-reservas-principal: #059669; /* Verde en modo oscuro */
+  --color-reservas-contraste: #ffffff;
+  --color-reservas-sombra: rgba(5, 150, 105, 0.3);
+  --color-reservas-sombra-hover: rgba(5, 150, 105, 0.4);
+  --color-reservas-hover: rgba(5, 150, 105, 0.1);
+  --color-reservas-gradiente: linear-gradient(90deg, #059669, #047857);
   
   /* VARIABLES PARA BOTONES DE DETALLES Y ELEMENTOS TEMÁTICOS - VERDE EN OSCURO */
-  --color-detalle-boton: #00ff66; /* Verde en modo oscuro */
-  --color-detalle-boton-contraste: #000000;
-  --color-detalle-boton-sombra: rgba(0, 255, 102, 0.2);
-  --color-detalle-boton-hover: rgba(0, 255, 102, 0.1);
-  --color-chip-activo: #00ff66;
-  --color-chip-activo-contraste: #000000;
-  --color-inscribir-boton: #00ff66;
-  --color-inscribir-boton-contraste: #000000;
-  --color-tabs-activo: #00ff66;
-  --color-tabs-contraste: #000000;
+  --color-detalle-boton: #059669; /* Verde en modo oscuro */
+  --color-detalle-boton-contraste: #ffffff;
+  --color-detalle-boton-sombra: rgba(5, 150, 105, 0.2);
+  --color-detalle-boton-hover: rgba(5, 150, 105, 0.1);
+  --color-chip-activo: #059669;
+  --color-chip-activo-contraste: #ffffff;
+  --color-inscribir-boton: #059669;
+  --color-inscribir-boton-contraste: #ffffff;
+  --color-tabs-activo: #059669;
+  --color-tabs-contraste: #ffffff;
   
   /* SCROLLBAR Y ELEMENTOS DASHBOARD */
   --color-scroll-principal: var(--color-secundario);

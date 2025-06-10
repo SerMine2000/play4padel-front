@@ -227,7 +227,7 @@ const Pay: React.FC = () => {
       },
       complete: {
         color: isDarkMode ? '#f0f0f0' : '#000000', // Quitar color rosa, usar color normal
-        iconColor: isDarkMode ? '#00FF66' : '#6129f0'
+        iconColor: isDarkMode ? '#059669' : '#6129f0'
       }
     }
   };
