@@ -140,7 +140,7 @@ const TorneoDetalle: React.FC = () => {
   };
 
   const loadUsuarios = async () => {
-    const response = await ApiService.get('/users');
+    const response = await ApiService.get('/users/basic');
     if (response && Array.isArray(response)) {
       console.log('Usuarios cargados:', response);
       setUsuarios(response);
