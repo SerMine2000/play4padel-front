@@ -98,7 +98,7 @@
 .config-card:hover,
 .advanced-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(97, 41, 240, 0.15);
+  box-shadow: var(--sombra-hover);
   border-color: var(--color-primario);
 }
 

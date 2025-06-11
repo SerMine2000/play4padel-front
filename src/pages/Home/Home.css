@@ -433,27 +433,47 @@
   opacity: 0.8;
 }
 
-/* FILAS DE PISTAS */
-.estado-pista-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: var(--fondo-aplicacion);
-  padding: 22px 24px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border: 1px solid var(--borde-principal);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  min-height: 72px;
-  max-height: 82px;
-  height: 72px;
-  box-sizing: border-box;
+/* FILAS DE PISTAS - MISMO ESTILO QUE RESERVAS */
+.estado-pistas .estado-pista-row,
+.estado-pistas-grid-2col .estado-pista-row {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  background: var(--fondo-aplicacion) !important;
+  margin: 0 0 12px 0 !important;
+  padding: 18px 20px !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  border-left: 3px solid var(--color-acento-dashboard) !important;
+  border: 1px solid var(--borde-principal) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  min-height: 72px !important;
+  max-height: 82px !important;
+  height: 72px !important;
+  box-sizing: border-box !important;
+  /* Override cualquier selección del navegador */
+  outline: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
 }
 
-.estado-pista-row:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--sombra-card);
-  background: var(--hover-card);
+.estado-pistas .estado-pista-row:hover,
+.estado-pistas-grid-2col .estado-pista-row:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: var(--sombra-card) !important;
+  background: var(--hover-card) !important;
+}
+
+.estado-pistas .estado-pista-row:focus,
+.estado-pistas .estado-pista-row:active,
+.estado-pistas .estado-pista-row:target,
+.estado-pistas-grid-2col .estado-pista-row:focus,
+.estado-pistas-grid-2col .estado-pista-row:active,
+.estado-pistas-grid-2col .estado-pista-row:target {
+  background: var(--fondo-aplicacion) !important;
+  outline: none !important;
 }
 
 .pista-nombre {
@@ -796,14 +816,26 @@
   box-shadow: var(--sombra-card);
 }
 
-.ion-palette-dark .estado-pista-row {
-  background: var(--fondo-input);
-  border-color: var(--borde-principal);
+.ion-palette-dark .estado-pistas .estado-pista-row,
+.ion-palette-dark .estado-pistas-grid-2col .estado-pista-row {
+  background: var(--fondo-input) !important;
+  border-color: var(--borde-principal) !important;
 }
 
-.ion-palette-dark .estado-pista-row:hover {
-  background: var(--hover-card);
-  box-shadow: var(--sombra-card);
+.ion-palette-dark .estado-pistas .estado-pista-row:hover,
+.ion-palette-dark .estado-pistas-grid-2col .estado-pista-row:hover {
+  background: var(--hover-card) !important;
+  box-shadow: var(--sombra-card) !important;
+}
+
+.ion-palette-dark .estado-pistas .estado-pista-row:focus,
+.ion-palette-dark .estado-pistas .estado-pista-row:active,
+.ion-palette-dark .estado-pistas .estado-pista-row:target,
+.ion-palette-dark .estado-pistas-grid-2col .estado-pista-row:focus,
+.ion-palette-dark .estado-pistas-grid-2col .estado-pista-row:active,
+.ion-palette-dark .estado-pistas-grid-2col .estado-pista-row:target {
+  background: var(--fondo-input) !important;
+  outline: none !important;
 }
 
 .ion-palette-dark .club-dropdown-content {

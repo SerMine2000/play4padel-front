@@ -35,13 +35,13 @@
 
 .liga-header:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(97, 41, 240, 0.15);
+  box-shadow: var(--sombra-hover);
   border-color: var(--color-primario);
 }
 
 /* Modo oscuro para liga header */
 .liga-detalle-container.dark .liga-header:hover {
-  box-shadow: 0 12px 40px rgba(5, 150, 105, 0.15);
+  box-shadow: var(--sombra-hover);
   border-color: var(--color-secundario);
 }
 
@@ -329,13 +329,13 @@
 
 .info-tab ion-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(97, 41, 240, 0.15);
+  box-shadow: var(--sombra-hover);
   border-color: var(--color-primario);
 }
 
 /* Modo oscuro para info tab cards */
 .liga-detalle-container.dark .info-tab ion-card:hover {
-  box-shadow: 0 12px 40px rgba(5, 150, 105, 0.15);
+  box-shadow: var(--sombra-hover);
   border-color: var(--color-secundario);
 }
 
@@ -377,13 +377,13 @@
   transform: translateY(-2px);
   background: var(--hover-card);
   border-color: var(--color-primario);
-  box-shadow: 0 4px 15px rgba(97, 41, 240, 0.1);
+  box-shadow: var(--sombra-card);
 }
 
 /* Modo oscuro para info-item */
 .liga-detalle-container.dark .info-item:hover {
   border-color: var(--color-secundario);
-  box-shadow: 0 4px 15px rgba(5, 150, 105, 0.1);
+  box-shadow: var(--sombra-card);
 }
 
 .liga-detalle-container.dark .info-item ion-icon {
@@ -732,14 +732,14 @@
 
 .clasificacion-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(97, 41, 240, 0.1);
+  box-shadow: var(--sombra-card);
   background: var(--hover-card);
   border-color: var(--color-primario);
 }
 
 /* Modo oscuro para clasificación items */
 .liga-detalle-container.dark .clasificacion-item:hover {
-  box-shadow: 0 4px 15px rgba(5, 150, 105, 0.1);
+  box-shadow: var(--sombra-card);
   border-color: var(--color-secundario);
 }
 
@@ -840,13 +840,13 @@
 
 .partido-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(97, 41, 240, 0.15);
+  box-shadow: var(--sombra-hover);
   border-color: var(--color-primario);
 }
 
 /* Modo oscuro para partido card */
 .liga-detalle-container.dark .partido-card:hover {
-  box-shadow: 0 12px 40px rgba(5, 150, 105, 0.15);
+  box-shadow: var(--sombra-hover);
   border-color: var(--color-secundario);
 }
 
@@ -963,13 +963,13 @@
 
 .pareja-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(97, 41, 240, 0.15);
+  box-shadow: var(--sombra-hover);
   border-color: var(--color-primario);
 }
 
 /* Modo oscuro para pareja card */
 .liga-detalle-container.dark .pareja-card:hover {
-  box-shadow: 0 12px 40px rgba(5, 150, 105, 0.15);
+  box-shadow: var(--sombra-hover);
   border-color: var(--color-secundario);
 }
 
@@ -1057,7 +1057,7 @@
 .jugador:hover .jugador-avatar {
   transform: scale(1.05);
   border-color: var(--color-primario);
-  box-shadow: 0 4px 12px rgba(97, 41, 240, 0.2);
+  box-shadow: var(--sombra-boton-primario);
 }
 
 .liga-detalle-container.dark .jugador-avatar {
@@ -1066,7 +1066,7 @@
 
 .liga-detalle-container.dark .jugador:hover .jugador-avatar {
   border-color: var(--color-primario);
-  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
+  box-shadow: var(--sombra-boton-primario);
 }
 
 .jugador-avatar img {
@@ -1754,7 +1754,7 @@ ion-content {
   background: var(--hover-card) \!important;
   border-color: var(--color-primario) \!important;
   transform: translateY(-1px) \!important;
-  box-shadow: 0 4px 12px rgba(97, 41, 240, 0.15) \!important;
+  box-shadow: var(--sombra-card) !important;
 }
 
 .modal-content-profesional ion-item:hover::before {
@@ -1763,7 +1763,7 @@ ion-content {
 
 .modal-content-profesional ion-item:focus-within {
   border: 2px solid var(--color-primario) \!important;
-  box-shadow: 0 0 0 3px rgba(97, 41, 240, 0.15);
+  box-shadow: 0 0 0 3px var(--sombra-color-primario);
   background: var(--fondo-card) \!important;
   transform: translateY(-1px) \!important;
 }
@@ -1817,12 +1817,12 @@ ion-content {
   --color: var(--color-primario-contraste) \!important;
   background: var(--color-primario) \!important;
   color: var(--color-primario-contraste) \!important;
-  box-shadow: 0 4px 15px rgba(97, 41, 240, 0.3);
+  box-shadow: var(--sombra-boton-primario);
 }
 
 .inscripcion-submit-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(97, 41, 240, 0.4);
+  box-shadow: var(--sombra-boton-primario-hover);
   --background: var(--color-secundario) \!important;
 }
 
@@ -1931,7 +1931,7 @@ ion-content {
 }
 
 .ion-palette-dark .liga-detalle-container .header-actions ion-button:hover {
-  box-shadow: 0 4px 15px rgba(5, 150, 105, 0.4);
+  box-shadow: var(--sombra-boton-primario-hover);
 }
 
 /* Chips de liga status en modo oscuro */
@@ -1943,7 +1943,7 @@ ion-content {
 
 /* Header hover en modo oscuro */
 .ion-palette-dark .liga-detalle-container .liga-header:hover {
-  box-shadow: 0 12px 40px rgba(5, 150, 105, 0.15);
+  box-shadow: var(--sombra-hover);
   border-color: var(--color-secundario);
 }
 

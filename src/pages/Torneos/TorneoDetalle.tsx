@@ -450,28 +450,11 @@ const TorneoDetalle: React.FC = () => {
                 <IonIcon icon={trophyOutline} className="icon-themed" />
                 <IonLabel>Torneo Activo</IonLabel>
               </IonChip>
-              {partidos.length > 0 && (
-                <IonChip className="status-chip">
-                  <IonIcon icon={playOutline} />
-                  <IonLabel>Cuadro Generado</IonLabel>
-                </IonChip>
-              )}
             </div>
           </div>
         </div>
         
         <div className="header-bottom">
-          {canManage && parejas.length >= 2 && (
-            <div className="header-actions">
-              <IonButton 
-                onClick={() => setShowGenerateFixtureAlert(true)}
-                disabled={partidos.length > 0}
-              >
-                <IonIcon icon={playOutline} slot="start" />
-                <IonLabel>{partidos.length > 0 ? 'Cuadro Ya Generado' : 'Generar Cuadro'}</IonLabel>
-              </IonButton>
-            </div>
-          )}
         </div>
       </div>
 
@@ -687,6 +670,24 @@ const TorneoDetalle: React.FC = () => {
 
         {selectedTab === 'bracket' && (
           <div className="bracket-tab">
+            {canManage && parejas.length >= 2 && (
+              <IonGrid>
+                <IonRow>
+                  <IonCol size="12">
+                    <IonButton 
+                      onClick={() => setShowGenerateFixtureAlert(true)}
+                      disabled={partidos.length > 0}
+                      className="inscribir-button" 
+                      fill="outline"
+                    >
+                      <IonIcon icon={playOutline} slot="start" className="icon-themed" />
+                      <IonLabel>{partidos.length > 0 ? 'Cuadro Ya Generado' : 'Generar Cuadro'}</IonLabel>
+                    </IonButton>
+                  </IonCol>
+                </IonRow>
+              </IonGrid>
+            )}
+            
             {!bracketData || Object.keys(bracketData.bracket || {}).length === 0 ? (
               <IonCard className="empty-state">
                 <IonCardContent>
@@ -738,7 +739,7 @@ const TorneoDetalle: React.FC = () => {
                     </IonCardHeader>
                     <IonCardContent>
                       <div className="partidos-ronda">
-                        {partidosRonda.map((partido: any, index: number) => (
+                        {partidosRonda.map((partido: any) => (
                           <div key={partido.id} className="bracket-match">
                             <div className="match-teams">
                               <div className={`team ${partido.resultado && partido.resultado.includes(partido.equipo1?.id) ? 'winner' : ''}`}>
@@ -878,26 +879,24 @@ const TorneoDetalle: React.FC = () => {
               Selección de Jugadores
             </h3>
             
-            <IonItem>
-              <IonLabel position="stacked">Jugador 1 *</IonLabel>
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: 'var(--texto-principal)' }}>
+                Jugador 1 *
+              </label>
               <IonSelect
                 value={inscriptionData.jugador1_id}
                 onIonChange={(e) => setInscriptionData({ ...inscriptionData, jugador1_id: e.detail.value })}
                 placeholder="Selecciona el primer jugador"
+                style={{ 
+                  border: '1px solid var(--borde-input)', 
+                  borderRadius: '12px', 
+                  background: 'var(--fondo-input)',
+                  minHeight: '48px'
+                }}
               >
                 {usuarios.filter(usuario => {
-                  // Extraer el rol de la estructura correcta: usuario.rol.nombre
                   const rolNombre = usuario.rol?.nombre;
                   const esUsuarioOSocio = rolNombre && ['USUARIO', 'SOCIO'].includes(rolNombre);
-                  
-                  console.log(`Usuario ${usuario.nombre}:`, {
-                    id: usuario.id,
-                    nombre: usuario.nombre,
-                    rol: usuario.rol,
-                    rolNombre: rolNombre,
-                    esUsuarioOSocio: esUsuarioOSocio
-                  });
-                  
                   return esUsuarioOSocio;
                 }).map((usuario) => (
                   <IonSelectOption key={usuario.id} value={usuario.id}>
@@ -905,18 +904,26 @@ const TorneoDetalle: React.FC = () => {
                   </IonSelectOption>
                 ))}
               </IonSelect>
-            </IonItem>
+            </div>
 
-            <IonItem>
-              <IonLabel position="stacked">Jugador 2 *</IonLabel>
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: 'var(--texto-principal)' }}>
+                Jugador 2 *
+              </label>
               <IonSelect
                 value={inscriptionData.jugador2_id}
                 onIonChange={(e) => setInscriptionData({ ...inscriptionData, jugador2_id: e.detail.value })}
                 placeholder="Selecciona el segundo jugador"
+                style={{ 
+                  border: '1px solid var(--borde-input)', 
+                  borderRadius: '12px', 
+                  background: 'var(--fondo-input)',
+                  minHeight: '48px'
+                }}
               >
                 {usuarios.filter(u => {
                   const rolNombre = u.rol?.nombre;
-                  const esUsuarioOSocio = ['USUARIO', 'SOCIO'].includes(rolNombre);
+                  const esUsuarioOSocio = rolNombre && ['USUARIO', 'SOCIO'].includes(rolNombre);
                   const notSamePlayer = u.id.toString() !== inscriptionData.jugador1_id;
                   return notSamePlayer && esUsuarioOSocio;
                 }).map((usuario) => (
@@ -925,21 +932,29 @@ const TorneoDetalle: React.FC = () => {
                   </IonSelectOption>
                 ))}
               </IonSelect>
-            </IonItem>
+            </div>
 
-            <IonItem>
-              <IonLabel position="stacked">Categoría *</IonLabel>
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: 'var(--texto-principal)' }}>
+                Categoría *
+              </label>
               <IonSelect
                 value={inscriptionData.categoria}
                 onIonChange={(e) => setInscriptionData({ ...inscriptionData, categoria: e.detail.value })}
                 placeholder="Selecciona la categoría"
+                style={{ 
+                  border: '1px solid var(--borde-input)', 
+                  borderRadius: '12px', 
+                  background: 'var(--fondo-input)',
+                  minHeight: '48px'
+                }}
               >
                 <IonSelectOption value="masculina">Masculina</IonSelectOption>
                 <IonSelectOption value="femenina">Femenina</IonSelectOption>
                 <IonSelectOption value="mixta">Mixta</IonSelectOption>
                 <IonSelectOption value="veteranos">Veteranos</IonSelectOption>
               </IonSelect>
-            </IonItem>
+            </div>
           </div>
 
           {/* Acciones */}
@@ -1008,7 +1023,7 @@ const TorneoDetalle: React.FC = () => {
                 </h3>
                 
                 <IonItem>
-                  <IonLabel position="stacked">Resultado (sets) *</IonLabel>
+                  <IonLabel position="floating">Resultado (sets) *</IonLabel>
                   <IonInput
                     value={resultData.resultado}
                     onIonInput={(e: any) => setResultData({ ...resultData, resultado: e.detail.value! })}
@@ -1017,7 +1032,7 @@ const TorneoDetalle: React.FC = () => {
                 </IonItem>
 
                 <IonItem>
-                  <IonLabel position="stacked">Ganador *</IonLabel>
+                  <IonLabel position="floating">Ganador *</IonLabel>
                   <IonSelect
                     value={resultData.ganador}
                     onIonChange={(e) => setResultData({ ...resultData, ganador: e.detail.value })}

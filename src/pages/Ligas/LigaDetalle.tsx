@@ -921,7 +921,16 @@ const LigaDetalle: React.FC = () => {
       </div>
 
       {/* Modal para inscribir pareja */}
-      <IonModal className="modal-inscripcion" isOpen={isInscriptionModalOpen} onDidDismiss={() => setIsInscriptionModalOpen(false)}>
+      <IonModal 
+        className="modal-inscripcion" 
+        isOpen={isInscriptionModalOpen} 
+        onDidDismiss={() => setIsInscriptionModalOpen(false)}
+        style={{
+          '--height': 'auto',
+          '--max-height': '90vh',
+          '--border-radius': '16px'
+        }}
+      >
         <IonHeader className="modal-header-profesional">
           <IonToolbar className="modal-header-profesional">
             <IonTitle>
@@ -960,8 +969,10 @@ const LigaDetalle: React.FC = () => {
               Información del Equipo
             </h3>
             
-            <IonItem>
-              <IonLabel position="stacked">Nombre del Equipo *</IonLabel>
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: 'var(--texto-principal)' }}>
+                Nombre del Equipo *
+              </label>
               <IonInput
                 value={inscriptionData.nombre_equipo}
                 onIonInput={(e) => {
@@ -970,8 +981,16 @@ const LigaDetalle: React.FC = () => {
                   setInscriptionData({ ...inscriptionData, nombre_equipo: newValue });
                 }}
                 placeholder="Ej: Los Campeones"
+                style={{ 
+                  border: '1px solid var(--borde-input)', 
+                  borderRadius: '12px', 
+                  background: 'var(--fondo-input)',
+                  minHeight: '48px',
+                  '--padding-start': '16px',
+                  '--padding-end': '16px'
+                }}
               />
-            </IonItem>
+            </div>
           </div>
 
           {/* Selección de jugadores */}
@@ -981,8 +1000,10 @@ const LigaDetalle: React.FC = () => {
               Selección de Jugadores
             </h3>
             
-            <IonItem>
-              <IonLabel position="stacked">Jugador 1 *</IonLabel>
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: 'var(--texto-principal)' }}>
+                Jugador 1 *
+              </label>
               <IonSelect
                 value={inscriptionData.id_jugador1}
                 onIonChange={(e) => {
@@ -991,19 +1012,16 @@ const LigaDetalle: React.FC = () => {
                   setInscriptionData({ ...inscriptionData, id_jugador1: newValue });
                 }}
                 placeholder="Selecciona el primer jugador"
+                style={{ 
+                  border: '1px solid var(--borde-input)', 
+                  borderRadius: '12px', 
+                  background: 'var(--fondo-input)',
+                  minHeight: '48px'
+                }}
               >
                 {usuarios.filter(usuario => {
                   const rolNombre = usuario.rol?.nombre;
                   const esUsuarioOSocio = rolNombre && ['USUARIO', 'SOCIO'].includes(rolNombre);
-                  
-                  console.log(`Usuario liga ${usuario.nombre}:`, {
-                    id: usuario.id,
-                    nombre: usuario.nombre,
-                    rol: usuario.rol,
-                    rolNombre: rolNombre,
-                    esUsuarioOSocio: esUsuarioOSocio
-                  });
-                  
                   return esUsuarioOSocio;
                 }).map((usuario) => (
                   <IonSelectOption key={usuario.id} value={usuario.id}>
@@ -1011,10 +1029,12 @@ const LigaDetalle: React.FC = () => {
                   </IonSelectOption>
                 ))}
               </IonSelect>
-            </IonItem>
+            </div>
 
-            <IonItem>
-              <IonLabel position="stacked">Jugador 2 *</IonLabel>
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: 'var(--texto-principal)' }}>
+                Jugador 2 *
+              </label>
               <IonSelect
                 value={inscriptionData.id_jugador2}
                 onIonChange={(e) => {
@@ -1023,10 +1043,16 @@ const LigaDetalle: React.FC = () => {
                   setInscriptionData({ ...inscriptionData, id_jugador2: newValue });
                 }}
                 placeholder="Selecciona el segundo jugador"
+                style={{ 
+                  border: '1px solid var(--borde-input)', 
+                  borderRadius: '12px', 
+                  background: 'var(--fondo-input)',
+                  minHeight: '48px'
+                }}
               >
                 {usuarios.filter(u => {
                   const rolNombre = u.rol?.nombre;
-                  const esUsuarioOSocio = ['USUARIO', 'SOCIO'].includes(rolNombre);
+                  const esUsuarioOSocio = rolNombre && ['USUARIO', 'SOCIO'].includes(rolNombre);
                   const notSamePlayer = u.id.toString() !== inscriptionData.id_jugador1.toString();
                   return notSamePlayer && esUsuarioOSocio;
                 }).map((usuario) => (
@@ -1035,7 +1061,7 @@ const LigaDetalle: React.FC = () => {
                   </IonSelectOption>
                 ))}
               </IonSelect>
-            </IonItem>
+            </div>
           </div>
 
           {/* Acciones */}

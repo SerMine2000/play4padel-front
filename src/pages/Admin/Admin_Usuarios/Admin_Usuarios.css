@@ -34,9 +34,9 @@
   bottom: -8px;
   left: 50%;
   transform: translateX(-50%);
-  width: 180px;
+  width: 120px;
   height: 4px;
-  background: linear-gradient(90deg, var(--color-primario), var(--color-secundario));
+  background: var(--color-primario);
   border-radius: 2px;
 }
 
@@ -173,7 +173,7 @@ ion-card-content {
 
 .filters-section ion-searchbar:focus-within {
   border-color: var(--color-primario);
-  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
+  box-shadow: 0 0 0 3px var(--sombra-color-primario);
 }
 
 .filters-row {
@@ -200,7 +200,7 @@ ion-card-content {
 
 .filters-row ion-select:focus-within {
   border-color: var(--color-primario);
-  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
+  box-shadow: 0 0 0 3px var(--sombra-color-primario);
 }
 
 /* Arreglar los desplegables completamente */
@@ -281,10 +281,32 @@ ion-item:hover {
 }
 
 .detail-row ion-icon {
-  font-size: 1rem;
-  color: var(--color-primario);
+  font-size: 1.4rem !important;
   flex-shrink: 0;
-  opacity: 0.8;
+  opacity: 1;
+  transition: all 0.3s ease;
+  width: 20px;
+  height: 20px;
+  margin-right: 4px;
+}
+
+/* Colores específicos para cada tipo de icono usando las clases */
+.detail-email ion-icon {
+  color: #3498db !important; /* Azul para email */
+}
+
+.detail-phone ion-icon {
+  color: #27ae60 !important; /* Verde para teléfono */
+}
+
+.detail-business ion-icon {
+  color: #f39c12 !important; /* Naranja para empresa/club */
+}
+
+/* Efecto hover para los iconos */
+ion-item:hover .detail-row ion-icon {
+  transform: scale(1.1);
+  opacity: 1;
 }
 
 .user-stats {

@@ -7,6 +7,9 @@
   overflow-y: auto;
   background-color: var(--fondo-aplicacion);
   color: var(--texto-principal);
+  /* Mejorar scroll en móviles */
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
 }
 
 .profile-container {
@@ -14,6 +17,9 @@
   margin: 0 auto;
   padding: 2rem 1.5rem 2rem 1.5rem;
   min-height: 100vh;
+  /* Asegurar que el contenido no se corte en móviles */
+  box-sizing: border-box;
+  width: 100%;
 }
 
 /* ===== HEADER DEL PERFIL ===== */
@@ -34,7 +40,7 @@
   transition: all 0.3s ease;
 }
 
-/* Degradado del header - Modo claro (morado) */
+/* Degradado del header - Morado en claro, verde en oscuro */
 .profile-header::before {
   content: '';
   position: absolute;
@@ -42,12 +48,11 @@
   left: 0;
   right: 0;
   height: 5px;
-  background: var(--color-primario);
+  background: #6129f0; /* Morado en modo claro */
 }
 
-/* Degradado del header - Modo oscuro (verde) */
 .ion-palette-dark .profile-header::before {
-  background: var(--color-secundario);
+  background: #059669; /* Verde en modo oscuro */
 }
 
 /* ===== AVATAR SECTION ===== */
@@ -73,7 +78,7 @@
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  box-shadow: 0 8px 25px rgba(97, 41, 240, 0.15);
+  box-shadow: var(--sombra-hover);
   transition: all 0.3s ease;
   cursor: pointer;
   position: relative;
@@ -82,17 +87,17 @@
 
 .profile-avatar:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(97, 41, 240, 0.3);
+  box-shadow: var(--sombra-boton-primario);
 }
 
 /* Avatar - Modo oscuro (verde) */
 .ion-palette-dark .profile-avatar {
-  box-shadow: 0 8px 25px rgba(5, 150, 105, 0.15);
+  box-shadow: var(--sombra-hover);
 }
 
 .ion-palette-dark .profile-avatar:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(5, 150, 105, 0.3);
+  box-shadow: var(--sombra-boton-primario);
 }
 
 /* Overlay para edición */
@@ -130,10 +135,10 @@
   100% { transform: scale(1); }
 }
 
-/* Hint del avatar - Modo claro (morado) */
+/* Hint del avatar - Morado en claro, verde en oscuro */
 .avatar-edit-hint {
   font-size: 0.85rem;
-  color: var(--color-primario);
+  color: #6129f0; /* Morado en modo claro */
   text-align: center;
   margin: 0;
   opacity: 0.9;
@@ -142,9 +147,8 @@
   animation: glow 2s ease-in-out infinite alternate;
 }
 
-/* Hint del avatar - Modo oscuro (verde) */
 .ion-palette-dark .avatar-edit-hint {
-  color: var(--color-secundario);
+  color: #059669; /* Verde en modo oscuro */
 }
 
 @keyframes glow {
@@ -181,10 +185,10 @@
   flex-wrap: wrap;
 }
 
-/* Chip del rol - Modo claro (morado) */
+/* Chip del rol - Morado en claro, verde en oscuro */
 .user-role-badge {
-  background: var(--color-primario);
-  color: var(--color-primario-contraste);
+  background: #6129f0; /* Morado en modo claro */
+  color: #ffffff;
   padding: 0.4rem 1rem;
   border-radius: 20px;
   font-size: 0.8rem;
@@ -195,10 +199,9 @@
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-/* Chip del rol - Modo oscuro (verde) */
 .ion-palette-dark .user-role-badge {
-  background: var(--color-secundario);
-  color: var(--color-primario-contraste);
+  background: #059669; /* Verde en modo oscuro */
+  color: #ffffff;
 }
 
 /* ===== CARD DE INFORMACIÓN ===== */
@@ -222,15 +225,14 @@
   color: var(--texto-principal);
 }
 
-/* Icono del título de card - Modo claro (morado) */
+/* Icono del título de card - Morado en claro, verde en oscuro */
 .card-title ion-icon {
-  color: var(--color-primario);
+  color: #6129f0; /* Morado en modo claro */
   font-size: 1.4rem;
 }
 
-/* Icono del título de card - Modo oscuro (verde) */
 .ion-palette-dark .card-title ion-icon {
-  color: var(--color-secundario);
+  color: #059669; /* Verde en modo oscuro */
 }
 
 /* ===== MODO VISTA ===== */
@@ -266,16 +268,15 @@
   flex-shrink: 0;
 }
 
-/* Iconos de info-label - Modo claro (morado) */
+/* Iconos de info-label - Morado en claro, verde en oscuro */
 .info-label ion-icon {
-  color: var(--color-primario);
+  color: #6129f0; /* Morado en modo claro */
   font-size: 1.2rem;
   flex-shrink: 0;
 }
 
-/* Iconos de info-label - Modo oscuro (verde) */
 .ion-palette-dark .info-label ion-icon {
-  color: var(--color-secundario);
+  color: #059669; /* Verde en modo oscuro */
 }
 
 .info-value {
@@ -315,15 +316,14 @@
   font-size: 0.95rem;
 }
 
-/* Iconos de field-label - Modo claro (morado) */
+/* Iconos de field-label - Morado en claro, verde en oscuro */
 .field-label ion-icon {
-  color: var(--color-primario);
+  color: #6129f0; /* Morado en modo claro */
   font-size: 1.1rem;
 }
 
-/* Iconos de field-label - Modo oscuro (verde) */
 .ion-palette-dark .field-label ion-icon {
-  color: var(--color-secundario);
+  color: #059669; /* Verde en modo oscuro */
 }
 
 .field-input {
@@ -342,18 +342,22 @@
   font-weight: 500;
   background-color: var(--fondo-input);
   color: var(--texto-principal);
+  /* Mejor experiencia en móviles */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  /* Evitar zoom en iOS */
+  font-size: max(1rem, 16px);
 }
 
-/* Focus de inputs - Modo claro (morado) */
+/* Focus de inputs - Morado en claro, verde en oscuro */
 .field-input:focus-within {
-  border-color: var(--color-primario);
-  box-shadow: 0 0 0 3px rgba(97, 41, 240, 0.1);
+  border-color: #6129f0; /* Morado en modo claro */
+  box-shadow: 0 0 0 3px rgba(97, 41, 240, 0.3);
 }
 
-/* Focus de inputs - Modo oscuro (verde) */
 .ion-palette-dark .field-input:focus-within {
-  border-color: var(--color-secundario);
-  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+  border-color: #059669; /* Verde en modo oscuro */
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.3);
 }
 
 /* ===== VALIDACIONES Y ERRORES ===== */
@@ -409,6 +413,9 @@
   justify-content: center;
   flex-wrap: wrap;
   gap: 2rem;
+  /* Mejoras para móviles */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* === BOTÓN PRIMARIO === */
@@ -428,37 +435,39 @@ ion-button.primary-button {
   transition: all 0.3s ease;
   width: 100%;
   max-width: 500px;
+  /* Mejor experiencia táctil en móviles */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* Botón primario - Modo claro (morado) */
+/* Botón primario - Morado en claro, verde en oscuro */
 ion-button.primary-button::part(native) {
   border-radius: 16px;
   padding: 1rem 2rem;
   width: 100%;
-  min-width: 340px;
+  min-width: 280px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-primario);
-  color: var(--color-primario-contraste);
-  box-shadow: 0 4px 15px rgba(97, 41, 240, 0.3);
+  background: #6129f0; /* Morado en modo claro */
+  color: #ffffff;
+  box-shadow: var(--sombra-boton-primario);
 }
 
 ion-button.primary-button:hover::part(native) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(97, 41, 240, 0.4);
+  box-shadow: var(--sombra-boton-primario-hover);
 }
 
-/* Botón primario - Modo oscuro (verde) */
 .ion-palette-dark ion-button.primary-button::part(native) {
-  background: var(--color-secundario);
-  color: var(--color-primario-contraste);
-  box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
+  background: #059669; /* Verde en modo oscuro */
+  color: #ffffff;
+  box-shadow: var(--sombra-boton-primario);
 }
 
 .ion-palette-dark ion-button.primary-button:hover::part(native) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
+  box-shadow: var(--sombra-boton-primario-hover);
 }
 
 /* === BOTÓN SECUNDARIO === */
@@ -478,37 +487,39 @@ ion-button.secondary-button {
   transition: all 0.3s ease;
   width: 100%;
   max-width: 500px;
+  /* Mejor experiencia táctil en móviles */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* Botón secundario - Modo claro (morado) */
+/* Botón secundario - Morado en claro, verde en oscuro */
 ion-button.secondary-button::part(native) {
   border-radius: 16px;
   padding: 1rem 2rem;
   width: 100%;
-  min-width: 340px;
+  min-width: 280px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-primario);
-  color: var(--color-primario-contraste);
-  box-shadow: 0 4px 15px rgba(97, 41, 240, 0.3);
+  background: #6129f0; /* Morado en modo claro */
+  color: #ffffff;
+  box-shadow: var(--sombra-boton-primario);
 }
 
 ion-button.secondary-button:hover::part(native) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(97, 41, 240, 0.4);
+  box-shadow: var(--sombra-boton-primario-hover);
 }
 
-/* Botón secundario - Modo oscuro (verde) */
 .ion-palette-dark ion-button.secondary-button::part(native) {
-  background: var(--color-secundario);
-  color: var(--color-primario-contraste);
-  box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
+  background: #059669; /* Verde en modo oscuro */
+  color: #ffffff;
+  box-shadow: var(--sombra-boton-primario);
 }
 
 .ion-palette-dark ion-button.secondary-button:hover::part(native) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
+  box-shadow: var(--sombra-boton-primario-hover);
 }
 
 /* === BOTÓN SUCCESS === */
@@ -528,37 +539,39 @@ ion-button.success-button {
   transition: all 0.3s ease;
   width: 100%;
   max-width: 500px;
+  /* Mejor experiencia táctil en móviles */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* Botón success - Modo claro (morado) */
+/* Botón success - Morado en claro, verde en oscuro */
 ion-button.success-button::part(native) {
   border-radius: 16px;
   padding: 1rem 2rem;
   width: 100%;
-  min-width: 340px;
+  min-width: 280px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-primario);
-  color: var(--color-primario-contraste);
-  box-shadow: 0 4px 15px rgba(97, 41, 240, 0.3);
+  background: #6129f0; /* Morado en modo claro */
+  color: #ffffff;
+  box-shadow: var(--sombra-boton-primario);
 }
 
 ion-button.success-button:hover::part(native) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(97, 41, 240, 0.4);
+  box-shadow: var(--sombra-boton-primario-hover);
 }
 
-/* Botón success - Modo oscuro (verde) */
 .ion-palette-dark ion-button.success-button::part(native) {
-  background: var(--color-secundario);
-  color: var(--color-primario-contraste);
-  box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
+  background: #059669; /* Verde en modo oscuro */
+  color: #ffffff;
+  box-shadow: var(--sombra-boton-primario);
 }
 
 .ion-palette-dark ion-button.success-button:hover::part(native) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
+  box-shadow: var(--sombra-boton-primario-hover);
 }
 
 /* === BOTÓN CANCELAR === */
@@ -688,23 +701,23 @@ ion-button.cancel-button:hover::part(native) {
   height: auto;
   object-fit: contain;
   border-radius: 50%;
-  box-shadow: 0 20px 60px rgba(97, 41, 240, 0.2);
+  box-shadow: var(--sombra-boton-primario);
   transition: all 0.3s ease;
 }
 
 .preview-image-large:hover {
   transform: scale(1.05);
-  box-shadow: 0 25px 70px rgba(97, 41, 240, 0.4);
+  box-shadow: var(--sombra-boton-primario-hover);
 }
 
 /* Vista previa de imagen - Modo oscuro (verde) */
 .ion-palette-dark .preview-image-large {
-  box-shadow: 0 20px 60px rgba(5, 150, 105, 0.2);
+  box-shadow: var(--sombra-boton-primario);
 }
 
 .ion-palette-dark .preview-image-large:hover {
   transform: scale(1.05);
-  box-shadow: 0 25px 70px rgba(5, 150, 105, 0.4);
+  box-shadow: var(--sombra-boton-primario-hover);
 }
 
 .preview-avatar-large {
@@ -715,34 +728,56 @@ ion-button.cancel-button:hover::part(native) {
 
 /* Avatar generado en vista previa - Modo claro (morado) */
 .generated-preview-large {
-  box-shadow: 0 20px 60px rgba(97, 41, 240, 0.2);
+  box-shadow: var(--sombra-boton-primario);
   transition: all 0.3s ease;
 }
 
 .generated-preview-large:hover {
   transform: scale(1.05);
-  box-shadow: 0 25px 70px rgba(97, 41, 240, 0.4);
+  box-shadow: var(--sombra-boton-primario-hover);
 }
 
 /* Avatar generado en vista previa - Modo oscuro (verde) */
 .ion-palette-dark .generated-preview-large {
-  box-shadow: 0 20px 60px rgba(5, 150, 105, 0.2);
+  box-shadow: var(--sombra-boton-primario);
 }
 
 .ion-palette-dark .generated-preview-large:hover {
   transform: scale(1.05);
-  box-shadow: 0 25px 70px rgba(5, 150, 105, 0.4);
+  box-shadow: var(--sombra-boton-primario-hover);
 }
 
-/* ===== RESPONSIVE DESIGN ===== */
+/* ===== RESPONSIVE DESIGN MEJORADO ===== */
+
+/* Tablet grande (1024px y abajo) */
+@media (max-width: 1024px) {
+  .profile-container {
+    max-width: 700px;
+    padding: 1.5rem 1.25rem;
+  }
+  
+  .profile-header {
+    padding: 2rem 1.5rem;
+  }
+  
+  ion-button.primary-button::part(native),
+  ion-button.secondary-button::part(native),
+  ion-button.success-button::part(native) {
+    min-width: 250px;
+  }
+}
+
+/* Tablet (768px y abajo) */
 @media (max-width: 768px) {
   .profile-container {
     padding: 1rem 1rem 1.5rem 1rem;
+    max-width: 100%;
   }
 
   .profile-header {
-    padding: 2rem 1.5rem;
-    gap: 1.25rem;
+    padding: 1.5rem 1rem;
+    gap: 1rem;
+    margin-bottom: 2rem;
   }
 
   .profile-avatar {
@@ -753,24 +788,36 @@ ion-button.cancel-button:hover::part(native) {
   .profile-name {
     font-size: 1.7rem;
     margin-bottom: 0.5rem;
+    text-align: center;
   }
 
   .profile-email {
     font-size: 1rem;
     margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .profile-badges {
+    justify-content: center;
+  }
+
+  .card-title {
+    font-size: 1.2rem;
+    justify-content: center;
   }
 
   .info-row {
     flex-direction: column;
     align-items: flex-start;
-    padding: 0.75rem 1rem;
+    padding: 1rem;
     text-align: left;
     min-height: auto;
-    gap: 0.5rem;
+    gap: 0.75rem;
   }
 
   .info-label {
     margin-bottom: 0;
+    width: 100%;
   }
 
   .info-value {
@@ -779,19 +826,38 @@ ion-button.cancel-button:hover::part(native) {
     opacity: 0.9;
     font-weight: 500;
     flex: none;
+    width: calc(100% - 2rem);
+    word-break: break-word;
   }
 
   .edit-fields {
     gap: 1rem;
   }
 
-  .action-buttons {
-    margin: 1rem 0 1rem 0;
-    padding-bottom: 1rem;
+  .field-input {
+    --padding-start: 1rem;
+    --padding-end: 1rem;
   }
 
-  .action-buttons ion-col {
-    margin-bottom: 1rem;
+  .action-buttons {
+    margin: 1.5rem 0;
+    padding-bottom: 1rem;
+    gap: 1rem;
+    flex-direction: column;
+  }
+
+  ion-button.primary-button,
+  ion-button.secondary-button,
+  ion-button.success-button {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  ion-button.primary-button::part(native),
+  ion-button.secondary-button::part(native),
+  ion-button.success-button::part(native) {
+    min-width: 100%;
+    width: 100%;
   }
 
   .avatar-preview-overlay {
@@ -815,13 +881,16 @@ ion-button.cancel-button:hover::part(native) {
   }
 }
 
+/* Móvil grande (480px y abajo) */
 @media (max-width: 480px) {
   .profile-container {
     padding: 0.75rem 0.75rem 1rem 0.75rem;
   }
 
   .profile-header {
-    padding: 1.5rem 1rem;
+    padding: 1.25rem 0.75rem;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
   }
 
   .profile-avatar {
@@ -832,45 +901,79 @@ ion-button.cancel-button:hover::part(native) {
   .profile-name {
     font-size: 1.4rem;
     line-height: 1.3;
+    text-align: center;
   }
 
   .profile-email {
     font-size: 0.9rem;
+    text-align: center;
   }
 
-  .card-title {
-    font-size: 1.1rem;
-  }
-
-  .info-row {
-    padding: 0.4rem 0.75rem;
-    min-height: 28px;
-  }
-
-  .info-label {
-    font-size: 0.9rem;
-  }
-
-  .info-value {
-    font-size: 0.9rem;
-    padding-left: 1.5rem;
-  }
-
-  .field-input {
-    --padding-start: 1rem;
-    --padding-end: 1rem;
-    --padding-top: 0.875rem;
-    --padding-bottom: 0.875rem;
+  .profile-badges {
+    justify-content: center;
+    gap: 0.25rem;
   }
 
   .user-role-badge {
-    font-size: 0.75rem;
-    padding: 0.3rem 0.8rem;
+    font-size: 0.7rem;
+    padding: 0.25rem 0.75rem;
+  }
+
+  .card-title {
+    font-size: 1rem;
+    justify-content: center;
+  }
+
+  .info-row {
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+
+  .info-label {
+    font-size: 0.85rem;
+  }
+
+  .info-label ion-icon {
+    font-size: 1rem;
+  }
+
+  .info-value {
+    font-size: 0.85rem;
+    margin-left: 1.5rem;
+    width: calc(100% - 1.5rem);
+  }
+
+  .field-label {
+    font-size: 0.85rem;
+  }
+
+  .field-label ion-icon {
+    font-size: 1rem;
+  }
+
+  .field-input {
+    --padding-start: 0.875rem;
+    --padding-end: 0.875rem;
+    --padding-top: 0.75rem;
+    --padding-bottom: 0.75rem;
+    font-size: 0.9rem;
   }
 
   .action-buttons {
     margin: 1rem 0 0.5rem 0;
     padding-bottom: 0.5rem;
+    gap: 0.75rem;
+  }
+
+  ion-button.primary-button::part(native),
+  ion-button.secondary-button::part(native),
+  ion-button.success-button::part(native) {
+    padding: 0.875rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .avatar-edit-hint {
+    font-size: 0.75rem;
   }
 
   .avatar-preview-overlay {
@@ -891,6 +994,94 @@ ion-button.cancel-button:hover::part(native) {
 
   .preview-close-button ion-icon {
     font-size: 1.125rem;
+  }
+}
+
+/* Móvil pequeño (360px y abajo) */
+@media (max-width: 360px) {
+  .profile-container {
+    padding: 0.5rem 0.5rem 0.75rem 0.5rem;
+  }
+
+  .profile-header {
+    padding: 1rem 0.5rem;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+  }
+
+  .profile-name {
+    font-size: 1.2rem;
+    line-height: 1.2;
+  }
+
+  .profile-email {
+    font-size: 0.8rem;
+  }
+
+  .user-role-badge {
+    font-size: 0.65rem;
+    padding: 0.2rem 0.6rem;
+  }
+
+  .card-title {
+    font-size: 0.95rem;
+  }
+
+  .info-row {
+    padding: 0.6rem;
+    gap: 0.4rem;
+  }
+
+  .info-label {
+    font-size: 0.8rem;
+  }
+
+  .info-value {
+    font-size: 0.8rem;
+    margin-left: 1.25rem;
+    width: calc(100% - 1.25rem);
+  }
+
+  .field-label {
+    font-size: 0.8rem;
+  }
+
+  .field-input {
+    --padding-start: 0.75rem;
+    --padding-end: 0.75rem;
+    --padding-top: 0.625rem;
+    --padding-bottom: 0.625rem;
+    font-size: 0.85rem;
+  }
+
+  ion-button.primary-button::part(native),
+  ion-button.secondary-button::part(native),
+  ion-button.success-button::part(native) {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.85rem;
+  }
+
+  .avatar-edit-hint {
+    font-size: 0.7rem;
+  }
+
+  .preview-image-large {
+    max-width: 90vw;
+    max-height: 45vh;
+  }
+
+  .preview-close-button {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .preview-close-button ion-icon {
+    font-size: 1rem;
   }
 }
 
@@ -924,8 +1115,9 @@ ion-button.cancel-button:hover::part(native) {
 }
 
 .ion-palette-dark .field-input:focus-within {
-  border-color: var(--color-secundario);
+  border-color: #059669; /* Verde en modo oscuro */
   background-color: var(--fondo-input);
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.3);
 }
 
 .ion-palette-dark .avatar-preview-overlay {

@@ -2,7 +2,7 @@
 
 .pagos-container {
   padding: var(--margenPaginaDesktop, 32px 40px); /* CORREGIDO: usar variable de márgenes */
-  background-color: var(--ion-background-color);
+  background-color: var(--fondo-aplicacion);
   min-height: calc(100vh - 64px);
   display: flex;
   flex-direction: column;
@@ -33,7 +33,7 @@
 .pagos-title {
   font-size: 2.2rem; /* CORREGIDO: mismo tamaño que otras páginas */
   font-weight: 700;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   position: relative;
   display: inline-block;
   margin: 0 0 0.5rem 0; /* CORREGIDO: mismo margen que otras páginas */
@@ -44,9 +44,9 @@
   position: absolute;
   bottom: -8px;
   left: 0;
-  width: 60px;
+  width: 120px;
   height: 4px;
-  background: linear-gradient(90deg, var(--ion-color-primary), #a160fb);
+  background: var(--color-primario);
   border-radius: 2px;
 }
 
@@ -59,7 +59,7 @@
 
 /* Botón de retroceso */
 .back-button {
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   font-size: 28px;
   cursor: pointer;
   transition: opacity 0.2s ease;
@@ -81,18 +81,18 @@
 
 /* Resumen de la reserva */
 .reserva-summary {
-  background: var(--color-panel);
+  background: var(--fondo-card);
   border-radius: 16px;
-  box-shadow: var(--card-shadow);
+  box-shadow: var(--sombra-card);
   padding: 28px;
-  border: 1px solid var(--ion-border-color);
+  border: 1px solid var(--borde-principal);
   height: fit-content;
 }
 
 .summary-title {
   font-size: 1.3rem;
   font-weight: 600;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   margin-bottom: 24px;
   display: flex;
   align-items: center;
@@ -110,7 +110,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 0;
-  border-bottom: 1px solid var(--ion-border-color);
+  border-bottom: 1px solid var(--borde-principal);
 }
 
 .summary-row:nth-last-child(2) {
@@ -123,11 +123,11 @@
   font-size: 1.2rem;
   padding-top: 20px;
   margin-top: 8px;
-  border-top: 2px solid var(--ion-border-color);
+  border-top: 2px solid var(--borde-principal);
 }
 
 .summary-label {
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   opacity: 0.8;
   font-size: 1rem;
   display: flex;
@@ -136,13 +136,13 @@
 }
 
 .summary-value {
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   font-weight: 500;
   font-size: 1rem;
 }
 
 .summary-total {
-  color: var(--ion-color-primary);
+  color: var(--color-primario);
   font-size: 1.8rem;
   font-weight: 700;
 }
@@ -151,15 +151,15 @@
 .summary-info {
   margin-top: 24px;
   padding: 20px;
-  background: var(--ion-background-color);
+  background: var(--fondo-aplicacion);
   border-radius: 12px;
-  border: 1px solid var(--ion-border-color);
+  border: 1px solid var(--borde-principal);
 }
 
 .summary-info-title {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   margin-bottom: 12px;
   display: flex;
   align-items: center;
@@ -168,7 +168,7 @@
 
 .summary-info-text {
   font-size: 0.9rem;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   opacity: 0.8;
   line-height: 1.5;
   margin: 0;
@@ -176,18 +176,18 @@
 
 /* Formulario de pago */
 .payment-form {
-  background: var(--color-panel);
+  background: var(--fondo-card);
   border-radius: 16px;
-  box-shadow: var(--card-shadow);
+  box-shadow: var(--sombra-card);
   padding: 28px;
-  border: 1px solid var(--ion-border-color);
+  border: 1px solid var(--borde-principal);
   height: fit-content;
 }
 
 .payment-form-title {
   font-size: 1.3rem;
   font-weight: 600;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   margin-bottom: 24px;
   display: flex;
   align-items: center;
@@ -203,7 +203,7 @@
   margin-bottom: 10px;
   font-size: 1rem;
   font-weight: 500;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   letter-spacing: 0.3px;
 }
 
@@ -211,9 +211,9 @@
   width: 100%;
   padding: 16px 18px;
   border-radius: 10px;
-  background-color: var(--colorFondoCampo, #ffffff); /* CORREGIDO: usar variable con fallback */
-  border: 1px solid var(--colorBordeCampo, rgba(0, 0, 0, 0.1)); /* CORREGIDO: usar variable con fallback */
-  color: var(--ion-text-color);
+  background-color: var(--fondo-input);
+  border: 1px solid var(--borde-input);
+  color: var(--texto-principal);
   font-size: 1rem;
   transition: border 0.2s ease, box-shadow 0.2s ease;
   box-sizing: border-box;
@@ -222,13 +222,10 @@
 
 .form-input:focus {
   outline: none;
-  border-color: var(--colorBordeCampoFocus, #6129f0); /* CORREGIDO: usar variable con fallback */
-  box-shadow: 0 0 0 3px rgba(97, 41, 240, 0.15);
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 3px var(--sombra-color-primario);
 }
 
-.ion-palette-dark .form-input:focus {
-  box-shadow: 0 0 0 3px rgba(0, 255, 102, 0.15);
-}
 
 /* Grid para campos de tarjeta */
 .card-details-grid {
@@ -248,9 +245,9 @@
   width: 100%;
   padding: 16px 18px;
   border-radius: 10px;
-  background-color: var(--colorFondoCampo, #ffffff) !important; /* CORREGIDO: usar variable con fallback */
-  border: 1px solid var(--colorBordeCampo, rgba(0, 0, 0, 0.1)) !important; /* CORREGIDO: usar variable con fallback */
-  color: var(--ion-text-color) !important;
+  background-color: var(--fondo-input) !important;
+  border: 1px solid var(--borde-input) !important;
+  color: var(--texto-principal) !important;
   font-size: 1rem;
   transition: border 0.2s ease, box-shadow 0.2s ease;
   box-sizing: border-box;
@@ -259,29 +256,25 @@
 
 .StripeElement:focus, .StripeElement--focus {
   outline: none !important;
-  border-color: var(--colorBordeCampoFocus, #6129f0) !important; /* CORREGIDO: usar variable con fallback */
-  box-shadow: 0 0 0 3px rgba(97, 41, 240, 0.15) !important;
+  border-color: var(--color-primario) !important;
+  box-shadow: 0 0 0 3px var(--sombra-color-primario) !important;
 }
 
-.ion-palette-dark .StripeElement:focus, 
-.ion-palette-dark .StripeElement--focus {
-  box-shadow: 0 0 0 3px rgba(0, 255, 102, 0.15) !important;
-}
 
 .StripeElement--invalid {
   border-color: #ff4d4d !important;
 }
 
 .StripeElement--complete {
-  border-color: var(--colorBordeCampoFocus, #6129f0) !important; /* CORREGIDO: usar variable con fallback */
+  border-color: var(--color-primario) !important;
 }
 
 /* Botón de pago */
 .payment-btn {
   width: 100%;
   padding: 18px 28px;
-  background: var(--ion-color-primary);
-  color: var(--ion-color-primary-contrast);
+  background: var(--color-primario);
+  color: var(--color-primario-contraste);
   border: none;
   border-radius: 12px;
   font-size: 1.1rem;
@@ -294,20 +287,20 @@
   gap: 12px;
   letter-spacing: 0.5px;
   margin-top: 24px;
-  box-shadow: 0 4px 15px rgba(97, 41, 240, 0.25);
+  box-shadow: var(--sombra-boton-primario);
 }
 
 .payment-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(97, 41, 240, 0.35);
+  box-shadow: var(--sombra-boton-primario-hover);
 }
 
 .ion-palette-dark .payment-btn {
-  box-shadow: 0 4px 15px rgba(0, 255, 102, 0.25);
+  box-shadow: var(--sombra-boton-primario);
 }
 
 .ion-palette-dark .payment-btn:hover:not(:disabled) {
-  box-shadow: 0 6px 20px rgba(0, 255, 102, 0.35);
+  box-shadow: var(--sombra-boton-primario-hover);
 }
 
 .payment-btn:disabled {
@@ -329,16 +322,16 @@
 /* Información de seguridad */
 .security-info {
   grid-column: 1 / -1; /* Ocupa todo el ancho en desktop */
-  background: var(--color-panel);
+  background: var(--fondo-card);
   border-radius: 12px;
   padding: 20px;
-  border: 1px solid var(--ion-border-color);
+  border: 1px solid var(--borde-principal);
   margin-top: 16px;
 }
 
 .security-text {
   font-size: 0.9rem;
-  color: var(--ion-text-color);
+  color: var(--texto-principal);
   opacity: 0.8;
   text-align: center;
   line-height: 1.5;
@@ -346,7 +339,7 @@
 }
 
 .security-icon {
-  color: var(--ion-color-primary);
+  color: var(--color-primario);
   margin-right: 8px;
   font-size: 1.1rem;
 }

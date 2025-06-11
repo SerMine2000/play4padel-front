@@ -198,8 +198,19 @@ body::-webkit-scrollbar, html::-webkit-scrollbar {
   font-size: 1.2rem;
   font-weight: 600;
   color: var(--texto-principal);
-  border-bottom: 2px solid var(--color-primario);
-  padding-bottom: 8px;
+  position: relative;
+  padding-bottom: 16px;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 80px;
+  height: 3px;
+  background: var(--color-primario);
+  border-radius: 2px;
 }
 
 .section-title ion-icon {
@@ -246,7 +257,7 @@ body::-webkit-scrollbar, html::-webkit-scrollbar {
 .field-input:focus {
   --border-color: var(--color-primario) !important;
   border-color: var(--color-primario) !important;
-  box-shadow: 0 0 0 3px rgba(97, 41, 240, 0.15);
+  box-shadow: 0 0 0 3px var(--sombra-color-primario);
   transform: translateY(-1px);
 }
 
@@ -309,7 +320,7 @@ body::-webkit-scrollbar, html::-webkit-scrollbar {
   border-color: var(--color-primario);
   background: var(--hover-card);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(97, 41, 240, 0.15);
+  box-shadow: 0 4px 12px var(--sombra-color-primario);
 }
 
 .tipo-btn.active {
@@ -444,7 +455,7 @@ body::-webkit-scrollbar, html::-webkit-scrollbar {
 .url-input-field:focus {
   --border-color: var(--color-primario) !important;
   border-color: var(--color-primario) !important;
-  box-shadow: 0 0 0 3px rgba(97, 41, 240, 0.15);
+  box-shadow: 0 0 0 3px var(--sombra-color-primario);
 }
 
 .url-buttons {
@@ -556,12 +567,12 @@ body::-webkit-scrollbar, html::-webkit-scrollbar {
   --color: var(--color-primario-contraste) !important;
   background: var(--color-primario) !important;
   color: var(--color-primario-contraste) !important;
-  box-shadow: 0 4px 15px rgba(97, 41, 240, 0.3);
+  box-shadow: var(--sombra-boton-primario);
 }
 
 .save-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(97, 41, 240, 0.4);
+  box-shadow: var(--sombra-boton-primario-hover);
   --background: var(--color-secundario) !important;
 }
 
@@ -1252,24 +1263,24 @@ body::-webkit-scrollbar, html::-webkit-scrollbar {
 :root .manage-courts-fab ion-fab-button {
   --background: var(--color-primario);
   --color: var(--color-primario-contraste);
-  --box-shadow: 0 12px 30px rgba(97, 41, 240, 0.4);
+  --box-shadow: var(--sombra-boton-primario-hover);
 }
 
 :root .manage-courts-fab ion-fab-button:hover {
   transform: scale(1.1);
-  --box-shadow: 0 16px 40px rgba(97, 41, 240, 0.5);
+  --box-shadow: var(--sombra-boton-primario-hover);
 }
 
 /* Modo oscuro - verde */
 .ion-palette-dark .manage-courts-fab ion-fab-button {
   --background: var(--color-secundario);
   --color: var(--color-primario-contraste);
-  --box-shadow: 0 12px 30px rgba(5, 150, 105, 0.4);
+  --box-shadow: var(--sombra-boton-primario-hover);
 }
 
 .ion-palette-dark .manage-courts-fab ion-fab-button:hover {
   transform: scale(1.1);
-  --box-shadow: 0 16px 40px rgba(5, 150, 105, 0.5);
+  --box-shadow: var(--sombra-boton-primario-hover);
 }
 
 .manage-courts-fab ion-fab-button ion-icon {

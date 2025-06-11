@@ -2,7 +2,7 @@
 
 /* ===== CONTENEDOR PRINCIPAL ===== */
 .calendar-view {
-  background: linear-gradient(135deg, var(--fondo-aplicacion) 0%, var(--fondo-aplicacion) 100%);
+  background: var(--fondo-aplicacion);
   min-height: 100vh;
   box-sizing: border-box;
 }
@@ -28,7 +28,7 @@ ion-segment {
 
 ion-segment-button {
   --background: transparent;
-  --background-checked: var(--color-primario);
+  --background-checked: #6129f0;
   --color: var(--texto-secundario);
   --color-checked: var(--color-primario-contraste);
   --border-radius: 12px;
@@ -39,6 +39,10 @@ ion-segment-button {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ion-palette-dark ion-segment-button {
+  --background-checked: #059669;
 }
 
 ion-segment-button::part(native) {
@@ -53,7 +57,7 @@ ion-segment-button::part(native)::before {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+  background: rgba(255,255,255,0.1);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -75,7 +79,7 @@ ion-segment-button:hover::part(native)::before {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(135deg, var(--fondo-card) 0%, var(--fondo-card) 100%);
+  background: var(--fondo-card);
   border-radius: 20px;
   border: 1px solid var(--borde-principal);
   padding: 16px;
@@ -93,8 +97,12 @@ ion-segment-button:hover::part(native)::before {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(97, 41, 240, 0.05) 0%, transparent 50%);
+  background: rgba(97, 41, 240, 0.05);
   pointer-events: none;
+}
+
+.ion-palette-dark .navegacion-calendario::before {
+  background: rgba(5, 150, 105, 0.05);
 }
 
 .titulo-mes {
@@ -113,7 +121,7 @@ ion-segment-button:hover::part(native)::before {
 .navegacion-calendario ion-button {
   --background: rgba(97, 41, 240, 0.08);
   --background-hover: rgba(97, 41, 240, 0.15);
-  --color: var(--color-primario);
+  --color: #6129f0;
   --border-radius: 12px;
   width: 44px;
   height: 44px;
@@ -123,13 +131,19 @@ ion-segment-button:hover::part(native)::before {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.ion-palette-dark .navegacion-calendario ion-button {
+  --background: rgba(5, 150, 105, 0.08);
+  --background-hover: rgba(5, 150, 105, 0.15);
+  --color: #059669;
+}
+
 .navegacion-calendario ion-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(97, 41, 240, 0.25);
+  box-shadow: var(--sombra-boton-primario);
 }
 
 .boton-hoy {
-  --background: var(--color-secundario);
+  --background: #6129f0;
   --color: var(--color-primario-contraste);
   --border-radius: 12px;
   font-size: 13px;
@@ -146,14 +160,22 @@ ion-segment-button:hover::part(native)::before {
   border: none;
 }
 
+.ion-palette-dark .boton-hoy {
+  --background: #059669;
+}
+
 .boton-hoy:hover {
   transform: translateY(-2px);
+  --background: #7c3aed;
+}
+
+.ion-palette-dark .boton-hoy:hover {
   --background: #10b981;
 }
 
 /* ===== GRID DEL CALENDARIO - DISEÑO PREMIUM ===== */
 .grid-calendario {
-  background: linear-gradient(135deg, var(--fondo-card) 0%, var(--fondo-card) 100%);
+  background: var(--fondo-card);
   border-radius: 20px;
   border: 1px solid var(--borde-principal);
   padding: 16px;
@@ -171,8 +193,12 @@ ion-segment-button:hover::part(native)::before {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(5, 150, 105, 0.03) 0%, transparent 50%);
+  background: rgba(97, 41, 240, 0.03);
   pointer-events: none;
+}
+
+.ion-palette-dark .grid-calendario::before {
+  background: rgba(5, 150, 105, 0.03);
 }
 
 /* ===== CABECERA DE DÍAS DE LA SEMANA ===== */
@@ -186,14 +212,20 @@ ion-segment-button:hover::part(native)::before {
   text-align: center;
   font-size: 13px;
   font-weight: 700;
-  color: var(--color-primario);
+  color: #6129f0;
   padding: 12px 4px;
-  background: linear-gradient(135deg, rgba(97, 41, 240, 0.08) 0%, rgba(97, 41, 240, 0.04) 100%);
+  background: rgba(97, 41, 240, 0.08);
   border-radius: 10px;
   margin: 2px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   border: 1px solid rgba(97, 41, 240, 0.1);
+}
+
+.ion-palette-dark .dias-semana ion-col {
+  color: #059669;
+  background: rgba(5, 150, 105, 0.08);
+  border: 1px solid rgba(5, 150, 105, 0.1);
 }
 
 /* ===== DÍAS DEL CALENDARIO - DISEÑO MODERNO ===== */
@@ -202,7 +234,7 @@ ion-segment-button:hover::part(native)::before {
 }
 
 .dia {
-  background: linear-gradient(135deg, var(--fondo-aplicacion) 0%, var(--fondo-aplicacion) 100%);
+  background: var(--fondo-aplicacion);
   border-radius: 12px;
   padding: 4px;
   text-align: center;
@@ -227,16 +259,20 @@ ion-segment-button:hover::part(native)::before {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  background: rgba(255, 255, 255, 0.1);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
 
 .dia:hover {
-  background: linear-gradient(135deg, var(--hover-card) 0%, var(--hover-card) 100%);
+  background: var(--hover-card);
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   border-color: rgba(97, 41, 240, 0.3);
+}
+
+.ion-palette-dark .dia:hover {
+  border-color: rgba(5, 150, 105, 0.3);
 }
 
 .dia:hover::before {
@@ -256,7 +292,7 @@ ion-segment-button:hover::part(native)::before {
 
 .dia.otro-mes {
   opacity: 0.4;
-  background: linear-gradient(135deg, rgba(var(--texto-placeholder), 0.05) 0%, transparent 50%);
+  background: rgba(128, 128, 128, 0.05);
 }
 
 .dia.otro-mes .numero-dia {
@@ -265,10 +301,15 @@ ion-segment-button:hover::part(native)::before {
 
 /* ===== DÍA ACTUAL (HOY) ===== */
 .dia.hoy {
-  background: linear-gradient(135deg, var(--color-primario) 0%, #7c3aed 100%);
-  border-color: var(--color-primario);
-  box-shadow: 0 8px 25px rgba(97, 41, 240, 0.4);
+  background: #6129f0;
+  border-color: #6129f0;
+  box-shadow: var(--sombra-boton-primario-hover);
   animation: pulse-day 2s infinite;
+}
+
+.ion-palette-dark .dia.hoy {
+  background: #059669;
+  border-color: #059669;
 }
 
 .dia.hoy .numero-dia {
@@ -284,9 +325,14 @@ ion-segment-button:hover::part(native)::before {
 
 /* ===== DÍA SELECCIONADO ===== */
 .dia.seleccionado {
-  background: linear-gradient(135deg, var(--color-secundario) 0%, #10b981 100%);
-  border-color: var(--color-secundario);
-  box-shadow: 0 8px 25px rgba(5, 150, 105, 0.4);
+  background: #6129f0;
+  border-color: #6129f0;
+  box-shadow: var(--sombra-boton-primario-hover);
+}
+
+.ion-palette-dark .dia.seleccionado {
+  background: #059669;
+  border-color: #059669;
 }
 
 .dia.seleccionado .numero-dia {
@@ -300,7 +346,7 @@ ion-segment-button:hover::part(native)::before {
   position: absolute;
   bottom: 4px;
   right: 4px;
-  background: linear-gradient(135deg, var(--color-secundario) 0%, #10b981 100%);
+  background: #6129f0;
   color: var(--color-primario-contraste);
   border-radius: 50%;
   width: 16px;
@@ -310,10 +356,14 @@ ion-segment-button:hover::part(native)::before {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 10px rgba(5, 150, 105, 0.4);
+  box-shadow: var(--sombra-boton-primario-hover);
   border: 1px solid var(--fondo-card);
   z-index: 2;
   animation: bounce-in 0.5s ease;
+}
+
+.ion-palette-dark .indicador-reservas {
+  background: #059669;
 }
 
 @keyframes bounce-in {
@@ -323,14 +373,19 @@ ion-segment-button:hover::part(native)::before {
 }
 
 .dia.hoy .indicador-reservas {
-  background: linear-gradient(135deg, var(--color-primario-contraste) 0%, #f8fafc 100%);
-  color: var(--color-primario);
-  border-color: var(--color-primario);
+  background: var(--color-primario-contraste);
+  color: #6129f0;
+  border-color: #6129f0;
+}
+
+.ion-palette-dark .dia.hoy .indicador-reservas {
+  color: #059669;
+  border-color: #059669;
 }
 
 /* ===== PANEL DE RESERVAS - DISEÑO PREMIUM ===== */
 .panel-reservas {
-  background: linear-gradient(135deg, var(--fondo-card) 0%, var(--fondo-card) 100%);
+  background: var(--fondo-card);
   border-radius: 20px;
   border: 1px solid var(--borde-principal);
   padding: 20px;
@@ -349,8 +404,12 @@ ion-segment-button:hover::part(native)::before {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(97, 41, 240, 0.02) 0%, transparent 50%);
+  background: rgba(97, 41, 240, 0.02);
   pointer-events: none;
+}
+
+.ion-palette-dark .panel-reservas::before {
+  background: rgba(5, 150, 105, 0.02);
 }
 
 .fecha-seleccionada {
@@ -362,8 +421,12 @@ ion-segment-button:hover::part(native)::before {
   position: relative;
   z-index: 1;
   padding-bottom: 12px;
-  border-bottom: 2px solid var(--color-primario);
+  border-bottom: 2px solid #6129f0;
   letter-spacing: 0.3px;
+}
+
+.ion-palette-dark .fecha-seleccionada {
+  border-bottom: 2px solid #059669;
 }
 
 .lista-reservas-scroll {
@@ -460,16 +523,24 @@ ion-segment-button:hover::part(native)::before {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(97, 41, 240, 0.03) 0%, transparent 50%);
+  background: rgba(97, 41, 240, 0.03);
   opacity: 0;
   transition: opacity 0.3s ease;
+}
+
+.ion-palette-dark .reserva-card::before {
+  background: rgba(5, 150, 105, 0.03);
 }
 
 .reserva-card:hover {
   background: var(--hover-card);
   transform: translateY(-3px);
   box-shadow: var(--sombra-hover);
-  border-color: var(--color-primario);
+  border-color: #6129f0;
+}
+
+.ion-palette-dark .reserva-card:hover {
+  border-color: #059669;
 }
 
 .reserva-card:hover::before {
@@ -523,13 +594,19 @@ ion-segment-button:hover::part(native)::before {
 .reserva-horario ion-icon,
 .reserva-pista ion-icon,
 .reserva-precio ion-icon {
-  color: var(--color-primario);
+  color: #6129f0;
   opacity: 0.8;
   font-size: 16px;
 }
 
+.ion-palette-dark .reserva-horario ion-icon,
+.ion-palette-dark .reserva-pista ion-icon,
+.ion-palette-dark .reserva-precio ion-icon {
+  color: #059669;
+}
+
 .reserva-precio {
-  color: var(--color-primario);
+  color: #6129f0;
   font-weight: 700;
   background: var(--fondo-precio);
   padding: 6px 10px;
@@ -537,6 +614,10 @@ ion-segment-button:hover::part(native)::before {
   border: 1px solid var(--borde-precio);
   align-self: flex-start;
   margin-top: 4px;
+}
+
+.ion-palette-dark .reserva-precio {
+  color: #059669;
 }
 
 .reserva-card-footer {
@@ -548,11 +629,15 @@ ion-segment-button:hover::part(native)::before {
 
 .reserva-card-footer ion-button {
   --background: transparent;
-  --color: var(--color-primario);
+  --color: #6129f0;
   --border-radius: 8px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+.ion-palette-dark .reserva-card-footer ion-button {
+  --color: #059669;
 }
 
 /* ===== CHIPS DE ESTADO ===== */
@@ -565,24 +650,24 @@ ion-segment-button:hover::part(native)::before {
 }
 
 .estado-pendiente {
-  --background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%) !important;
+  --background: #fbbf24 !important;
 }
 
 .estado-confirmada {
-  --background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  --background: #10b981 !important;
 }
 
 .estado-cancelada {
-  --background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  --background: #ef4444 !important;
 }
 
 .estado-completada {
-  --background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+  --background: #3b82f6 !important;
 }
 
 /* ===== VISTA LISTA COMPLETA ===== */
 .vista-lista-completa {
-  background: linear-gradient(135deg, var(--fondo-card) 0%, var(--fondo-card) 100%);
+  background: var(--fondo-card);
   border-radius: 20px;
   border: 1px solid var(--borde-principal);
   padding: 20px;
@@ -616,8 +701,12 @@ ion-segment-button:hover::part(native)::before {
   top: 0;
   width: 4px;
   height: 100%;
-  background: linear-gradient(to bottom, var(--color-primario), var(--color-secundario));
+  background: #6129f0;
   border-radius: 2px;
+}
+
+.ion-palette-dark .dia-reservas-section::before {
+  background: #059669;
 }
 
 .dia-header {
@@ -662,7 +751,7 @@ ion-segment-button:hover::part(native)::before {
 
 /* ===== TARJETA MINI DE RESERVA ===== */
 .reserva-card-mini {
-  background: linear-gradient(135deg, var(--fondo-aplicacion) 0%, var(--fondo-aplicacion) 100%);
+  background: var(--fondo-aplicacion);
   border-radius: 12px;
   border: 1px solid var(--borde-principal);
   padding: 16px;
@@ -680,15 +769,23 @@ ion-segment-button:hover::part(native)::before {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(5, 150, 105, 0.03) 0%, transparent 50%);
+  background: rgba(97, 41, 240, 0.03);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
 
+.ion-palette-dark .reserva-card-mini::before {
+  background: rgba(5, 150, 105, 0.03);
+}
+
 .reserva-card-mini:hover {
-  background: linear-gradient(135deg, var(--hover-card) 0%, var(--hover-card) 100%);
+  background: var(--hover-card);
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border-color: rgba(97, 41, 240, 0.3);
+}
+
+.ion-palette-dark .reserva-card-mini:hover {
   border-color: rgba(5, 150, 105, 0.3);
 }
 
@@ -742,17 +839,27 @@ ion-segment-button:hover::part(native)::before {
 }
 
 .detail-row ion-icon {
-  color: var(--color-primario);
+  color: #6129f0;
   opacity: 0.8;
 }
 
+.ion-palette-dark .detail-row ion-icon {
+  color: #059669;
+}
+
 .detail-row.precio-row {
-  color: var(--color-primario);
+  color: #6129f0;
   font-weight: 700;
-  background: linear-gradient(135deg, rgba(97, 41, 240, 0.08) 0%, rgba(97, 41, 240, 0.04) 100%);
+  background: rgba(97, 41, 240, 0.08);
   padding: 6px 10px;
   border-radius: 6px;
   border: 1px solid rgba(97, 41, 240, 0.15);
+}
+
+.ion-palette-dark .detail-row.precio-row {
+  color: #059669;
+  background: rgba(5, 150, 105, 0.08);
+  border: 1px solid rgba(5, 150, 105, 0.15);
 }
 
 .precio-destacado {
@@ -775,21 +882,54 @@ ion-segment-button:hover::part(native)::before {
   opacity: 1;
 }
 
-/* ===== RESPONSIVE DESIGN ===== */
+/* ===== RESPONSIVE DESIGN MEJORADO ===== */
+
+/* ===== TABLET GRANDE (1024px) ===== */
 @media (max-width: 1024px) {
+  .calendar-container {
+    max-width: 700px;
+    padding: 18px;
+  }
+  
   .reservas-dia-grid {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   }
+  
+  .navegacion-calendario ion-button {
+    min-width: 250px;
+  }
 }
 
+/* ===== TABLET (768px) ===== */
 @media (max-width: 768px) {
   .calendar-container {
     padding: 16px;
     padding-bottom: 60px;
+    width: 100%;
+    min-width: 100%;
   }
   
   .contenido-calendario {
     gap: 20px;
+    flex-direction: column;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .botones {
+    width: 100%;
+    min-width: 100%;
+  }
+  
+  .info-row {
+    flex-direction: column;
+  }
+  
+  .titulo-mes,
+  .email {
+    text-align: center;
   }
   
   .navegacion-calendario {
@@ -853,10 +993,29 @@ ion-segment-button:hover::part(native)::before {
   }
 }
 
+/* ===== MÓVIL GRANDE (480px) ===== */
 @media (max-width: 480px) {
   .calendar-container {
     padding: 12px;
     padding-bottom: 50px;
+  }
+  
+  .avatar {
+    width: 90px;
+    height: 90px;
+  }
+  
+  .titulo {
+    font-size: 1.4rem;
+  }
+  
+  .padding {
+    padding: 0.75rem;
+  }
+  
+  .botones {
+    padding: 0.875rem 1.5rem;
+    font-size: 0.9rem;
   }
   
   .contenido-calendario {
@@ -973,6 +1132,155 @@ ion-segment-button:hover::part(native)::before {
   }
 }
 
+/* ===== MÓVIL PEQUEÑO (360px) ===== */
+@media (max-width: 360px) {
+  .calendar-container {
+    padding: 10px;
+    padding-bottom: 45px;
+  }
+  
+  .avatar {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .titulo {
+    font-size: 1.2rem;
+  }
+  
+  .texto {
+    font-size: 0.8rem;
+  }
+  
+  .padding {
+    padding: 0.5rem;
+  }
+  
+  .contenido-calendario {
+    gap: 14px;
+  }
+  
+  .navegacion-calendario {
+    padding: 8px;
+  }
+  
+  .titulo-mes {
+    font-size: 14px;
+  }
+  
+  .navegacion-calendario ion-button {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .boton-hoy {
+    height: 28px;
+    font-size: 10px;
+    padding: 0 12px;
+    min-width: 50px;
+  }
+  
+  .grid-calendario {
+    padding: 8px;
+  }
+  
+  .dia {
+    height: 34px;
+    padding: 2px;
+  }
+  
+  .numero-dia {
+    font-size: 12px;
+  }
+  
+  .dias-semana ion-col {
+    font-size: 10px;
+    padding: 6px 1px;
+  }
+  
+  .indicador-reservas {
+    width: 14px;
+    height: 14px;
+    font-size: 8px;
+    bottom: 2px;
+    right: 2px;
+  }
+  
+  .panel-reservas {
+    padding: 10px;
+    min-height: 280px;
+  }
+  
+  .fecha-seleccionada {
+    font-size: 14px;
+    margin-bottom: 14px;
+  }
+  
+  .reserva-card {
+    padding: 12px;
+  }
+  
+  .reserva-usuario-info h3 {
+    font-size: 14px;
+  }
+  
+  .reserva-horario,
+  .reserva-pista,
+  .reserva-precio {
+    font-size: 12px;
+  }
+
+  .reserva-precio {
+    padding: 4px 6px;
+  }
+  
+  .reserva-card-mini {
+    padding: 10px;
+  }
+  
+  .vista-lista-completa {
+    padding: 10px;
+  }
+  
+  .dia-header {
+    padding-left: 10px;
+  }
+  
+  .reservas-dia-grid {
+    padding-left: 10px;
+  }
+  
+  ion-segment-button {
+    min-height: 38px;
+    font-size: 12px;
+  }
+}
+
+/* ===== OPTIMIZACIONES MÓVILES ===== */
+.calendar-container,
+.contenido-calendario,
+.panel-reservas,
+.vista-lista-completa {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.botones,
+.inputs,
+.reserva-card,
+.reserva-card-mini,
+.dia,
+ion-segment-button {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.input {
+  font-size: max(1rem, 16px);
+}
+
 /* ===== MODAL PROFESIONAL DE DETALLE DE RESERVA ===== */
 .modal-detalle-reserva {
   --width: 95vw;
@@ -1029,11 +1337,15 @@ ion-segment-button:hover::part(native)::before {
 
 .modal-reserva-icon-compact {
   font-size: 1.3rem !important;
-  color: var(--color-secundario) !important;
+  color: #6129f0 !important;
   flex-shrink: 0 !important;
   width: 22px !important;
   height: 22px !important;
   margin-right: 4px !important;
+}
+
+.ion-palette-dark .modal-reserva-icon-compact {
+  color: #059669 !important;
 }
 
 .modal-reserva-buttons-compact {
@@ -1102,7 +1414,11 @@ ion-segment-button:hover::part(native)::before {
 }
 
 .modal-reserva-container::-webkit-scrollbar-thumb:hover {
-  background: var(--color-secundario);
+  background: #6129f0;
+}
+
+.ion-palette-dark .modal-reserva-container::-webkit-scrollbar-thumb:hover {
+  background: #059669;
 }
 
 /* ===== SECCIONES DE INFORMACIÓN ===== */

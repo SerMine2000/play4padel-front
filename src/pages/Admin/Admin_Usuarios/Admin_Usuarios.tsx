@@ -469,18 +469,18 @@ const AdminManageUsers: React.FC = () => {
                             <div className="user-info">
                               <h2>{userItem.nombre} {userItem.apellidos}</h2>
                               <div className="user-details">
-                                <div className="detail-row">
+                                <div className="detail-row detail-email">
                                   <IonIcon icon={mailOutline} />
                                   <span>{userItem.email}</span>
                                 </div>
                                 {userItem.telefono && (
-                                  <div className="detail-row">
+                                  <div className="detail-row detail-phone">
                                     <IonIcon icon={callOutline} />
                                     <span>{userItem.telefono}</span>
                                   </div>
                                 )}
                                 {userItem.id_club_socio && (
-                                  <div className="detail-row">
+                                  <div className="detail-row detail-business">
                                     <IonIcon icon={businessOutline} />
                                     <span>{getClubName(userItem.id_club_socio)}</span>
                                   </div>

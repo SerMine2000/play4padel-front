@@ -25,9 +25,9 @@
   bottom: -8px;
   left: 50%;
   transform: translateX(-50%);
-  width: 100%;
+  width: 120px;
   height: 4px;
-  background: var(--color-detalle-boton);
+  background: var(--color-primario);
   border-radius: 2px;
 }
 
