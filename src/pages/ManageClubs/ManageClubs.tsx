@@ -384,19 +384,24 @@ const ManageClubs: React.FC = () => {
         </div>
       )}
 
-      {/* Modal de Detalles */}
-      <IonModal isOpen={showDetailModal} onDidDismiss={() => setShowDetailModal(false)}>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Detalles de la Solicitud</IonTitle>
-            <IonButtons slot="end">
-              <IonButton onClick={() => setShowDetailModal(false)}>Cerrar</IonButton>
+      {/* Modal de Detalles - PATRÓN MANAGE-COURTS */}
+      <IonModal className="modal-profesional" isOpen={showDetailModal} onDidDismiss={() => setShowDetailModal(false)}>
+        <IonHeader className="modal-header-compact">
+          <IonToolbar className="modal-toolbar-compact">
+            <IonTitle className="modal-title-compact">
+              <IonIcon icon={eyeOutline} className="modal-icon-compact" />
+              Detalles de la Solicitud
+            </IonTitle>
+            <IonButtons slot="end" className="modal-buttons-compact">
+              <IonButton fill="clear" onClick={() => setShowDetailModal(false)} className="modal-close-btn-compact">
+                ✕
+              </IonButton>
             </IonButtons>
           </IonToolbar>
         </IonHeader>
-        <IonContent>
+        <IonContent className="modal-content">
           {selectedSolicitud && (
-            <div style={{ padding: '1rem' }}>
+            <div className="modal-form-container">
               <IonCard>
                 <IonCardHeader>
                   <IonCardTitle>{selectedSolicitud.nombre_club}</IonCardTitle>
@@ -564,18 +569,23 @@ const ManageClubs: React.FC = () => {
         ]}
       />
 
-      {/* Modal de Rechazo */}
-      <IonModal isOpen={showRejectionModal} onDidDismiss={() => setShowRejectionModal(false)}>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Rechazar Solicitud</IonTitle>
-            <IonButtons slot="end">
-              <IonButton onClick={() => setShowRejectionModal(false)}>Cancelar</IonButton>
+      {/* Modal de Rechazo - PATRÓN MANAGE-COURTS */}
+      <IonModal className="modal-profesional" isOpen={showRejectionModal} onDidDismiss={() => setShowRejectionModal(false)}>
+        <IonHeader className="modal-header-compact">
+          <IonToolbar className="modal-toolbar-compact">
+            <IonTitle className="modal-title-compact">
+              <IonIcon icon={closeCircleOutline} className="modal-icon-compact" />
+              Rechazar Solicitud
+            </IonTitle>
+            <IonButtons slot="end" className="modal-buttons-compact">
+              <IonButton fill="clear" onClick={() => setShowRejectionModal(false)} className="modal-close-btn-compact">
+                ✕
+              </IonButton>
             </IonButtons>
           </IonToolbar>
         </IonHeader>
-        <IonContent>
-          <div style={{ padding: '1rem' }}>
+        <IonContent className="modal-content">
+          <div className="modal-form-container">
             <IonCard>
               <IonCardHeader>
                 <IonCardTitle>Rechazar: {selectedSolicitud?.nombre_club}</IonCardTitle>
@@ -602,15 +612,25 @@ const ManageClubs: React.FC = () => {
                   />
                 </IonItem>
                 
-                <IonButton
-                  expand="full"
-                  color="danger"
-                  style={{ marginTop: '1rem' }}
-                  onClick={confirmRejection}
-                  disabled={!motivoRechazo.trim()}
-                >
-                  Rechazar Solicitud
-                </IonButton>
+                <div className="modal-actions">
+                  <IonButton 
+                    fill="clear" 
+                    color="medium" 
+                    onClick={() => setShowRejectionModal(false)}
+                    className="action-btn cancel-btn"
+                  >
+                    Cancelar
+                  </IonButton>
+                  <IonButton 
+                    color="danger" 
+                    onClick={confirmRejection}
+                    disabled={!motivoRechazo.trim()}
+                    className="action-btn save-btn"
+                  >
+                    <IonIcon icon={closeCircleOutline} slot="start" />
+                    Rechazar Solicitud
+                  </IonButton>
+                </div>
               </IonCardContent>
             </IonCard>
           </div>

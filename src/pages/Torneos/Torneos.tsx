@@ -22,6 +22,12 @@ import {
   IonFab,
   IonFabButton,
   IonAlert,
+  IonModal,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonContent
 } from '@ionic/react';
 import {
   addOutline,
@@ -31,12 +37,7 @@ import {
   eyeOutline,
   createOutline,
   trashOutline,
-  closeOutline,
-  peopleOutline,
-  informationCircleOutline,
-  checkmarkCircleOutline,
-  documentsOutline,
-  cashOutline
+  peopleOutline
 } from 'ionicons/icons';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -406,25 +407,24 @@ const Torneos: React.FC = () => {
         </IonFab>
       )}
 
-      {/* Modal personalizado para crear torneo */}
-      {isCreateModalOpen && (
-        <div className="torneos-modal-overlay" onClick={() => setIsCreateModalOpen(false)}>
-          <div className="torneos-modal-container" onClick={(e) => e.stopPropagation()}>
-            <div className="torneos-modal-header">
-              <h2>
-                <IonIcon icon={trophyOutline} className="torneos-modal-icon" />
-                Crear Nuevo Torneo
-              </h2>
-              <button 
-                className="torneos-modal-close"
-                onClick={() => setIsCreateModalOpen(false)}
-              >
-                ×
-              </button>
-            </div>
-            
-            <div className="torneos-modal-content">
-              <div className="torneos-form-container">
+      {/* Modal para crear torneo - PATRÓN MANAGE-COURTS */}
+      <IonModal className="modal-profesional" isOpen={isCreateModalOpen} onDidDismiss={() => setIsCreateModalOpen(false)}>
+        <IonHeader className="modal-header-compact">
+          <IonToolbar className="modal-toolbar-compact">
+            <IonTitle className="modal-title-compact">
+              <IonIcon icon={trophyOutline} className="modal-icon-compact" />
+              Crear Nuevo Torneo
+            </IonTitle>
+            <IonButtons slot="end" className="modal-buttons-compact">
+              <IonButton fill="clear" onClick={() => setIsCreateModalOpen(false)} className="modal-close-btn-compact">
+                ✕
+              </IonButton>
+            </IonButtons>
+          </IonToolbar>
+        </IonHeader>
+        
+        <IonContent className="modal-content">
+          <div className="modal-form-container">
             <IonItem>
               <IonLabel position="stacked">Nombre del Torneo *</IonLabel>
               <IonInput
@@ -534,43 +534,46 @@ const Torneos: React.FC = () => {
               </IonRow>
             </IonGrid>
 
-            <div className="torneos-form-actions">
-              <IonButton
-                fill="clear"
-                color="medium"
+            <div className="modal-actions">
+              <IonButton 
+                fill="clear" 
+                color="medium" 
                 onClick={() => setIsCreateModalOpen(false)}
+                className="action-btn cancel-btn"
               >
                 Cancelar
               </IonButton>
-              <IonButton
-                color="primary"
+              <IonButton 
+                color="primary" 
                 onClick={handleCreateTorneo}
+                className="action-btn save-btn"
               >
+                <IonIcon icon={trophyOutline} slot="start" />
                 Crear Torneo
               </IonButton>
             </div>
-              </div>
-            </div>
           </div>
-        </div>
-      )}
+        </IonContent>
+      </IonModal>
 
-      {/* Modal personalizado para editar torneo */}
-      {isEditModalOpen && (
-        <div className="torneos-modal-overlay" onClick={() => setIsEditModalOpen(false)}>
-          <div className="torneos-modal-container" onClick={(e) => e.stopPropagation()}>
-            <div className="torneos-modal-header">
-              <h2>Editar Torneo</h2>
-              <button 
-                className="torneos-modal-close"
-                onClick={() => setIsEditModalOpen(false)}
-              >
-                <IonIcon icon={closeOutline} />
-              </button>
-            </div>
-            
-            <div className="torneos-modal-content">
-              <div className="torneos-form-container">
+      {/* Modal para editar torneo - PATRÓN MANAGE-COURTS */}
+      <IonModal className="modal-profesional" isOpen={isEditModalOpen} onDidDismiss={() => setIsEditModalOpen(false)}>
+        <IonHeader className="modal-header-compact">
+          <IonToolbar className="modal-toolbar-compact">
+            <IonTitle className="modal-title-compact">
+              <IonIcon icon={createOutline} className="modal-icon-compact" />
+              Editar Torneo
+            </IonTitle>
+            <IonButtons slot="end" className="modal-buttons-compact">
+              <IonButton fill="clear" onClick={() => setIsEditModalOpen(false)} className="modal-close-btn-compact">
+                ✕
+              </IonButton>
+            </IonButtons>
+          </IonToolbar>
+        </IonHeader>
+        
+        <IonContent className="modal-content">
+          <div className="modal-form-container">
             <IonItem>
               <IonLabel position="stacked">Nombre del Torneo *</IonLabel>
               <IonInput
@@ -680,26 +683,27 @@ const Torneos: React.FC = () => {
               </IonRow>
             </IonGrid>
 
-            <div className="torneos-form-actions">
-              <IonButton
-                fill="clear"
-                color="medium"
+            <div className="modal-actions">
+              <IonButton 
+                fill="clear" 
+                color="medium" 
                 onClick={() => setIsEditModalOpen(false)}
+                className="action-btn cancel-btn"
               >
                 Cancelar
               </IonButton>
-              <IonButton
-                color="primary"
+              <IonButton 
+                color="primary" 
                 onClick={handleUpdateTorneo}
+                className="action-btn save-btn"
               >
+                <IonIcon icon={createOutline} slot="start" />
                 Actualizar Torneo
               </IonButton>
             </div>
-              </div>
-            </div>
           </div>
-        </div>
-      )}
+        </IonContent>
+      </IonModal>
 
       {/* Alert para confirmar eliminación */}
       <IonAlert

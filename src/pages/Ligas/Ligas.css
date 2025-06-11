@@ -488,94 +488,146 @@ ion-chip[color="danger"] {
   border-color: rgba(255, 107, 107, 0.2);
 }
 
-/* ===== MODAL PERSONALIZADO ===== */
-.ligas-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
-  z-index: 10000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  padding-top: 5rem;
+/* ===== MODAL PROFESIONAL DE LIGAS - PATRÓN MANAGE-COURTS ===== */
+.modal-profesional {
+  --width: 95vw;
+  --max-width: 900px;
+  --height: auto;
+  --max-height: 90vh;
+  --border-radius: 16px;
+  --box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  --backdrop-opacity: 0.6;
 }
 
-.ligas-modal-container {
-  background: var(--fondo-card);
-  border-radius: 16px;
-  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15), 0 10px 40px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 800px;
-  max-height: 85vh;
-  display: flex;
-  flex-direction: column;
+.modal-profesional::part(content) {
+  border-radius: 20px;
   overflow: hidden;
-  border: 1px solid var(--borde-principal);
-  margin: 1rem;
-}
-
-/* Header del modal */
-.ligas-modal-header {
-  background: var(--fondo-card);
-  border-bottom: 1px solid var(--borde-principal);
-  padding: 1.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-shrink: 0;
-}
-
-.ligas-modal-header h2 {
-  margin: 0;
-  font-weight: 700;
-  font-size: 1.5rem;
-  color: var(--texto-principal);
-}
-
-.ligas-modal-close {
-  background: transparent;
-  border: none;
-  border-radius: 8px;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--texto-secundario);
-  cursor: pointer;
-}
-
-.ligas-modal-close:hover {
-  background: var(--hover-card);
-  color: var(--texto-principal);
-}
-
-/* Contenido del modal */
-.ligas-modal-content {
-  background: var(--fondo-card);
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  max-height: calc(85vh - 120px);
-}
-
-.ligas-form-container {
-  padding: 1.5rem;
   background: var(--fondo-card);
 }
 
-/* ===== CAMPOS SIN BORDES INTERNOS ===== */
-.ligas-form-container ion-item {
-  --background: transparent !important;
-  --border-radius: 8px;
-  --color: var(--texto-principal);
+/* ===== CABECERA COMPACTA DEL MODAL ===== */
+.modal-header-compact {
+  background: var(--fondo-panel-navegacion) !important;
+  border-bottom: 1px solid var(--borde-principal) !important;
+  height: 60px !important;
+  min-height: 60px !important;
+}
+
+.modal-toolbar-compact {
+  --background: var(--fondo-panel-navegacion) !important;
+  --color: var(--texto-panel-navegacion) !important;
+  --padding-start: 20px !important;
+  --padding-end: 20px !important;
+  --padding-top: 8px !important;
+  --padding-bottom: 8px !important;
+  --min-height: 60px !important;
+  min-height: 60px !important;
+  height: 60px !important;
+  background: var(--fondo-panel-navegacion) !important;
+  color: var(--texto-panel-navegacion) !important;
+}
+
+.modal-title-compact {
+  font-size: 1.2rem !important;
+  font-weight: 600 !important;
+  color: var(--texto-panel-navegacion) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 1.3 !important;
+  height: 44px !important;
   --padding-start: 0 !important;
   --padding-end: 0 !important;
+}
+
+.modal-icon-compact {
+  font-size: 1.3rem !important;
+  color: var(--color-secundario) !important;
+  flex-shrink: 0 !important;
+  width: 22px !important;
+  height: 22px !important;
+  margin-right: 4px !important;
+}
+
+.modal-buttons-compact {
+  --padding-start: 0 !important;
+  --padding-end: 0 !important;
+  height: 44px !important;
+}
+
+.modal-close-btn-compact {
+  --color: var(--texto-panel-navegacion) !important;
+  --background: transparent !important;
+  font-size: 1.2rem !important;
+  font-weight: bold !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  transition: all 0.3s ease !important;
+  margin: 0 !important;
+  --padding-start: 0 !important;
+  --padding-end: 0 !important;
+  --padding-top: 0 !important;
+  --padding-bottom: 0 !important;
+}
+
+.modal-close-btn-compact:hover {
+  --background: rgba(255, 255, 255, 0.1) !important;
+  transform: scale(1.05) !important;
+}
+
+.modal-close-btn-compact:active {
+  transform: scale(0.95) !important;
+}
+
+/* Contenido del Modal */
+.modal-content {
+  --background: var(--fondo-card) !important;
+  --color: var(--texto-principal) !important;
+  background: var(--fondo-card) !important;
+  color: var(--texto-principal) !important;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+}
+
+.modal-form-container {
+  padding: 24px;
+  max-height: calc(90vh - 40px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primario) var(--fondo-input);
+  padding-bottom: 80px;
+}
+
+.modal-form-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-form-container::-webkit-scrollbar-track {
+  background: var(--fondo-input);
+  border-radius: 3px;
+}
+
+.modal-form-container::-webkit-scrollbar-thumb {
+  background: var(--color-primario);
+  border-radius: 3px;
+}
+
+.modal-form-container::-webkit-scrollbar-thumb:hover {
+  background: var(--color-secundario);
+}
+
+/* ===== CAMPOS MEJORADOS CON ESTILO PROFESIONAL ===== */
+.modal-form-container ion-item {
+  --background: var(--fondo-input) !important;
+  --border-radius: 12px;
+  --color: var(--texto-principal);
+  --padding-start: 16px !important;
+  --padding-end: 16px !important;
   --min-height: 56px;
   --border-width: 0 !important;
   --border-color: transparent !important;
@@ -584,87 +636,113 @@ ion-chip[color="danger"] {
   --highlight-color-valid: transparent !important;
   --highlight-color-invalid: transparent !important;
   margin-bottom: 1rem;
-  border: 1px solid var(--borde-input) !important;
+  border: 2px solid var(--borde-input) !important;
   background: var(--fondo-input) !important;
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  transition: none !important;
-  animation: none !important;
+  border-radius: 12px;
+  padding: 12px 16px;
+  transition: all 0.3s ease !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-form-container ion-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(97, 41, 240, 0.03) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
 /* ELIMINAR BORDES INTERNOS DE IONIC */
-.ligas-form-container ion-item::part(native) {
+.modal-form-container ion-item::part(native) {
   border: none !important;
   background: transparent !important;
   padding: 0 !important;
   margin: 0 !important;
 }
 
-.ligas-form-container ion-item .item-native {
+.modal-form-container ion-item .item-native {
   border: none !important;
   background: transparent !important;
   padding: 0 !important;
   margin: 0 !important;
 }
 
-/* SIN HOVER NI ESTADOS */
-.ligas-form-container ion-item:hover,
-.ligas-form-container ion-item:focus,
-.ligas-form-container ion-item:active {
-  background: var(--fondo-input) !important;
-  border: 1px solid var(--borde-input) !important;
-  transform: none !important;
-  box-shadow: none !important;
-  transition: none !important;
-  animation: none !important;
+/* ESTADOS MEJORADOS CON TRANSICIONES */
+.modal-form-container ion-item:hover {
+  background: var(--hover-card) !important;
+  border-color: var(--color-primario) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(97, 41, 240, 0.15) !important;
 }
 
-/* FOCUS LIMPIO */
-.ligas-form-container ion-item:focus-within {
-  border: 1px solid var(--color-primario) !important;
-  box-shadow: 0 0 0 3px rgba(97, 41, 240, 0.1);
-  transition: none !important;
+.modal-form-container ion-item:hover::before {
+  opacity: 1;
 }
 
-/* Labels sin animaciones */
-.ligas-form-container ion-label {
+/* FOCUS MEJORADO */
+.modal-form-container ion-item:focus-within {
+  border: 2px solid var(--color-primario) !important;
+  box-shadow: 0 0 0 3px rgba(97, 41, 240, 0.15);
+  background: var(--fondo-card) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Labels mejorados */
+.modal-form-container ion-label {
   font-weight: 600;
   color: var(--texto-principal);
   margin-bottom: 0.5rem;
-  transition: none !important;
-  animation: none !important;
+  font-size: 0.9rem;
+  position: relative;
+  z-index: 1;
 }
 
-/* INPUTS SIN BORDES */
-.ligas-form-container ion-input,
-.ligas-form-container ion-textarea,
-.ligas-form-container ion-select {
+/* INPUTS Y SELECTS MEJORADOS */
+.modal-form-container ion-input,
+.modal-form-container ion-textarea,
+.modal-form-container ion-select,
+.modal-form-container ion-datetime {
   --color: var(--texto-principal);
   --placeholder-color: var(--texto-placeholder);
   --background: transparent !important;
   --border-width: 0 !important;
   --border-color: transparent !important;
+  --inner-border-width: 0 !important;
   border: none !important;
   background: transparent !important;
-  transition: none !important;
-  animation: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  position: relative;
+  z-index: 1;
+  font-size: 1rem;
 }
 
-/* ELIMINAR BORDES DE PSEUDO-ELEMENTOS */
-.ligas-form-container ion-input::part(native),
-.ligas-form-container ion-textarea::part(native),
-.ligas-form-container ion-select::part(native) {
+/* ELIMINAR BORDES DE PSEUDO-ELEMENTOS - SOLO USAR EL DEL CONTENEDOR */
+.modal-form-container ion-input::part(native),
+.modal-form-container ion-textarea::part(native),
+.modal-form-container ion-select::part(native),
+.modal-form-container ion-select::part(container),
+.modal-form-container ion-select::part(text),
+.modal-form-container ion-select::part(icon),
+.modal-form-container ion-datetime::part(native) {
   border: none !important;
   background: transparent !important;
   box-shadow: none !important;
   outline: none !important;
   transition: none !important;
+  animation: none !important;
 }
 
 /* ===== SIN HOVER EN CAMPOS Y CALENDARIO - PATRÓN DE RESERVAS ===== */
-.ligas-form-container ion-input:hover,
-.ligas-form-container ion-textarea:hover,
-.ligas-form-container ion-select:hover {
+.modal-form-container ion-input:hover,
+.modal-form-container ion-textarea:hover,
+.modal-form-container ion-select:hover {
   background: transparent !important;
   border: none !important;
   transform: none !important;
@@ -674,10 +752,10 @@ ion-chip[color="danger"] {
 }
 
 /* ELIMINAR HOVER DEL CALENDARIO - IGUAL QUE EN RESERVAS */
-.ligas-modal-container ion-datetime:hover,
-.ligas-modal-container ion-datetime-button:hover,
-.ligas-form-container ion-datetime:hover,
-.ligas-form-container ion-datetime-button:hover {
+.modal-profesional ion-datetime:hover,
+.modal-profesional ion-datetime-button:hover,
+.modal-form-container ion-datetime:hover,
+.modal-form-container ion-datetime-button:hover {
   background: transparent !important;
   border: none !important;
   transform: none !important;
@@ -687,22 +765,22 @@ ion-chip[color="danger"] {
 }
 
 /* ELIMINAR COMPLETAMENTE CUALQUIER VERDE/HOVER EN CALENDARIO */
-.ligas-modal-container .calendar-day:hover,
-.ligas-form-container .calendar-day:hover {
+.modal-profesional .calendar-day:hover,
+.modal-form-container .calendar-day:hover {
   background-color: var(--ion-text-color-step-50) !important;
   border: none !important;
 }
 
-.ligas-modal-container .calendar-day:focus,
-.ligas-modal-container .calendar-day:active,
-.ligas-modal-container .calendar-day:focus-visible,
-.ligas-modal-container .calendar-day:active:not(.calendar-day-active),
-.ligas-modal-container .calendar-day:hover:active,
-.ligas-form-container .calendar-day:focus,
-.ligas-form-container .calendar-day:active,
-.ligas-form-container .calendar-day:focus-visible,
-.ligas-form-container .calendar-day:active:not(.calendar-day-active),
-.ligas-form-container .calendar-day:hover:active {
+.modal-profesional .calendar-day:focus,
+.modal-profesional .calendar-day:active,
+.modal-profesional .calendar-day:focus-visible,
+.modal-profesional .calendar-day:active:not(.calendar-day-active),
+.modal-profesional .calendar-day:hover:active,
+.modal-form-container .calendar-day:focus,
+.modal-form-container .calendar-day:active,
+.modal-form-container .calendar-day:focus-visible,
+.modal-form-container .calendar-day:active:not(.calendar-day-active),
+.modal-form-container .calendar-day:hover:active {
   background-color: var(--ion-text-color-step-100) !important;
   border: none !important;
   outline: none !important;
@@ -710,60 +788,81 @@ ion-chip[color="danger"] {
   color: var(--ion-text-color) !important;
 }
 
+/* ===== ACCIONES DEL MODAL ===== */
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--borde-principal);
+}
+
+.action-btn {
+  flex: 1;
+  height: 48px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  --border-radius: 12px;
+}
+
+.save-btn {
+  --background: var(--color-primario) !important;
+  --color: var(--color-primario-contraste) !important;
+  background: var(--color-primario) !important;
+  color: var(--color-primario-contraste) !important;
+  box-shadow: 0 4px 15px rgba(97, 41, 240, 0.3);
+}
+
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(97, 41, 240, 0.4);
+  --background: var(--color-secundario) !important;
+  filter: brightness(1.1);
+}
+
+.cancel-btn {
+  --background: transparent !important;
+  --color: var(--texto-secundario) !important;
+  background: transparent !important;
+  color: var(--texto-secundario) !important;
+  border: 2px solid var(--borde-principal);
+}
+
+.cancel-btn:hover {
+  --background: var(--hover-card) !important;
+  --color: var(--texto-principal) !important;
+  border-color: var(--color-primario);
+  transform: translateY(-1px);
+}
+
 /* Grid del formulario */
-.ligas-form-container ion-grid {
+.modal-form-container ion-grid {
   padding: 0;
   margin: 0;
 }
 
-.ligas-form-container ion-row {
+.modal-form-container ion-row {
   margin: 0;
 }
 
-.ligas-form-container ion-col {
+.modal-form-container ion-col {
   padding: 0 0.5rem;
 }
 
-.ligas-form-container ion-col:first-child {
+.modal-form-container ion-col:first-child {
   padding-left: 0;
 }
 
-.ligas-form-container ion-col:last-child {
+.modal-form-container ion-col:last-child {
   padding-right: 0;
-}
-
-/* Acciones del formulario */
-.ligas-form-actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-  align-items: center;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--borde-principal);
-}
-
-.ligas-form-actions ion-button {
-  --border-radius: 8px;
-  font-weight: 600;
-  height: 44px;
-  min-width: 120px;
-}
-
-.ligas-form-actions ion-button[fill="clear"] {
-  --color: var(--texto-secundario);
-  --background: transparent;
-}
-
-.ligas-form-actions ion-button[color="primary"] {
-  --background: var(--color-primario);
-  --color: var(--color-primario-contraste);
 }
 
 /* ELIMINAR TODAS LAS ANIMACIONES GLOBALMENTE */
 .ligas-container *,
-.ligas-modal-container *,
-.ligas-form-container * {
+.modal-profesional *,
+.modal-form-container * {
   transition: none !important;
   animation: none !important;
 }
@@ -877,40 +976,22 @@ ion-chip[color="danger"] {
   }
   
   /* Modal responsive */
-  .ligas-modal-overlay {
-    padding: 0.5rem;
-    padding-top: 3rem;
+  .modal-profesional {
+    --max-width: 95vw;
+    --max-height: 95vh;
   }
   
-  .ligas-modal-container {
-    max-height: 92vh;
-    margin: 0.5rem;
+  .modal-form-container {
+    padding: 16px;
+    padding-bottom: 80px;
   }
   
-  .ligas-modal-header {
-    padding: 1rem;
-  }
-  
-  .ligas-modal-header h2 {
-    font-size: 1.3rem;
-  }
-  
-  .ligas-form-container {
-    padding: 1rem;
-  }
-  
-  .ligas-form-container ion-col {
+  .modal-form-container ion-col {
     padding: 0 0.25rem;
   }
   
-  .ligas-form-actions {
-    flex-direction: column-reverse;
-    gap: 0.75rem;
-  }
-  
-  .ligas-form-actions ion-button {
-    width: 100%;
-    min-width: auto;
+  .modal-actions {
+    flex-direction: column;
   }
 }
 
@@ -956,25 +1037,41 @@ ion-chip[color="danger"] {
   }
   
   /* Modal en móviles pequeños */
-  .ligas-modal-overlay {
-    padding: 0.25rem;
-    padding-top: 2rem;
+  .modal-profesional {
+    --max-width: 100vw;
+    --max-height: 100vh;
+    --border-radius: 0;
   }
   
-  .ligas-modal-container {
-    margin: 0.25rem;
-    border-radius: 12px;
+  .modal-profesional::part(content) {
+    border-radius: 0;
   }
   
-  .ligas-modal-header {
-    padding: 0.75rem;
+  .modal-form-container {
+    padding: 12px;
+    max-height: calc(100vh - 50px);
+    padding-bottom: 80px;
   }
   
-  .ligas-modal-header h2 {
-    font-size: 1.2rem;
+  .action-btn {
+    height: 44px;
+    font-size: 0.9rem;
   }
-  
-  .ligas-form-container {
-    padding: 0.75rem;
-  }
+}
+
+/* ===== MODO OSCURO ESPECÍFICO ===== */
+.ion-palette-dark .modal-form-container ion-item {
+  background: var(--fondo-input) !important;
+  border-color: var(--borde-input);
+  color: var(--texto-principal) !important;
+}
+
+.ion-palette-dark .modal-form-container ion-item:hover {
+  background: var(--hover-card) !important;
+  border-color: var(--color-primario);
+}
+
+.ion-palette-dark .modal-form-container ion-item:focus-within {
+  background: var(--fondo-card) !important;
+  border-color: var(--color-primario);
 }

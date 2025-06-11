@@ -22,7 +22,13 @@ import {
   IonFab,
   IonFabButton,
   IonAlert,
-  IonToggle
+  IonToggle,
+  IonModal,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonContent
 } from '@ionic/react';
 import {
   addOutline,
@@ -476,22 +482,24 @@ const Ligas: React.FC = () => {
         </IonFab>
       )}
 
-      {/* Modal personalizado para crear liga */}
-      {isCreateModalOpen && (
-        <div className="ligas-modal-overlay" onClick={() => setIsCreateModalOpen(false)}>
-          <div className="ligas-modal-container" onClick={(e) => e.stopPropagation()}>
-            <div className="ligas-modal-header">
-              <h2>Crear Nueva Liga</h2>
-              <button 
-                className="ligas-modal-close"
-                onClick={() => setIsCreateModalOpen(false)}
-              >
-                <IonIcon icon={closeOutline} />
-              </button>
-            </div>
-            
-            <div className="ligas-modal-content">
-              <div className="ligas-form-container">
+      {/* Modal para crear liga - PATRÓN MANAGE-COURTS */}
+      <IonModal className="modal-profesional" isOpen={isCreateModalOpen} onDidDismiss={() => setIsCreateModalOpen(false)}>
+        <IonHeader className="modal-header-compact">
+          <IonToolbar className="modal-toolbar-compact">
+            <IonTitle className="modal-title-compact">
+              <IonIcon icon={ribbonOutline} className="modal-icon-compact" />
+              Crear Nueva Liga
+            </IonTitle>
+            <IonButtons slot="end" className="modal-buttons-compact">
+              <IonButton fill="clear" onClick={() => setIsCreateModalOpen(false)} className="modal-close-btn-compact">
+                ✕
+              </IonButton>
+            </IonButtons>
+          </IonToolbar>
+        </IonHeader>
+        
+        <IonContent className="modal-content">
+          <div className="modal-form-container">
                 <IonItem>
                   <IonLabel position="stacked">Nombre de la Liga *</IonLabel>
                   <IonInput
@@ -632,43 +640,46 @@ const Ligas: React.FC = () => {
                   </IonRow>
                 </IonGrid>
 
-                <div className="ligas-form-actions">
-                  <IonButton
-                    fill="clear"
-                    color="medium"
+                <div className="modal-actions">
+                  <IonButton 
+                    fill="clear" 
+                    color="medium" 
                     onClick={() => setIsCreateModalOpen(false)}
+                    className="action-btn cancel-btn"
                   >
                     Cancelar
                   </IonButton>
-                  <IonButton
-                    color="primary"
+                  <IonButton 
+                    color="primary" 
                     onClick={handleCreateLiga}
+                    className="action-btn save-btn"
                   >
+                    <IonIcon icon={ribbonOutline} slot="start" />
                     Crear Liga
                   </IonButton>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      )}
+            </IonContent>
+          </IonModal>
 
-      {/* Modal personalizado para editar liga */}
-      {isEditModalOpen && (
-        <div className="ligas-modal-overlay" onClick={() => setIsEditModalOpen(false)}>
-          <div className="ligas-modal-container" onClick={(e) => e.stopPropagation()}>
-            <div className="ligas-modal-header">
-              <h2>Editar Liga</h2>
-              <button 
-                className="ligas-modal-close"
-                onClick={() => setIsEditModalOpen(false)}
-              >
-                <IonIcon icon={closeOutline} />
-              </button>
-            </div>
-            
-            <div className="ligas-modal-content">
-              <div className="ligas-form-container">
+      {/* Modal para editar liga - PATRÓN MANAGE-COURTS */}
+      <IonModal className="modal-profesional" isOpen={isEditModalOpen} onDidDismiss={() => setIsEditModalOpen(false)}>
+        <IonHeader className="modal-header-compact">
+          <IonToolbar className="modal-toolbar-compact">
+            <IonTitle className="modal-title-compact">
+              <IonIcon icon={createOutline} className="modal-icon-compact" />
+              Editar Liga
+            </IonTitle>
+            <IonButtons slot="end" className="modal-buttons-compact">
+              <IonButton fill="clear" onClick={() => setIsEditModalOpen(false)} className="modal-close-btn-compact">
+                ✕
+              </IonButton>
+            </IonButtons>
+          </IonToolbar>
+        </IonHeader>
+        
+        <IonContent className="modal-content">
+          <div className="modal-form-container">
                 <IonItem>
                   <IonLabel position="stacked">Nombre de la Liga *</IonLabel>
                   <IonInput
@@ -827,26 +838,27 @@ const Ligas: React.FC = () => {
                   </IonRow>
                 </IonGrid>
 
-                <div className="ligas-form-actions">
-                  <IonButton
-                    fill="clear"
-                    color="medium"
+                <div className="modal-actions">
+                  <IonButton 
+                    fill="clear" 
+                    color="medium" 
                     onClick={() => setIsEditModalOpen(false)}
+                    className="action-btn cancel-btn"
                   >
                     Cancelar
                   </IonButton>
-                  <IonButton
-                    color="primary"
+                  <IonButton 
+                    color="primary" 
                     onClick={handleUpdateLiga}
+                    className="action-btn save-btn"
                   >
+                    <IonIcon icon={createOutline} slot="start" />
                     Actualizar Liga
                   </IonButton>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      )}
+            </IonContent>
+          </IonModal>
 
       {/* Alert para confirmar eliminación */}
       <IonAlert

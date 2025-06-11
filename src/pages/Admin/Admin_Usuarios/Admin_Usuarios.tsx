@@ -550,17 +550,23 @@ const AdminManageUsers: React.FC = () => {
           </IonGrid>
         </div>
 
-        {/* Modal para crear usuario */}
-        <IonModal isOpen={showCreateModal} onDidDismiss={handleCloseModals}>
-          <IonHeader>
-            <IonToolbar>
-              <IonTitle>Crear Nuevo Usuario</IonTitle>
-              <IonButtons slot="end">
-                <IonButton onClick={handleCloseModals}>Cerrar</IonButton>
+        {/* Modal para crear usuario - PATRÓN MANAGE-COURTS */}
+        <IonModal className="modal-profesional" isOpen={showCreateModal} onDidDismiss={handleCloseModals}>
+          <IonHeader className="modal-header-compact">
+            <IonToolbar className="modal-toolbar-compact">
+              <IonTitle className="modal-title-compact">
+                <IonIcon icon={personOutline} className="modal-icon-compact" />
+                Crear Nuevo Usuario
+              </IonTitle>
+              <IonButtons slot="end" className="modal-buttons-compact">
+                <IonButton fill="clear" onClick={handleCloseModals} className="modal-close-btn-compact">
+                  ×
+                </IonButton>
               </IonButtons>
             </IonToolbar>
           </IonHeader>
-          <IonContent className="ion-padding">
+          <IonContent className="modal-content">
+            <div className="modal-form-container">
             <IonItem>
               <IonInput
                 label="Nombre *"
@@ -653,29 +659,45 @@ const AdminManageUsers: React.FC = () => {
               />
             </IonItem>
             
-            <div className="modal-actions" style={{ marginTop: '1rem' }}>
-              <IonButton expand="block" color="primary" onClick={handleSaveUser}>
-                <IonIcon icon={saveOutline} slot="start" />
-                Crear Usuario
-              </IonButton>
-              <IonButton expand="block" fill="clear" onClick={handleCloseModals}>
-                Cancelar
-              </IonButton>
+              <div className="modal-actions">
+                <IonButton 
+                  fill="clear" 
+                  color="medium" 
+                  onClick={handleCloseModals}
+                  className="action-btn cancel-btn"
+                >
+                  Cancelar
+                </IonButton>
+                <IonButton 
+                  color="primary" 
+                  onClick={handleSaveUser}
+                  className="action-btn save-btn"
+                >
+                  <IonIcon icon={saveOutline} slot="start" />
+                  Crear Usuario
+                </IonButton>
+              </div>
             </div>
           </IonContent>
         </IonModal>
 
-        {/* Modal para editar usuario */}
-        <IonModal isOpen={showEditModal} onDidDismiss={handleCloseModals}>
-          <IonHeader>
-            <IonToolbar>
-              <IonTitle>Editar Usuario</IonTitle>
-              <IonButtons slot="end">
-                <IonButton onClick={handleCloseModals}>Cerrar</IonButton>
+        {/* Modal para editar usuario - PATRÓN MANAGE-COURTS */}
+        <IonModal className="modal-profesional" isOpen={showEditModal} onDidDismiss={handleCloseModals}>
+          <IonHeader className="modal-header-compact">
+            <IonToolbar className="modal-toolbar-compact">
+              <IonTitle className="modal-title-compact">
+                <IonIcon icon={createOutline} className="modal-icon-compact" />
+                Editar Usuario
+              </IonTitle>
+              <IonButtons slot="end" className="modal-buttons-compact">
+                <IonButton fill="clear" onClick={handleCloseModals} className="modal-close-btn-compact">
+                  ×
+                </IonButton>
               </IonButtons>
             </IonToolbar>
           </IonHeader>
-          <IonContent className="ion-padding">
+          <IonContent className="modal-content">
+            <div className="modal-form-container">
             <IonItem>
               <IonInput
                 label="Nombre *"
@@ -776,14 +798,24 @@ const AdminManageUsers: React.FC = () => {
               </IonToggle>
             </IonItem>
             
-            <div className="modal-actions" style={{ marginTop: '1rem' }}>
-              <IonButton expand="block" color="primary" onClick={handleSaveUser}>
-                <IonIcon icon={saveOutline} slot="start" />
-                Actualizar Usuario
-              </IonButton>
-              <IonButton expand="block" fill="clear" onClick={handleCloseModals}>
-                Cancelar
-              </IonButton>
+              <div className="modal-actions">
+                <IonButton 
+                  fill="clear" 
+                  color="medium" 
+                  onClick={handleCloseModals}
+                  className="action-btn cancel-btn"
+                >
+                  Cancelar
+                </IonButton>
+                <IonButton 
+                  color="primary" 
+                  onClick={handleSaveUser}
+                  className="action-btn save-btn"
+                >
+                  <IonIcon icon={saveOutline} slot="start" />
+                  Actualizar Usuario
+                </IonButton>
+              </div>
             </div>
           </IonContent>
         </IonModal>

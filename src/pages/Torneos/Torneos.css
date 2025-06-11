@@ -18,14 +18,14 @@
   display: none;
 }
 
-/* Asegurar que body/html no tengan scroll visible */
-body, html {
+/* Asegurar que body/html no tengan scroll visible - SOLO EN CONTENEDOR ESPECÍFICO */
+.torneos-container body, .torneos-container html {
   overflow-x: hidden !important;
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
 }
 
-body::-webkit-scrollbar, html::-webkit-scrollbar {
+.torneos-container body::-webkit-scrollbar, .torneos-container html::-webkit-scrollbar {
   display: none !important;
 }
 
@@ -474,143 +474,137 @@ ion-chip[color="danger"] {
   border-color: rgba(255, 107, 107, 0.2);
 }
 
-/* ===== MODAL PROFESIONAL DE TORNEOS ===== */
-.torneos-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(10px);
-  z-index: 10000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  animation: fadeIn 0.3s ease-out;
+/* ===== MODAL PROFESIONAL DE TORNEOS - PATRÓN MANAGE-COURTS ===== */
+.modal-profesional {
+  --width: 95vw;
+  --max-width: 900px;
+  --height: auto;
+  --max-height: 90vh;
+  --border-radius: 16px;
+  --box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  --backdrop-opacity: 0.6;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.torneos-modal-container {
-  background: var(--fondo-card);
+.modal-profesional::part(content) {
   border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  width: 100%;
-  max-width: 900px;
-  max-height: 90vh;
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
-  border: 1px solid var(--borde-principal);
-  animation: modalSlideIn 0.3s ease-out;
-}
-
-@keyframes modalSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  background: var(--fondo-card);
 }
 
 /* ===== CABECERA COMPACTA DEL MODAL ===== */
-.torneos-modal-header {
+.modal-header-compact {
   background: var(--fondo-panel-navegacion) !important;
   border-bottom: 1px solid var(--borde-principal) !important;
   height: 60px !important;
   min-height: 60px !important;
-  padding: 0 20px !important;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-shrink: 0;
 }
 
-.torneos-modal-header h2 {
+.modal-toolbar-compact {
+  --background: var(--fondo-panel-navegacion) !important;
+  --color: var(--texto-panel-navegacion) !important;
+  --padding-start: 20px !important;
+  --padding-end: 20px !important;
+  --padding-top: 8px !important;
+  --padding-bottom: 8px !important;
+  --min-height: 60px !important;
+  min-height: 60px !important;
+  height: 60px !important;
+  background: var(--fondo-panel-navegacion) !important;
+  color: var(--texto-panel-navegacion) !important;
+}
+
+.modal-title-compact {
   font-size: 1.2rem !important;
   font-weight: 600 !important;
   color: var(--texto-panel-navegacion) !important;
   display: flex !important;
   align-items: center !important;
   gap: 12px !important;
+  padding: 0 !important;
   margin: 0 !important;
   line-height: 1.3 !important;
   height: 44px !important;
+  --padding-start: 0 !important;
+  --padding-end: 0 !important;
 }
 
-.torneos-modal-icon {
+.modal-icon-compact {
   font-size: 1.3rem !important;
   color: var(--color-secundario) !important;
   flex-shrink: 0 !important;
   width: 22px !important;
   height: 22px !important;
+  margin-right: 4px !important;
 }
 
-.torneos-modal-close {
-  background: transparent !important;
-  border: none !important;
-  color: var(--texto-panel-navegacion) !important;
+.modal-buttons-compact {
+  --padding-start: 0 !important;
+  --padding-end: 0 !important;
+  height: 44px !important;
+}
+
+.modal-close-btn-compact {
+  --color: var(--texto-panel-navegacion) !important;
+  --background: transparent !important;
   font-size: 1.2rem !important;
   font-weight: bold !important;
   width: 40px !important;
   height: 40px !important;
   border-radius: 50% !important;
   transition: all 0.3s ease !important;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin: 0 !important;
+  --padding-start: 0 !important;
+  --padding-end: 0 !important;
+  --padding-top: 0 !important;
+  --padding-bottom: 0 !important;
 }
 
-.torneos-modal-close:hover {
-  background: rgba(255, 255, 255, 0.1) !important;
+.modal-close-btn-compact:hover {
+  --background: rgba(255, 255, 255, 0.1) !important;
   transform: scale(1.05) !important;
 }
 
-.torneos-modal-close:active {
+.modal-close-btn-compact:active {
   transform: scale(0.95) !important;
 }
 
-/* ===== CONTENIDO DEL MODAL ===== */
-.torneos-modal-content {
+/* Contenido del Modal */
+.modal-content {
+  --background: var(--fondo-card) !important;
+  --color: var(--texto-principal) !important;
   background: var(--fondo-card) !important;
   color: var(--texto-principal) !important;
-  flex: 1;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+}
+
+.modal-form-container {
+  padding: 24px;
+  max-height: calc(90vh - 40px);
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--color-primario) var(--fondo-input);
+  padding-bottom: 80px;
 }
 
-.torneos-modal-content::-webkit-scrollbar {
+.modal-form-container::-webkit-scrollbar {
   width: 6px;
 }
 
-.torneos-modal-content::-webkit-scrollbar-track {
+.modal-form-container::-webkit-scrollbar-track {
   background: var(--fondo-input);
   border-radius: 3px;
 }
 
-.torneos-modal-content::-webkit-scrollbar-thumb {
+.modal-form-container::-webkit-scrollbar-thumb {
   background: var(--color-primario);
   border-radius: 3px;
 }
 
-.torneos-modal-content::-webkit-scrollbar-thumb:hover {
+.modal-form-container::-webkit-scrollbar-thumb:hover {
   background: var(--color-secundario);
-}
-
-.torneos-form-container {
-  padding: 24px;
-  background: var(--fondo-card);
-  max-height: calc(90vh - 60px);
 }
 
 /* ===== SECCIONES DEL FORMULARIO ===== */
@@ -714,7 +708,7 @@ ion-chip[color="danger"] {
 }
 
 /* ===== ACCIONES DEL MODAL ===== */
-.torneos-modal-actions {
+.modal-actions {
   display: flex;
   gap: 12px;
   margin-top: 32px;
@@ -722,7 +716,7 @@ ion-chip[color="danger"] {
   border-top: 1px solid var(--borde-principal);
 }
 
-.torneos-action-btn {
+.action-btn {
   flex: 1;
   height: 48px;
   border-radius: 12px;
@@ -732,7 +726,7 @@ ion-chip[color="danger"] {
   --border-radius: 12px;
 }
 
-.torneos-save-btn {
+.save-btn {
   --background: var(--color-primario) !important;
   --color: var(--color-primario-contraste) !important;
   background: var(--color-primario) !important;
@@ -740,13 +734,14 @@ ion-chip[color="danger"] {
   box-shadow: 0 4px 15px rgba(97, 41, 240, 0.3);
 }
 
-.torneos-save-btn:hover {
+.save-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(97, 41, 240, 0.4);
   --background: var(--color-secundario) !important;
+  filter: brightness(1.1);
 }
 
-.torneos-cancel-btn {
+.cancel-btn {
   --background: transparent !important;
   --color: var(--texto-secundario) !important;
   background: transparent !important;
@@ -754,7 +749,7 @@ ion-chip[color="danger"] {
   border: 2px solid var(--borde-principal);
 }
 
-.torneos-cancel-btn:hover {
+.cancel-btn:hover {
   --background: var(--hover-card) !important;
   --color: var(--texto-principal) !important;
   border-color: var(--color-primario);
@@ -778,7 +773,7 @@ ion-chip[color="danger"] {
 }
 
 /* ===== CAMPOS MEJORADOS CON ESTILO PROFESIONAL ===== */
-.torneos-form-container ion-item {
+.modal-form-container ion-item {
   --background: var(--fondo-input) !important;
   --border-radius: 12px;
   --color: var(--texto-principal);
@@ -801,7 +796,7 @@ ion-chip[color="danger"] {
   overflow: hidden;
 }
 
-.torneos-form-container ion-item::before {
+.modal-form-container ion-item::before {
   content: '';
   position: absolute;
   top: 0;
@@ -815,14 +810,14 @@ ion-chip[color="danger"] {
 }
 
 /* ELIMINAR BORDES INTERNOS DE IONIC */
-.torneos-form-container ion-item::part(native) {
+.modal-form-container ion-item::part(native) {
   border: none !important;
   background: transparent !important;
   padding: 0 !important;
   margin: 0 !important;
 }
 
-.torneos-form-container ion-item .item-native {
+.modal-form-container ion-item .item-native {
   border: none !important;
   background: transparent !important;
   padding: 0 !important;
@@ -830,19 +825,19 @@ ion-chip[color="danger"] {
 }
 
 /* ESTADOS MEJORADOS CON TRANSICIONES */
-.torneos-form-container ion-item:hover {
+.modal-form-container ion-item:hover {
   background: var(--hover-card) !important;
   border-color: var(--color-primario) !important;
   transform: translateY(-1px) !important;
   box-shadow: 0 4px 12px rgba(97, 41, 240, 0.15) !important;
 }
 
-.torneos-form-container ion-item:hover::before {
+.modal-form-container ion-item:hover::before {
   opacity: 1;
 }
 
 /* FOCUS MEJORADO */
-.torneos-form-container ion-item:focus-within {
+.modal-form-container ion-item:focus-within {
   border: 2px solid var(--color-primario) !important;
   box-shadow: 0 0 0 3px rgba(97, 41, 240, 0.15);
   background: var(--fondo-card) !important;
@@ -850,7 +845,7 @@ ion-chip[color="danger"] {
 }
 
 /* Labels mejorados */
-.torneos-form-container ion-label {
+.modal-form-container ion-label {
   font-weight: 600;
   color: var(--texto-principal);
   margin-bottom: 0.5rem;
@@ -860,10 +855,10 @@ ion-chip[color="danger"] {
 }
 
 /* INPUTS Y SELECTS MEJORADOS */
-.torneos-form-container ion-input,
-.torneos-form-container ion-textarea,
-.torneos-form-container ion-select,
-.torneos-form-container ion-datetime {
+.modal-form-container ion-input,
+.modal-form-container ion-textarea,
+.modal-form-container ion-select,
+.modal-form-container ion-datetime {
   --color: var(--texto-principal);
   --placeholder-color: var(--texto-placeholder);
   --background: transparent !important;
@@ -880,13 +875,13 @@ ion-chip[color="danger"] {
 }
 
 /* ELIMINAR BORDES DE PSEUDO-ELEMENTOS - SOLO USAR EL DEL CONTENEDOR */
-.torneos-form-container ion-input::part(native),
-.torneos-form-container ion-textarea::part(native),
-.torneos-form-container ion-select::part(native),
-.torneos-form-container ion-select::part(container),
-.torneos-form-container ion-select::part(text),
-.torneos-form-container ion-select::part(icon),
-.torneos-form-container ion-datetime::part(native) {
+.modal-form-container ion-input::part(native),
+.modal-form-container ion-textarea::part(native),
+.modal-form-container ion-select::part(native),
+.modal-form-container ion-select::part(container),
+.modal-form-container ion-select::part(text),
+.modal-form-container ion-select::part(icon),
+.modal-form-container ion-datetime::part(native) {
   border: none !important;
   background: transparent !important;
   box-shadow: none !important;
@@ -896,9 +891,9 @@ ion-chip[color="danger"] {
 }
 
 /* ===== SIN HOVER EN CAMPOS Y CALENDARIO - PATRÓN DE RESERVAS ===== */
-.torneos-form-container ion-input:hover,
-.torneos-form-container ion-textarea:hover,
-.torneos-form-container ion-select:hover {
+.modal-form-container ion-input:hover,
+.modal-form-container ion-textarea:hover,
+.modal-form-container ion-select:hover {
   background: transparent !important;
   border: none !important;
   transform: none !important;
@@ -908,10 +903,10 @@ ion-chip[color="danger"] {
 }
 
 /* ELIMINAR HOVER DEL CALENDARIO - IGUAL QUE EN RESERVAS */
-.torneos-modal-container ion-datetime:hover,
-.torneos-modal-container ion-datetime-button:hover,
-.torneos-form-container ion-datetime:hover,
-.torneos-form-container ion-datetime-button:hover {
+.modal-profesional ion-datetime:hover,
+.modal-profesional ion-datetime-button:hover,
+.modal-form-container ion-datetime:hover,
+.modal-form-container ion-datetime-button:hover {
   background: transparent !important;
   border: none !important;
   transform: none !important;
@@ -921,22 +916,22 @@ ion-chip[color="danger"] {
 }
 
 /* ELIMINAR COMPLETAMENTE CUALQUIER VERDE/HOVER EN CALENDARIO */
-.torneos-modal-container .calendar-day:hover,
-.torneos-form-container .calendar-day:hover {
+.modal-profesional .calendar-day:hover,
+.modal-form-container .calendar-day:hover {
   background-color: var(--ion-text-color-step-50) !important;
   border: none !important;
 }
 
-.torneos-modal-container .calendar-day:focus,
-.torneos-modal-container .calendar-day:active,
-.torneos-modal-container .calendar-day:focus-visible,
-.torneos-modal-container .calendar-day:active:not(.calendar-day-active),
-.torneos-modal-container .calendar-day:hover:active,
-.torneos-form-container .calendar-day:focus,
-.torneos-form-container .calendar-day:active,
-.torneos-form-container .calendar-day:focus-visible,
-.torneos-form-container .calendar-day:active:not(.calendar-day-active),
-.torneos-form-container .calendar-day:hover:active {
+.modal-profesional .calendar-day:focus,
+.modal-profesional .calendar-day:active,
+.modal-profesional .calendar-day:focus-visible,
+.modal-profesional .calendar-day:active:not(.calendar-day-active),
+.modal-profesional .calendar-day:hover:active,
+.modal-form-container .calendar-day:focus,
+.modal-form-container .calendar-day:active,
+.modal-form-container .calendar-day:focus-visible,
+.modal-form-container .calendar-day:active:not(.calendar-day-active),
+.modal-form-container .calendar-day:hover:active {
   background-color: var(--ion-text-color-step-100) !important;
   border: none !important;
   outline: none !important;
@@ -945,70 +940,45 @@ ion-chip[color="danger"] {
 }
 
 /* Grid del formulario */
-.torneos-form-container ion-grid {
+.modal-form-container ion-grid {
   padding: 0;
   margin: 0;
 }
 
-.torneos-form-container ion-row {
+.modal-form-container ion-row {
   margin: 0;
 }
 
-.torneos-form-container ion-col {
+.modal-form-container ion-col {
   padding: 0 0.5rem;
 }
 
-.torneos-form-container ion-col:first-child {
+.modal-form-container ion-col:first-child {
   padding-left: 0;
 }
 
-.torneos-form-container ion-col:last-child {
+.modal-form-container ion-col:last-child {
   padding-right: 0;
 }
 
-/* Acciones del formulario */
-.torneos-form-actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-  align-items: center;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--borde-principal);
-}
-
-.torneos-form-actions ion-button {
-  --border-radius: 8px;
-  font-weight: 600;
-  height: 44px;
-  min-width: 120px;
-}
-
-.torneos-form-actions ion-button[fill="clear"] {
-  --color: var(--texto-secundario);
-  --background: transparent;
-}
-
-.torneos-form-actions ion-button[color="primary"] {
-  --background: var(--color-primario);
-  --color: var(--color-primario-contraste);
-}
-
-/* ELIMINAR TODAS LAS ANIMACIONES GLOBALMENTE */
-.torneos-container *,
-.torneos-modal-container *,
-.torneos-form-container * {
-  transition: none !important;
-  animation: none !important;
-}
-
-/* Solo mantener animaciones esenciales de cards */
+/* Mantener animaciones esenciales de cards */
 .torneo-card {
   transition: all 0.2s ease;
 }
 
 .torneo-card:hover {
   transition: all 0.2s ease;
+}
+
+/* Solo eliminar animaciones problemáticas específicas */
+.modal-form-container ion-datetime:hover,
+.modal-form-container ion-datetime-button:hover {
+  background: transparent !important;
+  border: none !important;
+  transform: none !important;
+  box-shadow: none !important;
+  transition: none !important;
+  animation: none !important;
 }
 
 /* Responsive design mejorado */
@@ -1090,38 +1060,20 @@ ion-chip[color="danger"] {
   }
   
   /* Modal responsive */
-  .torneos-modal-overlay {
-    padding: 0.5rem;
-    padding-top: 3rem;
-  }
-  
-  .torneos-modal-container {
-    max-height: 92vh;
-    margin: 0.5rem;
-  }
-  
-  .torneos-modal-header {
+  .modal-form-container {
     padding: 1rem;
   }
   
-  .torneos-modal-header h2 {
-    font-size: 1.3rem;
-  }
-  
-  .torneos-form-container {
-    padding: 1rem;
-  }
-  
-  .torneos-form-container ion-col {
+  .modal-form-container ion-col {
     padding: 0 0.25rem;
   }
   
-  .torneos-form-actions {
+  .modal-actions {
     flex-direction: column-reverse;
     gap: 0.75rem;
   }
   
-  .torneos-form-actions ion-button {
+  .modal-actions .action-btn {
     width: 100%;
     min-width: auto;
   }
@@ -1169,109 +1121,64 @@ ion-chip[color="danger"] {
   }
   
   /* Modal en móviles pequeños */
-  .torneos-modal-overlay {
-    padding: 0.25rem;
-    padding-top: 2rem;
-  }
-  
-  .torneos-modal-container {
-    margin: 0.25rem;
-    border-radius: 12px;
-  }
-  
-  .torneos-modal-header {
-    padding: 0.75rem;
-  }
-  
-  .torneos-modal-header h2 {
-    font-size: 1.2rem;
-  }
-  
-  .torneos-form-container {
+  .modal-form-container {
     padding: 0.75rem;
   }
 }
 
 /* ===== RESPONSIVE DESIGN PARA MODAL ===== */
 @media (max-width: 768px) {
-  .torneos-modal-container {
-    max-width: 95vw;
-    max-height: 90vh;
+  .modal-profesional {
+    --max-width: 95vw;
+    --max-height: 95vh;
   }
   
-  .torneos-form-container {
+  .modal-form-container {
     padding: 16px;
-    max-height: calc(90vh - 60px);
+    padding-bottom: 80px;
   }
   
-  .torneos-form-layout {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-  
-  .torneos-form-section {
-    padding: 16px;
-    margin-bottom: 16px;
-  }
-  
-  .torneos-modal-actions {
+  .modal-actions {
     flex-direction: column;
-  }
-  
-  .torneos-section-title {
-    font-size: 1rem;
   }
 }
 
 @media (max-width: 480px) {
-  .torneos-modal-container {
-    max-width: 100vw;
-    max-height: 100vh;
+  .modal-profesional {
+    --max-width: 100vw;
+    --max-height: 100vh;
+    --border-radius: 0;
+  }
+  
+  .modal-profesional::part(content) {
     border-radius: 0;
   }
   
-  .torneos-modal-overlay {
-    padding: 0;
-  }
-  
-  .torneos-form-container {
+  .modal-form-container {
     padding: 12px;
-    max-height: calc(100vh - 60px);
+    max-height: calc(100vh - 50px);
+    padding-bottom: 80px;
   }
   
-  .torneos-form-section {
-    padding: 12px;
-    margin-bottom: 12px;
-  }
-  
-  .torneos-field-input {
-    padding: 10px 12px;
-    min-height: 44px;
-  }
-  
-  .torneos-action-btn {
+  .action-btn {
     height: 44px;
     font-size: 0.9rem;
   }
 }
 
 /* ===== MODO OSCURO ESPECÍFICO ===== */
-.ion-palette-dark .torneos-form-section {
-  background: var(--fondo-card);
-  border-color: var(--borde-principal);
-}
-
-.ion-palette-dark .torneos-form-container ion-item {
-  background: var(--fondo-input) \!important;
+.ion-palette-dark .modal-form-container ion-item {
+  background: var(--fondo-input) !important;
   border-color: var(--borde-input);
+  color: var(--texto-principal) !important;
 }
 
-.ion-palette-dark .torneos-form-container ion-item:hover {
-  background: var(--hover-card) \!important;
+.ion-palette-dark .modal-form-container ion-item:hover {
+  background: var(--hover-card) !important;
   border-color: var(--color-primario);
 }
 
-.ion-palette-dark .torneos-form-container ion-item:focus-within {
-  background: var(--fondo-card) \!important;
+.ion-palette-dark .modal-form-container ion-item:focus-within {
+  background: var(--fondo-card) !important;
   border-color: var(--color-primario);
 }

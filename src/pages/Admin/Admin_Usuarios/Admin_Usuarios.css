@@ -431,8 +431,113 @@ ion-item:hover ion-avatar {
   transition: all 0.3s ease;
 }
 
-/* ==================== MODALES - SIGUIENDO PATRÓN MANAGE-COURTS ==================== */
-/* Modal Header */
+/* ==================== MODALES - PATRÓN MANAGE-COURTS COMPLETO ==================== */
+.modal-profesional {
+  --width: 95vw;
+  --max-width: 900px;
+  --height: auto;
+  --max-height: 90vh;
+  --border-radius: 16px;
+  --box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  --backdrop-opacity: 0.6;
+}
+
+.modal-profesional::part(content) {
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--fondo-card);
+}
+
+/* ===== CABECERA COMPACTA DEL MODAL ===== */
+.modal-header-compact {
+  background: var(--fondo-panel-navegacion) !important;
+  border-bottom: 1px solid var(--borde-principal) !important;
+  height: 60px !important;
+  min-height: 60px !important;
+}
+
+.modal-toolbar-compact {
+  --background: var(--fondo-panel-navegacion) !important;
+  --color: var(--texto-panel-navegacion) !important;
+  --padding-start: 20px !important;
+  --padding-end: 20px !important;
+  --padding-top: 8px !important;
+  --padding-bottom: 8px !important;
+  --min-height: 60px !important;
+  min-height: 60px !important;
+  height: 60px !important;
+  background: var(--fondo-panel-navegacion) !important;
+  color: var(--texto-panel-navegacion) !important;
+}
+
+.modal-title-compact {
+  font-size: 1.2rem !important;
+  font-weight: 600 !important;
+  color: var(--texto-panel-navegacion) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 1.3 !important;
+  height: 44px !important;
+  --padding-start: 0 !important;
+  --padding-end: 0 !important;
+}
+
+.modal-icon-compact {
+  font-size: 1.3rem !important;
+  color: var(--color-secundario) !important;
+  flex-shrink: 0 !important;
+  width: 22px !important;
+  height: 22px !important;
+  margin-right: 4px !important;
+}
+
+.modal-buttons-compact {
+  --padding-start: 0 !important;
+  --padding-end: 0 !important;
+  height: 44px !important;
+}
+
+.modal-close-btn-compact {
+  --color: var(--texto-panel-navegacion) !important;
+  --background: transparent !important;
+  font-size: 1.2rem !important;
+  font-weight: bold !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  transition: all 0.3s ease !important;
+  margin: 0 !important;
+  --padding-start: 0 !important;
+  --padding-end: 0 !important;
+  --padding-top: 0 !important;
+  --padding-bottom: 0 !important;
+}
+
+.modal-close-btn-compact:hover {
+  --background: rgba(255, 255, 255, 0.1) !important;
+  transform: scale(1.05) !important;
+}
+
+.modal-close-btn-compact:active {
+  transform: scale(0.95) !important;
+}
+
+/* ===== CONTENIDO DEL MODAL ===== */
+.modal-content {
+  --background: var(--fondo-card) !important;
+  --color: var(--texto-principal) !important;
+  background: var(--fondo-card) !important;
+  color: var(--texto-principal) !important;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+}
+
+/* Modal Header - FALLBACK */
 ion-modal ion-header {
   background: var(--fondo-panel-navegacion) !important;
   border-bottom: 1px solid var(--borde-principal);
@@ -567,16 +672,55 @@ ion-modal ion-label {
   font-size: 0.9rem;
 }
 
-/* Modal Actions */
+/* ===== ACCIONES DEL MODAL ===== */
 .modal-actions {
   display: flex;
   gap: 12px;
-  margin-top: 32px;
-  padding: 24px 0 0 0;
+  margin-top: 24px;
+  padding-top: 20px;
   border-top: 1px solid var(--borde-principal);
-  justify-content: flex-end;
 }
 
+.action-btn {
+  flex: 1;
+  height: 48px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  --border-radius: 12px;
+}
+
+.save-btn {
+  --background: var(--color-detalle-boton) !important;
+  --color: var(--color-detalle-boton-contraste) !important;
+  background: var(--color-detalle-boton) !important;
+  color: var(--color-detalle-boton-contraste) !important;
+  box-shadow: var(--color-detalle-boton-sombra);
+}
+
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sombra-hover);
+  filter: brightness(1.1);
+}
+
+.cancel-btn {
+  --background: transparent !important;
+  --color: var(--texto-secundario) !important;
+  background: transparent !important;
+  color: var(--texto-secundario) !important;
+  border: 2px solid var(--borde-principal);
+}
+
+.cancel-btn:hover {
+  --background: var(--hover-card) !important;
+  --color: var(--texto-principal) !important;
+  border-color: var(--color-detalle-boton);
+  transform: translateY(-1px);
+}
+
+/* Modal Actions - FALLBACK para botones sin clases específicas */
 .modal-actions ion-button {
   --border-radius: 12px;
   height: 48px;
@@ -586,7 +730,7 @@ ion-modal ion-label {
   min-width: 120px;
 }
 
-/* Primary Button */
+/* Primary Button - FALLBACK */
 .modal-actions ion-button[color="primary"] {
   --background: var(--color-detalle-boton) !important;
   --color: var(--color-detalle-boton-contraste) !important;
@@ -601,7 +745,7 @@ ion-modal ion-label {
   filter: brightness(1.1);
 }
 
-/* Secondary Button */
+/* Secondary Button - FALLBACK */
 .modal-actions ion-button[fill="clear"] {
   --background: transparent !important;
   --color: var(--texto-secundario) !important;
@@ -634,7 +778,46 @@ ion-modal ion-buttons ion-button:hover {
   transform: scale(1.05);
 }
 
-/* ==================== RESPONSIVE DESIGN ==================== */
+/* ===== RESPONSIVE DESIGN PARA MODAL ===== */
+@media (max-width: 768px) {
+  .modal-profesional {
+    --max-width: 95vw;
+    --max-height: 90vh;
+  }
+  
+  .modal-form-container {
+    padding: 16px;
+    max-height: calc(90vh - 60px);
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-profesional {
+    --max-width: 100vw;
+    --max-height: 100vh;
+    --border-radius: 0;
+  }
+  
+  .modal-profesional::part(content) {
+    border-radius: 0;
+  }
+  
+  .modal-form-container {
+    padding: 12px;
+    max-height: calc(100vh - 60px);
+  }
+  
+  .action-btn {
+    height: 44px;
+    font-size: 0.9rem;
+  }
+}
+
+/* ==================== RESPONSIVE DESIGN GENERAL ==================== */
 @media (max-width: 768px) {
   .admin-users-container {
     padding: 16px;
