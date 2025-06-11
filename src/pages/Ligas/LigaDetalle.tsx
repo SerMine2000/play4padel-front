@@ -23,7 +23,12 @@ import {
   IonSegmentButton,
   IonAlert,
   IonBadge,
-  IonRange
+  IonRange,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonContent
 } from '@ionic/react';
 import {
   arrowBackOutline,
@@ -40,7 +45,9 @@ import {
   statsChartOutline,
   medalOutline,
   cashOutline,
-  createOutline
+  createOutline,
+  informationCircleOutline,
+  closeOutline
 } from 'ionicons/icons';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -142,23 +149,30 @@ const LigaDetalle: React.FC = () => {
 
   const loadUsuarios = async () => {
     try {
-      // Usar fetch directo como solución temporal hasta resolver el problema con ApiService
-      const response = await fetch('http://localhost:5000/users/basic');
-      const data = await response.json();
+      console.log('🔍 Cargando usuarios con roles para liga...');
+      // Usar el endpoint /users que incluye información de roles (requiere autenticación)
+      const response = await ApiService.get('/users');
       
-      if (data && Array.isArray(data)) {
-        setUsuarios(data);
+      if (response && Array.isArray(response)) {
+        setUsuarios(response);
+        console.log('✅ Usuarios cargados para liga:', response.length);
+        
+        // Log de los roles encontrados para debugging
+        const rolesEncontrados = response.map(u => u.rol?.nombre).filter(Boolean);
+        console.log('🎭 Roles encontrados en liga:', [...new Set(rolesEncontrados)]);
       }
     } catch (error) {
-      console.error('Error al cargar usuarios:', error);
-      // Fallback a ApiService si fetch directo falla
+      console.error('❌ Error al cargar usuarios para liga:', error);
+      // Fallback al endpoint básico si falla
       try {
+        console.log('🔄 Fallback al endpoint básico para liga...');
         const response = await ApiService.get('/users/basic');
         if (response && Array.isArray(response)) {
           setUsuarios(response);
+          console.log('⚠️ Usuarios de liga cargados sin información de roles');
         }
       } catch (apiError) {
-        console.error('Error con ApiService también:', apiError);
+        console.error('❌ Error con fallback en liga también:', apiError);
       }
     }
   };
@@ -188,6 +202,23 @@ const LigaDetalle: React.FC = () => {
 
       if (inscriptionData.id_jugador1.toString() === inscriptionData.id_jugador2.toString()) {
         setToastMessage('Los jugadores deben ser diferentes');
+        setShowToast(true);
+        return;
+      }
+
+      // Validar que la pareja no esté ya inscrita (verificar ambos órdenes de jugadores)
+      const jugador1Id = parseInt(inscriptionData.id_jugador1.toString());
+      const jugador2Id = parseInt(inscriptionData.id_jugador2.toString());
+      
+      const parejaExistente = parejas.find(pareja => 
+        (pareja.id_jugador1 === jugador1Id && pareja.id_jugador2 === jugador2Id) ||
+        (pareja.id_jugador1 === jugador2Id && pareja.id_jugador2 === jugador1Id)
+      );
+
+      if (parejaExistente) {
+        const nombreJugador1 = getUserName(jugador1Id);
+        const nombreJugador2 = getUserName(jugador2Id);
+        setToastMessage(`La pareja ${nombreJugador1} y ${nombreJugador2} ya está inscrita en esta liga`);
         setShowToast(true);
         return;
       }
@@ -890,73 +921,142 @@ const LigaDetalle: React.FC = () => {
       </div>
 
       {/* Modal para inscribir pareja */}
-      <IonModal isOpen={isInscriptionModalOpen} onDidDismiss={() => setIsInscriptionModalOpen(false)}>
-        <div className="modal-header">
-          <h2>Inscribir Pareja</h2>
-          <IonButton fill="clear" onClick={() => setIsInscriptionModalOpen(false)}>
-            Cancelar
-          </IonButton>
-        </div>
+      <IonModal className="modal-inscripcion" isOpen={isInscriptionModalOpen} onDidDismiss={() => setIsInscriptionModalOpen(false)}>
+        <IonHeader className="modal-header-profesional">
+          <IonToolbar className="modal-header-profesional">
+            <IonTitle>
+              <h2>
+                <IonIcon icon={addOutline} className="modal-inscripcion-icon" />
+                Inscribir Pareja
+              </h2>
+            </IonTitle>
+            <IonButtons slot="end">
+              <IonButton 
+                fill="clear" 
+                onClick={() => setIsInscriptionModalOpen(false)}
+              >
+                ×
+              </IonButton>
+            </IonButtons>
+          </IonToolbar>
+        </IonHeader>
 
-        <div className="modal-content">
-          <IonItem>
-            <IonLabel position="stacked">Nombre del Equipo *</IonLabel>
-            <IonInput
-              value={inscriptionData.nombre_equipo}
-              onIonInput={(e) => {
-                const newValue = e.detail.value!;
-                console.log('Nombre equipo cambiado a:', newValue);
-                setInscriptionData({ ...inscriptionData, nombre_equipo: newValue });
-              }}
-              placeholder="Ej: Los Campeones"
-            />
-          </IonItem>
+        <IonContent className="modal-content-profesional">
+          {/* Información del proceso */}
+          <div className="inscripcion-form-section">
+            <h3 className="inscripcion-section-title">
+              <IonIcon icon={informationCircleOutline} />
+              Información
+            </h3>
+            <p style={{ color: 'var(--texto-secundario)', fontSize: '0.95rem', lineHeight: '1.5', margin: '0' }}>
+              Selecciona dos jugadores para formar una pareja, asigna un nombre de equipo y regístralos en la liga.
+            </p>
+          </div>
 
-          <IonItem>
-            <IonLabel position="stacked">Jugador 1 *</IonLabel>
-            <IonSelect
-              value={inscriptionData.id_jugador1}
-              onIonChange={(e) => {
-                const newValue = e.detail.value;
-                console.log('Jugador 1 cambiado a:', newValue);
-                setInscriptionData({ ...inscriptionData, id_jugador1: newValue });
-              }}
-              placeholder="Selecciona el primer jugador"
+          {/* Información del equipo */}
+          <div className="inscripcion-form-section">
+            <h3 className="inscripcion-section-title">
+              <IonIcon icon={ribbonOutline} />
+              Información del Equipo
+            </h3>
+            
+            <IonItem>
+              <IonLabel position="stacked">Nombre del Equipo *</IonLabel>
+              <IonInput
+                value={inscriptionData.nombre_equipo}
+                onIonInput={(e) => {
+                  const newValue = e.detail.value!;
+                  console.log('Nombre equipo cambiado a:', newValue);
+                  setInscriptionData({ ...inscriptionData, nombre_equipo: newValue });
+                }}
+                placeholder="Ej: Los Campeones"
+              />
+            </IonItem>
+          </div>
+
+          {/* Selección de jugadores */}
+          <div className="inscripcion-form-section">
+            <h3 className="inscripcion-section-title">
+              <IonIcon icon={peopleOutline} />
+              Selección de Jugadores
+            </h3>
+            
+            <IonItem>
+              <IonLabel position="stacked">Jugador 1 *</IonLabel>
+              <IonSelect
+                value={inscriptionData.id_jugador1}
+                onIonChange={(e) => {
+                  const newValue = e.detail.value;
+                  console.log('Jugador 1 cambiado a:', newValue);
+                  setInscriptionData({ ...inscriptionData, id_jugador1: newValue });
+                }}
+                placeholder="Selecciona el primer jugador"
+              >
+                {usuarios.filter(usuario => {
+                  const rolNombre = usuario.rol?.nombre;
+                  const esUsuarioOSocio = rolNombre && ['USUARIO', 'SOCIO'].includes(rolNombre);
+                  
+                  console.log(`Usuario liga ${usuario.nombre}:`, {
+                    id: usuario.id,
+                    nombre: usuario.nombre,
+                    rol: usuario.rol,
+                    rolNombre: rolNombre,
+                    esUsuarioOSocio: esUsuarioOSocio
+                  });
+                  
+                  return esUsuarioOSocio;
+                }).map((usuario) => (
+                  <IonSelectOption key={usuario.id} value={usuario.id}>
+                    {usuario.nombre} {usuario.apellidos}
+                  </IonSelectOption>
+                ))}
+              </IonSelect>
+            </IonItem>
+
+            <IonItem>
+              <IonLabel position="stacked">Jugador 2 *</IonLabel>
+              <IonSelect
+                value={inscriptionData.id_jugador2}
+                onIonChange={(e) => {
+                  const newValue = e.detail.value;
+                  console.log('Jugador 2 cambiado a:', newValue);
+                  setInscriptionData({ ...inscriptionData, id_jugador2: newValue });
+                }}
+                placeholder="Selecciona el segundo jugador"
+              >
+                {usuarios.filter(u => {
+                  const rolNombre = u.rol?.nombre;
+                  const esUsuarioOSocio = ['USUARIO', 'SOCIO'].includes(rolNombre);
+                  const notSamePlayer = u.id.toString() !== inscriptionData.id_jugador1.toString();
+                  return notSamePlayer && esUsuarioOSocio;
+                }).map((usuario) => (
+                  <IonSelectOption key={usuario.id} value={usuario.id}>
+                    {usuario.nombre} {usuario.apellidos}
+                  </IonSelectOption>
+                ))}
+              </IonSelect>
+            </IonItem>
+          </div>
+
+          {/* Acciones */}
+          <div className="modal-footer-profesional">
+            <IonButton 
+              fill="outline" 
+              className="inscripcion-cancel-btn"
+              onClick={() => setIsInscriptionModalOpen(false)}
             >
-              {usuarios.map((usuario) => (
-                <IonSelectOption key={usuario.id} value={usuario.id}>
-                  {usuario.nombre} {usuario.apellidos}
-                </IonSelectOption>
-              ))}
-            </IonSelect>
-          </IonItem>
-
-          <IonItem>
-            <IonLabel position="stacked">Jugador 2 *</IonLabel>
-            <IonSelect
-              value={inscriptionData.id_jugador2}
-              onIonChange={(e) => {
-                const newValue = e.detail.value;
-                console.log('Jugador 2 cambiado a:', newValue);
-                setInscriptionData({ ...inscriptionData, id_jugador2: newValue });
-              }}
-              placeholder="Selecciona el segundo jugador"
+              <IonIcon slot="start" icon={closeOutline} />
+              Cancelar
+            </IonButton>
+            <IonButton
+              className="inscripcion-submit-btn"
+              onClick={handleInscribirPareja}
             >
-              {usuarios.filter(u => u.id.toString() !== inscriptionData.id_jugador1.toString()).map((usuario) => (
-                <IonSelectOption key={usuario.id} value={usuario.id}>
-                  {usuario.nombre} {usuario.apellidos}
-                </IonSelectOption>
-              ))}
-            </IonSelect>
-          </IonItem>
-        </div>
-
-        <div className="modal-footer">
-          <IonButton expand="block" onClick={handleInscribirPareja}>
-            <IonIcon icon={checkmarkCircleOutline} slot="start" />
-            <IonLabel>Inscribir Pareja</IonLabel>
-          </IonButton>
-        </div>
+              <IonIcon slot="start" icon={checkmarkCircleOutline} />
+              Inscribir Pareja
+            </IonButton>
+          </div>
+        </IonContent>
       </IonModal>
 
       {/* Modal para registrar resultado */}

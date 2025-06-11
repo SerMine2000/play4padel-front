@@ -1331,6 +1331,23 @@
   min-height: 48px;
 }
 
+/* Eliminar dobles bordes del item-native */
+.modal-content ion-item .item-native {
+  border: none !important;
+  --border-width: 0 !important;
+  --border-color: transparent !important;
+  --inner-border-width: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.modal-content ion-item .item-inner {
+  border: none !important;
+  --border-width: 0 !important;
+  --border-color: transparent !important;
+  background: transparent !important;
+}
+
 .modal-content ion-item:focus-within {
   border-color: var(--color-detalle-boton);
   box-shadow: 0 0 0 3px var(--color-detalle-boton-hover);
@@ -1546,6 +1563,354 @@ ion-list {
 ion-content {
   --background: var(--fondo-aplicacion);
 }
+
+/* ===== MODAL PROFESIONAL DE INSCRIPCIÓN PARA LIGAS ===== */
+.modal-inscripcion {
+  --width: 95vw;
+  --max-width: 900px;
+  --height: auto;
+  --max-height: 90vh;
+  --border-radius: 16px;
+  --box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  --backdrop-opacity: 0.6;
+}
+
+.modal-inscripcion::part(content) {
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--fondo-card);
+}
+
+/* ===== NUEVOS ESTILOS PROFESIONALES PARA MODAL HEADER ===== */
+.modal-header-profesional {
+  background: var(--fondo-panel-navegacion) \!important;
+  border-bottom: 1px solid var(--borde-principal) \!important;
+  height: 60px \!important;
+  min-height: 60px \!important;
+  padding: 0 20px \!important;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header-profesional h2 {
+  font-size: 1.2rem \!important;
+  font-weight: 600 \!important;
+  color: var(--texto-panel-navegacion) \!important;
+  display: flex \!important;
+  align-items: center \!important;
+  gap: 12px \!important;
+  margin: 0 \!important;
+  line-height: 1.3 \!important;
+  height: 44px \!important;
+}
+
+.modal-inscripcion-icon {
+  font-size: 1.3rem \!important;
+  color: var(--color-secundario) \!important;
+  flex-shrink: 0 \!important;
+  width: 22px \!important;
+  height: 22px \!important;
+}
+
+.modal-header-profesional ion-button {
+  --color: var(--texto-panel-navegacion) \!important;
+  --background: transparent \!important;
+  font-size: 1.2rem \!important;
+  font-weight: bold \!important;
+  width: 40px \!important;
+  height: 40px \!important;
+  border-radius: 50% \!important;
+  transition: all 0.3s ease \!important;
+  border: none \!important;
+  --padding-start: 0 \!important;
+  --padding-end: 0 \!important;
+}
+
+.modal-header-profesional ion-button:hover {
+  --background: rgba(255, 255, 255, 0.1) \!important;
+  transform: scale(1.05) \!important;
+}
+
+/* ===== SECCIONES DEL FORMULARIO ===== */
+.inscripcion-form-section {
+  background: var(--fondo-card);
+  border: 1px solid var(--borde-principal);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--sombra-card);
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.4s ease-out;
+  animation-fill-mode: both;
+}
+
+.inscripcion-form-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.inscripcion-section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 20px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--texto-principal);
+  border-bottom: 2px solid var(--color-detalle-boton);
+  padding-bottom: 8px;
+}
+
+.inscripcion-section-title ion-icon {
+  font-size: 1.3rem;
+  color: var(--color-primario);
+}
+
+/* ===== CONTENIDO MEJORADO ===== */
+.modal-content-profesional {
+  background: var(--fondo-card) \!important;
+  color: var(--texto-principal) \!important;
+  padding: 24px;
+  max-height: calc(85vh - 60px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primario) var(--fondo-input);
+}
+
+.modal-content-profesional::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content-profesional::-webkit-scrollbar-track {
+  background: var(--fondo-input);
+  border-radius: 3px;
+}
+
+.modal-content-profesional::-webkit-scrollbar-thumb {
+  background: var(--color-detalle-boton);
+  border-radius: 3px;
+}
+
+.modal-content-profesional::-webkit-scrollbar-thumb:hover {
+  background: var(--color-detalle-boton-hover);
+}
+
+/* ===== CAMPOS MEJORADOS PARA MODAL PROFESIONAL ===== */
+.modal-content-profesional ion-item {
+  --background: var(--fondo-input) \!important;
+  --border-radius: 12px;
+  --color: var(--texto-principal);
+  --padding-start: 16px \!important;
+  --padding-end: 16px \!important;
+  --min-height: 56px;
+  --border-width: 0 \!important;
+  --border-color: transparent \!important;
+  --inner-border-width: 0 \!important;
+  --highlight-color-focused: transparent \!important;
+  --highlight-color-valid: transparent \!important;
+  --highlight-color-invalid: transparent \!important;
+  margin-bottom: 1rem;
+  border: 2px solid var(--borde-input) \!important;
+  background: var(--fondo-input) \!important;
+  border-radius: 12px;
+  padding: 12px 16px;
+  transition: all 0.3s ease \!important;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Eliminar dobles bordes del item-native para modal profesional */
+.modal-content-profesional ion-item .item-native {
+  border: none \!important;
+  --border-width: 0 \!important;
+  --border-color: transparent \!important;
+  --inner-border-width: 0 \!important;
+  background: transparent \!important;
+  box-shadow: none \!important;
+}
+
+.modal-content-profesional ion-item .item-inner {
+  border: none \!important;
+  --border-width: 0 \!important;
+  --border-color: transparent \!important;
+  background: transparent \!important;
+}
+
+.modal-content-profesional ion-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(97, 41, 240, 0.03) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.modal-content-profesional ion-item:hover {
+  background: var(--hover-card) \!important;
+  border-color: var(--color-primario) \!important;
+  transform: translateY(-1px) \!important;
+  box-shadow: 0 4px 12px rgba(97, 41, 240, 0.15) \!important;
+}
+
+.modal-content-profesional ion-item:hover::before {
+  opacity: 1;
+}
+
+.modal-content-profesional ion-item:focus-within {
+  border: 2px solid var(--color-primario) \!important;
+  box-shadow: 0 0 0 3px rgba(97, 41, 240, 0.15);
+  background: var(--fondo-card) \!important;
+  transform: translateY(-1px) \!important;
+}
+
+.modal-content-profesional ion-label {
+  font-weight: 600;
+  color: var(--texto-principal);
+  font-size: 0.9rem;
+  position: relative;
+  z-index: 1;
+}
+
+.modal-content-profesional ion-select,
+.modal-content-profesional ion-input {
+  --color: var(--texto-principal);
+  --placeholder-color: var(--texto-placeholder);
+  --background: transparent \!important;
+  --border-width: 0 \!important;
+  --border-color: transparent \!important;
+  --inner-border-width: 0 \!important;
+  border: none \!important;
+  background: transparent \!important;
+  box-shadow: none \!important;
+  outline: none \!important;
+  position: relative;
+  z-index: 1;
+  font-size: 1rem;
+}
+
+/* ===== PIE DEL MODAL MEJORADO ===== */
+.modal-footer-profesional {
+  padding: 20px 24px;
+  background: var(--fondo-card);
+  border-top: 1px solid var(--borde-principal);
+  display: flex;
+  gap: 12px;
+}
+
+.modal-footer-profesional ion-button {
+  flex: 1;
+  height: 48px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  --border-radius: 12px;
+}
+
+.inscripcion-submit-btn {
+  --background: var(--color-primario) \!important;
+  --color: var(--color-primario-contraste) \!important;
+  background: var(--color-primario) \!important;
+  color: var(--color-primario-contraste) \!important;
+  box-shadow: 0 4px 15px rgba(97, 41, 240, 0.3);
+}
+
+.inscripcion-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(97, 41, 240, 0.4);
+  --background: var(--color-secundario) \!important;
+}
+
+.inscripcion-cancel-btn {
+  --background: transparent \!important;
+  --color: var(--texto-secundario) \!important;
+  background: transparent \!important;
+  color: var(--texto-secundario) \!important;
+  border: 2px solid var(--borde-principal);
+}
+
+.inscripcion-cancel-btn:hover {
+  --background: var(--hover-card) \!important;
+  --color: var(--texto-principal) \!important;
+  border-color: var(--color-primario);
+  transform: translateY(-1px);
+}
+
+/* ===== ANIMACIONES ===== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.inscripcion-form-section:nth-child(1) { animation-delay: 0.1s; }
+.inscripcion-form-section:nth-child(2) { animation-delay: 0.2s; }
+.inscripcion-form-section:nth-child(3) { animation-delay: 0.3s; }
+
+/* ===== RESPONSIVE DESIGN PARA MODAL ===== */
+@media (max-width: 768px) {
+  .modal-inscripcion {
+    --max-width: 95vw;
+    --max-height: 90vh;
+  }
+  
+  .modal-content-profesional {
+    padding: 16px;
+    max-height: calc(90vh - 60px);
+  }
+  
+  .inscripcion-form-section {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .modal-footer-profesional {
+    flex-direction: column;
+  }
+  
+  .inscripcion-section-title {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-inscripcion {
+    --max-width: 100vw;
+    --max-height: 100vh;
+    --border-radius: 0;
+  }
+  
+  .modal-content-profesional {
+    padding: 12px;
+    max-height: calc(100vh - 60px);
+  }
+  
+  .inscripcion-form-section {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .modal-content-profesional ion-item {
+    padding: 10px 12px;
+    --min-height: 48px;
+  }
+  
+  .modal-footer-profesional ion-button {
+    height: 44px;
+    font-size: 0.9rem;
+  }
+}
+
 /* ===== MODO OSCURO - MEJORAS PARA LIGAS DETALLE ===== */
 
 /* Chips con colores apropiados en modo oscuro */

@@ -1699,6 +1699,23 @@ ion-content {
   overflow: hidden;
 }
 
+/* Eliminar dobles bordes del item-native */
+.modal-content-profesional ion-item .item-native {
+  border: none \!important;
+  --border-width: 0 \!important;
+  --border-color: transparent \!important;
+  --inner-border-width: 0 \!important;
+  background: transparent \!important;
+  box-shadow: none \!important;
+}
+
+.modal-content-profesional ion-item .item-inner {
+  border: none \!important;
+  --border-width: 0 \!important;
+  --border-color: transparent \!important;
+  background: transparent \!important;
+}
+
 .modal-content-profesional ion-item::before {
   content: "";
   position: absolute;

@@ -11,6 +11,14 @@ export interface User {
   avatar_url?: string;
   bio?: string;
   activo: boolean;
+  rol?: {
+    id: number;
+    nombre: string;
+    descripcion: string;
+    permisos: any;
+    created_at: string;
+    updated_at: string;
+  };
 }
 
 export interface Pista {

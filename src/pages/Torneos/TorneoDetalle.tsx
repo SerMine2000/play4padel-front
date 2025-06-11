@@ -141,23 +141,40 @@ const TorneoDetalle: React.FC = () => {
 
   const loadUsuarios = async () => {
     try {
-      // Usar fetch directo como solución temporal hasta resolver el problema con ApiService
-      const response = await fetch('http://localhost:5000/users/basic');
-      const data = await response.json();
+      console.log('🔍 Cargando usuarios con roles...');
+      // Usar el endpoint /users que incluye información de roles (requiere autenticación)
+      const response = await ApiService.get('/users');
       
-      if (data && Array.isArray(data)) {
-        setUsuarios(data);
+      console.log('📥 Respuesta del servidor:', {
+        dataType: typeof response,
+        isArray: Array.isArray(response),
+        length: Array.isArray(response) ? response.length : 'N/A',
+        firstUsers: Array.isArray(response) ? response.slice(0, 2) : response
+      });
+      
+      if (response && Array.isArray(response)) {
+        setUsuarios(response);
+        console.log('✅ Usuarios cargados exitosamente:', response.length);
+        
+        // Log de los roles encontrados para debugging
+        const rolesEncontrados = response.map(u => u.rol?.nombre).filter(Boolean);
+        console.log('🎭 Roles encontrados:', [...new Set(rolesEncontrados)]);
+      } else {
+        console.log('❌ Los datos no son un array válido');
       }
     } catch (error) {
-      console.error('Error al cargar usuarios:', error);
-      // Fallback a ApiService si fetch directo falla
+      console.error('❌ Error al cargar usuarios:', error);
+      // Fallback al endpoint básico si falla
       try {
+        console.log('🔄 Fallback al endpoint básico...');
         const response = await ApiService.get('/users/basic');
+        console.log('📥 Respuesta de fallback:', response);
         if (response && Array.isArray(response)) {
           setUsuarios(response);
+          console.log('⚠️ Usuarios cargados sin información de roles');
         }
       } catch (apiError) {
-        console.error('Error con ApiService también:', apiError);
+        console.error('❌ Error con fallback también:', apiError);
       }
     }
   };
@@ -194,6 +211,23 @@ const TorneoDetalle: React.FC = () => {
 
       if (inscriptionData.jugador1_id === inscriptionData.jugador2_id) {
         setToastMessage('Los jugadores deben ser diferentes');
+        setShowToast(true);
+        return;
+      }
+
+      // Validar que la pareja no esté ya inscrita (verificar ambos órdenes de jugadores)
+      const jugador1Id = parseInt(inscriptionData.jugador1_id);
+      const jugador2Id = parseInt(inscriptionData.jugador2_id);
+      
+      const parejaExistente = parejas.find(pareja => 
+        (pareja.jugador1_id === jugador1Id && pareja.jugador2_id === jugador2Id) ||
+        (pareja.jugador1_id === jugador2Id && pareja.jugador2_id === jugador1Id)
+      );
+
+      if (parejaExistente) {
+        const nombreJugador1 = getUserName(jugador1Id);
+        const nombreJugador2 = getUserName(jugador2Id);
+        setToastMessage(`La pareja ${nombreJugador1} y ${nombreJugador2} ya está inscrita en este torneo`);
         setShowToast(true);
         return;
       }
@@ -851,7 +885,21 @@ const TorneoDetalle: React.FC = () => {
                 onIonChange={(e) => setInscriptionData({ ...inscriptionData, jugador1_id: e.detail.value })}
                 placeholder="Selecciona el primer jugador"
               >
-                {usuarios.map((usuario) => (
+                {usuarios.filter(usuario => {
+                  // Extraer el rol de la estructura correcta: usuario.rol.nombre
+                  const rolNombre = usuario.rol?.nombre;
+                  const esUsuarioOSocio = rolNombre && ['USUARIO', 'SOCIO'].includes(rolNombre);
+                  
+                  console.log(`Usuario ${usuario.nombre}:`, {
+                    id: usuario.id,
+                    nombre: usuario.nombre,
+                    rol: usuario.rol,
+                    rolNombre: rolNombre,
+                    esUsuarioOSocio: esUsuarioOSocio
+                  });
+                  
+                  return esUsuarioOSocio;
+                }).map((usuario) => (
                   <IonSelectOption key={usuario.id} value={usuario.id}>
                     {usuario.nombre} {usuario.apellidos}
                   </IonSelectOption>
@@ -866,7 +914,12 @@ const TorneoDetalle: React.FC = () => {
                 onIonChange={(e) => setInscriptionData({ ...inscriptionData, jugador2_id: e.detail.value })}
                 placeholder="Selecciona el segundo jugador"
               >
-                {usuarios.filter(u => u.id.toString() !== inscriptionData.jugador1_id).map((usuario) => (
+                {usuarios.filter(u => {
+                  const rolNombre = u.rol?.nombre;
+                  const esUsuarioOSocio = ['USUARIO', 'SOCIO'].includes(rolNombre);
+                  const notSamePlayer = u.id.toString() !== inscriptionData.jugador1_id;
+                  return notSamePlayer && esUsuarioOSocio;
+                }).map((usuario) => (
                   <IonSelectOption key={usuario.id} value={usuario.id}>
                     {usuario.nombre} {usuario.apellidos}
                   </IonSelectOption>

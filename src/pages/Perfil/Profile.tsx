@@ -89,19 +89,50 @@ const Profile: React.FC = () => {
     return emailRegex.test(email);
   };
 
-  // Función de validación de teléfono (solo números)
+  // Función de validación de teléfono simplificada
   const validatePhone = (phone: string): boolean => {
-    const phoneRegex = /^[0-9+\-\s()]*$/;
-    return phoneRegex.test(phone);
+    // Si está vacío, es válido (campo opcional)
+    if (!phone || phone.trim() === '') return true;
+    
+    // Extraer solo números
+    const numbers = phone.replace(/\D/g, '');
+    
+    // Debe tener exactamente 9 dígitos
+    return numbers.length === 9;
   };
 
-  // Función para limpiar el teléfono (solo números)
+  // Función para limpiar el teléfono (solo números para enviar al backend)
   const cleanPhoneNumber = (phone: string): string => {
-    return phone.replace(/[^0-9+]/g, '');
+    return phone.replace(/\D/g, '');
+  };
+
+  // Función para formatear el teléfono mientras se escribe
+  const formatPhoneNumber = (value: string): string => {
+    // Extraer solo los números
+    const numbers = value.replace(/\D/g, '');
+    
+    // Limitar a 9 dígitos
+    const limitedNumbers = numbers.slice(0, 9);
+    
+    // Formatear: XXX XX XX XX
+    if (limitedNumbers.length <= 3) {
+      return limitedNumbers;
+    } else if (limitedNumbers.length <= 5) {
+      return `${limitedNumbers.slice(0, 3)} ${limitedNumbers.slice(3)}`;
+    } else if (limitedNumbers.length <= 7) {
+      return `${limitedNumbers.slice(0, 3)} ${limitedNumbers.slice(3, 5)} ${limitedNumbers.slice(5)}`;
+    } else {
+      return `${limitedNumbers.slice(0, 3)} ${limitedNumbers.slice(3, 5)} ${limitedNumbers.slice(5, 7)} ${limitedNumbers.slice(7)}`;
+    }
   };
 
   const handleInputChange = (e: CustomEvent, field: string) => {
-    const value = e.detail.value;
+    let value = e.detail.value;
+    
+    // Formateo especial para teléfono
+    if (field === 'telefono') {
+      value = formatPhoneNumber(value);
+    }
     
     // Limpiar errores previos
     setFormErrors(prev => ({ ...prev, [field]: '' }));
@@ -114,10 +145,7 @@ const Profile: React.FC = () => {
     }
     
     if (field === 'telefono' && value) {
-      if (!validatePhone(value)) {
-        setFormErrors(prev => ({ ...prev, telefono: 'El teléfono solo puede contener números, +, -, espacios y paréntesis' }));
-        return; // No actualizar el valor si no es válido
-      }
+      // No mostrar error mientras está escribiendo, solo al validar el formulario completo
     }
     
     if ((field === 'nombre' || field === 'apellidos') && value) {
@@ -321,7 +349,7 @@ const Profile: React.FC = () => {
 
     // Validar teléfono (opcional pero si se llena debe ser válido)
     if (formData.telefono && !validatePhone(formData.telefono)) {
-      errors.telefono = 'El teléfono solo puede contener números, +, -, espacios y paréntesis';
+      errors.telefono = 'El teléfono debe tener exactamente 9 dígitos';
       isValid = false;
     }
 
@@ -632,7 +660,7 @@ const Profile: React.FC = () => {
                             onIonInput={(e) => handleInputChange(e, field.key)}
                             placeholder={
                               field.key === 'telefono' 
-                                ? '123 456 789' 
+                                ? '123 45 67 89' 
                                 : field.key === 'email'
                                 ? 'tu@email.com'
                                 : `Introduce tu ${field.label.toLowerCase()}`
