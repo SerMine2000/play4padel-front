@@ -271,15 +271,15 @@
 
 /* Chip específico para cuadro generado */
 .status-chip:has(ion-icon[icon="play-outline"]) {
-  --background: var(--color-exito) !important;
-  --color: #ffffff !important;
+  --background: var(--color-secundario) !important;
+  --color: var(--texto-sobre-secundario) !important;
 }
 
 .status-chip:has(ion-icon[icon="play-outline"]):hover {
-  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
 }
 
-/* Modo oscuro - usando variables consistentes */
+/* Modo oscuro */
 .ion-palette-dark .status-chip {
   --background: var(--color-detalle-boton) !important;
   --color: var(--color-detalle-boton-contraste) !important;
@@ -290,8 +290,8 @@
 }
 
 .torneo-detalle-container.dark .status-chip:has(ion-icon[icon="play-outline"]) {
-  --background: var(--color-exito) !important;
-  --color: #ffffff !important;
+  --background: var(--color-secundario) !important;
+  --color: var(--texto-sobre-secundario) !important;
 }
 
 /* Header bottom section simplificado */
@@ -347,10 +347,11 @@
 
 /* Mantener solo el button-native::after */
 .header-actions ion-button .button-native {
-  background: var(--color-primario) !important;
+  background: var(--color-detalle-boton) !important;
   border-radius: 20px !important;
   border: none !important;
   box-shadow: none !important;
+  color: var(--color-detalle-boton-contraste) !important;
 }
 
 .header-actions ion-button .button-native::before {
@@ -362,18 +363,19 @@
   box-shadow: var(--color-detalle-boton-sombra);
 }
 
-/* Modo oscuro - colores verde */
+/* Modo oscuro */
 .torneo-detalle-container.dark .header-actions ion-button {
-  --background: var(--color-secundario);
-  --color: #ffffff;
+  --background: var(--color-detalle-boton);
+  --color: var(--color-detalle-boton-contraste);
 }
 
 .torneo-detalle-container.dark .header-actions ion-button .button-native {
-  background: var(--color-secundario) !important;
+  background: var(--color-detalle-boton) !important;
+  color: var(--color-detalle-boton-contraste) !important;
 }
 
 .torneo-detalle-container.dark .header-actions ion-button:hover {
-  box-shadow: 0 4px 15px rgba(5, 150, 105, 0.4);
+  box-shadow: 0 4px 15px var(--color-detalle-boton-sombra);
 }
 
 /* Tabs - Centrado y adaptativo - SOLO PARA TORNEOS */
@@ -395,9 +397,9 @@
 
 .torneo-detalle-container ion-segment-button {
   --background: transparent;
-  --background-checked: var(--color-primario);
+  --background-checked: var(--color-detalle-boton);
   --color: var(--texto-secundario);
-  --color-checked: var(--color-primario-contraste);
+  --color-checked: var(--color-detalle-boton-contraste);
   --border-radius: 8px;
   font-weight: 600;
   transition: all 0.2s ease;
@@ -437,10 +439,10 @@
 }
 
 .torneo-detalle-container ion-segment-button.md.in-segment.segment-button-has-label.segment-button-has-label-only.segment-button-checked:hover {
-  --background: var(--color-primario) !important;
-  --color: var(--color-primario-contraste) !important;
+  --background: var(--color-detalle-boton) !important;
+  --color: var(--color-detalle-boton-contraste) !important;
   transform: none !important;
-  box-shadow: 0 4px 12px rgba(97, 41, 240, 0.25) !important;
+  box-shadow: 0 4px 12px var(--color-detalle-boton-sombra) !important;
 }
 
 .torneo-detalle-container ion-segment-button:hover:not(.segment-button-checked) {
@@ -456,7 +458,7 @@
 }
 
 .torneo-detalle-container ion-segment-button.segment-button-checked {
-  box-shadow: 0 4px 12px rgba(97, 41, 240, 0.25);
+  box-shadow: 0 4px 12px var(--color-detalle-boton-sombra);
   transform: translateY(-1px);
 }
 
@@ -474,8 +476,8 @@
 }
 
 .torneo-detalle-container.dark ion-segment-button.md.in-segment.segment-button-has-label.segment-button-has-label-only.segment-button-checked:hover {
-  --background: var(--color-secundario) !important;
-  --color: #ffffff !important;
+  --background: var(--color-detalle-boton) !important;
+  --color: var(--color-detalle-boton-contraste) !important;
   transform: none !important;
 }
 
@@ -486,7 +488,7 @@
 }
 
 .torneo-detalle-container.dark ion-segment-button.segment-button-checked {
-  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+  box-shadow: 0 4px 12px var(--color-detalle-boton-sombra);
 }
 
 /* Contenido de tabs */
@@ -588,7 +590,7 @@
 
 .info-item ion-icon {
   font-size: 2rem;
-  color: var(--color-primario);
+  color: var(--color-detalle-boton);
   transition: transform 0.2s ease;
   flex-shrink: 0;
 }
@@ -620,13 +622,13 @@
   padding: 1.5rem;
   background: var(--fondo-aplicacion);
   border-radius: 12px;
-  border-left: 4px solid var(--color-primario);
+  border-left: 4px solid var(--color-detalle-boton);
   border: 1px solid var(--borde-principal);
 }
 
 .descripcion-section h3 {
   margin: 0 0 1rem 0;
-  color: var(--color-primario);
+  color: var(--color-detalle-boton);
   font-size: 1.1rem;
   font-weight: 600;
 }
@@ -741,8 +743,8 @@
 }
 
 .pareja-header ion-badge {
-  --background: var(--color-primario);
-  --color: var(--color-primario-contraste);
+  --background: var(--color-detalle-boton);
+  --color: var(--color-detalle-boton-contraste);
   font-weight: 700;
   font-size: 0.9rem;
   padding: 0.5rem 1rem;
@@ -860,11 +862,11 @@
 
 .jugador-avatar ion-icon {
   font-size: 1.5rem;
-  color: var(--color-primario);
+  color: var(--color-detalle-boton);
 }
 
 .torneo-detalle-container.dark .jugador-avatar ion-icon {
-  color: var(--color-secundario);
+  color: var(--color-detalle-boton);
 }
 
 .jugador-info {
@@ -978,11 +980,11 @@
 .vs {
   font-weight: 700;
   font-size: 1.2rem;
-  color: var(--color-primario);
+  color: var(--color-detalle-boton);
   padding: 0.75rem;
   background: var(--fondo-card);
   border-radius: 50%;
-  border: 2px solid var(--color-primario);
+  border: 2px solid var(--color-detalle-boton);
   width: 50px;
   height: 50px;
   display: flex;
@@ -994,17 +996,17 @@
 
 .vs:hover {
   transform: scale(1.05);
-  box-shadow: 0 4px 15px rgba(97, 41, 240, 0.2);
+  box-shadow: 0 4px 15px var(--color-detalle-boton-sombra);
 }
 
 /* Modo oscuro para VS */
 .torneo-detalle-container.dark .vs {
-  color: var(--color-secundario);
-  border-color: var(--color-secundario);
+  color: var(--color-detalle-boton);
+  border-color: var(--color-detalle-boton);
 }
 
 .torneo-detalle-container.dark .vs:hover {
-  box-shadow: 0 4px 15px rgba(5, 150, 105, 0.2);
+  box-shadow: 0 4px 15px var(--color-detalle-boton-sombra);
 }
 
 .partido-info {

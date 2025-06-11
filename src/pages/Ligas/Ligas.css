@@ -405,6 +405,15 @@ body::-webkit-scrollbar, html::-webkit-scrollbar {
   margin-right: auto;
 }
 
+/* ===== ICONOS TEMÁTICOS - MISMA REGLA DE COLOR ===== */
+.icon-themed {
+  color: var(--color-primario) !important;
+}
+
+.ion-palette-dark .icon-themed {
+  color: var(--color-secundario) !important;
+}
+
 /* FAB flotante */
 .ligas-fab {
   position: fixed !important;
@@ -420,7 +429,7 @@ body::-webkit-scrollbar, html::-webkit-scrollbar {
   transition: all 0.3s ease-in-out;
 }
 
-/* Modo claro - morado */
+/* Modo claro - usando misma regla de color que iconos temáticos */
 :root .ligas-fab ion-fab-button {
   --background: var(--color-primario);
   --color: var(--color-primario-contraste);
@@ -432,16 +441,16 @@ body::-webkit-scrollbar, html::-webkit-scrollbar {
   --box-shadow: 0 16px 40px rgba(97, 41, 240, 0.5);
 }
 
-/* Modo oscuro - verde */
+/* Modo oscuro - usando misma regla de color que iconos temáticos, SIN SOMBRA */
 .ion-palette-dark .ligas-fab ion-fab-button {
   --background: var(--color-secundario);
   --color: var(--color-primario-contraste);
-  --box-shadow: 0 12px 30px rgba(5, 150, 105, 0.4);
+  --box-shadow: none; /* Sin sombra en modo oscuro */
 }
 
 .ion-palette-dark .ligas-fab ion-fab-button:hover {
   transform: scale(1.1) rotate(90deg);
-  --box-shadow: 0 16px 40px rgba(5, 150, 105, 0.5);
+  --box-shadow: none; /* Sin sombra en modo oscuro */
 }
 
 .ligas-fab ion-fab-button ion-icon {

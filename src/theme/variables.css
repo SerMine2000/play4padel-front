@@ -93,10 +93,10 @@
 
 /* ===== MODO OSCURO - FONDOS MENOS OSCUROS ===== */
 .ion-palette-dark {
-  /* COLORES PRINCIPALES */
-  --color-primario: #6129f0;
+  /* COLORES PRINCIPALES - INVERTIDOS EN MODO OSCURO */
+  --color-primario: #059669;
   --color-primario-contraste: #ffffff;
-  --color-secundario: #059669;
+  --color-secundario: #6129f0;
   
   /* SOMBRAS CON COLOR PRIMARIO (VERDE EN MODO OSCURO) */
   --sombra-color-primario: rgba(5, 150, 105, 0.3);
@@ -169,10 +169,10 @@
   --color-tabs-contraste: #ffffff;
   
   /* SCROLLBAR Y ELEMENTOS DASHBOARD */
-  --color-scroll-principal: var(--color-secundario);
+  --color-scroll-principal: var(--color-primario);
   --color-scroll-hover: #047857;
-  --color-acento-dashboard: var(--color-secundario);
-  --gradiente-dashboard: linear-gradient(135deg, var(--color-secundario), var(--color-primario));
+  --color-acento-dashboard: var(--color-primario);
+  --gradiente-dashboard: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
   
   /* VARIABLES IONIC COMPATIBLES */
   --ion-color-primary: var(--color-primario);

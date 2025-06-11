@@ -408,22 +408,15 @@ const TorneoDetalle: React.FC = () => {
         </div>
         
         <div className="header-bottom">
-          {canManage && (
+          {canManage && parejas.length >= 2 && (
             <div className="header-actions">
-              <IonButton onClick={() => setIsInscriptionModalOpen(true)} className="inscribir-button">
-                <IonIcon icon={addOutline} slot="start" className="icon-themed" />
-                <IonLabel>Inscribir Pareja</IonLabel>
+              <IonButton 
+                onClick={() => setShowGenerateFixtureAlert(true)}
+                disabled={partidos.length > 0}
+              >
+                <IonIcon icon={playOutline} slot="start" />
+                <IonLabel>{partidos.length > 0 ? 'Cuadro Ya Generado' : 'Generar Cuadro'}</IonLabel>
               </IonButton>
-              
-              {parejas.length >= 2 && (
-                <IonButton 
-                  onClick={() => setShowGenerateFixtureAlert(true)}
-                  disabled={partidos.length > 0}
-                >
-                  <IonIcon icon={playOutline} slot="start" />
-                  <IonLabel>{partidos.length > 0 ? 'Cuadro Ya Generado' : 'Generar Cuadro'}</IonLabel>
-                </IonButton>
-              )}
             </div>
           )}
         </div>
@@ -505,15 +498,39 @@ const TorneoDetalle: React.FC = () => {
         {selectedTab === 'parejas' && (
           <div className="parejas-tab">
             {parejas.length === 0 ? (
-              <IonCard className="empty-state">
-                <IonCardContent>
-                  <IonIcon icon={peopleOutline} />
-                  <h2>No hay parejas inscritas</h2>
-                  <p>Las parejas aparecerán aquí cuando se inscriban al torneo.</p>
-                </IonCardContent>
-              </IonCard>
+              <>
+                {canManage && (
+                  <IonGrid>
+                    <IonRow>
+                      <IonCol size="12">
+                        <IonButton onClick={() => setIsInscriptionModalOpen(true)} className="inscribir-button" fill="outline">
+                          <IonIcon icon={addOutline} slot="start" className="icon-themed" />
+                          <IonLabel>Inscribir Pareja</IonLabel>
+                        </IonButton>
+                      </IonCol>
+                    </IonRow>
+                  </IonGrid>
+                )}
+                <IonCard className="empty-state">
+                  <IonCardContent>
+                    <IonIcon icon={peopleOutline} />
+                    <h2>No hay parejas inscritas</h2>
+                    <p>Las parejas aparecerán aquí cuando se inscriban al torneo.</p>
+                  </IonCardContent>
+                </IonCard>
+              </>
             ) : (
               <IonGrid>
+                {canManage && (
+                  <IonRow>
+                    <IonCol size="12">
+                      <IonButton onClick={() => setIsInscriptionModalOpen(true)} className="inscribir-button" fill="outline">
+                        <IonIcon icon={addOutline} slot="start" className="icon-themed" />
+                        <IonLabel>Inscribir Pareja</IonLabel>
+                      </IonButton>
+                    </IonCol>
+                  </IonRow>
+                )}
                 <IonRow>
                   {parejas.map((pareja, index) => (
                     <IonCol size="12" sizeMd="6" key={pareja.id}>
@@ -621,8 +638,8 @@ const TorneoDetalle: React.FC = () => {
               <IonCard className="empty-state">
                 <IonCardContent>
                   <IonIcon icon={gitBranchOutline} />
-                  <h2>No hay bracket disponible</h2>
-                  <p>El bracket aparecerá cuando se genere el cuadro del torneo.</p>
+                  <h2>No hay cuadro disponible</h2>
+                  <p>El cuadro aparecerá después de ser generado.</p>
                 </IonCardContent>
               </IonCard>
             ) : (

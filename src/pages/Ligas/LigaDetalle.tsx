@@ -429,31 +429,8 @@ const LigaDetalle: React.FC = () => {
         <div className="header-bottom">
           
           <div className="liga-status">
-            <div className="status-chips">
-              {partidos.length > 0 && (
-                <IonChip color="success">
-                  <IonIcon icon={playOutline} />
-                  <IonLabel>Partidos Generados</IonLabel>
-                </IonChip>
-              )}
-            </div>
-            
             {canManage && (
               <div className="header-actions">
-                <IonButton onClick={() => setIsInscriptionModalOpen(true)} className="inscribir-button">
-                  <IonIcon icon={addOutline} slot="start" className="icon-themed" />
-                  <IonLabel>Inscribir Pareja</IonLabel>
-                </IonButton>
-                
-                {parejas.length >= 2 && (
-                  <IonButton 
-                    onClick={() => setShowGeneratePartidosAlert(true)}
-                    disabled={partidos.length > 0}
-                  >
-                    <IonIcon icon={playOutline} slot="start" />
-                    <IonLabel>{partidos.length > 0 ? 'Partidos Ya Generados' : 'Generar Partidos'}</IonLabel>
-                  </IonButton>
-                )}
               </div>
             )}
           </div>
@@ -651,60 +628,96 @@ const LigaDetalle: React.FC = () => {
         {selectedTab === 'partidos' && (
           <div className="partidos-tab">
             {partidos.length === 0 ? (
-              <IonCard className="empty-state">
-                <IonCardContent>
-                  <IonIcon icon={playOutline} />
-                  <h2>No hay partidos generados</h2>
-                  <p>Los partidos se generarán automáticamente cuando haya suficientes parejas.</p>
-                </IonCardContent>
-              </IonCard>
+              <>
+                {canManage && parejas.length >= 2 && (
+                  <IonGrid>
+                    <IonRow>
+                      <IonCol size="12">
+                        <IonButton 
+                          onClick={() => setShowGeneratePartidosAlert(true)}
+                          disabled={partidos.length > 0}
+                          fill="outline"
+                        >
+                          <IonIcon icon={playOutline} slot="start" />
+                          <IonLabel>Generar Partidos</IonLabel>
+                        </IonButton>
+                      </IonCol>
+                    </IonRow>
+                  </IonGrid>
+                )}
+                <IonCard className="empty-state">
+                  <IonCardContent>
+                    <IonIcon icon={playOutline} />
+                    <h2>No hay partidos generados</h2>
+                    <p>Los partidos se generarán automáticamente cuando haya suficientes parejas.</p>
+                  </IonCardContent>
+                </IonCard>
+              </>
             ) : (
-              <div className="partidos-list">
-                {partidos.map((partido) => (
-                  <IonCard key={partido.id} className="partido-card">
-                    <IonCardContent>
-                      <div className="partido-header">
-                        <h3>Partido #{partido.id}</h3>
-                        <IonChip color={getPartidoEstadoColor(partido.estado)}>
-                          {partido.estado}
-                        </IonChip>
-                      </div>
-                      
-                      <div className="partido-equipos">
-                        <div className="equipo">
-                          <span>{partido.nombre_equipo1 || `Equipo ${partido.id_equipo1}`}</span>
+              <>
+                {canManage && (
+                  <IonGrid>
+                    <IonRow>
+                      <IonCol size="12">
+                        <IonButton 
+                          onClick={() => setShowGeneratePartidosAlert(true)}
+                          disabled={partidos.length > 0}
+                          fill="outline"
+                        >
+                          <IonIcon icon={playOutline} slot="start" />
+                          <IonLabel>Partidos Ya Generados</IonLabel>
+                        </IonButton>
+                      </IonCol>
+                    </IonRow>
+                  </IonGrid>
+                )}
+                <div className="partidos-list">
+                  {partidos.map((partido) => (
+                    <IonCard key={partido.id} className="partido-card">
+                      <IonCardContent>
+                        <div className="partido-header">
+                          <h3>Partido #{partido.id}</h3>
+                          <IonChip color={getPartidoEstadoColor(partido.estado)}>
+                            {partido.estado}
+                          </IonChip>
                         </div>
-                        <span className="vs">VS</span>
-                        <div className="equipo">
-                          <span>{partido.nombre_equipo2 || `Equipo ${partido.id_equipo2}`}</span>
+                        
+                        <div className="partido-equipos">
+                          <div className="equipo">
+                            <span>{partido.nombre_equipo1 || `Equipo ${partido.id_equipo1}`}</span>
+                          </div>
+                          <span className="vs">VS</span>
+                          <div className="equipo">
+                            <span>{partido.nombre_equipo2 || `Equipo ${partido.id_equipo2}`}</span>
+                          </div>
                         </div>
-                      </div>
-                      
-                      {partido.resultado && (
-                        <div className="resultado">
-                          <strong>Resultado: {partido.resultado}</strong>
-                        </div>
-                      )}
+                        
+                        {partido.resultado && (
+                          <div className="resultado">
+                            <strong>Resultado: {partido.resultado}</strong>
+                          </div>
+                        )}
 
-                      {canManage && partido.estado === 'programado' && (
-                        <div className="partido-actions">
-                          <IonButton 
-                            fill="clear" 
-                            size="small"
-                            onClick={() => {
-                              setSelectedPartido(partido);
-                              setIsResultModalOpen(true);
-                            }}
-                          >
-                            <IonIcon icon={createOutline} slot="start" />
-                            Registrar Resultado
-                          </IonButton>
-                        </div>
-                      )}
-                    </IonCardContent>
-                  </IonCard>
-                ))}
-              </div>
+                        {canManage && partido.estado === 'programado' && (
+                          <div className="partido-actions">
+                            <IonButton 
+                              fill="clear" 
+                              size="small"
+                              onClick={() => {
+                                setSelectedPartido(partido);
+                                setIsResultModalOpen(true);
+                              }}
+                            >
+                              <IonIcon icon={createOutline} slot="start" />
+                              Registrar Resultado
+                            </IonButton>
+                          </div>
+                        )}
+                      </IonCardContent>
+                    </IonCard>
+                  ))}
+                </div>
+              </>
             )}
           </div>
         )}
@@ -712,15 +725,39 @@ const LigaDetalle: React.FC = () => {
         {selectedTab === 'parejas' && (
           <div className="parejas-tab">
             {parejas.length === 0 ? (
-              <IonCard className="empty-state">
-                <IonCardContent>
-                  <IonIcon icon={peopleOutline} />
-                  <h2>No hay parejas inscritas</h2>
-                  <p>Las parejas aparecerán aquí cuando se inscriban a la liga.</p>
-                </IonCardContent>
-              </IonCard>
+              <>
+                {canManage && (
+                  <IonGrid>
+                    <IonRow>
+                      <IonCol size="12">
+                        <IonButton onClick={() => setIsInscriptionModalOpen(true)} className="inscribir-button" fill="outline">
+                          <IonIcon icon={addOutline} slot="start" className="icon-themed" />
+                          <IonLabel>Inscribir Pareja</IonLabel>
+                        </IonButton>
+                      </IonCol>
+                    </IonRow>
+                  </IonGrid>
+                )}
+                <IonCard className="empty-state">
+                  <IonCardContent>
+                    <IonIcon icon={peopleOutline} />
+                    <h2>No hay parejas inscritas</h2>
+                    <p>Las parejas aparecerán aquí cuando se inscriban a la liga.</p>
+                  </IonCardContent>
+                </IonCard>
+              </>
             ) : (
               <IonGrid>
+                {canManage && (
+                  <IonRow>
+                    <IonCol size="12">
+                      <IonButton onClick={() => setIsInscriptionModalOpen(true)} className="inscribir-button" fill="outline">
+                        <IonIcon icon={addOutline} slot="start" className="icon-themed" />
+                        <IonLabel>Inscribir Pareja</IonLabel>
+                      </IonButton>
+                    </IonCol>
+                  </IonRow>
+                )}
                 <IonRow>
                   {parejas.map((pareja, index) => (
                     <IonCol size="12" sizeMd="6" key={pareja.id}>
@@ -733,17 +770,79 @@ const LigaDetalle: React.FC = () => {
                           
                           <div className="jugadores">
                             <div className="jugador">
-                              <IonAvatar>
-                                <IonIcon icon={personOutline} />
-                              </IonAvatar>
-                              <span>{getUserName(pareja.id_jugador1)}</span>
+                              <div className="jugador-avatar">
+                                {(() => {
+                                  const usuario = usuarios.find(u => u.id === pareja.id_jugador1);
+                                  const avatarUrl = usuario?.avatar_url;
+                                  
+                                  if (avatarUrl && avatarUrl.trim() !== '') {
+                                    return (
+                                      <>
+                                        <img 
+                                          src={avatarUrl} 
+                                          alt={getUserName(pareja.id_jugador1)}
+                                          onError={(e) => {
+                                            console.log('Error cargando imagen para:', usuario?.nombre, avatarUrl);
+                                            e.currentTarget.style.display = 'none';
+                                            const iconElement = e.currentTarget.nextElementSibling as HTMLElement;
+                                            if (iconElement) {
+                                              iconElement.style.display = 'flex';
+                                            }
+                                          }}
+                                        />
+                                        <IonIcon 
+                                          icon={personOutline} 
+                                          style={{ display: 'none' }}
+                                        />
+                                      </>
+                                    );
+                                  } else {
+                                    return <IonIcon icon={personOutline} />;
+                                  }
+                                })()}
+                              </div>
+                              <div className="jugador-info">
+                                <div className="jugador-nombre">{getUserName(pareja.id_jugador1)}</div>
+                                <div className="jugador-email">{usuarios.find(u => u.id === pareja.id_jugador1)?.email || ''}</div>
+                              </div>
                             </div>
                             
                             <div className="jugador">
-                              <IonAvatar>
-                                <IonIcon icon={personOutline} />
-                              </IonAvatar>
-                              <span>{getUserName(pareja.id_jugador2)}</span>
+                              <div className="jugador-avatar">
+                                {(() => {
+                                  const usuario = usuarios.find(u => u.id === pareja.id_jugador2);
+                                  const avatarUrl = usuario?.avatar_url;
+                                  
+                                  if (avatarUrl && avatarUrl.trim() !== '') {
+                                    return (
+                                      <>
+                                        <img 
+                                          src={avatarUrl} 
+                                          alt={getUserName(pareja.id_jugador2)}
+                                          onError={(e) => {
+                                            console.log('Error cargando imagen para:', usuario?.nombre, avatarUrl);
+                                            e.currentTarget.style.display = 'none';
+                                            const iconElement = e.currentTarget.nextElementSibling as HTMLElement;
+                                            if (iconElement) {
+                                              iconElement.style.display = 'flex';
+                                            }
+                                          }}
+                                        />
+                                        <IonIcon 
+                                          icon={personOutline} 
+                                          style={{ display: 'none' }}
+                                        />
+                                      </>
+                                    );
+                                  } else {
+                                    return <IonIcon icon={personOutline} />;
+                                  }
+                                })()}
+                              </div>
+                              <div className="jugador-info">
+                                <div className="jugador-nombre">{getUserName(pareja.id_jugador2)}</div>
+                                <div className="jugador-email">{usuarios.find(u => u.id === pareja.id_jugador2)?.email || ''}</div>
+                              </div>
                             </div>
                           </div>
                           
