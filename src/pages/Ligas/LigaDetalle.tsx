@@ -23,7 +23,6 @@ import {
   IonSegmentButton,
   IonAlert,
   IonBadge,
-  IonAvatar,
   IonRange
 } from '@ionic/react';
 import {
@@ -142,9 +141,25 @@ const LigaDetalle: React.FC = () => {
   };
 
   const loadUsuarios = async () => {
-    const response = await ApiService.get('/users/basic');
-    if (response && Array.isArray(response)) {
-      setUsuarios(response);
+    try {
+      // Usar fetch directo como solución temporal hasta resolver el problema con ApiService
+      const response = await fetch('http://localhost:5000/users/basic');
+      const data = await response.json();
+      
+      if (data && Array.isArray(data)) {
+        setUsuarios(data);
+      }
+    } catch (error) {
+      console.error('Error al cargar usuarios:', error);
+      // Fallback a ApiService si fetch directo falla
+      try {
+        const response = await ApiService.get('/users/basic');
+        if (response && Array.isArray(response)) {
+          setUsuarios(response);
+        }
+      } catch (apiError) {
+        console.error('Error con ApiService también:', apiError);
+      }
     }
   };
 
@@ -311,7 +326,10 @@ const LigaDetalle: React.FC = () => {
 
   const getUserName = (userId: number) => {
     const usuario = usuarios.find(u => u.id === userId);
-    return usuario ? `${usuario.nombre} ${usuario.apellidos}` : 'Usuario no encontrado';
+    if (!usuario) {
+      return `Usuario eliminado (ID: ${userId})`;
+    }
+    return `${usuario.nombre} ${usuario.apellidos}`;
   };
 
   const getPartidoEstadoColor = (estado: string) => {
