@@ -196,10 +196,10 @@ const FormularioLogin: React.FC = () => {
              style={{ color: brightGreen, textDecoration: 'none', transition: 'color 0.3s ease' }}>
             Crear una cuenta
           </a>
-          <a href="#" className="hover:text-white transition-colors hover:underline"
+          {/* <a href="#" className="hover:text-white transition-colors hover:underline"
              style={{ color: brightGreen, textDecoration: 'none', transition: 'color 0.3s ease' }}>
             ¿Olvidaste tu contraseña?
-          </a>
+          </a> */}
         </div>
       </form>
     </>
