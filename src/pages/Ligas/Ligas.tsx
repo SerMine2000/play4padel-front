@@ -75,7 +75,7 @@ const Ligas: React.FC = () => {
     categoria: '',
     nivel: '',
     precio_inscripcion: '',
-    estado: 'inscripciones_abiertas',
+    estado: 'inscripciones',
     max_parejas: '',
     descripcion: '',
     reglas: '',
@@ -168,7 +168,7 @@ const Ligas: React.FC = () => {
       categoria: liga.categoria || '',
       nivel: liga.nivel || '',
       precio_inscripcion: liga.precio_inscripcion?.toString() || '',
-      estado: liga.estado || 'inscripciones_abiertas',
+      estado: liga.estado || 'inscripciones',
       max_parejas: liga.max_parejas?.toString() || '',
       descripcion: liga.descripcion || '',
       reglas: liga.reglas || '',
@@ -244,7 +244,7 @@ const Ligas: React.FC = () => {
       categoria: '',
       nivel: '',
       precio_inscripcion: '',
-      estado: 'inscripciones_abiertas',
+      estado: 'inscripciones',
       max_parejas: '',
       descripcion: '',
       reglas: '',
@@ -301,7 +301,7 @@ const Ligas: React.FC = () => {
 
   const getEstadoColor = (estado: string) => {
     switch (estado?.toLowerCase()) {
-      case 'inscripciones_abiertas':
+      case 'inscripciones':
         return 'success';
       case 'en_curso':
         return 'warning';
@@ -316,7 +316,7 @@ const Ligas: React.FC = () => {
 
   const getEstadoText = (estado: string) => {
     switch (estado?.toLowerCase()) {
-      case 'inscripciones_abiertas':
+      case 'inscripciones':
         return 'Inscripciones Abiertas';
       case 'en_curso':
         return 'En Curso';
@@ -774,7 +774,7 @@ const Ligas: React.FC = () => {
                           value={formData.estado}
                           onIonChange={(e) => setFormData({ ...formData, estado: e.detail.value })}
                         >
-                          <IonSelectOption value="inscripciones_abiertas">Inscripciones Abiertas</IonSelectOption>
+                          <IonSelectOption value="inscripciones">Inscripciones Abiertas</IonSelectOption>
                           <IonSelectOption value="en_curso">En Curso</IonSelectOption>
                           <IonSelectOption value="finalizada">Finalizada</IonSelectOption>
                           <IonSelectOption value="suspendida">Suspendida</IonSelectOption>

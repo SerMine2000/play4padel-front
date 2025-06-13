@@ -378,7 +378,7 @@ const LigaDetalle: React.FC = () => {
 
   const getEstadoColor = (estado: string) => {
     switch (estado?.toLowerCase()) {
-      case 'inscripciones_abiertas':
+      case 'inscripciones':
         return 'success';
       case 'en_curso':
         return 'warning';
@@ -393,7 +393,7 @@ const LigaDetalle: React.FC = () => {
 
   const getEstadoText = (estado: string) => {
     switch (estado?.toLowerCase()) {
-      case 'inscripciones_abiertas':
+      case 'inscripciones':
         return 'Inscripciones Abiertas';
       case 'en_curso':
         return 'En Curso';

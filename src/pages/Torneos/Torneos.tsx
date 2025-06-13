@@ -273,7 +273,7 @@ const Torneos: React.FC = () => {
   const getEstadoColor = (estado: string) => {
     switch (estado?.toLowerCase()) {
       case 'activo':
-      case 'inscripciones_abiertas':
+      case 'inscripciones':
         return 'success';
       case 'en_curso':
         return 'warning';

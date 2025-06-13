@@ -4,9 +4,10 @@ import {IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonBac
   IonIcon, IonLoading, IonToast, IonChip, IonButton, IonModal, IonSegment, IonSegmentButton, IonText,
   IonItemDivider, IonSpinner, IonRefresher, IonRefresherContent, IonAlert } from '@ionic/react';
 import {arrowBack, calendarOutline, timeOutline, personOutline, cashOutline, tennisballOutline,
-  closeCircleOutline, chevronBackOutline, chevronForwardOutline, refreshOutline} from 'ionicons/icons';
+  closeCircleOutline, chevronBackOutline, chevronForwardOutline, refreshOutline, locationOutline} from 'ionicons/icons';
 import { useAuth } from '../../context/AuthContext';
 import apiService from '../../services/api.service';
+import { ROLES } from '../../utils/constants';
 import "../../theme/variables.css";
 import "./CalendarView.css";
 
@@ -155,24 +156,6 @@ const CalendarView: React.FC = () => {
 
     console.log('🔄 Cargando reservas del mes con renovación automática de tokens...');
 
-    // Obtener ID del club
-    let idClub = user.id_club;
-if (!idClub) {
-  try {
-    const clubsResponse = await apiService.get(`/clubs?id_administrador=${user.id}`);
-    if (Array.isArray(clubsResponse) && clubsResponse.length > 0) {
-      idClub = clubsResponse[0].id;
-    } else {
-      console.log('Usuario sin club asignado. No se mostrará toast de advertencia.');
-      return;
-    }
-  } catch (error) {
-    console.error('Error al buscar clubes del administrador:', error);
-    mostrarMensaje('Error al obtener información del club', 'danger');
-    return;
-  }
-}
-
     try {
       setCargando(true);
 
@@ -186,8 +169,35 @@ if (!idClub) {
       const fechaInicio = formatearFecha(primerDiaMes);
       const fechaFin = formatearFecha(ultimoDiaMes);
 
-      // Obtener todas las reservas del club
-      const response = await apiService.get(`/reservas?id_club=${idClub}`);
+      let response;
+      
+      // Verificar si el usuario es admin para mostrar todas las reservas
+      
+      // Los admins ven todas las reservas, otros usuarios solo las de su club
+      if (user.id_rol === ROLES.ADMIN || user.role === ROLES.ADMIN) {
+        console.log('👤 Usuario admin: cargando TODAS las reservas');
+        response = await apiService.get('/reservas');
+      } else {
+        // Obtener ID del club para usuarios no admin
+        let idClub = user.id_club;
+        if (!idClub) {
+          try {
+            const clubsResponse = await apiService.get(`/clubs?id_administrador=${user.id}`);
+            if (Array.isArray(clubsResponse) && clubsResponse.length > 0) {
+              idClub = clubsResponse[0].id;
+            } else {
+              console.log('Usuario sin club asignado. No se mostrará toast de advertencia.');
+              return;
+            }
+          } catch (error) {
+            console.error('Error al buscar clubes del administrador:', error);
+            mostrarMensaje('Error al obtener información del club', 'danger');
+            return;
+          }
+        }
+        console.log(`👤 Usuario no admin: cargando reservas del club ${idClub}`);
+        response = await apiService.get(`/reservas?id_club=${idClub}`);
+      }
 
       if (Array.isArray(response)) {
         console.log('✅ Reservas del mes cargadas exitosamente');
@@ -339,27 +349,6 @@ if (!idClub) {
 
     console.log('🔄 Cargando reservas del día con renovación automática de tokens...');
 
-    // Obtener el ID del club manualmente si no está en el objeto user
-    let idClub = user.id_club;
-
-    if (!idClub) {
-      try {
-        // Buscar los clubes asociados al administrador
-        const clubsResponse = await apiService.get(`/clubs?id_administrador=${user.id}`);
-
-        if (Array.isArray(clubsResponse) && clubsResponse.length > 0) {
-          idClub = clubsResponse[0].id;
-        } else {
-          console.log('Usuario sin club asignado. No se mostrará toast de advertencia.');
-          return;
-        }
-      } catch (error) {
-        console.error('Error al buscar clubes del administrador:', error);
-        mostrarMensaje('Error al obtener información del club', 'danger');
-        return;
-      }
-    }
-
     try {
       setCargando(true);
 
@@ -369,8 +358,38 @@ if (!idClub) {
       const day = String(fecha.getDate()).padStart(2, '0');
       const fechaFormateada = `${year}-${month}-${day}`;
 
-      // URL para obtener las reservas
-      const url = `/reservas?id_club=${idClub}&fecha=${fechaFormateada}`;
+      let url;
+      
+      // Verificar si el usuario es admin para mostrar todas las reservas del día
+      
+      // Los admins ven todas las reservas, otros usuarios solo las de su club
+      if (user.id_rol === ROLES.ADMIN || user.role === ROLES.ADMIN) {
+        console.log('👤 Usuario admin: cargando TODAS las reservas del día');
+        url = `/reservas?fecha=${fechaFormateada}`;
+      } else {
+        // Obtener el ID del club manualmente si no está en el objeto user
+        let idClub = user.id_club;
+
+        if (!idClub) {
+          try {
+            // Buscar los clubes asociados al administrador
+            const clubsResponse = await apiService.get(`/clubs?id_administrador=${user.id}`);
+
+            if (Array.isArray(clubsResponse) && clubsResponse.length > 0) {
+              idClub = clubsResponse[0].id;
+            } else {
+              console.log('Usuario sin club asignado. No se mostrará toast de advertencia.');
+              return;
+            }
+          } catch (error) {
+            console.error('Error al buscar clubes del administrador:', error);
+            mostrarMensaje('Error al obtener información del club', 'danger');
+            return;
+          }
+        }
+        console.log(`👤 Usuario no admin: cargando reservas del club ${idClub} para el día`);
+        url = `/reservas?id_club=${idClub}&fecha=${fechaFormateada}`;
+      }
 
       // Realizar la solicitud a la API
       const response = await apiService.get(url);
@@ -381,6 +400,7 @@ if (!idClub) {
         setCargando(false);
         return;
       }
+      
 
       // Si no hay reservas, actualizar el estado y salir
       if (response.length === 0) {
