@@ -52,9 +52,9 @@
   position: absolute;
   bottom: -8px;
   left: 0;
-  width: 60px;
+  width: 120px;
   height: 4px;
-  background: linear-gradient(90deg, var(--ion-color-primary), #a160fb);
+  background: var(--color-primario);
   border-radius: 2px;
 }
 
@@ -109,7 +109,7 @@
 .form-field:focus-within {
   background-color: var(--colorFondoCampoFocus);
   border-color: var(--colorBordeCampoFocus);
-  box-shadow: 0 0 0 3px rgba(97, 41, 240, 0.1);
+  box-shadow: 0 0 0 3px var(--sombra-color-primario);
 }
 
 .field-label {
@@ -216,12 +216,12 @@
   height: 48px;
   font-weight: 600;
   border-radius: 12px;
-  --box-shadow: 0 4px 12px rgba(97, 41, 240, 0.25);
+  --box-shadow: var(--sombra-boton-primario);
   transition: all 0.2s ease;
 }
 
 .solicitar-club-container ion-button:hover {
-  --box-shadow: 0 6px 16px rgba(97, 41, 240, 0.35);
+  --box-shadow: var(--sombra-boton-primario-hover);
   transform: translateY(-1px);
 }
 
@@ -350,7 +350,7 @@ ion-note[color="medium"] {
 .ion-palette-dark .form-field:focus-within {
   background-color: var(--colorFondoCampoFocus);
   border-color: var(--colorBordeCampoFocus);
-  box-shadow: 0 0 0 3px rgba(0, 255, 102, 0.15);
+  box-shadow: 0 0 0 3px var(--sombra-color-primario);
 }
 
 .ion-palette-dark .pending-state {

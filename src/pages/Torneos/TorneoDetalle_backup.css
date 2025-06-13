@@ -1675,6 +1675,114 @@ ion-content {
   background: var(--color-detalle-boton-hover);
 }
 
+/* ===== CAMPOS MEJORADOS ===== */
+.modal-content-profesional ion-item {
+  --background: var(--fondo-input) !important;
+  --border-radius: 12px;
+  --color: var(--texto-principal);
+  --padding-start: 16px !important;
+  --padding-end: 16px !important;
+  --min-height: 56px;
+  --border-width: 0 !important;
+  --border-color: transparent !important;
+  --inner-border-width: 0 !important;
+  --highlight-color-focused: transparent !important;
+  --highlight-color-valid: transparent !important;
+  --highlight-color-invalid: transparent !important;
+  margin-bottom: 1rem;
+  border: 1px solid var(--borde-input) !important;
+  background: var(--fondo-input) !important;
+  border-radius: 12px;
+  padding: 12px 16px;
+  transition: all 0.3s ease !important;
+  position: relative;
+  overflow: hidden;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Eliminar dobles bordes del item-native */
+.modal-content-profesional ion-item .item-native {
+  border: none !important;
+  --border-width: 0 !important;
+  --border-color: transparent !important;
+  --inner-border-width: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.modal-content-profesional ion-item .item-inner {
+  border: none !important;
+  --border-width: 0 !important;
+  --border-color: transparent !important;
+  background: transparent !important;
+  --inner-border-width: 0 !important;
+  outline: none !important;
+}
+
+.modal-content-profesional ion-item::part(native) {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.modal-content-profesional ion-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(97, 41, 240, 0.03) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.modal-content-profesional ion-item:hover {
+  background: var(--hover-card) \!important;
+  border-color: var(--color-primario) \!important;
+  transform: translateY(-1px) \!important;
+  box-shadow: var(--sombra-card) !important;
+}
+
+.modal-content-profesional ion-item:hover::before {
+  opacity: 1;
+}
+
+.modal-content-profesional ion-item:focus-within {
+  border: 2px solid var(--color-primario) \!important;
+  box-shadow: 0 0 0 3px var(--sombra-color-primario);
+  background: var(--fondo-card) \!important;
+  transform: translateY(-1px) \!important;
+}
+
+.modal-content-profesional ion-label {
+  font-weight: 600;
+  color: var(--texto-principal);
+  font-size: 0.9rem;
+  position: relative;
+  z-index: 1;
+}
+
+.modal-content-profesional ion-select,
+.modal-content-profesional ion-input {
+  --color: var(--texto-principal);
+  --placeholder-color: var(--texto-placeholder);
+  --background: transparent \!important;
+  --border-width: 0 \!important;
+  --border-color: transparent \!important;
+  --inner-border-width: 0 \!important;
+  border: none \!important;
+  background: transparent \!important;
+  box-shadow: none \!important;
+  outline: none \!important;
+  position: relative;
+  z-index: 1;
+  font-size: 1rem;
+}
+
 /* ===== PIE DEL MODAL MEJORADO ===== */
 .modal-footer-profesional {
   padding: 20px 24px;
@@ -1692,39 +1800,35 @@ ion-content {
   font-size: 1rem;
   transition: all 0.3s ease;
   --border-radius: 12px;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
 }
 
 .inscripcion-submit-btn {
-  --background: var(--color-detalle-boton) !important;
-  --color: var(--color-detalle-boton-contraste) !important;
-  background: var(--color-detalle-boton) !important;
-  color: var(--color-detalle-boton-contraste) !important;
-  box-shadow: 0 4px 15px var(--color-detalle-boton-sombra);
+  --background: var(--color-primario) \!important;
+  --color: var(--color-primario-contraste) \!important;
+  background: var(--color-primario) \!important;
+  color: var(--color-primario-contraste) \!important;
+  box-shadow: var(--sombra-boton-primario);
 }
 
 .inscripcion-submit-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px var(--color-detalle-boton-sombra);
-  --background: var(--color-secundario) !important;
+  box-shadow: var(--sombra-boton-primario-hover);
+  --background: var(--color-secundario) \!important;
 }
 
 .inscripcion-cancel-btn {
-  --background: #dc3545 !important;
-  --color: #ffffff !important;
-  background: #dc3545 !important;
-  color: #ffffff !important;
-  border: 2px solid #dc3545;
+  --background: transparent \!important;
+  --color: var(--texto-secundario) \!important;
+  background: transparent \!important;
+  color: var(--texto-secundario) \!important;
+  border: 2px solid var(--borde-principal);
 }
 
 .inscripcion-cancel-btn:hover {
-  --background: #c82333 !important;
-  --color: #ffffff !important;
-  background: #c82333 !important;
-  border-color: #c82333;
+  --background: var(--hover-card) \!important;
+  --color: var(--texto-principal) \!important;
+  border-color: var(--color-primario);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
 }
 
 /* ===== ANIMACIONES ===== */
@@ -1783,6 +1887,11 @@ ion-content {
   .inscripcion-form-section {
     padding: 12px;
     margin-bottom: 12px;
+  }
+  
+  .modal-content-profesional ion-item {
+    padding: 10px 12px;
+    --min-height: 48px;
   }
   
   .modal-footer-profesional ion-button {
@@ -1873,34 +1982,32 @@ ion-content {
 
 /* ===== BOTONES DEL MODAL DE RESULTADO ===== */
 .resultado-submit-btn {
-  --background: var(--color-detalle-boton) !important;
-  --color: var(--color-detalle-boton-contraste) !important;
-  background: var(--color-detalle-boton) !important;
-  color: var(--color-detalle-boton-contraste) !important;
-  box-shadow: 0 4px 15px var(--color-detalle-boton-sombra);
+  --background: var(--color-primario) \!important;
+  --color: var(--color-primario-contraste) \!important;
+  background: var(--color-primario) \!important;
+  color: var(--color-primario-contraste) \!important;
+  box-shadow: var(--sombra-boton-primario);
 }
 
 .resultado-submit-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px var(--color-detalle-boton-sombra);
-  --background: var(--color-secundario) !important;
+  box-shadow: var(--sombra-boton-primario-hover);
+  --background: var(--color-secundario) \!important;
 }
 
 .resultado-cancel-btn {
-  --background: #dc3545 !important;
-  --color: #ffffff !important;
-  background: #dc3545 !important;
-  color: #ffffff !important;
-  border: 2px solid #dc3545;
+  --background: transparent \!important;
+  --color: var(--texto-secundario) \!important;
+  background: transparent \!important;
+  color: var(--texto-secundario) \!important;
+  border: 2px solid var(--borde-principal);
 }
 
 .resultado-cancel-btn:hover {
-  --background: #c82333 !important;
-  --color: #ffffff !important;
-  background: #c82333 !important;
-  border-color: #c82333;
+  --background: var(--hover-card) \!important;
+  --color: var(--texto-principal) \!important;
+  border-color: var(--color-primario);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
 }
 
 /* ===== INFORMACIÓN DEL PARTIDO MEJORADA ===== */
@@ -1966,393 +2073,12 @@ ion-content {
   border-color: var(--borde-principal);
 }
 
-/* ===== CORRECCIÓN ESPECÍFICA PARA CAMPOS DEL MODAL DE INSCRIPCIÓN ===== */
-
-/* Resetear completamente los ion-item del modal */
-.modal-content-profesional ion-item {
-  --background: transparent !important;
-  background: transparent !important;
-  border: none !important;
-  --border-width: 0 !important;
-  --border-color: transparent !important;
-  --inner-border-width: 0 !important;
-  --highlight-color-focused: transparent !important;
-  --highlight-color-valid: transparent !important;
-  --highlight-color-invalid: transparent !important;
-  --ripple-color: transparent !important;
-  
-  margin-bottom: 1.5rem !important;
-  padding: 0 !important;
-  --padding-start: 0 !important;
-  --padding-end: 0 !important;
-  --padding-top: 0 !important;
-  --padding-bottom: 0 !important;
-  
-  position: relative;
-  overflow: visible;
-  min-height: 80px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: stretch !important;
-  justify-content: flex-start !important;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
+.ion-palette-dark .modal-content-profesional ion-item {
+  background: var(--fondo-input) \!important;
+  border-color: var(--borde-input);
 }
 
-/* Eliminar todos los bordes internos de los elementos nativos */
-.modal-content-profesional ion-item .item-native {
-  border: none !important;
-  --border-width: 0 !important;
-  --border-color: transparent !important;
-  --inner-border-width: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  outline: none !important;
-  padding: 0 !important;
-}
-
-.modal-content-profesional ion-item .item-inner {
-  border: none !important;
-  --border-width: 0 !important;
-  --border-color: transparent !important;
-  background: transparent !important;
-  --inner-border-width: 0 !important;
-  outline: none !important;
-  padding: 0 !important;
-}
-
-.modal-content-profesional ion-item::part(native) {
-  border: none !important;
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-/* Labels con posición floating mejorada */
-.modal-content-profesional ion-label {
-  --color: var(--texto-principal) !important;
-  color: var(--texto-principal) !important;
-  font-weight: 600 !important;
-  font-size: 0.9rem !important;
-  margin-bottom: 8px !important;
-  display: block !important;
-  position: static !important;
-  z-index: 2 !important;
-  padding: 0 !important;
-  order: 1 !important;
-  height: auto !important;
-  line-height: 1.2 !important;
-  background: transparent !important;
-}
-
-/* Campos de entrada con estilo consistente */
-.modal-content-profesional ion-select,
-.modal-content-profesional ion-input {
-  --color: var(--texto-principal) !important;
-  --placeholder-color: var(--texto-placeholder) !important;
-  --background: var(--fondo-input) !important;
-  --border-width: 0 !important;
-  --border-color: transparent !important;
-  --inner-border-width: 0 !important;
-  --padding-start: 16px !important;
-  --padding-end: 16px !important;
-  --padding-top: 12px !important;
-  --padding-bottom: 12px !important;
-  --highlight-color-focused: transparent !important;
-  --highlight-color-valid: transparent !important;
-  --highlight-color-invalid: transparent !important;
-  --ripple-color: transparent !important;
-  
-  border: 1px solid var(--borde-input) !important;
-  background: var(--fondo-input) !important;
-  border-radius: 12px !important;
-  position: relative;
-  z-index: 1;
-  font-size: max(1rem, 16px) !important;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-  width: 100% !important;
-  box-sizing: border-box !important;
-  outline: none !important;
-  box-shadow: none !important;
-  order: 2 !important;
-  margin-top: 0 !important;
-  min-height: 48px !important;
-  display: flex !important;
-  align-items: center !important;
-}
-
-/* ===== MEJORAS ESPECÍFICAS PARA SELECTS CON FLOATING LABELS ===== */
-/* Eliminar elementos de contorno adicionales de ion-select */
-.modal-content-profesional ion-select::part(container),
-.modal-content-profesional ion-select::part(icon) {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-.modal-content-profesional ion-select.has-focus,
-.modal-content-profesional ion-select.has-value {
-  border-color: var(--color-detalle-boton) !important;
-}
-
-/* Asegurar que el label flotante se vea bien */
-.modal-content-profesional ion-item .label-floating {
-  --color: var(--color-detalle-boton) !important;
-  font-size: 0.8rem !important;
-  font-weight: 600 !important;
-  transform: translateY(-24px) !important;
-  background: var(--fondo-card) !important;
-  padding: 0 4px !important;
-  margin-left: 8px !important;
-  z-index: 10 !important;
-}
-
-/* Estilos para el label cuando el select tiene valor */
-.modal-content-profesional ion-item.item-has-value .label-floating,
-.modal-content-profesional ion-item.item-has-focus .label-floating {
-  --color: var(--color-detalle-boton) !important;
-  transform: translateY(-24px) scale(0.85) !important;
-  background: var(--fondo-card) !important;
-  padding: 0 4px !important;
-  margin-left: 8px !important;
-}
-
-/* Corregir contenido interno del select para que no sobresalga */
-.modal-content-profesional ion-select {
-  --padding-start: 16px !important;
-  --padding-end: 16px !important;
-  --padding-top: 12px !important;
-  --padding-bottom: 12px !important;
-}
-
-.modal-content-profesional ion-select .select-text {
-  background: transparent !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-  transform: translateY(-1px);
-}
-
-.modal-content-profesional ion-select .select-placeholder {
-  background: transparent !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  color: var(--texto-placeholder) !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-  transform: translateY(-1px);
-}
-
-.modal-content-profesional ion-input .native-input {
-  background: transparent !important;
-  border: none !important;
-  outline: none !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-  transform: translateY(-1px);
-}
-
-/* Asegurar que el select wrapper no sobresalga */
-.modal-content-profesional ion-select .select-wrapper {
-  width: 100% !important;
-  box-sizing: border-box !important;
-  overflow: hidden !important;
-  background: transparent !important;
-  transform: translateY(-2px) !important;
-}
-
-/* Corregir el label wrapper del select */
-.modal-content-profesional .select-label {
-  background: transparent !important;
-  transform: translateY(-2px) !important;
-}
-
-/* Elemento específico que aparece en el inspector */
-.modal-content-profesional ion-select.md.in-item.has-placeholder.ion-focusable.select-label-placement-floating {
-  background: transparent !important;
-  transform: translateY(-2px) !important;
-}
-
-/* Label select wrapper */
-.modal-content-profesional label#select-label.select-wrapper {
-  background: transparent !important;
-  transform: translateY(-2px) !important;
-}
-
-/* Asegurar que el placeholder no interfiera con el borde */
-.modal-content-profesional ion-select::part(placeholder),
-.modal-content-profesional ion-select::part(text) {
-  background: transparent !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-  transform: translateY(-1px) !important;
-}
-
-.modal-content-profesional ion-input::part(native) {
-  background: transparent !important;
-  border: none !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-  transform: translateY(-1px) !important;
-}
-
-/* Eliminar estados hover para los campos del modal */
-.modal-content-profesional ion-select:hover,
-.modal-content-profesional ion-input:hover {
-  border-color: var(--borde-input) !important;
-  background: var(--fondo-input) !important;
-  transform: none !important;
-  box-shadow: none !important;
-}
-
-.modal-content-profesional ion-select:focus,
-.modal-content-profesional ion-input:focus,
-.modal-content-profesional ion-item:focus-within ion-select,
-.modal-content-profesional ion-item:focus-within ion-input {
-  border-color: var(--color-detalle-boton) !important;
-  box-shadow: 0 0 0 3px rgba(97, 41, 240, 0.2) !important;
-  background: var(--fondo-card) !important;
-  outline: none !important;
-}
-
-/* Eliminar cualquier efecto ::before de los items */
-.modal-content-profesional ion-item::before {
-  display: none !important;
-}
-
-/* Asegurar que no hay estilos conflictivos */
-.modal-content-profesional ion-item,
-.modal-content-profesional ion-item .item-native,
-.modal-content-profesional ion-item .item-inner {
-  box-shadow: none !important;
-  border-style: none !important;
-  border-width: 0 !important;
-}
-
-/* ===== CORRECCIÓN ESPECÍFICA PARA LABELS FLOATING ===== */
-.modal-content-profesional ion-label[position="floating"] {
-  position: static !important;
-  display: block !important;
-  margin-bottom: 3px !important;
-  font-size: 0.9rem !important;
-  color: var(--texto-principal) !important;
-  font-weight: 600 !important;
-  z-index: 1 !important;
-  pointer-events: auto !important;
-  background: transparent !important;
-  padding: 0 !important;
-  width: auto !important;
-  height: auto !important;
-  order: 1 !important;
-  line-height: 1.2 !important;
-}
-
-/* Mantener el mismo estilo independientemente del estado */
-.modal-content-profesional ion-item.item-has-value ion-label[position="floating"],
-.modal-content-profesional ion-item.item-has-focus ion-label[position="floating"] {
-  position: static !important;
-  display: block !important;
-  margin-bottom: 3px !important;
-  font-size: 0.9rem !important;
-  color: var(--texto-principal) !important;
-  font-weight: 600 !important;
-  background: transparent !important;
-}
-
-/* ===== MODO OSCURO SIMPLIFICADO ===== */
-.torneo-detalle-container.dark .modal-content-profesional ion-select:hover,
-.torneo-detalle-container.dark .modal-content-profesional ion-input:hover {
-  border-color: var(--borde-input) !important;
-  background: var(--fondo-input) !important;
-  transform: none !important;
-  box-shadow: none !important;
-}
-
-.torneo-detalle-container.dark .modal-content-profesional ion-label[position="floating"] {
-  color: var(--texto-principal) !important;
-}
-
-.torneo-detalle-container.dark .modal-content-profesional ion-item.item-has-value ion-label[position="floating"],
-.torneo-detalle-container.dark .modal-content-profesional ion-item.item-has-focus ion-label[position="floating"] {
-  color: var(--texto-principal) !important;
-}
-
-.torneo-detalle-container.dark .modal-content-profesional ion-select:focus,
-.torneo-detalle-container.dark .modal-content-profesional ion-input:focus,
-.torneo-detalle-container.dark .modal-content-profesional ion-item:focus-within ion-select,
-.torneo-detalle-container.dark .modal-content-profesional ion-item:focus-within ion-input {
-  border-color: var(--color-secundario) !important;
-  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.2) !important;
-}
-
-
-/* ===== CORRECCIONES ADICIONALES PARA CENTRADO PERFECTO ===== */
-
-/* Asegurar que los elementos internos del select no sobresalgan */
-.modal-content-profesional ion-select .select-text,
-.modal-content-profesional ion-select .select-placeholder {
-  width: 100% !important;
-  text-align: left !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  line-height: 1.4 !important;
-}
-
-/* Contenedor wrapper del select */
-.modal-content-profesional ion-select .select-wrapper {
-  width: 100% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  min-height: 24px !important;
-}
-
-/* Eliminar elementos conflictivos */
-.modal-content-profesional ion-item .item-highlight,
-.modal-content-profesional ion-item .item-inner-highlight {
-  display: none !important;
-}
-
-/* Espaciado vertical entre campos */
-.inscripcion-form-section ion-item:not(:last-child) {
-  margin-bottom: 1.8rem !important;
-}
-
-.inscripcion-form-section ion-item:last-child {
-  margin-bottom: 0.5rem !important;
-}
-
-/* Responsive para dispositivos móviles */
-@media (max-width: 768px) {
-  .modal-content-profesional ion-item {
-    min-height: 70px !important;
-  }
-  
-  .modal-content-profesional ion-select,
-  .modal-content-profesional ion-input {
-    min-height: 44px !important;
-    font-size: 16px !important; /* Evita zoom en iOS */
-  }
-  
-  .modal-content-profesional ion-label[position="floating"] {
-    font-size: 0.85rem !important;
-    margin-bottom: 2px !important;
-  }
-  
-  .modal-content-profesional ion-item.item-has-value ion-label[position="floating"],
-  .modal-content-profesional ion-item.item-has-focus ion-label[position="floating"] {
-    font-size: 0.85rem !important;
-    margin-bottom: 2px !important;
-    background: transparent !important;
-  }
+.ion-palette-dark .modal-content-profesional ion-item:hover {
+  background: var(--hover-card) \!important;
+  border-color: var(--color-primario);
 }

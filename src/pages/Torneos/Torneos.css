@@ -100,7 +100,7 @@
 
 .torneo-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(97, 41, 240, 0.15);
+  box-shadow: var(--sombra-hover);
   border-color: var(--color-primario);
 }
 
@@ -419,12 +419,12 @@
 :root .torneos-fab ion-fab-button {
   --background: var(--color-primario);
   --color: var(--color-primario-contraste);
-  --box-shadow: 0 12px 30px rgba(97, 41, 240, 0.4);
+  --box-shadow: var(--sombra-boton-primario-hover);
 }
 
 :root .torneos-fab ion-fab-button:hover {
   transform: scale(1.1) rotate(90deg);
-  --box-shadow: 0 16px 40px rgba(97, 41, 240, 0.5);
+  --box-shadow: var(--sombra-boton-primario-hover);
 }
 
 /* Modo oscuro - usando misma regla de color que iconos temáticos, SIN SOMBRA */
@@ -705,7 +705,7 @@ ion-chip[color="danger"] {
 .torneos-field-input:focus {
   --border-color: var(--color-primario) !important;
   border-color: var(--color-primario) !important;
-  box-shadow: 0 0 0 3px rgba(97, 41, 240, 0.15);
+  box-shadow: 0 0 0 3px var(--sombra-color-primario);
   transform: translateY(-1px);
 }
 
@@ -740,12 +740,12 @@ ion-chip[color="danger"] {
   --color: var(--color-primario-contraste) !important;
   background: var(--color-primario) !important;
   color: var(--color-primario-contraste) !important;
-  box-shadow: 0 4px 15px rgba(97, 41, 240, 0.3);
+  box-shadow: var(--sombra-boton-primario);
 }
 
 .save-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(97, 41, 240, 0.4);
+  box-shadow: var(--sombra-boton-primario-hover);
   --background: var(--color-secundario) !important;
   filter: brightness(1.1);
 }
@@ -838,7 +838,7 @@ ion-chip[color="danger"] {
   background: var(--hover-card) !important;
   border-color: var(--color-primario) !important;
   transform: translateY(-1px) !important;
-  box-shadow: 0 4px 12px rgba(97, 41, 240, 0.15) !important;
+  box-shadow: var(--sombra-card) !important;
 }
 
 .modal-form-container ion-item:hover::before {
@@ -848,7 +848,7 @@ ion-chip[color="danger"] {
 /* FOCUS MEJORADO */
 .modal-form-container ion-item:focus-within {
   border: 2px solid var(--color-primario) !important;
-  box-shadow: 0 0 0 3px rgba(97, 41, 240, 0.15);
+  box-shadow: 0 0 0 3px var(--sombra-color-primario);
   background: var(--fondo-card) !important;
   transform: translateY(-1px) !important;
 }
