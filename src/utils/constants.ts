@@ -1,20 +1,33 @@
 // src/utils/constants.ts
 
-export const API_URL = 'https://backend-1-uvqp.onrender.com';
-// export const API_URL = 'http://localhost:5000';
+/**
+ * Archivo de constantes globales para la aplicación Play4Padel.
+ * Centraliza URLs, endpoints de API, roles, estados y utilidades comunes.
+ */
 
+// URL base del backend - cambiar según el entorno (desarrollo/producción)
+// export const API_URL = 'https://backend-1-uvqp.onrender.com'; // Producción
+export const API_URL = 'http://localhost:5000'; // Desarrollo local
+
+/**
+ * Endpoints de la API REST organizados por funcionalidad.
+ * Incluye endpoints estáticos y funciones que generan endpoints dinámicos.
+ */
 export const API_ENDPOINTS = {
+  // Endpoints de autenticación y usuarios
   LOGIN: '/login',
   REGISTER: '/create-user',
   LOGOUT: '/logout',
   USER: '/user',
   UPDATE_PASSWORD: '/update-password',
+  
+  // Endpoints de clubes y reservas
   CLUBS: '/clubs',
   RESERVAS: '/reservas',
   CREAR_RESERVA: '/crear-reserva',
   DISPONIBILIDAD_PISTA: '/pistas',
   
-  // Torneos
+  // Endpoints de torneos - incluyen funciones para generar URLs dinámicas
   TORNEOS: '/torneos',
   CREAR_TORNEO: '/torneos/crear',
   TORNEO_DETALLE: (id: number) => `/torneos/${id}`,
@@ -23,7 +36,7 @@ export const API_ENDPOINTS = {
   AVANZAR_RONDA: (id: number, ronda: string) => `/torneos/${id}/rondas/${ronda}/avanzar`,
   CREAR_CONSOLACION: (id: number, ronda: string) => `/torneos/${id}/rondas/${ronda}/consolacion`,
   
-  // Ligas
+  // Endpoints de ligas - sistema de competición por puntos
   LIGAS: '/ligas',
   LIGA_DETALLE: (id: number) => `/ligas/${id}`,
   INSCRIBIR_PAREJA_LIGA: (id: number) => `/ligas/${id}/inscribir_pareja`,
@@ -33,16 +46,24 @@ export const API_ENDPOINTS = {
   CLASIFICACION_LIGA: (id: number) => `/ligas/${id}/clasificacion`,
   REGISTRAR_RESULTADO: (partidoId: number) => `/partidos/${partidoId}/resultado`,
   
-  // Parejas
+  // Endpoints de parejas
   PAREJA_DETALLE: (id: number) => `/parejas_liga/${id}`
 };
 
+/**
+ * Claves utilizadas para almacenar datos en localStorage.
+ * Centralizadas para evitar errores de escritura y facilitar cambios.
+ */
 export const STORAGE_KEYS = {
   AUTH_TOKEN: 'auth_token',
   USER_ID: 'user_id',
   USER_ROLE: 'user_role',
 };
 
+/**
+ * Roles de usuario del sistema definidos como constantes.
+ * Corresponden con los enums del backend para autorización.
+ */
 export const ROLES = {
   ADMIN: 'ADMIN',
   CLUB: 'CLUB',
@@ -52,6 +73,10 @@ export const ROLES = {
   SOCIO: 'SOCIO',
 };
 
+/**
+ * Estados posibles de las reservas en el sistema.
+ * Utilizados para el ciclo de vida de las reservas de pistas.
+ */
 export const ESTADOS_RESERVA = {
   PENDIENTE: 'pendiente',
   CONFIRMADA: 'confirmada', 
@@ -59,19 +84,31 @@ export const ESTADOS_RESERVA = {
   COMPLETADA: 'completada'
 };
 
+/**
+ * Tipos de cuenta disponibles en el registro.
+ * Determina si se registra un usuario normal o administrador de club.
+ */
 export const TIPOS_CUENTA = {
   USUARIO: 'USUARIO',
   CLUB: 'CLUB'
 };
 
 // ===== UTILIDADES PARA AVATARES =====
+
+/**
+ * Interfaz que define la estructura de datos para generar avatares de usuario.
+ * Utilizada cuando no hay imagen de avatar personalizada.
+ */
 export interface DatosAvatar {
   colorFondo: string;
   colorTexto: string;
   inicial: string;
 }
 
-// Colores para avatares de usuarios - paleta profesional
+/**
+ * Paleta de colores profesional para avatares generados automáticamente.
+ * Se asignan de forma determinística basándose en el ID del usuario.
+ */
 const COLORES_AVATAR = [
   '#1abc9c', // Verde agua
   '#3498db', // Azul

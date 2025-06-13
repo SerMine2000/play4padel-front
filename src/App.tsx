@@ -1,4 +1,11 @@
-// src/App.tsx
+/**
+ * APP.TSX - COMPONENTE RAÍZ DE LA APLICACIÓN PLAY4PADEL
+ * 
+ * Este archivo contiene la configuración principal del routing, autenticación y layout
+ * de la aplicación. Define todas las rutas públicas y privadas, así como los componentes
+ * de protección de rutas basados en roles de usuario.
+ */
+
 import { IonApp, IonRouterOutlet, IonLoading, useIonRouter } from '@ionic/react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home/Home';
@@ -15,7 +22,7 @@ import MarcadorPantalla from './pages/Marcador/MarcadorPantalla';
 import Configuracion from './pages/Configuracion/Configuracion';
 import Pay from './pages/Pago/Pay';
 
-// Páginas del Administrador Supremo (solo para rutas que mantienen el prefijo /admin/)
+// Páginas del Administrador (gestión de solicitudes de clubes)
 import AdminSolicitudesClub from './pages/Admin/Admin_SolicitudesClub/Admin_SolicitudesClub';
 import SolicitarClub from './pages/SolicitarClub/SolicitarClub';
 
@@ -52,17 +59,36 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
+/**
+ * CONFIGURACIÓN DE STRIPE
+ * 
+ * Inicializamos Stripe con la clave pública para procesar pagos.
+ * Esta clave es de prueba y debe ser reemplazada en producción.
+ */
 const stripePromise = loadStripe('pk_test_51RBDLF2MsbKNiz9B2Wol9ZvHjbvYvhMjVwkQPOvZmBEeyRGBFPAFgkGAhBOzD4FSq1kMxZgjYJGTm9fFhfJuMdA300Vt5jJ7m4');
 
-// Componente para rutas privadas
+/**
+ * COMPONENTE PARA RUTAS PRIVADAS
+ * 
+ * Este componente protege las rutas que requieren autenticación.
+ * Verifica si el usuario está autenticado y redirige al login si no lo está.
+ */
 const PrivateRoute = ({ element }: { element: JSX.Element }) => {
   const { isAuthenticated, isLoading } = useAuth();
 
+  // Mostramos un loading mientras se verifica la autenticación
   if (isLoading) return <IonLoading isOpen={true} message="Autenticando..." />;
+  
+  // Renderizamos el componente si está autenticado, sino redirigimos al login
   return isAuthenticated ? element : <Navigate to="/login" />;
 };
 
-// Componente para rutas con roles específicos
+/**
+ * COMPONENTE PARA RUTAS CON ROLES ESPECÍFICOS
+ * 
+ * Este componente protege las rutas que requieren roles específicos de usuario.
+ * Verifica tanto la autenticación como los permisos de rol.
+ */
 const RoleRoute = ({
   element,
   roles
@@ -72,20 +98,30 @@ const RoleRoute = ({
 }) => {
   const { user, isAuthenticated, isLoading } = useAuth();
 
+  // Mostramos loading mientras se verifican los permisos
   if (isLoading) return <IonLoading isOpen={true} message="Verificando permisos..." />;
+  
+  // Redirigimos al login si no está autenticado
   if (!isAuthenticated) return <Navigate to="/login" />;
   
-  // Verificar por role (string) en lugar de id_rol
+  // Verificamos si el rol del usuario está en la lista de roles permitidos
   if (user && roles.includes(user.role.toUpperCase())) return element;
   
+  // Si no tiene permisos, redirigimos al home
   return <Navigate to="/home" />;
 };
 
-// Componente para manejar el foco al cambiar de ruta
+/**
+ * COMPONENTE PARA MANEJAR EL FOCO AL CAMBIAR DE RUTA
+ * 
+ * Este componente gestiona el foco de los elementos cuando se cambia de ruta,
+ * mejorando la accesibilidad y evitando problemas de navegación con teclado.
+ */
 const FocusManager: React.FC = () => {
   const ionRouter = useIonRouter();
 
   useEffect(() => {
+    // Función que quita el foco del elemento activo al cambiar de ruta
     const handleRouteChange = () => {
       setTimeout(() => {
         if (document.activeElement instanceof HTMLElement) {
@@ -94,9 +130,13 @@ const FocusManager: React.FC = () => {
       }, 100);
     };
 
+    // Ejecutamos al montar el componente
     handleRouteChange();
+    
+    // Escuchamos los cambios de ruta de Ionic
     document.addEventListener('ionRouterOutletActivated', handleRouteChange);
 
+    // Limpiamos el event listener al desmontar
     return () => {
       document.removeEventListener('ionRouterOutletActivated', handleRouteChange);
     };
@@ -105,7 +145,12 @@ const FocusManager: React.FC = () => {
   return null;
 };
 
-// Layout principal para páginas con cabecera y barra lateral
+/**
+ * LAYOUT PRINCIPAL PARA PÁGINAS CON CABECERA Y BARRA LATERAL
+ * 
+ * Este componente envuelve las páginas principales de la aplicación
+ * con la estructura común (header, sidebar, contenido principal).
+ */
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div className="main-content">
     <Estructura>
@@ -114,7 +159,12 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   </div>
 );
 
-// Estilos básicos
+/**
+ * ESTILOS BÁSICOS PARA EL LAYOUT
+ * 
+ * Definimos estilos básicos para el contenedor principal.
+ * Estos estilos se inyectan directamente en el head del documento.
+ */
 const styles = `
   .main-content {
     display: flex;
@@ -122,15 +172,27 @@ const styles = `
   }
 `;
 
+// Inyectamos los estilos en el head del documento
 document.head.appendChild(document.createElement('style')).textContent = styles;
 
+/**
+ * COMPONENTE PRINCIPAL DE CONTENIDO DE LA APLICACIÓN
+ * 
+ * Este componente contiene toda la lógica de routing y navegación.
+ * Define las rutas públicas, privadas y con restricción de roles.
+ */
 const AppContent: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
 
-  // Función para determinar la ruta por defecto según el rol
+  /**
+   * FUNCIÓN PARA DETERMINAR LA RUTA POR DEFECTO
+   * 
+   * Determina a qué ruta redirigir al usuario según su estado de autenticación.
+   * Todos los usuarios autenticados van a /home, que internamente decide qué mostrar.
+   */
   const getDefaultRoute = () => {
     if (!isAuthenticated) return '/login';
-    return '/home'; // Ahora todos van a /home, que internamente decide qué mostrar
+    return '/home';
   };
 
   return (
@@ -139,7 +201,7 @@ const AppContent: React.FC = () => {
         <FocusManager />
         <IonRouterOutlet>
           <Routes>
-            {/* Rutas públicas */}
+            {/* RUTAS PÚBLICAS - Accesibles sin autenticación */}
             <Route 
               path="/login" 
               element={isAuthenticated ? <Navigate to={getDefaultRoute()} /> : <Login />} 
@@ -149,7 +211,7 @@ const AppContent: React.FC = () => {
               element={isAuthenticated ? <Navigate to={getDefaultRoute()} /> : <Register />} 
             />
 
-            {/* Rutas privadas generales - ahora todas usan lógica condicional interna */}
+            {/* RUTAS PRIVADAS GENERALES - Requieren autenticación */}
             <Route path="/home" element={<PrivateRoute element={<MainLayout><Home /></MainLayout>} />} />
             <Route path="/manage-users" element={<PrivateRoute element={<MainLayout><ManageUsers /></MainLayout>} />} />
             <Route path="/manage-clubs" element={<PrivateRoute element={<MainLayout><ManageClubs /></MainLayout>} />} />
@@ -164,27 +226,27 @@ const AppContent: React.FC = () => {
             <Route path="/marcador" element={<PrivateRoute element={<Estructura><MarcadorControl /></Estructura>} />} />
             <Route path="/solicitar-club" element={<PrivateRoute element={<MainLayout><SolicitarClub /></MainLayout>} />} />
 
-            {/* Ruta de solicitudes de club (movida de /admin/solicitudes-club) */}
+            {/* RUTA DE SOLICITUDES DE CLUB - Solo para administradores */}
             <Route 
               path="/solicitudes-club" 
               element={<RoleRoute roles={['ADMIN']} element={<MainLayout><ManageClubs /></MainLayout>} />} 
             />
 
-            {/* Rutas de Torneos */}
+            {/* RUTAS DE TORNEOS - Gestión de torneos y competiciones */}
             <Route path="/torneos" element={<PrivateRoute element={<MainLayout><Torneos /></MainLayout>} />} />
             <Route path="/torneos/:id" element={<PrivateRoute element={<MainLayout><TorneoDetalle /></MainLayout>} />} />
 
-            {/* Rutas de Ligas */}
+            {/* RUTAS DE LIGAS - Gestión de ligas y clasificaciones */}
             <Route path="/ligas" element={<PrivateRoute element={<MainLayout><Ligas /></MainLayout>} />} />
             <Route path="/ligas/:id" element={<PrivateRoute element={<MainLayout><LigaDetalle /></MainLayout>} />} />
 
-            {/* Ruta pública de pago */}
+            {/* RUTA PÚBLICA DE PAGO - Integración con Stripe */}
             <Route path="/pay" element={ <Elements stripe={stripePromise}> <Pay /></Elements>}/>
 
-            {/* Redirección por defecto */}
+            {/* REDIRECCIÓN POR DEFECTO */}
             <Route path="/" element={<Navigate to={getDefaultRoute()} />} />
 
-            {/* Redirecciones para compatibilidad hacia atrás */}
+            {/* REDIRECCIONES PARA COMPATIBILIDAD HACIA ATRÁS */}
             <Route path="/admin/dashboard" element={<Navigate to="/home" />} />
             <Route path="/admin/manage-clubs" element={<Navigate to="/manage-clubs" />} />
             <Route path="/admin/manage-all-users" element={<Navigate to="/manage-users" />} />
@@ -196,6 +258,13 @@ const AppContent: React.FC = () => {
   );
 };
 
+/**
+ * COMPONENTE RAÍZ DE LA APLICACIÓN
+ * 
+ * Envuelve toda la aplicación con los proveedores de contexto necesarios:
+ * - AuthProvider: Gestiona el estado de autenticación global
+ * - ThemeProvider: Gestiona el tema (claro/oscuro) de la aplicación
+ */
 const App: React.FC = () => (
   <AuthProvider>
     <ThemeProvider>

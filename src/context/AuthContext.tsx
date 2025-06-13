@@ -5,6 +5,10 @@ import authService from '../services/auth.service';
 import { RegisterRequest, User } from '../interfaces';
 import { API_URL } from '../utils/constants';
 
+/**
+ * Interfaz que define la estructura del contexto de autenticación.
+ * Contiene todas las propiedades y métodos disponibles para componentes que usen el contexto.
+ */
 interface AuthContextType {
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
@@ -21,6 +25,10 @@ interface AuthContextType {
   deleteAccount: () => Promise<void>;
 }
 
+/**
+ * Contexto de React que proporciona funcionalidad de autenticación a toda la aplicación.
+ * Inicializado con valores por defecto para evitar errores en componentes.
+ */
 const AuthContext = createContext<AuthContextType>({
   user: null,
   setUser: () => {},
@@ -37,18 +45,27 @@ const AuthContext = createContext<AuthContextType>({
   deleteAccount: async () => {},
 });
 
+/**
+ * Proveedor del contexto de autenticación que envuelve la aplicación.
+ * Maneja el estado global de autenticación y proporciona métodos para login, logout, registro, etc.
+ */
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  // Estados principales del contexto de autenticación
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // Flag para evitar renovaciones concurrentes de token
   const [isRefreshingToken, setIsRefreshingToken] = useState(false);
 
-  // Función interna para renovar token (evita problemas de referencia circular)
+  /**
+   * Función interna para renovar el token de acceso.
+   * Evita referencias circulares con el servicio API y maneja renovaciones concurrentes.
+   */
   const refreshAccessTokenInternal = async (): Promise<void> => {
-    // Evitar renovaciones concurrentes
+    // Prevenir múltiples renovaciones simultáneas
     if (isRefreshingToken) {
       throw new Error('Token refresh already in progress');
     }
@@ -62,7 +79,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       setIsRefreshingToken(true);
       
-      // Enviar el refresh_token en el header Authorization
+      // Realizamos la petición de renovación de token
       const response = await fetch(`${API_URL}/refresh-token`, {
         method: 'POST',
         headers: {
@@ -71,6 +88,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
       });
 
+      // Verificamos el estado de la respuesta
       if (!response.ok) {
         if (response.status === 401 || response.status === 403) {
           throw new Error('Refresh token expired - login required');
@@ -84,41 +102,47 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         throw new Error('No se recibió un nuevo access token');
       }
 
-      // Guardar el nuevo token
+      // Actualizamos el token en localStorage y el estado
       localStorage.setItem('token', data.access_token);
       setToken(data.access_token);
       
     } catch (error) {
       console.error('❌ Error al refrescar access token:', error);
-      // Si falla el refresh, hacer logout completo
-      logout(); // Llamada sin await para evitar bloqueo en caso de error
+      // Si falla la renovación, cerramos sesión
+      logout();
       throw error;
     } finally {
       setIsRefreshingToken(false);
     }
   };
 
-  // Crear objeto con métodos que necesita api.service
+  // Creamos un objeto con los métodos que necesita el servicio API
   const authContextForAPI = {
     refreshAccessToken: refreshAccessTokenInternal,
     logout: () => logout()
   };
 
-  // Inyectar el contexto en api.service al inicializar
+  // Efecto para inyectar el contexto en el servicio API al inicializar
   useEffect(() => {
     api.setAuthContext(authContextForAPI);
-  }, []); // Solo una vez al montar
+  }, []);
 
+  // Efecto para cargar el usuario al montar el componente
   useEffect(() => {
     refreshUser();
   }, []);
 
+  /**
+   * Función para autenticar al usuario con email y contraseña.
+   * Maneja el almacenamiento de tokens y actualización del estado de autenticación.
+   */
   const login = async (email: string, password: string) => {
     try {
       setIsLoading(true);
+      // Enviamos las credenciales al servidor
       const response = await api.post('/login', { email, password });
       
-      // Verificar la estructura de respuesta
+      // Extraemos los datos de la respuesta del servidor
       const { access_token, refresh_token, user_id, role, user_data } = response;
 
       console.log("🔍 DATOS RECIBIDOS DEL LOGIN:");
@@ -127,11 +151,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.log("📞 user_data.telefono:", user_data.telefono);
       console.log("📝 user_data.bio:", user_data.bio);
 
+      // Validamos que tengamos los datos mínimos necesarios
       if (!access_token || !user_id || !role) {
         throw new Error('Respuesta del servidor incompleta');
       }
 
-      // Guardar ambos tokens en localStorage
+      // Almacenamos los tokens en localStorage y el estado
       localStorage.setItem('token', access_token);
       if (refresh_token) {
         localStorage.setItem('refresh_token', refresh_token);
@@ -141,7 +166,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setToken(access_token);
       setIsAuthenticated(true);
 
-      // Construir objeto usuario con los datos recibidos
+      // Construimos el objeto usuario con todos los datos recibidos
       const usuario: User = {
         ...user_data,
         id: user_id,
@@ -161,6 +186,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
+      // Limpiamos todo en caso de error
       localStorage.removeItem('token');
       localStorage.removeItem('refresh_token');
       setToken(null);
@@ -173,17 +199,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  /**
+   * Función para cerrar sesión del usuario.
+   * Notifica al servidor y limpia el estado local de autenticación.
+   */
   const logout = async () => {
     try {
-      // Si hay un usuario, notificar al backend
+      // Notificamos al backend si hay un usuario activo
       if (user?.id) {
         await authService.logout(user.id);
       }
     } catch (error) {
       console.error('⚠️ Error al notificar logout al backend:', error);
-      // Continuar con el logout local incluso si hay error en el backend
     } finally {
-      // Limpiar sesión local siempre
+      // Limpiamos la sesión local siempre, incluso si hay error en el servidor
       localStorage.removeItem('token');
       localStorage.removeItem('refresh_token');
       setUser(null);
@@ -314,4 +343,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   );
 };
 
+/**
+ * Hook personalizado para usar el contexto de autenticación.
+ * Proporciona acceso a todas las funciones y estado de autenticación.
+ */
 export const useAuth = () => useContext(AuthContext);

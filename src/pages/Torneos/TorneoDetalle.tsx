@@ -41,7 +41,6 @@ import {
   checkmarkCircleOutline,
   closeCircleOutline,
   createOutline,
-  ribbonOutline,
   arrowForwardOutline,
   gitBranchOutline,
   flashOutline,
@@ -91,6 +90,21 @@ const TorneoDetalle: React.FC = () => {
 
   const userRole = (user?.role || '').toUpperCase();
   const canManage = ['ADMIN', 'CLUB'].includes(userRole);
+
+  // Función para crear mapeo de parejas a números secuenciales
+  const createParejaNumberMap = () => {
+    const map = new Map();
+    parejas.forEach((pareja, index) => {
+      map.set(pareja.id, index + 1);
+    });
+    return map;
+  };
+
+  // Función para obtener el número secuencial de una pareja
+  const getParejaNumber = (parejaId: number) => {
+    const parejaNumberMap = createParejaNumberMap();
+    return parejaNumberMap.get(parejaId) || parejaId;
+  };
 
   useEffect(() => {
     if (id) {
@@ -697,75 +711,168 @@ const TorneoDetalle: React.FC = () => {
                 </IonCardContent>
               </IonCard>
             ) : (
-              <div className="bracket-container">
-                {Object.entries(bracketData.bracket).map(([ronda, partidosRonda]: [string, any]) => (
-                  <IonCard key={ronda} className="ronda-card">
-                    <IonCardHeader>
-                      <IonCardTitle>
-                        <IonIcon icon={ribbonOutline} />
-                        {ronda.toUpperCase()}
-                        
-                        {canManage && (
-                          <div className="ronda-actions">
-                            {estadoTorneo && estadoTorneo.rondas && estadoTorneo.rondas[ronda] && 
-                             estadoTorneo.rondas[ronda].pendientes === 0 && 
-                             estadoTorneo.rondas[ronda].finalizados > 0 && 
-                             ronda !== 'final' && ronda !== 'consolacion' && (
-                              <IonButton 
-                                size="small" 
-                                fill="outline" 
-                                onClick={() => handleAvanzarRonda(ronda)}
-                              >
-                                <IonIcon icon={arrowForwardOutline} slot="start" />
-                                Avanzar
-                              </IonButton>
-                            )}
+              <div className="tournament-bracket">
+                {/* Navegador de rondas */}
+                {Object.keys(bracketData.bracket).length > 2 && (
+                  <div className="bracket-navigator">
+                    <h4>Navegación por Rondas</h4>
+                    <div className="round-nav-buttons">
+                      {Object.keys(bracketData.bracket).map((ronda, index) => (
+                        <button
+                          key={ronda}
+                          className="round-nav-btn"
+                          onClick={() => {
+                            const roundElement = document.querySelector(`.round-${ronda.toLowerCase()}`);
+                            if (roundElement) {
+                              roundElement.scrollIntoView({ 
+                                behavior: 'smooth', 
+                                inline: 'center',
+                                block: 'nearest'
+                              });
+                            }
+                          }}
+                        >
+                          <span className="round-nav-number">{index + 1}</span>
+                          <span className="round-nav-name">{ronda.toUpperCase()}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Control de administración */}
+                {canManage && (
+                  <div className="bracket-controls">
+                    {Object.entries(bracketData.bracket).map(([ronda, partidosRonda]: [string, any]) => (
+                      <div key={ronda} className="round-control">
+                        <span className="round-name">{ronda.toUpperCase()}</span>
+                        <div className="round-actions">
+                          {estadoTorneo && estadoTorneo.rondas && estadoTorneo.rondas[ronda] && 
+                           estadoTorneo.rondas[ronda].pendientes === 0 && 
+                           estadoTorneo.rondas[ronda].finalizados > 0 && 
+                           ronda !== 'final' && ronda !== 'consolacion' && (
+                            <IonButton 
+                              size="small" 
+                              fill="outline" 
+                              onClick={() => handleAvanzarRonda(ronda)}
+                            >
+                              <IonIcon icon={arrowForwardOutline} slot="start" />
+                              Avanzar
+                            </IonButton>
+                          )}
+                          
+                          {ronda === 'principal' && estadoTorneo && estadoTorneo.rondas && 
+                           estadoTorneo.rondas[ronda] && estadoTorneo.rondas[ronda].finalizados > 0 && (
+                            <IonButton 
+                              size="small" 
+                              fill="outline" 
+                              color="secondary"
+                              onClick={() => handleCrearConsolacion(ronda)}
+                            >
+                              <IonIcon icon={gitBranchOutline} slot="start" />
+                              Consolación
+                            </IonButton>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Bracket visual */}
+                <div className="bracket-visual">
+                  {Object.entries(bracketData.bracket).map(([ronda, partidosRonda]: [string, any]) => (
+                    <div key={ronda} className={`bracket-round round-${ronda.toLowerCase()}`}>
+                      <div className="round-header">
+                        <h3>{ronda.toUpperCase()}</h3>
+                        <IonBadge color="primary">{(partidosRonda as any[]).length} partidos</IonBadge>
+                      </div>
+                      
+                      <div className="round-matches">
+                        {(partidosRonda as any[]).map((partido: any, matchIndex: number) => (
+                          <div key={partido.id} className={`tournament-match match-${matchIndex}`}>
+                            <div className="match-connector-left"></div>
                             
-                            {ronda === 'principal' && estadoTorneo && estadoTorneo.rondas && 
-                             estadoTorneo.rondas[ronda] && estadoTorneo.rondas[ronda].finalizados > 0 && (
-                              <IonButton 
-                                size="small" 
-                                fill="outline" 
-                                color="secondary"
-                                onClick={() => handleCrearConsolacion(ronda)}
-                              >
-                                <IonIcon icon={gitBranchOutline} slot="start" />
-                                Consolación
-                              </IonButton>
-                            )}
-                          </div>
-                        )}
-                      </IonCardTitle>
-                    </IonCardHeader>
-                    <IonCardContent>
-                      <div className="partidos-ronda">
-                        {partidosRonda.map((partido: any) => (
-                          <div key={partido.id} className="bracket-match">
-                            <div className="match-teams">
-                              <div className={`team ${partido.resultado && partido.resultado.includes(partido.equipo1?.id) ? 'winner' : ''}`}>
-                                <span>{partido.equipo1 ? `Pareja ${partido.equipo1.id}` : 'TBD'}</span>
+                            <div className="match-content">
+                              {/* Equipo 1 */}
+                              <div className={`match-team team-1 ${
+                                partido.resultado && partido.resultado.includes(partido.equipo1?.id) ? 'winner' : ''
+                              }`}>
+                                <div className="team-info">
+                                  <span className="team-name">
+                                    {partido.equipo1 ? `Pareja ${getParejaNumber(partido.equipo1.id)}` : 'TBD'}
+                                  </span>
+                                  {partido.resultado && partido.resultado.includes(partido.equipo1?.id) && (
+                                    <IonIcon icon={trophyOutline} className="winner-icon" />
+                                  )}
+                                </div>
+                                <div className="team-score">
+                                  {partido.estado === 'finalizado' && partido.notas ? (
+                                    <span className="score">{partido.notas.split(',')[0] || '-'}</span>
+                                  ) : (
+                                    <span className="score">-</span>
+                                  )}
+                                </div>
                               </div>
-                              <div className="vs-bracket">VS</div>
-                              <div className={`team ${partido.resultado && partido.resultado.includes(partido.equipo2?.id) ? 'winner' : ''}`}>
-                                <span>{partido.equipo2 ? `Pareja ${partido.equipo2.id}` : 'TBD'}</span>
+
+                              {/* Separador */}
+                              <div className="match-separator"></div>
+
+                              {/* Equipo 2 */}
+                              <div className={`match-team team-2 ${
+                                partido.resultado && partido.resultado.includes(partido.equipo2?.id) ? 'winner' : ''
+                              }`}>
+                                <div className="team-info">
+                                  <span className="team-name">
+                                    {partido.equipo2 ? `Pareja ${getParejaNumber(partido.equipo2.id)}` : 'TBD'}
+                                  </span>
+                                  {partido.resultado && partido.resultado.includes(partido.equipo2?.id) && (
+                                    <IonIcon icon={trophyOutline} className="winner-icon" />
+                                  )}
+                                </div>
+                                <div className="team-score">
+                                  {partido.estado === 'finalizado' && partido.notas ? (
+                                    <span className="score">{partido.notas.split(',')[1] || '-'}</span>
+                                  ) : (
+                                    <span className="score">-</span>
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Estado del partido */}
+                              <div className="match-status">
+                                <IonChip 
+                                  color={getPartidoEstadoColor(partido.estado)}
+                                  className="status-chip-small"
+                                >
+                                  {partido.estado === 'programado' ? 'Por jugar' : 
+                                   partido.estado === 'en_curso' ? 'En curso' : 
+                                   partido.estado === 'finalizado' ? 'Finalizado' : partido.estado}
+                                </IonChip>
+
+                                {canManage && partido.estado === 'programado' && (
+                                  <IonButton 
+                                    fill="clear" 
+                                    size="small"
+                                    className="edit-match-btn"
+                                    onClick={() => {
+                                      setSelectedPartido(partido);
+                                      setIsResultModalOpen(true);
+                                    }}
+                                  >
+                                    <IonIcon icon={createOutline} />
+                                  </IonButton>
+                                )}
                               </div>
                             </div>
                             
-                            <div className="match-info">
-                              <IonChip color={getPartidoEstadoColor(partido.estado)}>
-                                {partido.estado}
-                              </IonChip>
-                              
-                              {partido.estado === 'finalizado' && partido.notas && (
-                                <small className="resultado-sets">{partido.notas}</small>
-                              )}
-                            </div>
+                            <div className="match-connector-right"></div>
                           </div>
                         ))}
                       </div>
-                    </IonCardContent>
-                  </IonCard>
-                ))}
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
@@ -795,11 +902,11 @@ const TorneoDetalle: React.FC = () => {
                       
                       <div className="partido-equipos">
                         <div className="equipo">
-                          <span>Pareja {partido.id_equipo1}</span>
+                          <span>Pareja {getParejaNumber(partido.id_equipo1)}</span>
                         </div>
                         <span className="vs">VS</span>
                         <div className="equipo">
-                          <span>Pareja {partido.id_equipo2}</span>
+                          <span>Pareja {getParejaNumber(partido.id_equipo2)}</span>
                         </div>
                       </div>
 
@@ -1010,7 +1117,7 @@ const TorneoDetalle: React.FC = () => {
                 </h3>
                 <div className="partido-info">
                   <h4>Partido #{selectedPartido.id}</h4>
-                  <p>Pareja {selectedPartido.id_equipo1} vs Pareja {selectedPartido.id_equipo2}</p>
+                  <p>Pareja {getParejaNumber(selectedPartido.id_equipo1)} vs Pareja {getParejaNumber(selectedPartido.id_equipo2)}</p>
                   {selectedPartido.ronda && <IonChip color="tertiary">{selectedPartido.ronda}</IonChip>}
                 </div>
               </div>
@@ -1039,10 +1146,10 @@ const TorneoDetalle: React.FC = () => {
                     placeholder="Selecciona el ganador"
                   >
                     <IonSelectOption value={selectedPartido.id_equipo1}>
-                      Pareja {selectedPartido.id_equipo1}
+                      Pareja {getParejaNumber(selectedPartido.id_equipo1)}
                     </IonSelectOption>
                     <IonSelectOption value={selectedPartido.id_equipo2}>
-                      Pareja {selectedPartido.id_equipo2}
+                      Pareja {getParejaNumber(selectedPartido.id_equipo2)}
                     </IonSelectOption>
                   </IonSelect>
                 </IonItem>

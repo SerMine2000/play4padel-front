@@ -2,11 +2,20 @@ import React from 'react';
 import FormularioRegister from './FormularioRegister';
 import './Register.css';
 
-// Colores del logo Play4Padel
-const primaryPurple = '#2D0A31'; // Púrpura oscuro del fondo del logo
-const brightGreen = '#00FF66'; // Verde brillante de la "P" en el logo
+/**
+ * Página de registro de la aplicación Play4Padel.
+ * Proporciona una interfaz para registrar nuevos usuarios con diseño glassmorphism.
+ * Incluye el logo de la aplicación y el formulario de registro.
+ */
 
-// Estilos inline para asegurar que se apliquen - ahora con colores de padel
+// Colores de la identidad visual de Play4Padel
+const primaryPurple = '#2D0A31'; // Púrpura oscuro del fondo del logo
+const brightGreen = '#00FF66'; // Verde brillante característico de la marca
+
+/**
+ * Estilos para el fondo principal de la página de registro.
+ * Utiliza el color púrpura corporativo y centra el contenido.
+ */
 const gradientBg = {
   background: primaryPurple,
   minHeight: '100vh',
@@ -16,6 +25,10 @@ const gradientBg = {
   padding: '1rem'
 };
 
+/**
+ * Estilos para la tarjeta de registro con efecto glassmorphism.
+ * Proporciona una superficie semitransparente con desenfoque de fondo.
+ */
 const glassCard = {
   width: '100%',
   maxWidth: '36rem',
@@ -28,6 +41,10 @@ const glassCard = {
   padding: '1.5rem'
 };
 
+/**
+ * Estilos para el logo de Play4Padel en la página de registro.
+ * Utiliza los colores corporativos y tipografía destacada.
+ */
 const logoStyle = {
   color: 'white',
   fontSize: '1.5rem',
@@ -37,18 +54,24 @@ const logoStyle = {
   backgroundColor: 'rgba(45, 10, 49, 0.7)'
 };
 
+/**
+ * Componente principal de la página de registro.
+ * Renderiza una interfaz centrada con el logo de la aplicación y el formulario de registro.
+ */
 const Register: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center p-4" style={gradientBg}>
+      {/* Tarjeta principal con efecto glassmorphism */}
       <div className="w-full max-w-md bg-white bg-opacity-10 backdrop-blur-lg rounded-xl overflow-hidden" style={glassCard}>
         <div style={{ padding: '1.5rem' }}>
-          {/* Logo centered */}
+          {/* Logo centrado de Play4Padel */}
           <div className="flex justify-center mb-4" style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
             <div className="text-white px-4 py-2 rounded-lg" style={logoStyle}>
               Play<span style={{ color: brightGreen }}>4</span>Padel
             </div>
           </div>
           
+          {/* Formulario de registro */}
           <FormularioRegister />
         </div>
       </div>
